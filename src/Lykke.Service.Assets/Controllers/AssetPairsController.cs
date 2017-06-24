@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,17 @@ namespace Lykke.Service.Assets.Controllers
     [Route("api/[controller]")]
     public class AssetPairsController : Controller
     {
-        private readonly IAssetPairsManager _manager;
+        private readonly IDictionaryManager<IAssetPair> _manager;
 
-        public AssetPairsController(IAssetPairsManager manager)
+        public AssetPairsController(IDictionaryManager<IAssetPair> manager)
         {
             _manager = manager;
         }
 
+        /// <summary>
+        /// Returns asset pair by ID
+        /// </summary>
+        /// <param name="assetPairId">Asset pair ID</param>
         [HttpGet("{assetPairId}")]
         [SwaggerOperation("GetAssetPair")]
         [ProducesResponseType(typeof(AssetPairResponseModel), (int)HttpStatusCode.OK)]
@@ -37,6 +42,9 @@ namespace Lykke.Service.Assets.Controllers
             return Ok(AssetPairResponseModel.Create(assetPair));
         }
 
+        /// <summary>
+        /// Returns all asset pairs
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(AssetPairResponseModel[]), (int)HttpStatusCode.OK)]
         [SwaggerOperation("GetAssetPairs")]

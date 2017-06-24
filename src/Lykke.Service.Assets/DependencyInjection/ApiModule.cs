@@ -31,20 +31,37 @@ namespace Lykke.Service.Assets.DependencyInjection
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
 
             RegisterAssets(builder);
+            RegisterAssetPairs(builder);
         }
 
         private void RegisterAssets(ContainerBuilder builder)
         {
-            builder.Register(c => new AssetPairsRepository(
-                    new AzureTableStorage<AssetPairEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "Dictionaries", _log)))
-                .As<IAssetPairsRepository>();
+            builder.Register(c => new AssetsRepository(
+                    new AzureTableStorage<AssetEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "Dictionaries", _log)))
+                .As<IDictionaryRepository<IAsset>>();
 
-            builder.RegisterType<AssetPairsCacheService>()
-                .As<IAssetPairsCacheService>()
+            builder.RegisterType<DictionaryCacheService<IAsset>>()
+                .As<IDictionaryCacheService<IAsset>>()
                 .SingleInstance();
 
-            builder.RegisterType<AssetPairsManager>()
-                .As<IAssetPairsManager>()
+            builder.RegisterType<DictionaryManager<IAsset>>()
+                .As<IDictionaryManager<IAsset>>()
+                .WithParameter(new TypedParameter(typeof(TimeSpan), _settings.AssetsService.Dictionaries.CacheExpirationPeriod))
+                .SingleInstance();
+        }
+
+        private void RegisterAssetPairs(ContainerBuilder builder)
+        {
+            builder.Register(c => new AssetPairsRepository(
+                    new AzureTableStorage<AssetPairEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "Dictionaries", _log)))
+                .As<IDictionaryRepository<IAssetPair>>();
+
+            builder.RegisterType<DictionaryCacheService<IAssetPair>>()
+                .As<IDictionaryCacheService<IAssetPair>>()
+                .SingleInstance();
+
+            builder.RegisterType<DictionaryManager<IAssetPair>>()
+                .As<IDictionaryManager<IAssetPair>>()
                 .WithParameter(new TypedParameter(typeof(TimeSpan), _settings.AssetsService.Dictionaries.CacheExpirationPeriod))
                 .SingleInstance();
         }

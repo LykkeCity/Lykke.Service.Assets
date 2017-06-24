@@ -8,15 +8,20 @@ using Lykke.Service.Assets.Core.Services;
 namespace Lykke.Service.Assets.Services
 {
     [UsedImplicitly]
-    public class AssetPairsManager : IAssetPairsManager
+    public class DictionaryManager<TDictionaryItem> : IDictionaryManager<TDictionaryItem> 
+        where TDictionaryItem : IDictionaryItem
     {
-        private readonly IAssetPairsRepository _repository;
-        private readonly IAssetPairsCacheService _cache;
+        private readonly IDictionaryRepository<TDictionaryItem> _repository;
+        private readonly IDictionaryCacheService<TDictionaryItem> _cache;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly TimeSpan _cacheExpirationPeriod;
         private DateTime _cacheExpirationMoment;
 
-        public AssetPairsManager(IAssetPairsRepository repository, IAssetPairsCacheService cache, IDateTimeProvider dateTimeProvider, TimeSpan cacheExpirationPeriod)
+        public DictionaryManager(
+            IDictionaryRepository<TDictionaryItem> repository,
+            IDictionaryCacheService<TDictionaryItem> cache,
+            IDateTimeProvider dateTimeProvider,
+            TimeSpan cacheExpirationPeriod)
         {
             _repository = repository;
             _cache = cache;
@@ -26,14 +31,14 @@ namespace Lykke.Service.Assets.Services
             _cacheExpirationMoment = DateTime.MinValue;
         }
 
-        public async Task<IAssetPair> TryGetAsync(string assetPairId)
+        public async Task<TDictionaryItem> TryGetAsync(string id)
         {
             await EnsureCacheIsUpdatedAsync();
 
-            return _cache.TryGetPair(assetPairId);
+            return _cache.TryGet(id);
         }
 
-        public async Task<IEnumerable<IAssetPair>> GetAllAsync()
+        public async Task<IEnumerable<TDictionaryItem>> GetAllAsync()
         {
             await EnsureCacheIsUpdatedAsync();
 
@@ -51,9 +56,9 @@ namespace Lykke.Service.Assets.Services
 
         private async Task UpdateCacheAsync()
         {
-            var pairs = await _repository.GetAllAsync();
+            var items = await _repository.GetAllAsync();
 
-            _cache.Update(pairs);
+            _cache.Update(items);
         }
     }
 }
