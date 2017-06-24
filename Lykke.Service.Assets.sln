@@ -19,6 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Repositories", "2. Repos
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Tests", "3. Tests", "{6F04271F-62A2-4C7F-82D9-EDBD1773C745}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Client", "4. Client", "{3420C66E-488B-49E5-95D4-992D9E1F7540}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets.Client", "client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj", "{747B8280-19C3-44F9-8B27-BB24CD1420A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{1F5202EC-8C70-44EF-9D83-DC19D1FB4F2F}"
+	ProjectSection(SolutionItems) = preProject
+		client\scripts\update.ps1 = client\scripts\update.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +54,10 @@ Global
 		{20BDF5E2-CBB0-4A8F-B7A1-5F47B1418FD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20BDF5E2-CBB0-4A8F-B7A1-5F47B1418FD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20BDF5E2-CBB0-4A8F-B7A1-5F47B1418FD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +67,7 @@ Global
 		{F3408D63-424D-4269-9D4F-ECA5191C2FF9} = {9ED8EFD0-B340-4111-9BA1-F79B205DB0D3}
 		{65E68E61-BBDC-48BC-BDF5-74A538666435} = {0C32A041-EA3F-4888-A58E-2B50F0AE0E58}
 		{20BDF5E2-CBB0-4A8F-B7A1-5F47B1418FD8} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
+		{747B8280-19C3-44F9-8B27-BB24CD1420A1} = {3420C66E-488B-49E5-95D4-992D9E1F7540}
+		{1F5202EC-8C70-44EF-9D83-DC19D1FB4F2F} = {3420C66E-488B-49E5-95D4-992D9E1F7540}
 	EndGlobalSection
 EndGlobal
