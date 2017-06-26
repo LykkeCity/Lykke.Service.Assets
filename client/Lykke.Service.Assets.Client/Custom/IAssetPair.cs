@@ -2,6 +2,7 @@
 {
     public interface IAssetPair
     {
+        string Id { get; }
         string Name { get; }
         string BaseAssetId { get; }
         string QuotingAssetId { get; }

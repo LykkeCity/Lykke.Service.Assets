@@ -2,6 +2,7 @@
 {
     public interface IAsset
     {
+        string Id { get; }
         string BlockChainId { get; }
         string BlockChainAssetId { get; }
         string Name { get; }
