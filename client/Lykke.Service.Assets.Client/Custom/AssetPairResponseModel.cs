@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace Lykke.Service.Assets.Client.Models
 {
-    public partial class AssetPairResponseModel : IDictionaryItemModel
+    public partial class AssetPairResponseModel : IDictionaryItemModel, IAssetPair
     { 
     }
 }

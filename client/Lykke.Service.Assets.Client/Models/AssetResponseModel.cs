@@ -23,7 +23,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetResponseModel class.
         /// </summary>
-        public AssetResponseModel(string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), bool? isBase = default(bool?), bool? hideIfZero = default(bool?), int? accuracy = default(int?), double? multiplier = default(double?), bool? isDisabled = default(bool?), bool? hideWithdraw = default(bool?), bool? hideDeposit = default(bool?), int? defaultOrder = default(int?), bool? kycNeeded = default(bool?), string assetAddress = default(string), bool? bankCardsDepositEnabled = default(bool?), bool? swiftDepositEnabled = default(bool?), bool? blockchainDepositEnabled = default(bool?), double? dustLimit = default(double?), string categoryId = default(string))
+        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, double multiplier, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, bool bankCardsDepositEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, double dustLimit, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string))
         {
             Id = id;
             BlockChainId = blockChainId;
@@ -57,107 +57,117 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Id")]
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "BlockChainId")]
-        public string BlockChainId { get; private set; }
+        public string BlockChainId { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "BlockChainAssetId")]
-        public string BlockChainAssetId { get; private set; }
+        public string BlockChainAssetId { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Name")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Symbol")]
-        public string Symbol { get; private set; }
+        public string Symbol { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "IdIssuer")]
-        public string IdIssuer { get; private set; }
+        public string IdIssuer { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "IsBase")]
-        public bool? IsBase { get; private set; }
+        public bool IsBase { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "HideIfZero")]
-        public bool? HideIfZero { get; private set; }
+        public bool HideIfZero { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Accuracy")]
-        public int? Accuracy { get; private set; }
+        public int Accuracy { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Multiplier")]
-        public double? Multiplier { get; private set; }
+        public double Multiplier { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "IsDisabled")]
-        public bool? IsDisabled { get; private set; }
+        public bool IsDisabled { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "HideWithdraw")]
-        public bool? HideWithdraw { get; private set; }
+        public bool HideWithdraw { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "HideDeposit")]
-        public bool? HideDeposit { get; private set; }
+        public bool HideDeposit { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "DefaultOrder")]
-        public int? DefaultOrder { get; private set; }
+        public int DefaultOrder { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "KycNeeded")]
-        public bool? KycNeeded { get; private set; }
+        public bool KycNeeded { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "AssetAddress")]
-        public string AssetAddress { get; private set; }
+        public string AssetAddress { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
-        public bool? BankCardsDepositEnabled { get; private set; }
+        public bool BankCardsDepositEnabled { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool? SwiftDepositEnabled { get; private set; }
+        public bool SwiftDepositEnabled { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "BlockchainDepositEnabled")]
-        public bool? BlockchainDepositEnabled { get; private set; }
+        public bool BlockchainDepositEnabled { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "DustLimit")]
-        public double? DustLimit { get; private set; }
+        public double DustLimit { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "CategoryId")]
-        public string CategoryId { get; private set; }
+        public string CategoryId { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetPairResponseModel class.
         /// </summary>
-        public AssetPairResponseModel(string id = default(string), string name = default(string), string baseAssetId = default(string), string quotingAssetId = default(string), int? accuracy = default(int?), int? invertedAccuracy = default(int?), string source = default(string), string source2 = default(string), bool? isDisabled = default(bool?))
+        public AssetPairResponseModel(int accuracy, int invertedAccuracy, bool isDisabled, string id = default(string), string name = default(string), string baseAssetId = default(string), string quotingAssetId = default(string), string source = default(string), string source2 = default(string))
         {
             Id = id;
             Name = name;
@@ -45,47 +45,57 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Id")]
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Name")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "BaseAssetId")]
-        public string BaseAssetId { get; private set; }
+        public string BaseAssetId { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "QuotingAssetId")]
-        public string QuotingAssetId { get; private set; }
+        public string QuotingAssetId { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Accuracy")]
-        public int? Accuracy { get; private set; }
+        public int Accuracy { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "InvertedAccuracy")]
-        public int? InvertedAccuracy { get; private set; }
+        public int InvertedAccuracy { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Source")]
-        public string Source { get; private set; }
+        public string Source { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Source2")]
-        public string Source2 { get; private set; }
+        public string Source2 { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "IsDisabled")]
-        public bool? IsDisabled { get; private set; }
+        public bool IsDisabled { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

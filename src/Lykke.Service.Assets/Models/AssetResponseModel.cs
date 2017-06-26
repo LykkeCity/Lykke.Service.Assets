@@ -1,30 +1,44 @@
-﻿using Lykke.Service.Assets.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Models
 {
     public class AssetResponseModel
     {
-        public string Id { get; private set; }
-        public string BlockChainId { get; private set; }
-        public string BlockChainAssetId { get; private set; }
-        public string Name { get; private set; }
-        public string Symbol { get; private set; }
-        public string IdIssuer { get; private set; }
-        public bool IsBase { get; private set; }
-        public bool HideIfZero { get; private set; }
-        public int Accuracy { get; private set; }
-        public double Multiplier { get; private set; }
-        public bool IsDisabled { get; private set; }
-        public bool HideWithdraw { get; private set; }
-        public bool HideDeposit { get; private set; }
-        public int DefaultOrder { get; private set; }
-        public bool KycNeeded { get; private set; }
-        public string AssetAddress { get; private set; }
-        public bool BankCardsDepositEnabled { get; private set; }
-        public bool SwiftDepositEnabled { get; private set; }
-        public bool BlockchainDepositEnabled { get; private set; }
-        public double DustLimit { get; private set; }
-        public string CategoryId { get; private set; }
+        public string Id { get; set; }
+        public string BlockChainId { get; set; }
+        public string BlockChainAssetId { get; set; }
+        public string Name { get; set; }
+        public string Symbol { get; set; }
+        public string IdIssuer { get; set; }
+        [Required]
+        public bool IsBase { get; set; }
+        [Required]
+        public bool HideIfZero { get; set; }
+        [Required]
+        public int Accuracy { get; set; }
+        [Required]
+        public double Multiplier { get; set; }
+        [Required]
+        public bool IsDisabled { get; set; }
+        [Required]
+        public bool HideWithdraw { get; set; }
+        [Required]
+        public bool HideDeposit { get; set; }
+        [Required]
+        public int DefaultOrder { get; set; }
+        [Required]
+        public bool KycNeeded { get; set; }
+        public string AssetAddress { get; set; }
+        [Required]
+        public bool BankCardsDepositEnabled { get; set; }
+        [Required]
+        public bool SwiftDepositEnabled { get; set; }
+        [Required]
+        public bool BlockchainDepositEnabled { get; set; }
+        [Required]
+        public double DustLimit { get; set; }
+        public string CategoryId { get; set; }
 
 
         public static AssetResponseModel Create(IAsset src)

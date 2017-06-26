@@ -1,18 +1,22 @@
-﻿using Lykke.Service.Assets.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Models
 {
     public class AssetPairResponseModel
     {
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public string BaseAssetId { get; private set; }
-        public string QuotingAssetId { get; private set; }
-        public int Accuracy { get; private set; }
-        public int InvertedAccuracy { get; private set; }
-        public string Source { get; private set; }
-        public string Source2 { get; private set; }
-        public bool IsDisabled { get; private set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string BaseAssetId { get; set; }
+        public string QuotingAssetId { get; set; }
+        [Required]
+        public int Accuracy { get; set; }
+        [Required]
+        public int InvertedAccuracy { get; set; }
+        public string Source { get; set; }
+        public string Source2 { get; set; }
+        [Required]
+        public bool IsDisabled { get; set; }
 
         public static AssetPairResponseModel Create(IAssetPair src)
         {
