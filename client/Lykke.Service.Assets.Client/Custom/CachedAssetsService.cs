@@ -5,13 +5,13 @@ using Lykke.Service.Assets.Client.Models;
 
 namespace Lykke.Service.Assets.Client.Custom
 {
-    public class CachedAssetsScervice : ICachedAssetsScervice
+    public class CachedAssetsService : ICachedAssetsService
     {
         private readonly IAssetsservice _assetsservice;
         private readonly IDictionaryCache<AssetResponseModel> _assetsCache;
         private readonly IDictionaryCache<AssetPairResponseModel> _assetPairsCache;
 
-        public CachedAssetsScervice(IAssetsservice assetsservice, IDictionaryCache<AssetResponseModel> assetsCache, IDictionaryCache<AssetPairResponseModel> assetPairsCache)
+        public CachedAssetsService(IAssetsservice assetsservice, IDictionaryCache<AssetResponseModel> assetsCache, IDictionaryCache<AssetPairResponseModel> assetPairsCache)
         {
             _assetsservice = assetsservice;
             _assetsCache = assetsCache;

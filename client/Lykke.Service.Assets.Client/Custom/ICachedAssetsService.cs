@@ -8,7 +8,7 @@ namespace Lykke.Service.Assets.Client.Custom
     /// <summary>
     /// Provides assets data, cached on the client's side
     /// </summary>
-    public interface ICachedAssetsScervice
+    public interface ICachedAssetsService
     {
         Task<AssetPairResponseModel> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
         Task<IReadOnlyCollection<AssetPairResponseModel>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken());
