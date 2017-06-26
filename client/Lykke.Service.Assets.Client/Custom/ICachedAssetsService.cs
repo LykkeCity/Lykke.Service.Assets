@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Client.Models;
 
 namespace Lykke.Service.Assets.Client.Custom
 {
@@ -10,9 +9,9 @@ namespace Lykke.Service.Assets.Client.Custom
     /// </summary>
     public interface ICachedAssetsService
     {
-        Task<AssetPairResponseModel> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
-        Task<IReadOnlyCollection<AssetPairResponseModel>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken());
-        Task<AssetResponseModel> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
-        Task<IReadOnlyCollection<AssetResponseModel>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
+        Task<IAssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
+        Task<IReadOnlyCollection<IAssetPair>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken());
+        Task<IAsset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
+        Task<IReadOnlyCollection<IAsset>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }
