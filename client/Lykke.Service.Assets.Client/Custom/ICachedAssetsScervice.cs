@@ -10,9 +10,9 @@ namespace Lykke.Service.Assets.Client.Custom
     /// </summary>
     public interface ICachedAssetsScervice
     {
-        Task<AssetPairResponseModel> GetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
+        Task<AssetPairResponseModel> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
         Task<IReadOnlyCollection<AssetPairResponseModel>> GetAssetPairs(CancellationToken cancellationToken = new CancellationToken());
-        Task<AssetResponseModel> GetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
+        Task<AssetResponseModel> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
         Task<IReadOnlyCollection<AssetResponseModel>> GetAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }
