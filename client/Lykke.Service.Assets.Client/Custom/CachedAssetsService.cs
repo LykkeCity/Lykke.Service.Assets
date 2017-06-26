@@ -25,7 +25,7 @@ namespace Lykke.Service.Assets.Client.Custom
             return _assetPairsCache.TryGet(assetPairId);
         }
 
-        public async Task<IReadOnlyCollection<AssetPairResponseModel>> GetAssetPairs(CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IReadOnlyCollection<AssetPairResponseModel>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             await _assetPairsCache.EnsureCacheIsUpdatedAsync(() => UpdateAssetPairsCacheAsync(cancellationToken));
 
@@ -39,7 +39,7 @@ namespace Lykke.Service.Assets.Client.Custom
             return _assetsCache.TryGet(assetId);
         }
 
-        public async Task<IReadOnlyCollection<AssetResponseModel>> GetAssetsAsync(CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IReadOnlyCollection<AssetResponseModel>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             await _assetsCache.EnsureCacheIsUpdatedAsync(() => UpdateAssetsCacheAsync(cancellationToken));
 

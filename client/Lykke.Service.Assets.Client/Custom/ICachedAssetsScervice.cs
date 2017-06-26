@@ -11,8 +11,8 @@ namespace Lykke.Service.Assets.Client.Custom
     public interface ICachedAssetsScervice
     {
         Task<AssetPairResponseModel> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
-        Task<IReadOnlyCollection<AssetPairResponseModel>> GetAssetPairs(CancellationToken cancellationToken = new CancellationToken());
+        Task<IReadOnlyCollection<AssetPairResponseModel>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken());
         Task<AssetResponseModel> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
-        Task<IReadOnlyCollection<AssetResponseModel>> GetAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
+        Task<IReadOnlyCollection<AssetResponseModel>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }
