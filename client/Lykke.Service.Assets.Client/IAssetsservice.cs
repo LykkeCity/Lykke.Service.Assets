@@ -35,6 +35,17 @@ namespace Lykke.Service.Assets.Client
 
 
         /// <summary>
+        /// Forcibly updates asset pairs cache
+        /// </summary>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> UpdateAssetPairsCacheWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Returns asset pair by ID
         /// </summary>
         /// <param name='assetPairId'>
@@ -58,6 +69,17 @@ namespace Lykke.Service.Assets.Client
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse<IList<AssetPairResponseModel>>> GetAssetPairsWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Forcibly updates assets cache
+        /// </summary>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> UpdateAssetsCacheWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns asset by ID

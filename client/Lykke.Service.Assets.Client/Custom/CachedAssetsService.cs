@@ -20,38 +20,52 @@ namespace Lykke.Service.Assets.Client.Custom
 
         public async Task<IAssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken())
         {
-            await _assetPairsCache.EnsureCacheIsUpdatedAsync(() => UpdateAssetPairsCacheAsync(cancellationToken));
+            await _assetPairsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetPairsAsync(cancellationToken));
 
             return _assetPairsCache.TryGet(assetPairId);
         }
 
         public async Task<IReadOnlyCollection<IAssetPair>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            await _assetPairsCache.EnsureCacheIsUpdatedAsync(() => UpdateAssetPairsCacheAsync(cancellationToken));
+            await _assetPairsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetPairsAsync(cancellationToken));
 
             return _assetPairsCache.GetAll();
         }
 
         public async Task<IAsset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken())
         {
-            await _assetsCache.EnsureCacheIsUpdatedAsync(() => UpdateAssetsCacheAsync(cancellationToken));
+            await _assetsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetsAsync(cancellationToken));
             
             return _assetsCache.TryGet(assetId);
         }
 
         public async Task<IReadOnlyCollection<IAsset>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            await _assetsCache.EnsureCacheIsUpdatedAsync(() => UpdateAssetsCacheAsync(cancellationToken));
+            await _assetsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetsAsync(cancellationToken));
 
             return _assetsCache.GetAll();
         }
 
-        private async Task<IEnumerable<AssetResponseModel>> UpdateAssetsCacheAsync(CancellationToken cancellationToken)
+        public async Task UpdateAssetPairsCacheAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            await _assetsservice.UpdateAssetPairsCacheAsync(cancellationToken);
+
+            _assetPairsCache.Update(await GetUncachedAssetPairsAsync(cancellationToken));
+        }
+
+        public async Task UpdateAssetsCacheAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            await _assetsservice.UpdateAssetsCacheAsync(cancellationToken);
+
+            _assetsCache.Update(await GetUncachedAssetsAsync(cancellationToken));
+        }
+
+        private async Task<IEnumerable<AssetResponseModel>> GetUncachedAssetsAsync(CancellationToken cancellationToken)
         {
             return await _assetsservice.GetAssetsAsync(cancellationToken);
         }
 
-        private async Task<IEnumerable<AssetPairResponseModel>> UpdateAssetPairsCacheAsync(CancellationToken cancellationToken)
+        private async Task<IEnumerable<AssetPairResponseModel>> GetUncachedAssetPairsAsync(CancellationToken cancellationToken)
         {
             return await _assetsservice.GetAssetPairsAsync(cancellationToken);
         }

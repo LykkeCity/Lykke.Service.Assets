@@ -18,6 +18,31 @@ namespace Lykke.Service.Assets.Client
     public static partial class AssetsserviceExtensions
     {
             /// <summary>
+            /// Forcibly updates asset pairs cache
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static void UpdateAssetPairsCache(this IAssetsservice operations)
+            {
+                operations.UpdateAssetPairsCacheAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Forcibly updates asset pairs cache
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task UpdateAssetPairsCacheAsync(this IAssetsservice operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.UpdateAssetPairsCacheWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
             /// Returns asset pair by ID
             /// </summary>
             /// <param name='operations'>
@@ -77,6 +102,31 @@ namespace Lykke.Service.Assets.Client
                 {
                     return _result.Body;
                 }
+            }
+
+            /// <summary>
+            /// Forcibly updates assets cache
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static void UpdateAssetsCache(this IAssetsservice operations)
+            {
+                operations.UpdateAssetsCacheAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Forcibly updates assets cache
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task UpdateAssetsCacheAsync(this IAssetsservice operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.UpdateAssetsCacheWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>

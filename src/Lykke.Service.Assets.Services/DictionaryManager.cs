@@ -45,20 +45,21 @@ namespace Lykke.Service.Assets.Services
             return _cache.GetAll();
         }
 
+        public async Task UpdateCacheAsync()
+        {
+            var items = await _repository.GetAllAsync();
+
+            _cache.Update(items);
+
+            _cacheExpirationMoment = _dateTimeProvider.UtcNow + _cacheExpirationPeriod;
+        }
+
         private async Task EnsureCacheIsUpdatedAsync()
         {
             if (_cacheExpirationMoment < _dateTimeProvider.UtcNow)
             {
                 await UpdateCacheAsync();
-                _cacheExpirationMoment = _dateTimeProvider.UtcNow + _cacheExpirationPeriod;
             }
-        }
-
-        private async Task UpdateCacheAsync()
-        {
-            var items = await _repository.GetAllAsync();
-
-            _cache.Update(items);
         }
     }
 }

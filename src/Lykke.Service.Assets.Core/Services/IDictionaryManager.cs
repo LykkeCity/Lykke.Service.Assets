@@ -9,5 +9,6 @@ namespace Lykke.Service.Assets.Core.Services
     {
         Task<TDictionaryItem> TryGetAsync(string id);
         Task<IEnumerable<TDictionaryItem>> GetAllAsync();
+        Task UpdateCacheAsync();
     }
 }
