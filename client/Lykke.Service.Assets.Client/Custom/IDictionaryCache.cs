@@ -8,6 +8,7 @@ namespace Lykke.Service.Assets.Client.Custom
         where TDictionaryItem : IDictionaryItemModel
     {
         Task EnsureCacheIsUpdatedAsync(Func<Task<IEnumerable<TDictionaryItem>>> getAllItemsAsync);
+        void Update(IEnumerable<TDictionaryItem> items);
         TDictionaryItem TryGet(string id);
         IReadOnlyCollection<TDictionaryItem> GetAll();
     }

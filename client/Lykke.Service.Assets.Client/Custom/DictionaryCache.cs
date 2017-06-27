@@ -28,10 +28,15 @@ namespace Lykke.Service.Assets.Client.Custom
             {
                 var items = await getAllItemsAsync();
 
-                UpdateItems(items);
-
-                _cacheExpirationMoment = _dateTimeProvider.UtcNow + _cacheExpirationPeriod;
+                Update(items);
             }
+        }
+
+        public void Update(IEnumerable<TDictionaryItem> items)
+        {
+            _items = items.ToDictionary(p => p.Id, p => p);
+
+            _cacheExpirationMoment = _dateTimeProvider.UtcNow + _cacheExpirationPeriod;
         }
 
         public TDictionaryItem TryGet(string id)
@@ -44,11 +49,6 @@ namespace Lykke.Service.Assets.Client.Custom
         public IReadOnlyCollection<TDictionaryItem> GetAll()
         {
             return _items.Values;
-        }
-
-        private void UpdateItems(IEnumerable<TDictionaryItem> items)
-        {
-            _items = items.ToDictionary(p => p.Id, p => p);
         }
     }
 }

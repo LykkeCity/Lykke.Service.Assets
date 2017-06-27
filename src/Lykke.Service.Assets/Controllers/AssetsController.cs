@@ -23,6 +23,17 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         /// <summary>
+        /// Forcibly updates assets cache
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("updateCache")]
+        [SwaggerOperation("UpdateAssetsCache")]
+        public async Task UpdateCache()
+        {
+            await _manager.UpdateCacheAsync();
+        }
+
+        /// <summary>
         /// Returns asset by ID
         /// </summary>
         /// <param name="assetId">Asset ID</param>
