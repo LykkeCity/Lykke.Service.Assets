@@ -35,6 +35,8 @@ namespace Lykke.Service.Assets
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();
+            
+            Console.WriteLine("Running...");
 
             host.Run(webHostCancellationTokenSource.Token);
 
