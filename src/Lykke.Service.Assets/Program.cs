@@ -13,15 +13,12 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         private static void Main(string[] args)
         {
-            Console.WriteLine("With SIGTERM handling");
-
             var webHostCancellationTokenSource = new CancellationTokenSource();
             var end = new ManualResetEvent(false);
 
             AssemblyLoadContext.Default.Unloading += ctx =>
             {
                 Console.WriteLine("SIGTERM recieved");
-
                 webHostCancellationTokenSource.Cancel(false);
 
                 end.WaitOne();
@@ -36,11 +33,7 @@ namespace Lykke.Service.Assets
                 .UseApplicationInsights()
                 .Build();
             
-            Console.WriteLine("Running...");
-
             host.Run(webHostCancellationTokenSource.Token);
-
-            Console.WriteLine("Terminating");
 
             end.Set();
 
