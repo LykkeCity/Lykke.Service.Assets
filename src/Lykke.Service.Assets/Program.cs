@@ -13,6 +13,8 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         private static void Main(string[] args)
         {
+            Console.WriteLine("With SIGTERM handling");
+
             var webHostCancellationTokenSource = new CancellationTokenSource();
             var end = new ManualResetEvent(false);
 
