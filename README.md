@@ -2,7 +2,7 @@
 
 Assets and asset pairs service
 
-Client: [Nuget](https://www.nuget.org/packages/Lykke.Service.CandlesHistory.Client/)
+Client: [Nuget](https://www.nuget.org/packages/Lykke.Service.Assets.Client/)
 
 # Client usage
 
