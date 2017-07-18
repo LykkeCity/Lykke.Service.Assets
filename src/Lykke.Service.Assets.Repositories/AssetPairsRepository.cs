@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 using Lykke.Service.Assets.Core.Domain;
@@ -19,7 +18,7 @@ namespace Lykke.Service.Assets.Repositories
         {
             var partitionKey = AssetPairEntity.GeneratePartitionKey();
 
-            return (await _tableStorage.GetDataAsync(partitionKey)).Select(AssetPair.Create);
+            return (await _tableStorage.GetDataAsync(partitionKey));
         }
     }
 }

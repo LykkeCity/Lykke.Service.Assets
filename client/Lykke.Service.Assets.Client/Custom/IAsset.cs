@@ -1,4 +1,7 @@
-﻿namespace Lykke.Service.Assets.Client.Custom
+﻿using Lykke.Service.Assets.Client.Models;
+using System.Collections.Generic;
+
+namespace Lykke.Service.Assets.Client.Custom
 {
     public interface IAsset
     {
@@ -11,17 +14,46 @@
         bool IsBase { get; }
         bool HideIfZero { get; }
         int Accuracy { get; }
-        double Multiplier { get; }
+        int MultiplierPower { get; }
         bool IsDisabled { get; }
         bool HideWithdraw { get; }
         bool HideDeposit { get; }
         int DefaultOrder { get; }
         bool KycNeeded { get; }
         string AssetAddress { get; }
+        double DustLimit { get; }
+        string CategoryId { get; }
+        Blockchain Blockchain { get; }
+        string DefinitionUrl { get; }
+        IList<string> PartnerIds { get; }
+        bool NotLykkeAsset { get; }
+        bool IssueAllowed { get; }
+        /// <summary>
+        /// Value lower that this property is considered "low volume" and may have some limitations,
+        /// e.g. cash out timeout limits
+        /// </summary>
+        double? LowVolumeAmount { get; set; }
+        string DisplayId { get; set; }
+
+        //deposit flags
         bool BankCardsDepositEnabled { get; }
         bool SwiftDepositEnabled { get; }
         bool BlockchainDepositEnabled { get; }
-        double DustLimit { get; }
-        string CategoryId { get; }
+        bool BuyScreen { get; }
+
+        //withdraw flags
+        bool SellScreen { get; }
+        bool BlockchainWithdrawal { get; }
+        bool SwiftWithdrawal { get; }
+        bool ForwardWithdrawal { get; }
+        bool CrosschainWithdrawal { get; }
+
+        //lock period for forward withdrawal
+        int ForwardFrozenDays { get; }
+        //base asset for forward withdrawal
+        string ForwardBaseAsset { get; }
+        string ForwardMemoUrl { get; }
+
+        string IconUrl { get; }
     }
 }

@@ -1,4 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Common;
 using Lykke.Service.Assets.Core.Domain;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories
@@ -24,7 +30,7 @@ namespace Lykke.Service.Assets.Repositories
         public bool IsBase { get; set; }
         public bool HideIfZero { get; set; }
         public int Accuracy { get; set; }
-        public double Multiplier { get; set; }
+        public int MultiplierPower { get; set; }
         public bool IsDisabled { get; set; }
         public bool HideWithdraw { get; set; }
         public bool HideDeposit { get; set; }
@@ -34,36 +40,60 @@ namespace Lykke.Service.Assets.Repositories
         public bool BankCardsDepositEnabled { get; set; }
         public bool SwiftDepositEnabled { get; set; }
         public bool BlockchainDepositEnabled { get; set; }
+        public bool BuyScreen { get; set; }
+        public bool SellScreen { get; set; }
+        public bool BlockchainWithdrawal { get; set; }
+        public bool SwiftWithdrawal { get; set; }
         public double DustLimit { get; set; }
         public string CategoryId { get; set; }
+        public Blockchain Blockchain { get; set; }
+        public string DefinitionUrl { get; set; }
+        public bool IssueAllowed { get; set; }
+        public double? LowVolumeAmount { get; set; }
+        public bool ForwardWithdrawal { get; set; }
+        public int ForwardFrozenDays { get; set; }
+        public string ForwardBaseAsset { get; set; }
+        public string ForwardMemoUrl { get; set; }
+        public string DisplayId { get; set; }
 
-        public static AssetEntity Create(IAsset asset)
+        public bool CrosschainWithdrawal { get; set; }
+        public string IconUrl { get; set; }
+
+        public string[] PartnerIds
         {
-            return new AssetEntity
+            get => PartnersIdsJson?.DeserializeJson<string[]>();
+            set => PartnersIdsJson = value?.ToJson();
+        }
+
+        public string PartnersIdsJson { get; set; }
+
+        public bool NotLykkeAsset { get; set; }
+
+        public override void ReadEntity(IDictionary<string, EntityProperty> properties,
+            OperationContext operationContext)
+        {
+            base.ReadEntity(properties, operationContext);
+
+            foreach (var p in GetType()
+                .GetProperties()
+                .Where(x => x.PropertyType.GetTypeInfo().IsEnum && properties.ContainsKey(x.Name)))
             {
-                PartitionKey = GeneratePartitionKey(),
-                RowKey = GenerateRowKey(asset.Id),
-                BlockChainId = asset.BlockChainId,
-                Name = asset.Name,
-                IsBase = asset.IsBase,
-                Symbol = asset.Symbol,
-                IdIssuer = asset.IdIssuer,
-                HideIfZero = asset.HideIfZero,
-                BlockChainAssetId = asset.BlockChainAssetId,
-                Accuracy = asset.Accuracy,
-                Multiplier = asset.Multiplier,
-                IsDisabled = asset.IsDisabled,
-                HideDeposit = asset.HideDeposit,
-                HideWithdraw = asset.HideWithdraw,
-                DefaultOrder = asset.DefaultOrder,
-                KycNeeded = asset.KycNeeded,
-                AssetAddress = asset.AssetAddress,
-                BankCardsDepositEnabled = asset.BankCardsDepositEnabled,
-                SwiftDepositEnabled = asset.SwiftDepositEnabled,
-                BlockchainDepositEnabled = asset.BlockchainDepositEnabled,
-                DustLimit = asset.DustLimit,
-                CategoryId = asset.CategoryId
-            };
+                p.SetValue(this, Enum.Parse(p.PropertyType, properties[p.Name].StringValue));
+            }
+        }
+
+        public override IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
+        {
+            var properties = base.WriteEntity(operationContext);
+
+            foreach (var p in GetType()
+                .GetProperties()
+                .Where(x => x.PropertyType.GetTypeInfo().IsEnum))
+            {
+                properties.Add(p.Name, new EntityProperty(p.GetValue(this).ToString()));
+            }
+
+            return properties;
         }
     }
 }

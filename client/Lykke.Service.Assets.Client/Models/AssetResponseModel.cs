@@ -8,6 +8,8 @@ namespace Lykke.Service.Assets.Client.Models
     using Lykke.Service.Assets;
     using Lykke.Service.Assets.Client;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
     public partial class AssetResponseModel
@@ -23,7 +25,9 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetResponseModel class.
         /// </summary>
-        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, double multiplier, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, bool bankCardsDepositEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, double dustLimit, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string))
+        /// <param name="blockchain">Possible values include: 'None',
+        /// 'Bitcoin', 'Ethereum'</param>
+        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, int multiplierPower, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, double dustLimit, Blockchain blockchain, bool notLykkeAsset, bool issueAllowed, bool bankCardsDepositEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, bool buyScreen, bool sellScreen, bool blockchainWithdrawal, bool swiftWithdrawal, bool forwardWithdrawal, bool crosschainWithdrawal, int forwardFrozenDays, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string), string definitionUrl = default(string), IList<string> partnerIds = default(IList<string>), double? lowVolumeAmount = default(double?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string))
         {
             Id = id;
             BlockChainId = blockChainId;
@@ -34,18 +38,35 @@ namespace Lykke.Service.Assets.Client.Models
             IsBase = isBase;
             HideIfZero = hideIfZero;
             Accuracy = accuracy;
-            Multiplier = multiplier;
+            MultiplierPower = multiplierPower;
             IsDisabled = isDisabled;
             HideWithdraw = hideWithdraw;
             HideDeposit = hideDeposit;
             DefaultOrder = defaultOrder;
             KycNeeded = kycNeeded;
             AssetAddress = assetAddress;
+            DustLimit = dustLimit;
+            CategoryId = categoryId;
+            Blockchain = blockchain;
+            DefinitionUrl = definitionUrl;
+            PartnerIds = partnerIds;
+            NotLykkeAsset = notLykkeAsset;
+            IssueAllowed = issueAllowed;
+            LowVolumeAmount = lowVolumeAmount;
+            DisplayId = displayId;
             BankCardsDepositEnabled = bankCardsDepositEnabled;
             SwiftDepositEnabled = swiftDepositEnabled;
             BlockchainDepositEnabled = blockchainDepositEnabled;
-            DustLimit = dustLimit;
-            CategoryId = categoryId;
+            BuyScreen = buyScreen;
+            SellScreen = sellScreen;
+            BlockchainWithdrawal = blockchainWithdrawal;
+            SwiftWithdrawal = swiftWithdrawal;
+            ForwardWithdrawal = forwardWithdrawal;
+            CrosschainWithdrawal = crosschainWithdrawal;
+            ForwardFrozenDays = forwardFrozenDays;
+            ForwardBaseAsset = forwardBaseAsset;
+            ForwardMemoUrl = forwardMemoUrl;
+            IconUrl = iconUrl;
             CustomInit();
         }
 
@@ -101,8 +122,8 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Multiplier")]
-        public double Multiplier { get; set; }
+        [JsonProperty(PropertyName = "MultiplierPower")]
+        public int MultiplierPower { get; set; }
 
         /// <summary>
         /// </summary>
@@ -136,6 +157,52 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "DustLimit")]
+        public double DustLimit { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "CategoryId")]
+        public string CategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'None', 'Bitcoin', 'Ethereum'
+        /// </summary>
+        [JsonProperty(PropertyName = "Blockchain")]
+        public Blockchain Blockchain { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "DefinitionUrl")]
+        public string DefinitionUrl { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "PartnerIds")]
+        public IList<string> PartnerIds { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "NotLykkeAsset")]
+        public bool NotLykkeAsset { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IssueAllowed")]
+        public bool IssueAllowed { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "LowVolumeAmount")]
+        public double? LowVolumeAmount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "DisplayId")]
+        public string DisplayId { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
         public bool BankCardsDepositEnabled { get; set; }
 
@@ -151,13 +218,53 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "DustLimit")]
-        public double DustLimit { get; set; }
+        [JsonProperty(PropertyName = "BuyScreen")]
+        public bool BuyScreen { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "CategoryId")]
-        public string CategoryId { get; set; }
+        [JsonProperty(PropertyName = "SellScreen")]
+        public bool SellScreen { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "BlockchainWithdrawal")]
+        public bool BlockchainWithdrawal { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftWithdrawal")]
+        public bool SwiftWithdrawal { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ForwardWithdrawal")]
+        public bool ForwardWithdrawal { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "CrosschainWithdrawal")]
+        public bool CrosschainWithdrawal { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ForwardFrozenDays")]
+        public int ForwardFrozenDays { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ForwardBaseAsset")]
+        public string ForwardBaseAsset { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ForwardMemoUrl")]
+        public string ForwardMemoUrl { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IconUrl")]
+        public string IconUrl { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -167,7 +274,6 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            //Nothing to validate
         }
     }
 }
