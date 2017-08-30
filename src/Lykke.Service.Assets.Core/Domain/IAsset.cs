@@ -2,7 +2,6 @@ namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IAsset : IDictionaryItem
     {
-        string Id { get; }
         string BlockChainId { get; }
         string BlockChainAssetId { get; }
         string Name { get; }

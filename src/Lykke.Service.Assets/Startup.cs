@@ -67,40 +67,9 @@ namespace Lykke.Service.Assets
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
-        private static ILog CreateLog(IServiceCollection services, ApplicationSettings settings)
-        {
-            var appSettings = settings.AssetsService;
-
-            LykkeLogToAzureStorage logToAzureStorage = null;
-            var logToConsole = new LogToConsole();
-            var logAggregate = new LogAggregate();
-
-            logAggregate.AddLogger(logToConsole);
-
-            if (!string.IsNullOrEmpty(appSettings.Logs.DbConnectionString) &&
-                !(appSettings.Logs.DbConnectionString.StartsWith("${") && appSettings.Logs.DbConnectionString.EndsWith("}")))
-            {
-                logToAzureStorage = new LykkeLogToAzureStorage("Lykke.Service.Assets", new AzureTableStorage<LogEntity>(
-                    appSettings.Logs.DbConnectionString, "AssetsServiceLogs", logToConsole));
-
-                logAggregate.AddLogger(logToAzureStorage);
-            }
-
-            var log = logAggregate.CreateLogger();
-
-            var slackService = services.UseSlackNotificationsSenderViaAzureQueue(new AzureQueueSettings
-            {
-                ConnectionString = settings.SlackNotifications.AzureQueue.ConnectionString,
-                QueueName = settings.SlackNotifications.AzureQueue.QueueName
-            }, log);
-
-            logToAzureStorage?.SetSlackNotification(slackService);
-            return log;
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [UsedImplicitly]
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -110,6 +79,56 @@ namespace Lykke.Service.Assets
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUi();
+            app.UseStaticFiles();
+
+            appLifetime.ApplicationStopped.Register(CleanUp);
+        }
+
+        private void CleanUp()
+        {
+            ApplicationContainer.Dispose();
+        }
+
+        private static ILog CreateLog(IServiceCollection services, ApplicationSettings settings)
+        {
+            var consoleLogger = new LogToConsole();
+            var aggregateLogger = new AggregateLogger();
+
+            aggregateLogger.AddLog(consoleLogger);
+
+            // Creating slack notification service, which logs own azure queue processing messages to aggregate log
+            var slackService = services.UseSlackNotificationsSenderViaAzureQueue(new AzureQueueSettings
+            {
+                ConnectionString = settings.SlackNotifications.AzureQueue.ConnectionString,
+                QueueName = settings.SlackNotifications.AzureQueue.QueueName
+            }, aggregateLogger);
+
+            var dbLogConnectionString = settings.AssetsService.Logs.DbConnectionString;
+
+            // Creating azure storage logger, which logs own messages to concole log
+            if (!string.IsNullOrEmpty(dbLogConnectionString) && !(dbLogConnectionString.StartsWith("${") && dbLogConnectionString.EndsWith("}")))
+            {
+                const string appName = "Lykke.Service.Assets";
+
+                var persistenceManager = new LykkeLogToAzureStoragePersistenceManager(
+                    appName,
+                    AzureTableStorage<LogEntity>.Create(() => dbLogConnectionString, "AssetsServiceLog", consoleLogger),
+                    consoleLogger);
+
+                var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager(appName, slackService, consoleLogger);
+
+                var azureStorageLogger = new LykkeLogToAzureStorage(
+                    appName,
+                    persistenceManager,
+                    slackNotificationsManager,
+                    consoleLogger);
+
+                azureStorageLogger.Start();
+
+                aggregateLogger.AddLog(azureStorageLogger);
+            }
+
+            return aggregateLogger;
         }
     }
 }
