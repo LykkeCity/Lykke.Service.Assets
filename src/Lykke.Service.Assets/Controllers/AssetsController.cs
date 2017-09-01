@@ -6,6 +6,7 @@ using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
+using System.Collections.Generic;
 
 namespace Lykke.Service.Assets.Controllers
 {
@@ -16,10 +17,12 @@ namespace Lykke.Service.Assets.Controllers
     public class AssetsController : Controller
     {
         private readonly IDictionaryManager<IAsset> _manager;
+        private readonly IDictionaryManager<IAssetAttributes> _assetAttributesManager;
 
-        public AssetsController(IDictionaryManager<IAsset> manager)
+        public AssetsController(IDictionaryManager<IAsset> manager, IDictionaryManager<IAssetAttributes> assetAttributesManager)
         {
             _manager = manager;
+            _assetAttributesManager = assetAttributesManager;
         }
 
         /// <summary>
@@ -64,6 +67,53 @@ namespace Lykke.Service.Assets.Controllers
             var assets = await _manager.GetAllAsync();
 
             return Ok(assets.Select(AssetResponseModel.Create));
+        }
+
+        /// <summary>
+        /// Returns asset attributes by ID
+        /// </summary>
+        /// <param name="assetId">Asset ID</param>
+        [HttpGet("{assetId}/attributes")]        
+        [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("GetAssetAttributes")]
+        public async Task<IActionResult> AssetAttributes(string assetId)
+        {        
+            var asset = await _manager.TryGetAsync(assetId);
+
+            if (asset == null)
+            {
+                return NotFound(ErrorResponse.Create(nameof(assetId), "Asset not found"));
+            }
+
+            var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);            
+
+            return Ok(AssetAttributesResponseModel.Create(assetAttributes));
+        }
+
+
+        /// <summary>
+        /// Returns asset attribute by ID and key
+        /// </summary>
+        /// <param name="assetId">Asset ID</param>
+        /// <param name="key">Attribute key</param>
+        [HttpGet("{assetId}/attributes/{key}")]
+        [SwaggerOperation("GetAssetAttributeByKey")]
+        [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> AssetAttributeByKey(string assetId, string key)
+        {
+            var asset = await _manager.TryGetAsync(assetId);
+
+            if (asset == null)
+            {
+                return NotFound(ErrorResponse.Create(nameof(assetId), "Asset not found"));
+            }
+
+            var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
+            assetAttributes.Attributes = assetAttributes.Attributes.Where(a => a.Key == key);
+
+            return Ok(AssetAttributesResponseModel.Create(assetAttributes));
         }
     }
 }

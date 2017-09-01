@@ -8,26 +8,25 @@ namespace Lykke.Service.Assets.Client.Models
     using Lykke.Service.Assets;
     using Lykke.Service.Assets.Client;
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class ErrorResponse
+    public partial class IAssetAttributesKeyValue
     {
         /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
+        /// Initializes a new instance of the IAssetAttributesKeyValue class.
         /// </summary>
-        public ErrorResponse()
+        public IAssetAttributesKeyValue()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
+        /// Initializes a new instance of the IAssetAttributesKeyValue class.
         /// </summary>
-        public ErrorResponse(IDictionary<string, IList<string>> errorMessages = default(IDictionary<string, IList<string>>))
+        public IAssetAttributesKeyValue(string key = default(string), string value = default(string))
         {
-            ErrorMessages = errorMessages;
+            Key = key;
+            Value = value;
             CustomInit();
         }
 
@@ -38,8 +37,13 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "ErrorMessages")]
-        public IDictionary<string, IList<string>> ErrorMessages { get; private set; }
+        [JsonProperty(PropertyName = "Key")]
+        public string Key { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Value")]
+        public string Value { get; set; }
 
     }
 }
