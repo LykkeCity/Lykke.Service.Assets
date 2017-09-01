@@ -32,6 +32,23 @@ namespace Lykke.Service.Assets.DependencyInjection
 
             RegisterAssets(builder);
             RegisterAssetPairs(builder);
+            RegisterAssetAttributes(builder);
+        }
+
+        private void RegisterAssetAttributes(ContainerBuilder builder)
+        {
+            builder.Register(c => new AssetAttributesRepository(
+                   new AzureTableStorage<AssetAttributesEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "AssetAttributes", _log)))
+               .As<IDictionaryRepository<IAssetAttributes>>();
+
+            builder.RegisterType<DictionaryCacheService<IAssetAttributes>>()
+                .As<IDictionaryCacheService<IAssetAttributes>>()
+                .SingleInstance();
+
+            builder.RegisterType<DictionaryManager<IAssetAttributes>>()
+                .As<IDictionaryManager<IAssetAttributes>>()
+                .WithParameter(new TypedParameter(typeof(TimeSpan), _settings.AssetsService.Dictionaries.CacheExpirationPeriod))
+                .SingleInstance();
         }
 
         private void RegisterAssets(ContainerBuilder builder)
