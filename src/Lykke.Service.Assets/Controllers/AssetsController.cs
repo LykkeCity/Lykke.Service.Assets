@@ -6,6 +6,7 @@ using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
+using System.Collections.Generic;
 
 namespace Lykke.Service.Assets.Controllers
 {
@@ -72,10 +73,10 @@ namespace Lykke.Service.Assets.Controllers
         /// Returns asset attributes by ID
         /// </summary>
         /// <param name="assetId">Asset ID</param>
-        [HttpGet("{assetId}/attributes")]
-        [SwaggerOperation("GetAssetAttributes")]
+        [HttpGet("{assetId}/attributes")]        
         [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("GetAssetAttributes")]
         public async Task<IActionResult> AssetAttributes(string assetId)
         {        
             var asset = await _manager.TryGetAsync(assetId);
@@ -85,7 +86,7 @@ namespace Lykke.Service.Assets.Controllers
                 return NotFound(ErrorResponse.Create(nameof(assetId), "Asset not found"));
             }
 
-            var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
+            var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);            
 
             return Ok(AssetAttributesResponseModel.Create(assetAttributes));
         }
