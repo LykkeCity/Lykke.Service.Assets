@@ -27,10 +27,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the AssetAttributesResponseModel
         /// class.
         /// </summary>
-        public AssetAttributesResponseModel(string assetId = default(string), IList<IAssetAttributesKeyValue> pairs = default(IList<IAssetAttributesKeyValue>))
+        public AssetAttributesResponseModel(string assetId = default(string), IList<IAssetAttributesKeyValue> pairs = default(IList<IAssetAttributesKeyValue>), ErrorResponse errorResponse = default(ErrorResponse))
         {
             AssetId = assetId;
             Pairs = pairs;
+            ErrorResponse = errorResponse;
             CustomInit();
         }
 
@@ -48,6 +49,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "Pairs")]
         public IList<IAssetAttributesKeyValue> Pairs { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "errorResponse")]
+        public ErrorResponse ErrorResponse { get; set; }
 
     }
 }

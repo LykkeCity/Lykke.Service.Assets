@@ -200,7 +200,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='assetId'>
             /// Asset ID
             /// </param>
-            public static object GetAssetAttributes(this IAssetsservice operations, string assetId)
+            public static AssetAttributesResponseModel GetAssetAttributes(this IAssetsservice operations, string assetId)
             {
                 return operations.GetAssetAttributesAsync(assetId).GetAwaiter().GetResult();
             }
@@ -217,7 +217,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAssetAttributesAsync(this IAssetsservice operations, string assetId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<AssetAttributesResponseModel> GetAssetAttributesAsync(this IAssetsservice operations, string assetId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetAssetAttributesWithHttpMessagesAsync(assetId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -237,7 +237,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='key'>
             /// Attribute key
             /// </param>
-            public static object GetAssetAttributeByKey(this IAssetsservice operations, string assetId, string key)
+            public static AssetAttributesResponseModel GetAssetAttributeByKey(this IAssetsservice operations, string assetId, string key)
             {
                 return operations.GetAssetAttributeByKeyAsync(assetId, key).GetAwaiter().GetResult();
             }
@@ -257,7 +257,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAssetAttributeByKeyAsync(this IAssetsservice operations, string assetId, string key, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<AssetAttributesResponseModel> GetAssetAttributeByKeyAsync(this IAssetsservice operations, string assetId, string key, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetAssetAttributeByKeyWithHttpMessagesAsync(assetId, key, null, cancellationToken).ConfigureAwait(false))
                 {
