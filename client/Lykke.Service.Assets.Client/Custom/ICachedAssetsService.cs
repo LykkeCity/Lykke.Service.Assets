@@ -13,7 +13,9 @@ namespace Lykke.Service.Assets.Client.Custom
         Task<IReadOnlyCollection<IAssetPair>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken());
         Task<IAsset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
         Task<IReadOnlyCollection<IAsset>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
-        
+        Task<IAssetAttributes> GetAssetAttributesAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
+        Task<IAssetAttributes> GetAssetAttributeByKeyAsync(string assetId, string key, CancellationToken cancellationToken = new CancellationToken());
+
         /// <summary>
         /// Forcibly updates server-side and client-side asset pairs cache
         /// </summary>

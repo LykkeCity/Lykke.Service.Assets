@@ -89,7 +89,7 @@ namespace Lykke.Service.Assets.Controllers
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
 
-            return Ok(AssetAttributesResponseModel.Create(assetAttributes));
+            return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes.Attributes.ToArray()));
         }
 
 
@@ -113,9 +113,7 @@ namespace Lykke.Service.Assets.Controllers
             }
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
-            assetAttributes.Attributes = assetAttributes.Attributes.Where(a => a.Key == key);
-
-            return Ok(AssetAttributesResponseModel.Create(assetAttributes));
+            return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes.Attributes.Where(a => a.Key == key).ToArray()));
         }
     }
 }

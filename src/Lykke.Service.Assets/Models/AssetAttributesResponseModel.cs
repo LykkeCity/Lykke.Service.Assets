@@ -8,16 +8,16 @@ namespace Lykke.Service.Assets.Models
 {
     public class AssetAttributesResponseModel
     {
-        public string assetId;
-        public IAssetAttributesKeyValue[] Pairs { get; set; }
+        public string AssetId;
+        public IAssetAttributesKeyValue[] Attributes { get; set; }
         public ErrorResponse errorResponse { get; set; }
 
-        public static AssetAttributesResponseModel Create(IAssetAttributes assetAttributes)
+        public static AssetAttributesResponseModel Create(string assetId, IAssetAttributesKeyValue[] assetAttributes)
         {
             return new AssetAttributesResponseModel
             {
-                Pairs = assetAttributes.Attributes.ToArray(),
-                assetId = assetAttributes.AssetId
+                Attributes = assetAttributes,
+                AssetId = assetId
             };
 
         }

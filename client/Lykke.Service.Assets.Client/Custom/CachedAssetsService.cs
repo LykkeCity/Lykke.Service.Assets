@@ -18,6 +18,16 @@ namespace Lykke.Service.Assets.Client.Custom
             _assetPairsCache = assetPairsCache;
         }
 
+        public async Task<IAssetAttributes> GetAssetAttributesAsync(string assetId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _assetsservice.GetAssetAttributesAsync(assetId, cancellationToken);
+        }
+
+        public async Task<IAssetAttributes> GetAssetAttributeByKeyAsync(string assetId, string key, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _assetsservice.GetAssetAttributeByKeyAsync(assetId, key, cancellationToken);
+        }
+
         public async Task<IAssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken())
         {
             await _assetPairsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetPairsAsync(cancellationToken));
@@ -68,6 +78,6 @@ namespace Lykke.Service.Assets.Client.Custom
         private async Task<IEnumerable<AssetPairResponseModel>> GetUncachedAssetPairsAsync(CancellationToken cancellationToken)
         {
             return await _assetsservice.GetAssetPairsAsync(cancellationToken);
-        }
+        }       
     }
 }
