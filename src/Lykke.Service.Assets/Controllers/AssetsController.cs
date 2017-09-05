@@ -94,7 +94,7 @@ namespace Lykke.Service.Assets.Controllers
 
 
         /// <summary>
-        /// Returns asset attribute by ID and key
+        /// Returns asset attribute by asset ID and attribute key
         /// </summary>
         /// <param name="assetId">Asset ID</param>
         /// <param name="key">Attribute key</param>
