@@ -18,11 +18,15 @@ namespace Lykke.Service.Assets.Controllers
     {
         private readonly IDictionaryManager<IAsset> _manager;
         private readonly IDictionaryManager<IAssetAttributes> _assetAttributesManager;
+        private readonly IDictionaryManager<IAssetExtendedInfo> _assetExtendedInfoManager;
+        private readonly IDictionaryManager<IIssuer> _assetIssuerManager;
 
-        public AssetsController(IDictionaryManager<IAsset> manager, IDictionaryManager<IAssetAttributes> assetAttributesManager)
+        public AssetsController(IDictionaryManager<IAsset> manager, IDictionaryManager<IAssetAttributes> assetAttributesManager, IDictionaryManager<IAssetExtendedInfo> assetExtendedInfoManager, IDictionaryManager<IIssuer> assetIssuerManager)
         {
             _manager = manager;
             _assetAttributesManager = assetAttributesManager;
+            _assetExtendedInfoManager = assetExtendedInfoManager;
+            _assetIssuerManager = assetIssuerManager;
         }
 
         /// <summary>
@@ -114,6 +118,40 @@ namespace Lykke.Service.Assets.Controllers
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
             return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes.Attributes.Where(a => a.Key == key).ToArray()));
+        }
+
+        /// <summary>
+        /// Returns asset descriptions for array of assets
+        /// </summary>
+        /// <param name="request.Ids">Array asset ids</param>
+        [HttpPost("description/list")]
+        [Produces("application/json", Type = typeof(AssetDescriptionsResponseModel))]
+        [ProducesResponseType(typeof(AssetDescriptionsResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AssetDescriptionsResponseModel), (int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("GetAssetDescriptions")]
+        public async Task<IActionResult> GetAssetDescriptions([FromBody]GetAssetDescriptionsRequestModel request)
+        {
+            if(request == null || request.Ids == null)
+            {
+                return BadRequest(AssetDescriptionsResponseModel.Create(ErrorResponse.Create(nameof(request.Ids), "No asset ids specified")));
+            }
+
+            var assets = ((await _manager.GetAllAsync()).Where(x => request.Ids.Contains(x.Id))).ToArray();
+            List<AssetExtendedInfo> res = new List<AssetExtendedInfo>();
+
+            if (assets.Any())
+            {
+                foreach (var asset in assets)
+                {
+                    var extendedInfo = await _assetExtendedInfoManager.TryGetAsync(asset.Id);
+                    var issuer = asset?.IdIssuer == null ? null : await _assetIssuerManager.TryGetAsync(asset.IdIssuer);
+                    var assetInfo = AssetExtendedInfo.Create(extendedInfo, issuer);
+
+                    res.Add(assetInfo);
+                }
+            }
+
+            return Ok(AssetDescriptionsResponseModel.Create(res));
         }
     }
 }

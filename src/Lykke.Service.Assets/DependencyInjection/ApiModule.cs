@@ -33,6 +33,38 @@ namespace Lykke.Service.Assets.DependencyInjection
             RegisterAssets(builder);
             RegisterAssetPairs(builder);
             RegisterAssetAttributes(builder);
+            RegisterIssuerRepository(builder);
+            RegisterAssetExtendedInfoRepository(builder);
+        }
+
+        private void RegisterAssetExtendedInfoRepository(ContainerBuilder builder)
+        {
+            builder.Register(c => new AssetExtendedInfoRepository(
+                   new AzureTableStorage<AssetExtendedInfoEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "Dictionaries", _log)))
+               .As<IDictionaryRepository<IAssetExtendedInfo>>();
+
+            RegisterDictionaryManager<IAssetExtendedInfo>(builder);
+        }
+
+        private void RegisterIssuerRepository(ContainerBuilder builder)
+        {
+            builder.Register(c => new IssuerRepository(
+                   new AzureTableStorage<IssuerEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "AssetIssuers", _log)))
+               .As<IDictionaryRepository<IIssuer>>();
+
+            RegisterDictionaryManager<IIssuer>(builder);
+        }
+
+        private void RegisterDictionaryManager<T>(ContainerBuilder builder) where T : IDictionaryItem
+        {
+            builder.RegisterType<DictionaryCacheService<T>>()
+                .As<IDictionaryCacheService<T>>()
+                .SingleInstance();
+
+            builder.RegisterType<DictionaryManager<T>>()
+                .As<IDictionaryManager<T>>()
+                .WithParameter(new TypedParameter(typeof(TimeSpan), _settings.AssetsService.Dictionaries.CacheExpirationPeriod))
+                .SingleInstance();
         }
 
         private void RegisterAssetAttributes(ContainerBuilder builder)

@@ -78,6 +78,11 @@ namespace Lykke.Service.Assets.Client.Custom
         private async Task<IEnumerable<AssetPairResponseModel>> GetUncachedAssetPairsAsync(CancellationToken cancellationToken)
         {
             return await _assetsservice.GetAssetPairsAsync(cancellationToken);
-        }       
+        }
+
+        public async Task<IAssetExtendedInfo> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _assetsservice.GetAssetDescriptionsAsync(ids, cancellationToken);
+        }
     }
 }
