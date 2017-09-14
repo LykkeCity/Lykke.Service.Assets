@@ -35,22 +35,33 @@ namespace Lykke.Service.Assets.DependencyInjection
             RegisterAssetAttributes(builder);
             RegisterIssuerRepository(builder);
             RegisterAssetExtendedInfoRepository(builder);
+            RegisterAssetCategoryRepository(builder);
+        }
+
+        private void RegisterAssetCategoryRepository(ContainerBuilder builder)
+        {
+            builder.RegisterInstance<IDictionaryRepository<IAssetCategory>>(
+                new AssetCategoryRepository(AzureTableStorage<AssetCategoryEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
+                    "AssetCategories", _log)));
+
+            RegisterDictionaryManager<IAssetCategory>(builder);
         }
 
         private void RegisterAssetExtendedInfoRepository(ContainerBuilder builder)
         {
-            builder.Register(c => new AssetExtendedInfoRepository(
-                   new AzureTableStorage<AssetExtendedInfoEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "Dictionaries", _log)))
-               .As<IDictionaryRepository<IAssetExtendedInfo>>();
+            builder.RegisterInstance<IDictionaryRepository < IAssetExtendedInfo >> (
+                new AssetExtendedInfoRepository(AzureTableStorage<AssetExtendedInfoEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
+                    "Dictionaries", _log)));
 
             RegisterDictionaryManager<IAssetExtendedInfo>(builder);
         }
 
         private void RegisterIssuerRepository(ContainerBuilder builder)
         {
-            builder.Register(c => new IssuerRepository(
-                   new AzureTableStorage<IssuerEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "AssetIssuers", _log)))
-               .As<IDictionaryRepository<IIssuer>>();
+
+            builder.RegisterInstance<IDictionaryRepository<IIssuer>>(
+                new IssuerRepository(AzureTableStorage<IssuerEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
+                    "AssetIssuers", _log)));
 
             RegisterDictionaryManager<IIssuer>(builder);
         }
@@ -69,9 +80,9 @@ namespace Lykke.Service.Assets.DependencyInjection
 
         private void RegisterAssetAttributes(ContainerBuilder builder)
         {
-            builder.Register(c => new AssetAttributesRepository(
-                   new AzureTableStorage<AssetAttributesEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "AssetAttributes", _log)))
-               .As<IDictionaryRepository<IAssetAttributes>>();
+            builder.RegisterInstance<IDictionaryRepository<IAssetAttributes>>(
+               new AssetAttributesRepository(AzureTableStorage<AssetAttributesEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
+                   "AssetAttributes", _log)));
 
             builder.RegisterType<DictionaryCacheService<IAssetAttributes>>()
                 .As<IDictionaryCacheService<IAssetAttributes>>()

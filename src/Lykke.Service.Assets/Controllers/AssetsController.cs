@@ -20,13 +20,19 @@ namespace Lykke.Service.Assets.Controllers
         private readonly IDictionaryManager<IAssetAttributes> _assetAttributesManager;
         private readonly IDictionaryManager<IAssetExtendedInfo> _assetExtendedInfoManager;
         private readonly IDictionaryManager<IIssuer> _assetIssuerManager;
+        private readonly IDictionaryManager<IAssetCategory> _assetCategoryManager;
 
-        public AssetsController(IDictionaryManager<IAsset> manager, IDictionaryManager<IAssetAttributes> assetAttributesManager, IDictionaryManager<IAssetExtendedInfo> assetExtendedInfoManager, IDictionaryManager<IIssuer> assetIssuerManager)
+        public AssetsController(IDictionaryManager<IAsset> manager, 
+            IDictionaryManager<IAssetAttributes> assetAttributesManager, 
+            IDictionaryManager<IAssetExtendedInfo> assetExtendedInfoManager, 
+            IDictionaryManager<IIssuer> assetIssuerManager,
+            IDictionaryManager<IAssetCategory> assetCategoryManager)
         {
             _manager = manager;
             _assetAttributesManager = assetAttributesManager;
             _assetExtendedInfoManager = assetExtendedInfoManager;
             _assetIssuerManager = assetIssuerManager;
+            _assetCategoryManager = assetCategoryManager;
         }
 
         /// <summary>
@@ -152,6 +158,49 @@ namespace Lykke.Service.Assets.Controllers
             }
 
             return Ok(AssetDescriptionsResponseModel.Create(res));
+        }
+
+        /// <summary>
+        /// Returns all asset categories
+        /// </summary>
+        [HttpGet("categories")]
+        [Produces("application/json", Type = typeof(AssetCategoriesResponseModel))]
+        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("GetAssetCategories")]
+        public async Task<IActionResult> GetAssetCategories()
+        {         
+            var assetCategories = await _assetCategoryManager.GetAllAsync();
+            return Ok(AssetCategoriesResponseModel.Create(assetCategories));
+        }
+
+
+        /// <summary>
+        /// Returns asset category for asset id
+        /// </summary>
+        /// <param name="assetId">Asset ID</param>
+        [HttpGet("{assetId}/categories")]
+        [Produces("application/json", Type = typeof(AssetCategoriesResponseModel))]
+        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("GetAssetCategory")]
+        public async Task<IActionResult> GetAssetCategories(string assetId)
+        {
+            var asset = await _manager.TryGetAsync(assetId);
+
+            if (asset == null)
+            {
+                return NotFound(AssetCategoriesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "Asset not found")));
+            }
+
+            var assetCategories = await _assetCategoryManager.TryGetAsync(asset.CategoryId ?? "");
+
+            if(assetCategories == null)
+            {
+                return NotFound(AssetCategoriesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "No asset category found")));
+            }
+
+            return Ok(AssetCategoriesResponseModel.Create(new List<IAssetCategory> { assetCategories }));
         }
     }
 }
