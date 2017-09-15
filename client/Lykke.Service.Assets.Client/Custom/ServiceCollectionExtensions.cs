@@ -11,6 +11,7 @@ namespace Lykke.Service.Assets.Client.Custom
             services.AddTransient<ICachedAssetsService, CachedAssetsService>();
             services.AddSingleton<IDictionaryCache<AssetResponseModel>>(x => new DictionaryCache<AssetResponseModel>(new DateTimeProvider(), settings.AssetsCacheExpirationPeriod));
             services.AddSingleton<IDictionaryCache<AssetPairResponseModel>>(x => new DictionaryCache<AssetPairResponseModel>(new DateTimeProvider(), settings.AssetPairsCacheExpirationPeriod));
+            services.AddSingleton<IDictionaryCache<AssetCategoriesResponseModel>>(x => new DictionaryCache<AssetCategoriesResponseModel>(new DateTimeProvider(), settings.AssetsCacheExpirationPeriod));
         }
     }
 }

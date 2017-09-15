@@ -164,14 +164,13 @@ namespace Lykke.Service.Assets.Controllers
         /// Returns all asset categories
         /// </summary>
         [HttpGet("categories")]
-        [Produces("application/json", Type = typeof(AssetCategoriesResponseModel))]
-        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.BadRequest)]
+        [Produces("application/json", Type = typeof(AssetCategoriesResponseModel[]))]
+        [ProducesResponseType(typeof(AssetCategoriesResponseModel[]), (int)HttpStatusCode.OK)]
         [SwaggerOperation("GetAssetCategories")]
         public async Task<IActionResult> GetAssetCategories()
         {         
             var assetCategories = await _assetCategoryManager.GetAllAsync();
-            return Ok(AssetCategoriesResponseModel.Create(assetCategories));
+            return Ok(assetCategories.Select(AssetCategoriesResponseModel.Create));  // Ok(AssetCategoriesResponseModel.Create(assetCategories));
         }
 
 
@@ -182,7 +181,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpGet("{assetId}/categories")]
         [Produces("application/json", Type = typeof(AssetCategoriesResponseModel))]
         [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(AssetCategoriesResponseModel), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)] 
         [SwaggerOperation("GetAssetCategory")]
         public async Task<IActionResult> GetAssetCategories(string assetId)
         {
@@ -190,17 +189,17 @@ namespace Lykke.Service.Assets.Controllers
 
             if (asset == null)
             {
-                return NotFound(AssetCategoriesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "Asset not found")));
+                return NotFound(ErrorResponse.Create(nameof(assetId), "Asset not found")); //return NotFound(AssetCategoriesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "Asset not found")));
             }
 
-            var assetCategories = await _assetCategoryManager.TryGetAsync(asset.CategoryId ?? "");
+            var assetCategory = await _assetCategoryManager.TryGetAsync(asset.CategoryId ?? "");
 
-            if(assetCategories == null)
+            if(assetCategory == null)
             {
-                return NotFound(AssetCategoriesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "No asset category found")));
+                return NotFound(ErrorResponse.Create(nameof(assetId), "No asset category found")); //return NotFound(AssetCategoriesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "No asset category found")));
             }
 
-            return Ok(AssetCategoriesResponseModel.Create(new List<IAssetCategory> { assetCategories }));
+            return Ok(AssetCategoriesResponseModel.Create(assetCategory)); //return Ok(AssetCategoriesResponseModel.Create(new List<IAssetCategory> { assetCategories }));
         }
     }
 }

@@ -226,7 +226,7 @@ namespace Lykke.Service.Assets.Client
             }
 
             /// <summary>
-            /// Returns asset attribute by ID and key
+            /// Returns asset attribute by asset ID and attribute key
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -243,7 +243,7 @@ namespace Lykke.Service.Assets.Client
             }
 
             /// <summary>
-            /// Returns asset attribute by ID and key
+            /// Returns asset attribute by asset ID and attribute key
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -292,6 +292,68 @@ namespace Lykke.Service.Assets.Client
             public static async Task<AssetDescriptionsResponseModel> GetAssetDescriptionsAsync(this IAssetsservice operations, GetAssetDescriptionsRequestModel request = default(GetAssetDescriptionsRequestModel), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetAssetDescriptionsWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Returns all asset categories
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static IList<AssetCategoriesResponseModel> GetAssetCategories(this IAssetsservice operations)
+            {
+                return operations.GetAssetCategoriesAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns all asset categories
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<AssetCategoriesResponseModel>> GetAssetCategoriesAsync(this IAssetsservice operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAssetCategoriesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Returns asset category for asset id
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// Asset ID
+            /// </param>
+            public static object GetAssetCategory(this IAssetsservice operations, string assetId)
+            {
+                return operations.GetAssetCategoryAsync(assetId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns asset category for asset id
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// Asset ID
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetAssetCategoryAsync(this IAssetsservice operations, string assetId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAssetCategoryWithHttpMessagesAsync(assetId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

@@ -121,7 +121,7 @@ namespace Lykke.Service.Assets.Client
         Task<HttpOperationResponse<AssetAttributesResponseModel>> GetAssetAttributesWithHttpMessagesAsync(string assetId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Returns asset attribute by ID and key
+        /// Returns asset attribute by asset ID and attribute key
         /// </summary>
         /// <param name='assetId'>
         /// Asset ID
@@ -149,6 +149,31 @@ namespace Lykke.Service.Assets.Client
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse<AssetDescriptionsResponseModel>> GetAssetDescriptionsWithHttpMessagesAsync(GetAssetDescriptionsRequestModel request = default(GetAssetDescriptionsRequestModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Returns all asset categories
+        /// </summary>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<IList<AssetCategoriesResponseModel>>> GetAssetCategoriesWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Returns asset category for asset id
+        /// </summary>
+        /// <param name='assetId'>
+        /// Asset ID
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> GetAssetCategoryWithHttpMessagesAsync(string assetId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Checks service is alive

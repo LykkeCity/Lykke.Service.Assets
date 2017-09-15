@@ -10,12 +10,17 @@ namespace Lykke.Service.Assets.Client.Custom
         private readonly IAssetsservice _assetsservice;
         private readonly IDictionaryCache<AssetResponseModel> _assetsCache;
         private readonly IDictionaryCache<AssetPairResponseModel> _assetPairsCache;
+        private readonly IDictionaryCache<AssetCategoriesResponseModel> _assetCategoriesCache;
 
-        public CachedAssetsService(IAssetsservice assetsservice, IDictionaryCache<AssetResponseModel> assetsCache, IDictionaryCache<AssetPairResponseModel> assetPairsCache)
+        public CachedAssetsService(IAssetsservice assetsservice, 
+            IDictionaryCache<AssetResponseModel> assetsCache, 
+            IDictionaryCache<AssetPairResponseModel> assetPairsCache,
+            IDictionaryCache<AssetCategoriesResponseModel> assetCategoriesCache)
         {
             _assetsservice = assetsservice;
             _assetsCache = assetsCache;
             _assetPairsCache = assetPairsCache;
+            _assetCategoriesCache = assetCategoriesCache;
         }
 
         public async Task<IAssetAttributes> GetAssetAttributesAsync(string assetId, CancellationToken cancellationToken = default(CancellationToken))
@@ -84,5 +89,30 @@ namespace Lykke.Service.Assets.Client.Custom
         {
             return await _assetsservice.GetAssetDescriptionsAsync(ids, cancellationToken);
         }
+
+        public async Task<IReadOnlyCollection<IAssetCategory>> GetAssetCategoriesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await _assetCategoriesCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetCategoriesAsync(cancellationToken));
+
+            return _assetCategoriesCache.GetAll();
+        }
+
+        public async Task<AssetCategoriesResponseModel> TryGetAssetCategoryAsync(string assetId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var res = await _assetsservice.GetAssetCategoryAsync(assetId);
+            if (res is ErrorResponse)
+                return AssetCategoriesResponseModel.Create((ErrorResponse)res);
+            if (res is IAssetCategory)
+                return AssetCategoriesResponseModel.Create(res as IAssetCategory);
+            else
+                return new AssetCategoriesResponseModel();
+        }
+
+        private async Task<IEnumerable<AssetCategoriesResponseModel>> GetUncachedAssetCategoriesAsync(CancellationToken cancellationToken)
+        {
+            return await _assetsservice.GetAssetCategoriesAsync(cancellationToken);
+        }
+
+
     }
 }

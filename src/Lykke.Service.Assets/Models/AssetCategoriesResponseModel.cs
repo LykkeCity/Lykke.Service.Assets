@@ -7,26 +7,22 @@ namespace Lykke.Service.Assets.Models
 {
     public class AssetCategoriesResponseModel
     {
-        public IEnumerable<IAssetCategory> Categories { get; set; }
-        public ErrorResponse errorResponse { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string IosIconUrl { get; set; }
+        public string AndroidIconUrl { get; set; }
+        public int SortOrder { get; set; }
 
-        public static AssetCategoriesResponseModel Create(IEnumerable<IAssetCategory> categories)
+        public static AssetCategoriesResponseModel Create(IAssetCategory src)
         {
             return new AssetCategoriesResponseModel
             {
-                Categories = categories
+                Id = src.Id,
+                Name = src.Name,
+                IosIconUrl = src.IosIconUrl,
+                AndroidIconUrl = src.AndroidIconUrl,
+                SortOrder = src.SortOrder
             };
-
-        }
-
-        public static AssetCategoriesResponseModel Create(ErrorResponse error)
-        {
-            return new AssetCategoriesResponseModel
-            {
-                errorResponse = error
-            };
-
         }
     }
 }
-
