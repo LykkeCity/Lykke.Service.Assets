@@ -12,25 +12,22 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class AssetDescriptionsResponseModel
+    public partial class AssetExtendedResponseModel
     {
         /// <summary>
-        /// Initializes a new instance of the AssetDescriptionsResponseModel
-        /// class.
+        /// Initializes a new instance of the AssetExtendedResponseModel class.
         /// </summary>
-        public AssetDescriptionsResponseModel()
+        public AssetExtendedResponseModel()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the AssetDescriptionsResponseModel
-        /// class.
+        /// Initializes a new instance of the AssetExtendedResponseModel class.
         /// </summary>
-        public AssetDescriptionsResponseModel(IList<AssetDescription> descriptions = default(IList<AssetDescription>), ErrorResponse errorResponse = default(ErrorResponse))
+        public AssetExtendedResponseModel(IList<AssetExtended> assets = default(IList<AssetExtended>))
         {
-            Descriptions = descriptions;
-            ErrorResponse = errorResponse;
+            Assets = assets;
             CustomInit();
         }
 
@@ -41,13 +38,8 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Descriptions")]
-        public IList<AssetDescription> Descriptions { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "errorResponse")]
-        public ErrorResponse ErrorResponse { get; set; }
+        [JsonProperty(PropertyName = "Assets")]
+        public IList<AssetExtended> Assets { get; set; }
 
     }
 }

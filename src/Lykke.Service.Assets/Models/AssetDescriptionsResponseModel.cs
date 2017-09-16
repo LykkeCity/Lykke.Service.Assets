@@ -7,10 +7,10 @@ namespace Lykke.Service.Assets.Models
 {
     public class AssetDescriptionsResponseModel
     {
-        public IEnumerable<AssetExtendedInfo> Descriptions { get; set; }
+        public IEnumerable<AssetDescription> Descriptions { get; set; }
         public ErrorResponse errorResponse { get; set; }
 
-        public static AssetDescriptionsResponseModel Create(IEnumerable<AssetExtendedInfo> descriptions)
+        public static AssetDescriptionsResponseModel Create(IEnumerable<AssetDescription> descriptions)
         {
             return new AssetDescriptionsResponseModel
             {

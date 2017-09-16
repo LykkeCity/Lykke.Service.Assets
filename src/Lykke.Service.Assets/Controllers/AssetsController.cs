@@ -18,13 +18,13 @@ namespace Lykke.Service.Assets.Controllers
     {
         private readonly IDictionaryManager<IAsset> _manager;
         private readonly IDictionaryManager<IAssetAttributes> _assetAttributesManager;
-        private readonly IDictionaryManager<IAssetExtendedInfo> _assetExtendedInfoManager;
+        private readonly IDictionaryManager<IAssetDescription> _assetExtendedInfoManager;
         private readonly IDictionaryManager<IIssuer> _assetIssuerManager;
         private readonly IDictionaryManager<IAssetCategory> _assetCategoryManager;
 
         public AssetsController(IDictionaryManager<IAsset> manager, 
             IDictionaryManager<IAssetAttributes> assetAttributesManager, 
-            IDictionaryManager<IAssetExtendedInfo> assetExtendedInfoManager, 
+            IDictionaryManager<IAssetDescription> assetExtendedInfoManager, 
             IDictionaryManager<IIssuer> assetIssuerManager,
             IDictionaryManager<IAssetCategory> assetCategoryManager)
         {
@@ -99,7 +99,7 @@ namespace Lykke.Service.Assets.Controllers
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
 
-            return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes.Attributes.ToArray()));
+            return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes != null ? assetAttributes.Attributes.ToArray() : new KeyValue[0]));
         }
 
 
@@ -123,41 +123,45 @@ namespace Lykke.Service.Assets.Controllers
             }
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
-            return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes.Attributes.Where(a => a.Key == key).ToArray()));
+            return Ok(AssetAttributesResponseModel.Create(assetId, assetAttributes != null ? assetAttributes.Attributes.Where(a => a.Key == key).ToArray() : new KeyValue[0]));
         }
 
         /// <summary>
         /// Returns asset descriptions for array of assets
         /// </summary>
         /// <param name="request.Ids">Array asset ids</param>
-        [HttpPost("description/list")]
+        [HttpPost("description")]
         [Produces("application/json", Type = typeof(AssetDescriptionsResponseModel))]
         [ProducesResponseType(typeof(AssetDescriptionsResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(AssetDescriptionsResponseModel), (int)HttpStatusCode.NotFound)]
         [SwaggerOperation("GetAssetDescriptions")]
         public async Task<IActionResult> GetAssetDescriptions([FromBody]GetAssetDescriptionsRequestModel request)
         {
-            if(request == null || request.Ids == null)
-            {
-                return BadRequest(AssetDescriptionsResponseModel.Create(ErrorResponse.Create(nameof(request.Ids), "No asset ids specified")));
-            }
-
-            var assets = ((await _manager.GetAllAsync()).Where(x => request.Ids.Contains(x.Id))).ToArray();
-            List<AssetExtendedInfo> res = new List<AssetExtendedInfo>();
+            var assets = ((await _manager.GetAllAsync()).Where(x => request == null || request.Ids == null || request.Ids.Contains(x.Id))).ToArray();
+            List<AssetDescription> res = new List<AssetDescription>();
 
             if (assets.Any())
             {
                 foreach (var asset in assets)
                 {
-                    var extendedInfo = await _assetExtendedInfoManager.TryGetAsync(asset.Id);
-                    var issuer = asset?.IdIssuer == null ? null : await _assetIssuerManager.TryGetAsync(asset.IdIssuer);
-                    var assetInfo = AssetExtendedInfo.Create(extendedInfo, issuer);
-
-                    res.Add(assetInfo);
+                    var assetInfo = await GetAssetDescriptionAsync(asset);
+                    if(assetInfo!=null)
+                    {
+                        res.Add(assetInfo);
+                    }                    
                 }
             }
 
             return Ok(AssetDescriptionsResponseModel.Create(res));
+        }
+
+        private async Task<AssetDescription> GetAssetDescriptionAsync(IAsset asset)
+        {
+            var extendedInfo = await _assetExtendedInfoManager.TryGetAsync(asset.Id);
+            if (extendedInfo == null) return null;
+
+            var issuer = asset?.IdIssuer == null ? null : await _assetIssuerManager.TryGetAsync(asset.IdIssuer);
+            var assetInfo = AssetDescription.Create(extendedInfo, issuer);
+            return assetInfo;
         }
 
         /// <summary>
@@ -200,6 +204,56 @@ namespace Lykke.Service.Assets.Controllers
             }
 
             return Ok(AssetCategoriesResponseModel.Create(assetCategory)); //return Ok(AssetCategoriesResponseModel.Create(new List<IAssetCategory> { assetCategories }));
+        }
+
+
+        /// <summary>
+        /// Returns all assets extended
+        /// </summary>
+        [HttpGet("extended")]
+        [SwaggerOperation("GetAssetsExtended")]
+        [ProducesResponseType(typeof(AssetExtendedResponseModel), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAssetsExtended()
+        {
+            var assets = await _manager.GetAllAsync();
+
+            var result =  assets.Select(async asset => 
+            {
+                return await GetAssetExtendedInfo(asset);
+
+            }).Select(r => r.Result).ToList();
+
+            return Ok(AssetExtendedResponseModel.Create(result));          
+        }
+
+        private async Task<AssetExtended> GetAssetExtendedInfo(IAsset asset)
+        {
+            var assetDescription = await GetAssetDescriptionAsync(asset);
+            var assetCategory = await _assetCategoryManager.TryGetAsync(asset.CategoryId ?? "") ?? new AssetCategory();
+            var assetAttributes = await _assetAttributesManager.TryGetAsync(asset.Id) ?? new AssetAttributes { AssetId = asset.Id, Attributes = new List<KeyValue>() };
+
+            return AssetExtended.Create(asset, assetDescription, assetCategory, assetAttributes.Attributes);
+        }
+
+        /// <summary>
+        /// Returns all assets extended
+        /// </summary>
+        [HttpGet("{assetId}/extended")]
+        [SwaggerOperation("GetAssetExtended")]
+        [ProducesResponseType(typeof(AssetExtendedResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetAssetExtended(string assetId)
+        {
+            var asset = await _manager.TryGetAsync(assetId);
+
+            if (asset == null)
+            {
+                return NotFound(ErrorResponse.Create(nameof(assetId), "Asset not found"));
+            }
+
+            var assetExtended = await GetAssetExtendedInfo(asset);
+
+            return Ok(AssetExtendedResponseModel.Create(new List<AssetExtended> { assetExtended }));
         }
     }
 }

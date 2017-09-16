@@ -360,6 +360,66 @@ namespace Lykke.Service.Assets.Client
             }
 
             /// <summary>
+            /// Returns all assets extended
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static AssetExtendedResponseModel GetAssetsExtended(this IAssetsservice operations)
+            {
+                return operations.GetAssetsExtendedAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns all assets extended
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<AssetExtendedResponseModel> GetAssetsExtendedAsync(this IAssetsservice operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAssetsExtendedWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Returns all assets extended
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            public static object GetAssetExtended(this IAssetsservice operations, string assetId)
+            {
+                return operations.GetAssetExtendedAsync(assetId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns all assets extended
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetAssetExtendedAsync(this IAssetsservice operations, string assetId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAssetExtendedWithHttpMessagesAsync(assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Checks service is alive
             /// </summary>
             /// <param name='operations'>

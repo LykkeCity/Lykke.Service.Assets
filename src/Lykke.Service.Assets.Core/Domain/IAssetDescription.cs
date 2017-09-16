@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Core.Domain
 {
-    public interface IAssetExtendedInfo : IDictionaryItem
+    public interface IAssetDescription : IDictionaryItem
     {
         string Id { get; }
+        string AssetId { get; }
         string AssetClass { get; }
         string Description { get; }
         string IssuerName { get; set; }
@@ -18,9 +19,10 @@ namespace Lykke.Service.Assets.Core.Domain
         string FullName { get; }
     }
 
-    public class AssetExtendedInfo : IAssetExtendedInfo
+    public class AssetDescription : IAssetDescription
     {
         public string Id { get; set; }
+        public string AssetId { get; set; }
         public string AssetClass { get; set; }
         public string Description { get; set; }
         public string IssuerName { get; set; }
@@ -31,9 +33,9 @@ namespace Lykke.Service.Assets.Core.Domain
         public string FullName { get; set; }
 
 
-        public static AssetExtendedInfo CreateDefault(string id)
+        public static AssetDescription CreateDefault(string id)
         {
-            return new AssetExtendedInfo
+            return new AssetDescription
             {
                 Id = id,
                 PopIndex = 0,
@@ -46,11 +48,12 @@ namespace Lykke.Service.Assets.Core.Domain
             };
         }
 
-        public static AssetExtendedInfo Create(IAssetExtendedInfo src, IIssuer issuer)
+        public static AssetDescription Create(IAssetDescription src, IIssuer issuer)
         {
-            return new AssetExtendedInfo
+            return new AssetDescription
             {
                 Id = src.Id,
+                AssetId = src.AssetId,
                 AssetClass = src.AssetClass,
                 Description = src.Description,
                 IssuerName = issuer?.Name,
@@ -63,23 +66,23 @@ namespace Lykke.Service.Assets.Core.Domain
         }
     }
 
-    public interface IAssetExtendedInfoRepository
+    public interface IAssetDescriptionRepository
     {
 
-        Task SaveAsync(IAssetExtendedInfo src);
-        Task<IAssetExtendedInfo> GetAssetExtendedInfoAsync(string id);
-        Task<IEnumerable<IAssetExtendedInfo>> GetAllAsync();
+        Task SaveAsync(IAssetDescription src);
+        Task<IAssetDescription> GetAssetExtendedInfoAsync(string id);
+        Task<IEnumerable<IAssetDescription>> GetAllAsync();
     }
 
 
     public static class AssetExtendedInfoExt
     {
-        public static async Task<IAssetExtendedInfo> GetAssetExtendedInfoOrDefaultAsync(this IAssetExtendedInfoRepository table, string id)
+        public static async Task<IAssetDescription> GetAssetExtendedInfoOrDefaultAsync(this IAssetDescriptionRepository table, string id)
         {
             if (id == null)
-                return AssetExtendedInfo.CreateDefault(null);
+                return AssetDescription.CreateDefault(null);
             var aei = await table.GetAssetExtendedInfoAsync(id);
-            return aei ?? AssetExtendedInfo.CreateDefault(null);
+            return aei ?? AssetDescription.CreateDefault(null);
         }
     }
 }

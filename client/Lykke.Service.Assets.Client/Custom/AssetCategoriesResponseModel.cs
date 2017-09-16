@@ -2,7 +2,7 @@
 
 namespace Lykke.Service.Assets.Client.Models
 {
-    public partial class AssetCategoriesResponseModel : IDictionaryItemModel, IAssetCategory
+    public partial class AssetCategoriesResponseModel : Lykke.Service.Assets.Client.Custom.IAssetCategory, IDictionaryItemModel
     {
         public ErrorResponse errorResponse { get; set; }
 
@@ -14,7 +14,7 @@ namespace Lykke.Service.Assets.Client.Models
             };
 
         }
-        public static AssetCategoriesResponseModel Create(IAssetCategory category)
+        public static AssetCategoriesResponseModel Create(Lykke.Service.Assets.Client.Custom.IAssetCategory category)
         {
             return new AssetCategoriesResponseModel
             {

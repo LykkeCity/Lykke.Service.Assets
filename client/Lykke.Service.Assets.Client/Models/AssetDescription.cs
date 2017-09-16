@@ -10,22 +10,23 @@ namespace Lykke.Service.Assets.Client.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class AssetExtendedInfo
+    public partial class AssetDescription
     {
         /// <summary>
-        /// Initializes a new instance of the AssetExtendedInfo class.
+        /// Initializes a new instance of the AssetDescription class.
         /// </summary>
-        public AssetExtendedInfo()
+        public AssetDescription()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the AssetExtendedInfo class.
+        /// Initializes a new instance of the AssetDescription class.
         /// </summary>
-        public AssetExtendedInfo(string id = default(string), string assetClass = default(string), string description = default(string), string issuerName = default(string), string numberOfCoins = default(string), string marketCapitalization = default(string), int? popIndex = default(int?), string assetDescriptionUrl = default(string), string fullName = default(string))
+        public AssetDescription(string id = default(string), string assetId = default(string), string assetClass = default(string), string description = default(string), string issuerName = default(string), string numberOfCoins = default(string), string marketCapitalization = default(string), int? popIndex = default(int?), string assetDescriptionUrl = default(string), string fullName = default(string))
         {
             Id = id;
+            AssetId = assetId;
             AssetClass = assetClass;
             Description = description;
             IssuerName = issuerName;
@@ -46,6 +47,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "Id")]
         public string Id { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "AssetId")]
+        public string AssetId { get; set; }
 
         /// <summary>
         /// </summary>

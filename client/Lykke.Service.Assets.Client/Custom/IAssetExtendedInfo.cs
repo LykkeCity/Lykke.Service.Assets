@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Lykke.Service.Assets.Client.Custom
 {
-    public interface IAssetExtendedInfo
+    public interface IAssetDescription
     {
-        IList<AssetExtendedInfo> Descriptions { get; set; }
+        IList<AssetDescription> Descriptions { get; set; }
 
         ErrorResponse ErrorResponse { get; set; }
     }

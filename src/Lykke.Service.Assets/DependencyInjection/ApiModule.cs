@@ -49,11 +49,11 @@ namespace Lykke.Service.Assets.DependencyInjection
 
         private void RegisterAssetExtendedInfoRepository(ContainerBuilder builder)
         {
-            builder.RegisterInstance<IDictionaryRepository < IAssetExtendedInfo >> (
+            builder.RegisterInstance<IDictionaryRepository < IAssetDescription >> (
                 new AssetExtendedInfoRepository(AzureTableStorage<AssetExtendedInfoEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
                     "Dictionaries", _log)));
 
-            RegisterDictionaryManager<IAssetExtendedInfo>(builder);
+            RegisterDictionaryManager<IAssetDescription>(builder);
         }
 
         private void RegisterIssuerRepository(ContainerBuilder builder)

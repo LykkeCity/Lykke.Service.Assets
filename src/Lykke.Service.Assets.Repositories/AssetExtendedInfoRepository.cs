@@ -6,7 +6,7 @@ using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class AssetExtendedInfoEntity : TableEntity, IAssetExtendedInfo
+    public class AssetExtendedInfoEntity : TableEntity, IAssetDescription
     {
         public static string GeneratePartitionKey()
         {
@@ -19,6 +19,8 @@ namespace Lykke.Service.Assets.Repositories
         }
 
         public string Id => RowKey;
+        public string AssetId => RowKey;
+        
         public string AssetClass { get; set; }
         public string Description { get; set; }
         public string IssuerName { get; set; }
@@ -27,14 +29,13 @@ namespace Lykke.Service.Assets.Repositories
         public int PopIndex { get; set; }
         public string AssetDescriptionUrl { get; set; }
         public string FullName { get; set; }
-        
 
-        public static AssetExtendedInfoEntity Create(IAssetExtendedInfo src)
+
+        public static AssetExtendedInfoEntity Create(IAssetDescription src)
         {
             return new AssetExtendedInfoEntity
             {
                 PartitionKey = GeneratePartitionKey(),
-                RowKey = GenerateRowKey(src.Id),
                 PopIndex = src.PopIndex,
                 MarketCapitalization = src.MarketCapitalization,
                 AssetClass = src.AssetClass,
@@ -46,7 +47,7 @@ namespace Lykke.Service.Assets.Repositories
         }
     }
 
-    public class AssetExtendedInfoRepository : IAssetExtendedInfoRepository, IDictionaryRepository<IAssetExtendedInfo>
+    public class AssetExtendedInfoRepository : IAssetDescriptionRepository, IDictionaryRepository<IAssetDescription>
     {
         private readonly INoSQLTableStorage<AssetExtendedInfoEntity> _tableStorage;
 
@@ -55,13 +56,13 @@ namespace Lykke.Service.Assets.Repositories
             _tableStorage = tableStorage;
         }
 
-        public Task SaveAsync(IAssetExtendedInfo src)
+        public Task SaveAsync(IAssetDescription src)
         {
             var newEntity = AssetExtendedInfoEntity.Create(src);
             return _tableStorage.InsertOrReplaceAsync(newEntity);
         }
 
-        public async Task<IAssetExtendedInfo> GetAssetExtendedInfoAsync(string id)
+        public async Task<IAssetDescription> GetAssetExtendedInfoAsync(string id)
         {
             var partitionKey = AssetExtendedInfoEntity.GeneratePartitionKey();
             var rowKey = AssetExtendedInfoEntity.GenerateRowKey(id);
@@ -69,7 +70,7 @@ namespace Lykke.Service.Assets.Repositories
             return await _tableStorage.GetDataAsync(partitionKey, rowKey);
         }
 
-        public async Task<IEnumerable<IAssetExtendedInfo>> GetAllAsync()
+        public async Task<IEnumerable<IAssetDescription>> GetAllAsync()
         {
             var partitionKey = AssetExtendedInfoEntity.GeneratePartitionKey();
             return await _tableStorage.GetDataAsync(partitionKey);

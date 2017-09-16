@@ -85,7 +85,7 @@ namespace Lykke.Service.Assets.Client.Custom
             return await _assetsservice.GetAssetPairsAsync(cancellationToken);
         }
 
-        public async Task<IAssetExtendedInfo> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IAssetDescription> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await _assetsservice.GetAssetDescriptionsAsync(ids, cancellationToken);
         }
@@ -113,6 +113,20 @@ namespace Lykke.Service.Assets.Client.Custom
             return await _assetsservice.GetAssetCategoriesAsync(cancellationToken);
         }
 
+        public async Task<AssetExtendedResponseModel> GetAssetsExtendedAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _assetsservice.GetAssetsExtendedAsync(cancellationToken);
+        }
 
+        public async Task<AssetExtendedResponseModel> GetAssetExtendedByIdAsync(string assetId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var res = await _assetsservice.GetAssetExtendedAsync(assetId, cancellationToken);
+            if (res is ErrorResponse)
+                return AssetExtendedResponseModel.Create((ErrorResponse)res);
+            if (res is AssetExtendedResponseModel)
+                return res as AssetExtendedResponseModel;
+            else
+                return new AssetExtendedResponseModel();
+        }
     }
 }
