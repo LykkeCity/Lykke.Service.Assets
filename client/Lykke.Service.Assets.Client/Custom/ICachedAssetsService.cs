@@ -16,7 +16,7 @@ namespace Lykke.Service.Assets.Client.Custom
         Task<IReadOnlyCollection<IAsset>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
         Task<IAssetAttributes> GetAssetAttributesAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
         Task<IAssetAttributes> GetAssetAttributeByKeyAsync(string assetId, string key, CancellationToken cancellationToken = new CancellationToken());
-        Task<IAssetDescription> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = new CancellationToken());
+        Task<IEnumerable<IAssetDescription>> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = new CancellationToken());
         Task<IReadOnlyCollection<IAssetCategory>> GetAssetCategoriesAsync(CancellationToken cancellationToken = new CancellationToken());
         Task<AssetCategoriesResponseModel> TryGetAssetCategoryAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
         Task<AssetExtendedResponseModel> GetAssetsExtendedAsync(CancellationToken cancellationToken = new CancellationToken());

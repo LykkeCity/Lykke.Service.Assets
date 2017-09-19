@@ -25,12 +25,27 @@ namespace Lykke.Service.Assets.Client.Custom
 
         public async Task<IAssetAttributes> GetAssetAttributesAsync(string assetId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _assetsservice.GetAssetAttributesAsync(assetId, cancellationToken);
+            var res = await _assetsservice.GetAssetAttributesAsync(assetId, cancellationToken);
+
+            if (res is ErrorResponse)
+                return AssetAttributesResponseModel.Create((ErrorResponse)res);
+            if (res is IAssetAttributes)
+                return res as AssetAttributesResponseModel;
+            else
+                return new AssetAttributesResponseModel();
+
         }
 
         public async Task<IAssetAttributes> GetAssetAttributeByKeyAsync(string assetId, string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _assetsservice.GetAssetAttributeByKeyAsync(assetId, key, cancellationToken);
+            var res = await _assetsservice.GetAssetAttributeByKeyAsync(assetId, key, cancellationToken);
+
+            if (res is ErrorResponse)
+                return AssetAttributesResponseModel.Create((ErrorResponse)res);
+            if (res is IAssetAttributes)
+                return res as AssetAttributesResponseModel;
+            else
+                return new AssetAttributesResponseModel();
         }
 
         public async Task<IAssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken())
@@ -85,7 +100,7 @@ namespace Lykke.Service.Assets.Client.Custom
             return await _assetsservice.GetAssetPairsAsync(cancellationToken);
         }
 
-        public async Task<IAssetDescription> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<IAssetDescription>> GetAssetDescriptionsAsync(GetAssetDescriptionsRequestModel ids, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await _assetsservice.GetAssetDescriptionsAsync(ids, cancellationToken);
         }

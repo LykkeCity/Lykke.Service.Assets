@@ -8,8 +8,6 @@ namespace Lykke.Service.Assets.Client.Models
     using Lykke.Service.Assets;
     using Lykke.Service.Assets.Client;
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
     public partial class AssetDescriptionsResponseModel
@@ -27,10 +25,18 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the AssetDescriptionsResponseModel
         /// class.
         /// </summary>
-        public AssetDescriptionsResponseModel(IList<AssetDescription> descriptions = default(IList<AssetDescription>), ErrorResponse errorResponse = default(ErrorResponse))
+        public AssetDescriptionsResponseModel(int popIndex, string id = default(string), string assetId = default(string), string assetClass = default(string), string description = default(string), string issuerName = default(string), string numberOfCoins = default(string), string marketCapitalization = default(string), string assetDescriptionUrl = default(string), string fullName = default(string))
         {
-            Descriptions = descriptions;
-            ErrorResponse = errorResponse;
+            Id = id;
+            AssetId = assetId;
+            AssetClass = assetClass;
+            Description = description;
+            IssuerName = issuerName;
+            NumberOfCoins = numberOfCoins;
+            MarketCapitalization = marketCapitalization;
+            PopIndex = popIndex;
+            AssetDescriptionUrl = assetDescriptionUrl;
+            FullName = fullName;
             CustomInit();
         }
 
@@ -41,13 +47,63 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Descriptions")]
-        public IList<AssetDescription> Descriptions { get; set; }
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "errorResponse")]
-        public ErrorResponse ErrorResponse { get; set; }
+        [JsonProperty(PropertyName = "AssetId")]
+        public string AssetId { get; set; }
 
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "AssetClass")]
+        public string AssetClass { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Description")]
+        public string Description { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IssuerName")]
+        public string IssuerName { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "NumberOfCoins")]
+        public string NumberOfCoins { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MarketCapitalization")]
+        public string MarketCapitalization { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "PopIndex")]
+        public int PopIndex { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "AssetDescriptionUrl")]
+        public string AssetDescriptionUrl { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "FullName")]
+        public string FullName { get; set; }
+
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

@@ -118,7 +118,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<AssetAttributesResponseModel>> GetAssetAttributesWithHttpMessagesAsync(string assetId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetAssetAttributesWithHttpMessagesAsync(string assetId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns asset attribute by asset ID and attribute key
@@ -135,7 +135,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<AssetAttributesResponseModel>> GetAssetAttributeByKeyWithHttpMessagesAsync(string assetId, string key, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetAssetAttributeByKeyWithHttpMessagesAsync(string assetId, string key, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns asset descriptions for array of assets
@@ -148,7 +148,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<AssetDescriptionsResponseModel>> GetAssetDescriptionsWithHttpMessagesAsync(GetAssetDescriptionsRequestModel request = default(GetAssetDescriptionsRequestModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<AssetDescriptionsResponseModel>>> GetAssetDescriptionsWithHttpMessagesAsync(GetAssetDescriptionsRequestModel request = default(GetAssetDescriptionsRequestModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns all asset categories

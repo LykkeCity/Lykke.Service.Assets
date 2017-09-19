@@ -25,7 +25,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the AssetCategoriesResponseModel
         /// class.
         /// </summary>
-        public AssetCategoriesResponseModel(string id = default(string), string name = default(string), string iosIconUrl = default(string), string androidIconUrl = default(string), int? sortOrder = default(int?))
+        public AssetCategoriesResponseModel(int sortOrder, string id = default(string), string name = default(string), string iosIconUrl = default(string), string androidIconUrl = default(string))
         {
             Id = id;
             Name = name;
@@ -63,7 +63,17 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "SortOrder")]
-        public int? SortOrder { get; set; }
+        public int SortOrder { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

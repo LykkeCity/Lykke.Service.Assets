@@ -1,6 +1,7 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Lykke.Service.Assets.Models
@@ -11,6 +12,7 @@ namespace Lykke.Service.Assets.Models
         public string Name { get; set; }
         public string IosIconUrl { get; set; }
         public string AndroidIconUrl { get; set; }
+        [Required]
         public int SortOrder { get; set; }
 
         public static AssetCategoriesResponseModel Create(IAssetCategory src)

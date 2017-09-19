@@ -86,7 +86,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpGet("{assetId}/attributes")]
         [Produces("application/json", Type = typeof(AssetAttributesResponseModel))]
         [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         [SwaggerOperation("GetAssetAttributes")]
         public async Task<IActionResult> AssetAttributes(string assetId)
         {
@@ -94,7 +94,7 @@ namespace Lykke.Service.Assets.Controllers
 
             if (asset == null)
             {
-                return NotFound(AssetAttributesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "Asset not found")));
+                return NotFound((ErrorResponse.Create(nameof(assetId), "Asset not found")));
             }
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
@@ -111,7 +111,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpGet("{assetId}/attributes/{key}")]
         [Produces("application/json", Type = typeof(AssetAttributesResponseModel))]
         [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(AssetAttributesResponseModel), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         [SwaggerOperation("GetAssetAttributeByKey")]
         public async Task<IActionResult> AssetAttributeByKey(string assetId, string key)
         {
@@ -119,7 +119,7 @@ namespace Lykke.Service.Assets.Controllers
 
             if (asset == null)
             {
-                return NotFound(AssetAttributesResponseModel.Create(ErrorResponse.Create(nameof(assetId), "Asset not found")));
+                return NotFound((ErrorResponse.Create(nameof(assetId), "Asset not found")));
             }
 
             var assetAttributes = await _assetAttributesManager.TryGetAsync(assetId);
@@ -131,8 +131,8 @@ namespace Lykke.Service.Assets.Controllers
         /// </summary>
         /// <param name="request.Ids">Array asset ids</param>
         [HttpPost("description")]
-        [Produces("application/json", Type = typeof(AssetDescriptionsResponseModel))]
-        [ProducesResponseType(typeof(AssetDescriptionsResponseModel), (int)HttpStatusCode.OK)]
+        [Produces("application/json", Type = typeof(AssetDescriptionsResponseModel[]))]
+        [ProducesResponseType(typeof(AssetDescriptionsResponseModel[]), (int)HttpStatusCode.OK)]
         [SwaggerOperation("GetAssetDescriptions")]
         public async Task<IActionResult> GetAssetDescriptions([FromBody]GetAssetDescriptionsRequestModel request)
         {
@@ -151,7 +151,7 @@ namespace Lykke.Service.Assets.Controllers
                 }
             }
 
-            return Ok(AssetDescriptionsResponseModel.Create(res));
+            return Ok(res.Select(AssetDescriptionsResponseModel.Create));
         }
 
         private async Task<AssetDescription> GetAssetDescriptionAsync(IAsset asset)
@@ -232,7 +232,7 @@ namespace Lykke.Service.Assets.Controllers
             var assetCategory = await _assetCategoryManager.TryGetAsync(asset.CategoryId ?? "") ?? new AssetCategory();
             var assetAttributes = await _assetAttributesManager.TryGetAsync(asset.Id) ?? new AssetAttributes { AssetId = asset.Id, Attributes = new List<KeyValue>() };
 
-            return AssetExtended.Create(asset, assetDescription, assetCategory, assetAttributes.Attributes);
+            return AssetExtended.Create(AssetResponseModel.Create(asset), AssetDescriptionsResponseModel.Create(assetDescription ?? new AssetDescription()), AssetCategoriesResponseModel.Create(assetCategory ?? new AssetCategory()), AssetAttributesResponseModel.Create(asset.Id, assetAttributes?.Attributes.ToArray() ?? new KeyValue[0]));
         }
 
         /// <summary>

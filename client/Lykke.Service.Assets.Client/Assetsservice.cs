@@ -912,7 +912,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<AssetAttributesResponseModel>> GetAssetAttributesWithHttpMessagesAsync(string assetId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetAssetAttributesWithHttpMessagesAsync(string assetId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetId == null)
             {
@@ -992,7 +992,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<AssetAttributesResponseModel>();
+            var _result = new HttpOperationResponse<object>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1019,7 +1019,7 @@ namespace Lykke.Service.Assets.Client
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<AssetAttributesResponseModel>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1068,7 +1068,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<AssetAttributesResponseModel>> GetAssetAttributeByKeyWithHttpMessagesAsync(string assetId, string key, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetAssetAttributeByKeyWithHttpMessagesAsync(string assetId, string key, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetId == null)
             {
@@ -1154,7 +1154,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<AssetAttributesResponseModel>();
+            var _result = new HttpOperationResponse<object>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1181,7 +1181,7 @@ namespace Lykke.Service.Assets.Client
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<AssetAttributesResponseModel>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1220,7 +1220,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<AssetDescriptionsResponseModel>> GetAssetDescriptionsWithHttpMessagesAsync(GetAssetDescriptionsRequestModel request = default(GetAssetDescriptionsRequestModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<AssetDescriptionsResponseModel>>> GetAssetDescriptionsWithHttpMessagesAsync(GetAssetDescriptionsRequestModel request = default(GetAssetDescriptionsRequestModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1301,7 +1301,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<AssetDescriptionsResponseModel>();
+            var _result = new HttpOperationResponse<IList<AssetDescriptionsResponseModel>>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1310,7 +1310,7 @@ namespace Lykke.Service.Assets.Client
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<AssetDescriptionsResponseModel>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<AssetDescriptionsResponseModel>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

@@ -10,7 +10,7 @@ namespace Lykke.Service.Assets.Client.Custom
         string Name { get; }
         string IosIconUrl { get; set; }
         string AndroidIconUrl { get; set; }
-        int? SortOrder { get; set; }
+        int SortOrder { get; set; }
 
     }
 }

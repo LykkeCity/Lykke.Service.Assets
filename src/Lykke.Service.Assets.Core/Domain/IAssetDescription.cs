@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace Lykke.Service.Assets.Core.Domain
         string IssuerName { get; set; }
         string NumberOfCoins { get; }
         string MarketCapitalization { get; }
+        [Required]
         int PopIndex { get; }
         string AssetDescriptionUrl { get; }
         string FullName { get; }
@@ -28,6 +30,7 @@ namespace Lykke.Service.Assets.Core.Domain
         public string IssuerName { get; set; }
         public string NumberOfCoins { get; set; }
         public string MarketCapitalization { get; set; }
+        [Required]
         public int PopIndex { get; set; }
         public string AssetDescriptionUrl { get; set; }
         public string FullName { get; set; }

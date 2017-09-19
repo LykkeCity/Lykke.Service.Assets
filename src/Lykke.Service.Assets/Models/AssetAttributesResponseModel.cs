@@ -10,7 +10,6 @@ namespace Lykke.Service.Assets.Models
     {
         public string AssetId;
         public IAssetAttributesKeyValue[] Attributes { get; set; }
-        public ErrorResponse errorResponse { get; set; }
 
         public static AssetAttributesResponseModel Create(string assetId, IAssetAttributesKeyValue[] assetAttributes)
         {
@@ -19,15 +18,6 @@ namespace Lykke.Service.Assets.Models
                 Attributes = assetAttributes,
                 AssetId = assetId
             };
-
-        }
-        public static AssetAttributesResponseModel Create(ErrorResponse error)
-        {
-            return new AssetAttributesResponseModel
-            {
-                errorResponse = error
-            };
-
         }
     }
 }

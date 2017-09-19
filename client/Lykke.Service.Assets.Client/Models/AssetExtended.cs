@@ -8,8 +8,6 @@ namespace Lykke.Service.Assets.Client.Models
     using Lykke.Service.Assets;
     using Lykke.Service.Assets.Client;
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
     public partial class AssetExtended
@@ -25,7 +23,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetExtended class.
         /// </summary>
-        public AssetExtended(IAsset asset = default(IAsset), IAssetDescription description = default(IAssetDescription), IAssetCategory category = default(IAssetCategory), IList<IAssetAttributesKeyValue> attributes = default(IList<IAssetAttributesKeyValue>))
+        public AssetExtended(AssetResponseModel asset = default(AssetResponseModel), AssetDescriptionsResponseModel description = default(AssetDescriptionsResponseModel), AssetCategoriesResponseModel category = default(AssetCategoriesResponseModel), AssetAttributesResponseModel attributes = default(AssetAttributesResponseModel))
         {
             Asset = asset;
             Description = description;
@@ -42,22 +40,43 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Asset")]
-        public IAsset Asset { get; set; }
+        public AssetResponseModel Asset { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Description")]
-        public IAssetDescription Description { get; set; }
+        public AssetDescriptionsResponseModel Description { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Category")]
-        public IAssetCategory Category { get; set; }
+        public AssetCategoriesResponseModel Category { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Attributes")]
-        public IList<IAssetAttributesKeyValue> Attributes { get; set; }
+        public AssetAttributesResponseModel Attributes { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (Asset != null)
+            {
+                Asset.Validate();
+            }
+            if (Description != null)
+            {
+                Description.Validate();
+            }
+            if (Category != null)
+            {
+                Category.Validate();
+            }
+        }
     }
 }

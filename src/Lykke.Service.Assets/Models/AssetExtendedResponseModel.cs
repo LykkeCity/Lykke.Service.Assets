@@ -20,12 +20,12 @@ namespace Lykke.Service.Assets.Models
 
     public class AssetExtended 
     {
-        public IAsset Asset { get; set; }
-        public IAssetDescription Description { get; set; }
-        public IAssetCategory Category { get; set; }
-        public IEnumerable<IAssetAttributesKeyValue> Attributes { get; set; }
+        public AssetResponseModel Asset { get; set; }
+        public AssetDescriptionsResponseModel Description { get; set; }
+        public AssetCategoriesResponseModel Category { get; set; }
+        public AssetAttributesResponseModel Attributes { get; set; }
 
-        public static AssetExtended Create(IAsset asset, IAssetDescription description, IAssetCategory category, IEnumerable<IAssetAttributesKeyValue> attributes)
+        public static AssetExtended Create(AssetResponseModel asset, AssetDescriptionsResponseModel description, AssetCategoriesResponseModel category, AssetAttributesResponseModel attributes)
         {
             return new AssetExtended
             {
