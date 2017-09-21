@@ -7,6 +7,7 @@ using Lykke.Service.Assets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 using System.Collections.Generic;
+using Lykke.Service.Assets.Services;
 
 namespace Lykke.Service.Assets.Controllers
 {
@@ -21,18 +22,23 @@ namespace Lykke.Service.Assets.Controllers
         private readonly IDictionaryManager<IAssetDescription> _assetExtendedInfoManager;
         private readonly IDictionaryManager<IIssuer> _assetIssuerManager;
         private readonly IDictionaryManager<IAssetCategory> _assetCategoryManager;
+        private readonly IAssetsServiceHelper _assetsServiceHelper;
+
 
         public AssetsController(IDictionaryManager<IAsset> manager, 
             IDictionaryManager<IAssetAttributes> assetAttributesManager, 
             IDictionaryManager<IAssetDescription> assetExtendedInfoManager, 
             IDictionaryManager<IIssuer> assetIssuerManager,
-            IDictionaryManager<IAssetCategory> assetCategoryManager)
+            IDictionaryManager<IAssetCategory> assetCategoryManager,
+            IAssetGroupRepository assetGroupRepo,
+            IAssetsServiceHelper assetsServiceHelper)
         {
             _manager = manager;
             _assetAttributesManager = assetAttributesManager;
             _assetExtendedInfoManager = assetExtendedInfoManager;
             _assetIssuerManager = assetIssuerManager;
             _assetCategoryManager = assetCategoryManager;
+            _assetsServiceHelper = assetsServiceHelper;
         }
 
         /// <summary>
@@ -255,5 +261,31 @@ namespace Lykke.Service.Assets.Controllers
 
             return Ok(AssetExtendedResponseModel.Create(new List<AssetExtended> { assetExtended }));
         }
+
+        [HttpGet("client")]
+        [ProducesResponseType(typeof(AssetResponseModel[]), (int)HttpStatusCode.OK)]
+        [SwaggerOperation("GetAssetsForClient")]
+        public async Task<IActionResult> GetAssetsForClient(string clientId, bool isIosDevice, string partnerId = null)
+        {
+            var result = await _assetsServiceHelper.GetAssetsForClient(clientId, isIosDevice, partnerId);
+            return Ok(result.Select(AssetResponseModel.Create));
+            //var result = (await _manager.GetAllAsync()).Where(x => !x.IsDisabled);
+
+            //if (partnerId != null)
+            //{
+            //    return Ok(result.Where(x => x.PartnerIds != null && x.PartnerIds.Contains(partnerId)).Select(AssetResponseModel.Create));
+            //}
+
+            //var assetIdsForClient = await _assetGroupRepo.GetAssetIdsForClient(clientId, isIosDevice);
+
+            //if (assetIdsForClient != null)
+            //    result = result.Where(x => assetIdsForClient.Contains(x.Id));
+
+            //return Ok(result.Where(x => !x.NotLykkeAsset).Select(AssetResponseModel.Create));
+        }
+
+        
+
+        
     }
 }

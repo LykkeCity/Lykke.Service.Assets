@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client.Models;
+using System.Linq;
 
 namespace Lykke.Service.Assets.Client.Custom
 {
@@ -142,6 +143,12 @@ namespace Lykke.Service.Assets.Client.Custom
                 return res as AssetExtendedResponseModel;
             else
                 return new AssetExtendedResponseModel();
+        }
+
+        public async Task<IEnumerable<AssetPairResponseModel>> GetAssetsPairsForClient(GetAssetPairsForClientRequestModel request, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var result = await _assetsservice.GetAssetsPairsForClientAsync(request);
+            return result;
         }
     }
 }

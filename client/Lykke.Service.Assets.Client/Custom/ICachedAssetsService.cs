@@ -22,6 +22,8 @@ namespace Lykke.Service.Assets.Client.Custom
         Task<AssetExtendedResponseModel> GetAssetsExtendedAsync(CancellationToken cancellationToken = new CancellationToken());
         Task<AssetExtendedResponseModel> GetAssetExtendedByIdAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
 
+        Task<IEnumerable<AssetPairResponseModel>> GetAssetsPairsForClient(GetAssetPairsForClientRequestModel request, CancellationToken cancellationToken = new CancellationToken());
+
         /// <summary>
         /// Forcibly updates server-side and client-side asset pairs cache
         /// </summary>

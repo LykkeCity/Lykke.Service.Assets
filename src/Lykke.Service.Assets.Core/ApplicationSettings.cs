@@ -25,6 +25,12 @@ namespace Lykke.Service.Assets.Core
         }
 
         [UsedImplicitly]
+        public class OtherConnectionStrings
+        {
+            public string ClientPersonalInfoConnString { get; set; }
+        }
+
+        [UsedImplicitly]
         public class LogsSettings
         {
             public string DbConnectionString { get; set; }

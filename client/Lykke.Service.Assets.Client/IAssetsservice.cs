@@ -70,6 +70,16 @@ namespace Lykke.Service.Assets.Client
         /// </param>
         Task<HttpOperationResponse<IList<AssetPairResponseModel>>> GetAssetPairsWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='request'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<IList<AssetPairResponseModel>>> GetAssetsPairsForClientWithHttpMessagesAsync(GetAssetPairsForClientRequestModel request = default(GetAssetPairsForClientRequestModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <summary>
         /// Forcibly updates assets cache
         /// </summary>

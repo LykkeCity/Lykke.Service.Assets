@@ -7,7 +7,7 @@ namespace Lykke.Service.Assets.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string BaseAssetId { get; set; }
+        //public string BaseAssetId { get; set; }
         public string QuotingAssetId { get; set; }
         [Required]
         public int Accuracy { get; set; }
@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets.Models
             {
                 Id = src.Id,
                 Name = src.Name,
-                BaseAssetId = src.BaseAssetId,
+                //BaseAssetId = src.BaseAssetId,
                 QuotingAssetId = src.QuotingAssetId,
                 Accuracy = src.Accuracy,
                 InvertedAccuracy = src.InvertedAccuracy,
@@ -33,5 +33,12 @@ namespace Lykke.Service.Assets.Models
                 IsDisabled = src.IsDisabled
             };
         }
+    }
+
+    public class GetAssetPairsForClientRequestModel
+    {
+        public string ClientId { get; set; }
+        public bool IsIosDevice { get; set; }
+        public string PartnerId { get; set; }
     }
 }
