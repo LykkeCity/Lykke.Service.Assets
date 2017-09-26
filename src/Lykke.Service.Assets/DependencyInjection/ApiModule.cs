@@ -27,6 +27,7 @@ namespace Lykke.Service.Assets.DependencyInjection
 
             builder.RegisterInstance(_settings).SingleInstance();
             builder.RegisterInstance(_settings.AssetsService).SingleInstance();
+            builder.RegisterType<AssetServiceHelper>().As<IAssetsServiceHelper>().SingleInstance();
 
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
 
@@ -36,6 +37,16 @@ namespace Lykke.Service.Assets.DependencyInjection
             RegisterIssuerRepository(builder);
             RegisterAssetExtendedInfoRepository(builder);
             RegisterAssetCategoryRepository(builder);
+            RegisterAssetGroupsRepository(builder);
+        }
+
+        private void RegisterAssetGroupsRepository(ContainerBuilder builder)
+        {
+            builder.RegisterInstance<IAssetGroupRepository>(
+                new AssetGroupsRepository(AzureTableStorage<AssetGroupEntity>.Create(() => _settings.AssetsService.Db.ClientPersonalInfoConnString,
+                    "AssetGroups", _log)));
+
+            RegisterDictionaryManager<IAssetGroup>(builder);
         }
 
         private void RegisterAssetCategoryRepository(ContainerBuilder builder)

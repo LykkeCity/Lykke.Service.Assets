@@ -1,3 +1,7 @@
+using Lykke.Service.Assets.Core.Domain;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IAsset : IDictionaryItem
@@ -52,4 +56,27 @@ namespace Lykke.Service.Assets.Core.Domain
 
         string IconUrl { get; }
     }
+
+    
 }
+
+public static class AssetsRepositoryExt
+{
+    public static string GetFirstAssetId(this IEnumerable<IAsset> assets)
+    {
+        return assets.OrderBy(x => x.DefaultOrder).First().Id;
+    }
+
+    public static IEnumerable<IAssetPair> WhichHaveAssets(this IEnumerable<IAssetPair> src, params string[] assetIds)
+    {
+        return src.Where(assetPair => assetIds.Contains(assetPair.BaseAssetId) || assetIds.Contains(assetPair.QuotingAssetId));
+    }
+
+    public static IEnumerable<IAssetPair> WhichConsistsOfAssets(this IEnumerable<IAssetPair> src, params string[] assetIds)
+    {
+        return src.Where(assetPair => assetIds.Contains(assetPair.BaseAssetId) && assetIds.Contains(assetPair.QuotingAssetId));
+    }
+}
+
+
+

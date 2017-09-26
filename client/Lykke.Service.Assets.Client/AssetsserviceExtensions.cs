@@ -104,6 +104,32 @@ namespace Lykke.Service.Assets.Client
                 }
             }
 
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='request'>
+            /// </param>
+            public static IList<AssetPairResponseModel> GetAssetsPairsForClient(this IAssetsservice operations, GetAssetPairsForClientRequestModel request = default(GetAssetPairsForClientRequestModel))
+            {
+                return operations.GetAssetsPairsForClientAsync(request).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='request'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<AssetPairResponseModel>> GetAssetsPairsForClientAsync(this IAssetsservice operations, GetAssetPairsForClientRequestModel request = default(GetAssetPairsForClientRequestModel), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAssetsPairsForClientWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
             /// <summary>
             /// Forcibly updates assets cache
             /// </summary>

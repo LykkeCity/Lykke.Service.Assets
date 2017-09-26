@@ -287,3 +287,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /client/Lykke.Service.Assets.Client/Service.Assets.json
+/src/Lykke.Service.Assets/appsettings.Development.json

@@ -15,6 +15,13 @@ namespace Lykke.Service.Assets.Core
         {
             public DictionariesSettings Dictionaries { get; set; }
             public LogsSettings Logs { get; set; }
+            public DbSettings Db { get; set; }
+        }
+
+        [UsedImplicitly]
+        public class DbSettings
+        {
+            public string ClientPersonalInfoConnString { get; set; }
         }
 
         [UsedImplicitly]
