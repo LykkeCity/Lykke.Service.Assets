@@ -75,12 +75,7 @@ namespace Lykke.Service.Assets.Controllers
         public async Task<IActionResult> GetAssetsPairsForClient([FromBody]GetAssetPairsForClientRequestModel request)
         {
             var assetsForClient = await _assetsServiceHelper.GetAssetsForClient(request.ClientId, request.IsIosDevice, request.PartnerId); 
-
             var result = (await _manager.GetAllAsync()).Where(x => !x.IsDisabled);
-
-            //if (!ignoreBase)
-            //    result = result.WhichHaveAssets((await _assetsServiceHelper.GetBaseAssetForClient(clientId, isIosDevice, partnerId)).Id); 
-
             return Ok(result.WhichConsistsOfAssets(assetsForClient.Select(x => x.Id).ToArray()).Select(AssetPairResponseModel.Create));
         }
     }

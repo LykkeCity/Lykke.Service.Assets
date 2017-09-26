@@ -15,6 +15,13 @@ namespace Lykke.Service.Assets.Core
         {
             public DictionariesSettings Dictionaries { get; set; }
             public LogsSettings Logs { get; set; }
+            public DbSettings Db { get; set; }
+        }
+
+        [UsedImplicitly]
+        public class DbSettings
+        {
+            public string ClientPersonalInfoConnString { get; set; }
         }
 
         [UsedImplicitly]
@@ -22,12 +29,6 @@ namespace Lykke.Service.Assets.Core
         {
             public string DbConnectionString { get; set; }
             public TimeSpan CacheExpirationPeriod { get; set; }
-        }
-
-        [UsedImplicitly]
-        public class OtherConnectionStrings
-        {
-            public string ClientPersonalInfoConnString { get; set; }
         }
 
         [UsedImplicitly]

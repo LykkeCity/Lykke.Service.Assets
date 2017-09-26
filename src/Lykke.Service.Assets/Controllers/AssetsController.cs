@@ -268,24 +268,7 @@ namespace Lykke.Service.Assets.Controllers
         public async Task<IActionResult> GetAssetsForClient(string clientId, bool isIosDevice, string partnerId = null)
         {
             var result = await _assetsServiceHelper.GetAssetsForClient(clientId, isIosDevice, partnerId);
-            return Ok(result.Select(AssetResponseModel.Create));
-            //var result = (await _manager.GetAllAsync()).Where(x => !x.IsDisabled);
-
-            //if (partnerId != null)
-            //{
-            //    return Ok(result.Where(x => x.PartnerIds != null && x.PartnerIds.Contains(partnerId)).Select(AssetResponseModel.Create));
-            //}
-
-            //var assetIdsForClient = await _assetGroupRepo.GetAssetIdsForClient(clientId, isIosDevice);
-
-            //if (assetIdsForClient != null)
-            //    result = result.Where(x => assetIdsForClient.Contains(x.Id));
-
-            //return Ok(result.Where(x => !x.NotLykkeAsset).Select(AssetResponseModel.Create));
-        }
-
-        
-
-        
+            return Ok(result.Select(AssetResponseModel.Create));            
+        }  
     }
 }

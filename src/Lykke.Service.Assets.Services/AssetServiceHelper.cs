@@ -11,9 +11,7 @@ namespace Lykke.Service.Assets.Services
     public interface IAssetsServiceHelper
     {
         Task<IAsset[]> GetAssetsForClient(string clientId, bool isIosDevice, string partnerId = null);
-        //Task<IAsset> GetBaseAssetForClient(string clientId, bool isIosDevice, string partnerId);
     }
-
 
     public class AssetServiceHelper : IAssetsServiceHelper
     {
@@ -41,20 +39,6 @@ namespace Lykke.Service.Assets.Services
                 result = result.Where(x => assetIdsForClient.Contains(x.Id));
 
             return result.Where(x => !x.NotLykkeAsset).ToArray();
-        }
-
-        //public async Task<IAsset> GetBaseAssetForClient(string clientId, bool isIosDevice, string partnerId)
-        //{
-        //    var assetsForClient = (await GetAssetsForClient(clientId, isIosDevice, partnerId)).Where(x => x.IsBase);
-        //    var exchangeSettings =
-        //        await _exchangeSettingsRepository.GetOrDefaultAsync(clientId);
-
-        //    var baseAsset = exchangeSettings.BaseAsset(isIosDevice);
-
-        //    if (string.IsNullOrEmpty(baseAsset))
-        //        baseAsset = assetsForClient.GetFirstAssetId();
-
-        //    return await _manager.TryGetAsync(baseAsset);
-        //}
+        }        
     }
 }

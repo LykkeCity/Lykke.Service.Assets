@@ -43,7 +43,7 @@ namespace Lykke.Service.Assets.DependencyInjection
         private void RegisterAssetGroupsRepository(ContainerBuilder builder)
         {
             builder.RegisterInstance<IAssetGroupRepository>(
-                new AssetGroupsRepository(AzureTableStorage<AssetGroupEntity>.Create(() => "DefaultEndpointsProtocol=https;AccountName=lkedevmain;AccountKey=l0W0CaoNiRZQIqJ536sIScSV5fUuQmPYRQYohj/UjO7+ZVdpUiEsRLtQMxD+1szNuAeJ351ndkOsdWFzWBXmdw==",
+                new AssetGroupsRepository(AzureTableStorage<AssetGroupEntity>.Create(() => _settings.AssetsService.Db.ClientPersonalInfoConnString,
                     "AssetGroups", _log)));
 
             RegisterDictionaryManager<IAssetGroup>(builder);
