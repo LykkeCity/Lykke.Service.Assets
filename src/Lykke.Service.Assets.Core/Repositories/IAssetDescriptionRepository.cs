@@ -4,7 +4,7 @@ using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Repositories
 {
-    public interface IAssetDescriptionRepository : IRepository<IAssetDescriptionRepository>
+    public interface IAssetDescriptionRepository
     {
         Task SaveAsync(IAssetDescription src);
 
