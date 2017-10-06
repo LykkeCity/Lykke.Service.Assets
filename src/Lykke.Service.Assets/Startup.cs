@@ -34,6 +34,7 @@ namespace Lykke.Service.Assets
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
@@ -43,21 +44,23 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
+            services
+                .AddMvc()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
                 });
 
-            services.AddSwaggerGen(options =>
-            {
-                options.DefaultLykkeConfiguration("v1", "Assets service");
-            });
+            services
+                .AddSwaggerGen(options =>
+                {
+                    options.DefaultLykkeConfiguration("v1", "Assets Service");
+                });
 
-            var settings = HttpSettingsLoader.Load<ApplicationSettings>();
-            var log = CreateLog(services, settings);
-            var builder = new ContainerBuilder();
+            var settings = HttpSettingsLoader.Load<ApplicationSettings>(Configuration.GetConnectionString("SettingsUrl"));
+            var log      = CreateLog(services, settings);
+            var builder  = new ContainerBuilder();
 
             builder.RegisterModule(new ApiModule(settings, log));
             builder.Populate(services);
@@ -91,7 +94,7 @@ namespace Lykke.Service.Assets
 
         private static ILog CreateLog(IServiceCollection services, ApplicationSettings settings)
         {
-            var consoleLogger = new LogToConsole();
+            var consoleLogger   = new LogToConsole();
             var aggregateLogger = new AggregateLogger();
 
             aggregateLogger.AddLog(consoleLogger);
@@ -100,7 +103,7 @@ namespace Lykke.Service.Assets
             var slackService = services.UseSlackNotificationsSenderViaAzureQueue(new AzureQueueSettings
             {
                 ConnectionString = settings.SlackNotifications.AzureQueue.ConnectionString,
-                QueueName = settings.SlackNotifications.AzureQueue.QueueName
+                QueueName        = settings.SlackNotifications.AzureQueue.QueueName
             }, aggregateLogger);
 
             var dbLogConnectionString = settings.AssetsService.Logs.DbConnectionString;
@@ -110,18 +113,27 @@ namespace Lykke.Service.Assets
             {
                 const string appName = "Lykke.Service.Assets";
 
-                var persistenceManager = new LykkeLogToAzureStoragePersistenceManager(
+                var persistenceManager = new LykkeLogToAzureStoragePersistenceManager
+                (
                     appName,
                     AzureTableStorage<LogEntity>.Create(() => dbLogConnectionString, "AssetsServiceLog", consoleLogger),
-                    consoleLogger);
+                    consoleLogger
+                );
 
-                var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager(appName, slackService, consoleLogger);
+                var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager
+                (
+                    appName,
+                    slackService,
+                    consoleLogger
+                );
 
-                var azureStorageLogger = new LykkeLogToAzureStorage(
+                var azureStorageLogger = new LykkeLogToAzureStorage
+                (
                     appName,
                     persistenceManager,
                     slackNotificationsManager,
-                    consoleLogger);
+                    consoleLogger
+                );
 
                 azureStorageLogger.Start();
 

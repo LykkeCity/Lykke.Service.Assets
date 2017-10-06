@@ -1,34 +1,41 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Models;
+using Lykke.Service.Assets.Repositories.Extensions;
+using Lykke.Service.Assets.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
-using Lykke.Service.Assets.Services;
+
 
 namespace Lykke.Service.Assets.Controllers
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Controller for asset pairs
+    ///     Controller for asset pairs
     /// </summary>
     [Route("api/[controller]")]
     public class AssetPairsController : Controller
     {
+        private readonly IAssetsServiceHelper           _assetsServiceHelper;
         private readonly IDictionaryManager<IAssetPair> _manager;
-        private readonly IAssetsServiceHelper _assetsServiceHelper;
 
-        public AssetPairsController(IDictionaryManager<IAssetPair> manager, IAssetsServiceHelper assetsServiceHelper)
+
+        public AssetPairsController(
+            IAssetsServiceHelper assetsServiceHelper,
+            IDictionaryManager<IAssetPair> manager)
         {
-            _manager = manager;
             _assetsServiceHelper = assetsServiceHelper;
+            _manager             = manager;
         }
 
+
         /// <summary>
-        /// Forcibly updates asset pairs cache
+        ///     Forcibly updates asset pairs cache
         /// </summary>
-        /// <returns></returns>
         [HttpPost("updateCache")]
         [SwaggerOperation("UpdateAssetPairsCache")]
         public async Task UpdateCache()
@@ -37,46 +44,54 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         /// <summary>
-        /// Returns asset pair by ID
+        ///     Returns asset pair by id
         /// </summary>
-        /// <param name="assetPairId">Asset pair ID</param>
+        /// <param name="assetPairId">
+        ///    Asset pair id
+        /// </param>
         [HttpGet("{assetPairId}")]
         [SwaggerOperation("GetAssetPair")]
-        [ProducesResponseType(typeof(AssetPairResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Get(string assetPairId)
+        [ProducesResponseType(typeof(AssetPair),     (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetAssetPair(string assetPairId)
         {
             var assetPair = await _manager.TryGetAsync(assetPairId);
-
             if (assetPair == null)
             {
                 return NotFound(ErrorResponse.Create(nameof(assetPairId), "Asset pair not found"));
             }
 
-            return Ok(AssetPairResponseModel.Create(assetPair));
+            return Ok(AssetPair.Create(assetPair));
         }
 
         /// <summary>
-        /// Returns all asset pairs
+        ///     Returns all asset pairs
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(AssetPairResponseModel[]), (int)HttpStatusCode.OK)]
         [SwaggerOperation("GetAssetPairs")]
-        public async Task<IActionResult> GetAll()
+        [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAssetPairs()
         {
             var assetPairs = await _manager.GetAllAsync();
+            var result     = assetPairs.Select(AssetPair.Create);
 
-            return Ok(assetPairs.Select(AssetPairResponseModel.Create));
+            return Ok(result);
         }
 
         [HttpPost("client")]
-        [ProducesResponseType(typeof(AssetPairResponseModel[]), (int)HttpStatusCode.OK)]
         [SwaggerOperation("GetAssetsPairsForClient")]
-        public async Task<IActionResult> GetAssetsPairsForClient([FromBody]GetAssetPairsForClientRequestModel request)
+        [ProducesResponseType(typeof(AssetPair[]), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAssetsPairsForClient([FromBody] AssetPairListForClientRequest request)
         {
-            var assetsForClient = await _assetsServiceHelper.GetAssetsForClient(request.ClientId, request.IsIosDevice, request.PartnerId); 
-            var result = (await _manager.GetAllAsync()).Where(x => !x.IsDisabled);
-            return Ok(result.WhichConsistsOfAssets(assetsForClient.Select(x => x.Id).ToArray()).Select(AssetPairResponseModel.Create));
+            var assets   = await _assetsServiceHelper.GetAssetsForClient(request.ClientId, request.IsIosDevice, request.PartnerId);
+            var assetIds = assets.Select(x => x.Id).ToArray();
+
+            var result = (await _manager.GetAllAsync())
+                .Where(x => !x.IsDisabled)
+                .WhichConsistsOfAssets(assetIds)
+                .Select(AssetPair.Create);
+
+            return Ok(result);
         }
     }
 }

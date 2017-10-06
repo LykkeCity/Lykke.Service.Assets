@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Repositories;
 
 namespace Lykke.Service.Assets.Services
 {

@@ -4,8 +4,10 @@ using AzureStorage.Tables;
 using Common.Log;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Repositories;
+using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.Service.Assets.Services;
 
 namespace Lykke.Service.Assets.DependencyInjection
@@ -92,7 +94,7 @@ namespace Lykke.Service.Assets.DependencyInjection
         private void RegisterAssetAttributes(ContainerBuilder builder)
         {
             builder.RegisterInstance<IDictionaryRepository<IAssetAttributes>>(
-               new AssetAttributesRepository(AzureTableStorage<AssetAttributesEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
+               new AssetAttributeRepository(AzureTableStorage<AssetAttributeEntity>.Create(() => _settings.AssetsService.Dictionaries.DbConnectionString,
                    "AssetAttributes", _log)));
 
             builder.RegisterType<DictionaryCacheService<IAssetAttributes>>()
@@ -107,7 +109,7 @@ namespace Lykke.Service.Assets.DependencyInjection
 
         private void RegisterAssets(ContainerBuilder builder)
         {
-            builder.Register(c => new AssetsRepository(
+            builder.Register(c => new AssetRepository(
                     new AzureTableStorage<AssetEntity>(_settings.AssetsService.Dictionaries.DbConnectionString, "Dictionaries", _log)))
                 .As<IDictionaryRepository<IAsset>>();
 

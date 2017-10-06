@@ -2,40 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzureStorage;
-using Microsoft.WindowsAzure.Storage.Table;
+using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class IssuerEntity : TableEntity, IIssuer
-    {
-
-        public static string GeneratePartitionKey()
-        {
-            return "Issuer";
-        }
-
-        public static string GenerateRowKey(string id)
-        {
-            return id;
-        }
-
-        public string Id => RowKey;
-        public string Name { get; set; }
-        public string IconUrl { get; set; }
-
-        public static IssuerEntity Create(IIssuer issuer)
-        {
-            return new IssuerEntity
-            {
-                PartitionKey = GeneratePartitionKey(),
-                RowKey = GenerateRowKey(issuer.Id),
-                Name = issuer.Name,
-                IconUrl = issuer.IconUrl
-            };
-        }
-
-    }
-
     public class IssuerRepository : IIssuerRepository, IDictionaryRepository<IIssuer>
     {
         private readonly INoSQLTableStorage<IssuerEntity> _tableStorage;

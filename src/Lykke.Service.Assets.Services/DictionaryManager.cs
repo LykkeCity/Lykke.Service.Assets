@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 
 namespace Lykke.Service.Assets.Services

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AzureStorage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Core.Repositories;
 
 namespace Lykke.Service.Assets.Repositories
 {

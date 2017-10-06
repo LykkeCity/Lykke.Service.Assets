@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

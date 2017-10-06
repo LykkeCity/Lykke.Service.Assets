@@ -1,82 +1,91 @@
-using Lykke.Service.Assets.Core.Domain;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Lykke.Service.Assets.Core.Domain
 {
-    public interface IAsset : IDictionaryItem
+    public interface IAsset
     {
-        string BlockChainId { get; }
-        string BlockChainAssetId { get; }
-        string Name { get; }
-        string Symbol { get; }
-        string IdIssuer { get; }
-        bool IsBase { get; }
-        bool HideIfZero { get; }
-        int Accuracy { get; }
-        int MultiplierPower { get; }
-        bool IsDisabled { get; }
-        bool HideWithdraw { get; }
-        bool HideDeposit { get; }
-        int DefaultOrder { get; }
-        bool KycNeeded { get; }
-        string AssetAddress { get; }
-        double DustLimit { get; }
-        string CategoryId { get; }
-        Blockchain Blockchain { get; }
-        string DefinitionUrl { get; }
-        string[] PartnerIds { get; }
-        bool NotLykkeAsset { get; }
-        bool IssueAllowed { get; }
-        /// <summary>
-        /// Value lower that this property is considered "low volume" and may have some limitations,
-        /// e.g. cash out timeout limits
-        /// </summary>
-        double? LowVolumeAmount { get; set; }
+        int Accuracy { get; set; }
+
+        string AssetAddress { get; set; }
+
+        bool BankCardsDepositEnabled { get; set; }
+
+        Blockchain Blockchain { get; set; }
+
+        string BlockChainAssetId { get; set; }
+
+        bool BlockchainDepositEnabled { get; set; }
+
+        string BlockChainId { get; set; }
+
+        bool BlockchainWithdrawal { get; set; }
+
+        bool BuyScreen { get; set; }
+
+        string CategoryId { get; set; }
+
+        bool CrosschainWithdrawal { get; set; }
+
+        int DefaultOrder { get; set; }
+
+        string DefinitionUrl { get; set; }
+
         string DisplayId { get; set; }
 
-        //deposit flags
-        bool BankCardsDepositEnabled { get; }
-        bool SwiftDepositEnabled { get; }
-        bool BlockchainDepositEnabled { get; }
-        bool BuyScreen { get; }
+        double DustLimit { get; set; }
 
-        //withdraw flags
-        bool SellScreen { get; }
-        bool BlockchainWithdrawal { get; }
-        bool SwiftWithdrawal { get; }
-        bool ForwardWithdrawal { get; }
-        bool CrosschainWithdrawal { get; }
+        /// <summary>
+        ///     Base asset for forward withdrawal.
+        /// </summary>
+        string ForwardBaseAsset { get; set; }
 
-        //lock period for forward withdrawal
-        int ForwardFrozenDays { get; }
-        //base asset for forward withdrawal
-        string ForwardBaseAsset { get; }
-        string ForwardMemoUrl { get; }
+        /// <summary>
+        ///     Lock period for forward withdrawal.
+        /// </summary>
+        int ForwardFrozenDays { get; set; }
 
-        string IconUrl { get; }
+        string ForwardMemoUrl { get; set; }
+
+        bool ForwardWithdrawal { get; set; }
+
+        bool HideDeposit { get; set; }
+
+        bool HideIfZero { get; set; }
+
+        bool HideWithdraw { get; set; }
+
+        string IconUrl { get; set; }
+
+        string Id { get; set; }
+
+        string IdIssuer { get; set; }
+
+        bool IsBase { get; set; }
+
+        bool IsDisabled { get; set; }
+
+        bool IssueAllowed { get; set; }
+
+        bool KycNeeded { get; set; }
+
+        /// <summary>
+        ///     Value lower that this property is considered "low volume" and may have some limitations,
+        ///     e.g. cash out timeout limits
+        /// </summary>
+        double? LowVolumeAmount { get; set; }
+
+        int MultiplierPower { get; set; }
+
+        string Name { get; set; }
+
+        bool NotLykkeAsset { get; set; }
+
+        string[] PartnerIds { get; set; }
+
+        bool SellScreen { get; set; }
+
+        bool SwiftDepositEnabled { get; set; }
+
+        bool SwiftWithdrawal { get; set; }
+
+        string Symbol { get; set; }
     }
-
-    
 }
-
-public static class AssetsRepositoryExt
-{
-    public static string GetFirstAssetId(this IEnumerable<IAsset> assets)
-    {
-        return assets.OrderBy(x => x.DefaultOrder).First().Id;
-    }
-
-    public static IEnumerable<IAssetPair> WhichHaveAssets(this IEnumerable<IAssetPair> src, params string[] assetIds)
-    {
-        return src.Where(assetPair => assetIds.Contains(assetPair.BaseAssetId) || assetIds.Contains(assetPair.QuotingAssetId));
-    }
-
-    public static IEnumerable<IAssetPair> WhichConsistsOfAssets(this IEnumerable<IAssetPair> src, params string[] assetIds)
-    {
-        return src.Where(assetPair => assetIds.Contains(assetPair.BaseAssetId) && assetIds.Contains(assetPair.QuotingAssetId));
-    }
-}
-
-
-

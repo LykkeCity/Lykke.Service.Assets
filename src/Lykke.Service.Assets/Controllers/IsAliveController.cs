@@ -1,28 +1,30 @@
 ﻿using System;
-using Lykke.Service.Assets.Models.IsAlive;
+using Lykke.Service.Assets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.SwaggerGen.Annotations;
 
+
 namespace Lykke.Service.Assets.Controllers
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Controller to test service is alive
+    ///    Allows to test if service is alive
     /// </summary>
     [Route("api/[controller]")]
     public class IsAliveController : Controller
     {
         /// <summary>
-        /// Checks service is alive
+        ///    Returns service alive status
         /// </summary>
         [HttpGet]
         [SwaggerOperation("IsAlive")]
-        public IsAliveResponse Get()
+        public IsAlive IsAlive()
         {
-            return new IsAliveResponse
+            return new IsAlive
             {
-                Version = PlatformServices.Default.Application.ApplicationVersion,
-                Env = Environment.GetEnvironmentVariable("ENV_INFO")
+                Env     = Environment.GetEnvironmentVariable("ENV_INFO"),
+                Version = PlatformServices.Default.Application.ApplicationVersion
             };
         }
     }
