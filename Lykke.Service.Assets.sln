@@ -28,11 +28,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{1F52
 		client\scripts\update.ps1 = client\scripts\update.ps1
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.Asset", "src\Lykke.Job.Asset\Lykke.Job.Asset.csproj", "{29174765-6BB8-490C-A3CB-056DF2605F8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.Assets", "src\Lykke.Job.Asset\Lykke.Job.Assets.csproj", "{29174765-6BB8-490C-A3CB-056DF2605F8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.Asset.Core", "src\Lykke.Job.Asset.Core\Lykke.Job.Asset.Core.csproj", "{DB8684DB-A266-4511-B671-049228D1C43D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.Assets.Core", "src\Lykke.Job.Asset.Core\Lykke.Job.Assets.Core.csproj", "{DB8684DB-A266-4511-B671-049228D1C43D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.Asset.Services", "src\Lykke.Job.Asset.Services\Lykke.Job.Asset.Services.csproj", "{777BA604-8B29-46F2-94AA-F305F482C2FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.Assets.Services", "src\Lykke.Job.Asset.Services\Lykke.Job.Assets.Services.csproj", "{777BA604-8B29-46F2-94AA-F305F482C2FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

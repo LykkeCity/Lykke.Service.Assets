@@ -48,8 +48,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lykke.Job.Asset.Core\Lykke.Job.Asset.Core.csproj" />
-    <ProjectReference Include="..\Lykke.Job.Asset.Services\Lykke.Job.Asset.Services.csproj" />
+    <ProjectReference Include="..\Lykke.Job.Asset.Core\Lykke.Job.Assets.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Job.Asset.Services\Lykke.Job.Assets.Services.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />
