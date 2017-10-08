@@ -9,7 +9,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetEntity : TableEntity, IAsset
+    /*public class AssetEntity : TableEntity, IAsset
     {
         public static string GeneratePartitionKey()
         {
@@ -129,5 +129,5 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
             return properties;
         }
-    }
+    }*/
 }

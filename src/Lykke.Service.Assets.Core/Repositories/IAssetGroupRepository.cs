@@ -6,10 +6,14 @@ namespace Lykke.Service.Assets.Core.Repositories
 {
     public interface IAssetGroupRepository
     {
-        Task<IEnumerable<(AssetGroupType Type, IAssetGroup AssetGroup)>> GetAllAsync();
+        Task AddAsync(IAssetGroup group);
 
-        Task<IEnumerable<IAssetGroup>> GetAllAsync(AssetGroupType type);
+        Task<IEnumerable<IAssetGroup>> GetAllAsync();
 
-        Task<IEnumerable<IAssetGroup>> GetAllAsync(AssetGroupType type, string id);
+        Task<IAssetGroup> GetAsync(string groupName);
+        
+        Task RemoveAsync(string groupName);
+        
+        Task UpdateAsync(IAssetGroup group);
     }
 }

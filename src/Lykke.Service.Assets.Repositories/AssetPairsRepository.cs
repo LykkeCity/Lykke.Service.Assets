@@ -7,7 +7,7 @@ using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class AssetPairsRepository : IDictionaryRepository<IAssetPair>
+    /*public class AssetPairsRepository : IDictionaryRepository<IAssetPair>
     {
         private readonly INoSQLTableStorage<AssetPairEntity> _tableStorage;
 
@@ -22,5 +22,5 @@ namespace Lykke.Service.Assets.Repositories
 
             return (await _tableStorage.GetDataAsync(partitionKey));
         }
-    }
+    }*/
 }

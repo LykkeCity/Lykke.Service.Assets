@@ -7,7 +7,7 @@ using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class IssuerRepository : IIssuerRepository, IDictionaryRepository<IIssuer>
+    /*public class IssuerRepository : IIssuerRepository, IDictionaryRepository<IIssuer>
     {
         private readonly INoSQLTableStorage<IssuerEntity> _tableStorage;
 
@@ -46,5 +46,5 @@ namespace Lykke.Service.Assets.Repositories
         {
             return await GetAllIssuersAsync();
         }
-    }
+    }*/
 }

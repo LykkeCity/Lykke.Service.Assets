@@ -10,10 +10,10 @@ namespace Lykke.Service.Assets.Repositories
         public AutoMapperProfile()
         {
             CreateMap<IErc20Asset,    Erc20AssetEntity>();
-            CreateMap<IAsset,         AssetEntity>();
+            //CreateMap<IAsset,         AssetEntity>();
             CreateMap<IAssetCategory, AssetCategoryEntity>();
-            CreateMap<IAssetPair,     AssetPairEntity>();
-            CreateMap<IIssuer,        IssuerEntity>();
+            //CreateMap<IAssetPair,     AssetPairEntity>();
+            //CreateMap<IIssuer,        IssuerEntity>();
         }
     }
 }

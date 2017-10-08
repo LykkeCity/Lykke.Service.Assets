@@ -1,16 +1,13 @@
-﻿using Lykke.Service.Assets.Core.Domain;
-using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetGroupEntity : TableEntity, IAssetGroup
+    public class AssetGroupEntity : TableEntity
     {
         public string AssetId { get; set; }
 
         public string ClientId { get; set; }
-
-        public string Id { get; set; }
-
+        
         public string Name { get; set; }
 
         public bool IsIosDevice { get; set; }

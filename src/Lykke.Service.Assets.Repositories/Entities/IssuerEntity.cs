@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class IssuerEntity : TableEntity, IIssuer
+    /*public class IssuerEntity : TableEntity, IIssuer
     {
         public string IconUrl { get; set; }
 
@@ -22,5 +22,5 @@ namespace Lykke.Service.Assets.Repositories.Entities
         {
             return id;
         }
-    }
+    }*/
 }

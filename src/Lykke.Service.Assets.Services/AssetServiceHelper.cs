@@ -14,7 +14,7 @@ namespace Lykke.Service.Assets.Services
         Task<IAsset[]> GetAssetsForClient(string clientId, bool isIosDevice, string partnerId = null);
     }
 
-    public class AssetServiceHelper : IAssetsServiceHelper
+    /*public class AssetServiceHelper : IAssetsServiceHelper
     {
         private readonly IAssetGroupRepository _assetGroupRepo;
         private readonly IDictionaryManager<IAsset> _manager;
@@ -41,5 +41,5 @@ namespace Lykke.Service.Assets.Services
 
             return result.Where(x => !x.NotLykkeAsset).ToArray();
         }        
-    }
+    }*/
 }

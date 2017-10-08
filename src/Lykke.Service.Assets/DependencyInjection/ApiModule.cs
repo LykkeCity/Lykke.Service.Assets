@@ -45,7 +45,7 @@ namespace Lykke.Service.Assets.DependencyInjection
         private void RegisterAssetGroupsRepository(ContainerBuilder builder)
         {
             builder.RegisterInstance<IAssetGroupRepository>(
-                new AssetGroupsRepository(AzureTableStorage<AssetGroupEntity>.Create(() => _settings.AssetsService.Db.ClientPersonalInfoConnString,
+                new AssetGroupRepository(AzureTableStorage<AssetGroupEntity>.Create(() => _settings.AssetsService.Db.ClientPersonalInfoConnString,
                     "AssetGroups", _log)));
 
             RegisterDictionaryManager<IAssetGroup>(builder);

@@ -1,12 +1,14 @@
 ﻿namespace Lykke.Service.Assets.Core.Domain
 {
-    public interface IAssetGroup
+    public interface IClientAssetGroupLink
     {
         bool ClientsCanCashInViaBankCards { get; set; }
-        
-        bool IsIosDevice { get; set; }
 
-        string Name { get; set; }
+        string ClientId { get; set; }
+
+        string GroupName { get; set; }
+
+        bool IsIosDevice { get; set; }
 
         bool SwiftDepositEnabled { get; set; }
     }

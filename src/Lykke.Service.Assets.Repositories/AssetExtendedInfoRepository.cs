@@ -7,7 +7,7 @@ using Lykke.Service.Assets.Core.Repositories;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class AssetExtendedInfoEntity : TableEntity, IAssetDescription
+    /*public class AssetExtendedInfoEntity : TableEntity, IAssetDescription
     {
         public static string GeneratePartitionKey()
         {
@@ -77,5 +77,5 @@ namespace Lykke.Service.Assets.Repositories
             return await _tableStorage.GetDataAsync(partitionKey);
 
         }
-    }
+    }*/
 }

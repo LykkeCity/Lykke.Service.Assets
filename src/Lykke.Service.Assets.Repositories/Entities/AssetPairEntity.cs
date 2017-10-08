@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetPairEntity : TableEntity, IAssetPair
+    /*public class AssetPairEntity : TableEntity, IAssetPair
     {
         public string Id => RowKey;
 
@@ -27,5 +27,5 @@ namespace Lykke.Service.Assets.Repositories.Entities
         {
             return "AssetPair";
         }
-    }
+    }*/
 }

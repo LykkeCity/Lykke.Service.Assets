@@ -6,7 +6,6 @@ using Common.Log;
 using Lykke.Job.Asset.IncomingMessages;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
-using Lykke.Job.Asset.Core.Messages;
 using Lykke.Job.Asset.Core.Services;
 using Lykke.Job.Asset.Core.Domain;
 
