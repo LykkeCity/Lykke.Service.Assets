@@ -31,7 +31,7 @@ namespace Lykke.Job.Asset.RabbitSubscribers
             // about RabbitMq subscriber configuration
 
             var settings = RabbitMqSubscriptionSettings
-                .CreateForSubscriber(_connectionString, "lykke.ethereum.samurai.event.provider", "erc20")
+                .CreateForSubscriber(_connectionString, "lykke.ethereum.indexer", "erccontracts")
                 .MakeDurable();
             // TODO: Make additional configuration, using fluent API here:
             // ex: .MakeDurable()
