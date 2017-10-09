@@ -20,7 +20,7 @@ namespace Lykke.Service.Assets.Controllers
     [Route("api/[controller]")]
     public class AssetPairsController : Controller
     {
-        private readonly IAssetsServiceHelper           _assetsServiceHelper;
+        /*private readonly IAssetsServiceHelper           _assetsServiceHelper;
         private readonly IDictionaryManager<IAssetPair> _manager;
 
 
@@ -92,6 +92,6 @@ namespace Lykke.Service.Assets.Controllers
                 .Select(AssetPair.Create);
 
             return Ok(result);
-        }
+        }*/
     }
 }

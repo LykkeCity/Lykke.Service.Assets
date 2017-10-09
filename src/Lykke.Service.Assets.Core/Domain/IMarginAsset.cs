@@ -2,18 +2,18 @@
 {
     public interface IMarginAsset
     {
-        int Accuracy { get; }
+        int Accuracy { get; set; }
 
-        double DustLimit { get; }
+        double DustLimit { get; set; }
 
-        string Id { get; }
+        string Id { get; set; }
 
-        string IdIssuer { get; }
+        string IdIssuer { get; set; }
 
-        double Multiplier { get; }
+        double Multiplier { get; set; }
 
-        string Name { get; }
+        string Name { get; set; }
 
-        string Symbol { get; }
+        string Symbol { get; set; }
     }
 }

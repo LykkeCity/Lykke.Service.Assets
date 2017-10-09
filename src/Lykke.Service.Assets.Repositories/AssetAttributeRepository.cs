@@ -12,7 +12,8 @@ namespace Lykke.Service.Assets.Repositories
     {
         private readonly INoSQLTableStorage<AssetAttributeEntity> _assetAttributeTable;
 
-        public AssetAttributeRepository(INoSQLTableStorage<AssetAttributeEntity> assetAttributeTable)
+        public AssetAttributeRepository(
+            INoSQLTableStorage<AssetAttributeEntity> assetAttributeTable)
         {
             _assetAttributeTable = assetAttributeTable;
         }

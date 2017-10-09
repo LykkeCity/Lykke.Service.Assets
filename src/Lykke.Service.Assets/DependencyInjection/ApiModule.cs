@@ -31,23 +31,24 @@ namespace Lykke.Service.Assets.DependencyInjection
 
             builder.RegisterInstance(_settings).SingleInstance();
             builder.RegisterInstance(_settings.AssetsService).SingleInstance();
-            builder.RegisterType<AssetServiceHelper>().As<IAssetsServiceHelper>().SingleInstance();
+            //builder.RegisterType<AssetServiceHelper>().As<IAssetsServiceHelper>().SingleInstance();
 
-            builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
+            //builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
 
-            RegisterAssets(builder);
-            RegisterAssetPairs(builder);
-            RegisterAssetAttributes(builder);
-            RegisterIssuerRepository(builder);
-            RegisterAssetExtendedInfoRepository(builder);
-            RegisterAssetCategoryRepository(builder);
-            RegisterAssetGroupsRepository(builder);
-
-            RegisterServicesForJobs(builder);
-            RegisterRepositoriesForJobs(builder);
-            RegisterRabbitMqSubscribers(builder);
+            //RegisterAssets(builder);
+            //RegisterAssetPairs(builder);
+            //RegisterAssetAttributes(builder);
+            //RegisterIssuerRepository(builder);
+            //RegisterAssetExtendedInfoRepository(builder);
+            //RegisterAssetCategoryRepository(builder);
+            //RegisterAssetGroupsRepository(builder);
+            //
+            //RegisterServicesForJobs(builder);
+            //RegisterRepositoriesForJobs(builder);
+            //RegisterRabbitMqSubscribers(builder);
         }
 
+        /*
         private void RegisterAssetGroupsRepository(ContainerBuilder builder)
         {
             builder.RegisterInstance<IAssetGroupRepository>(
@@ -172,5 +173,6 @@ namespace Lykke.Service.Assets.DependencyInjection
                 .Create(_dbSettingsManager.Nested(x => x.AssetsService.Dictionaries.DbConnectionString),
                     "Erc20Asset", _log)));
         }
+        */
     }
 }

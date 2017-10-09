@@ -6,12 +6,12 @@ namespace Lykke.Service.Assets.Core.Repositories
 {
     public interface IMarginAssetPairRepository
     {
+        Task AddAsync(IMarginAssetPair marginAssetPair);
+
         Task<IEnumerable<IMarginAssetPair>> GetAllAsync();
 
         Task<IMarginAssetPair> GetAsync(string id);
 
-        Task AddAsync(IMarginAssetPair assetPair);
-
-        Task EditAsync(string id, IMarginAssetPair assetPair);
+        Task UpdateAsync(IMarginAssetPair marginAssetPair);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Lykke.Service.Asset.Core.Domain;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities

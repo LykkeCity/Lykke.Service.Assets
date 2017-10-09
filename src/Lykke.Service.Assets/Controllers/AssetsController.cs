@@ -21,6 +21,7 @@ namespace Lykke.Service.Assets.Controllers
     [Route("api/[controller]")]
     public class AssetsController : Controller
     {
+        /*
         private readonly IDictionaryManager<IAsset> _manager;
         private readonly IDictionaryManager<IAssetAttributes> _assetAttributesManager;
         private readonly IDictionaryManager<IAssetDescription> _assetExtendedInfoManager;
@@ -274,5 +275,6 @@ namespace Lykke.Service.Assets.Controllers
             var result = await _assetsServiceHelper.GetAssetsForClient(clientId, isIosDevice, partnerId);
             return Ok(result.Select(Asset.Create));            
         }  
+        */
     }
 }

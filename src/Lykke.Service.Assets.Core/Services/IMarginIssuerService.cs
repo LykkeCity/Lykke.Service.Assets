@@ -1,14 +1,19 @@
-﻿using Lykke.Service.Assets.Core.Domain;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Services
 {
     public interface IMarginIssuerService
     {
+        Task AddAsync(IMarginIssuer marginIssuer);
+
         IMarginIssuer CreateDefault();
 
-        //public static MarginIssuer CreateDefault()
-        //{
-        //    return new MarginIssuer();
-        //}
+        Task<IEnumerable<IMarginIssuer>> GetAllAsync();
+
+        Task<IMarginIssuer> GetAsync(string id);
+
+        Task UpdateAsync(IMarginIssuer marginIssuer);
     }
 }

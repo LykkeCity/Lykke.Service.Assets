@@ -113,12 +113,12 @@ namespace Lykke.Service.Assets
             {
                 const string appName = "Lykke.Service.Assets";
 
-                var persistenceManager = new LykkeLogToAzureStoragePersistenceManager
-                (
-                    appName,
-                    AzureTableStorage<LogEntity>.Create(() => dbLogConnectionString, "AssetsServiceLog", consoleLogger),
-                    consoleLogger
-                );
+                //var persistenceManager = new LykkeLogToAzureStoragePersistenceManager
+                //(
+                //    appName,
+                //    AzureTableStorage<LogEntity>.Create(() => dbLogConnectionString, "AssetsServiceLog", consoleLogger),
+                //    consoleLogger
+                //);
 
                 var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager
                 (
@@ -127,17 +127,17 @@ namespace Lykke.Service.Assets
                     consoleLogger
                 );
 
-                var azureStorageLogger = new LykkeLogToAzureStorage
-                (
-                    appName,
-                    persistenceManager,
-                    slackNotificationsManager,
-                    consoleLogger
-                );
+                //var azureStorageLogger = new LykkeLogToAzureStorage
+                //(
+                //    appName,
+                //    persistenceManager,
+                //    slackNotificationsManager,
+                //    consoleLogger
+                //);
 
-                azureStorageLogger.Start();
+                //azureStorageLogger.Start();
 
-                aggregateLogger.AddLog(azureStorageLogger);
+                //aggregateLogger.AddLog(azureStorageLogger);
             }
 
             return aggregateLogger;

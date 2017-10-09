@@ -1,17 +1,19 @@
-﻿using Lykke.Service.Assets.Core.Domain;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Services
 {
     public interface IMarginAssetPairService
     {
+        Task AddAsync(IMarginAssetPair marginAssetPair);
+
         IMarginAssetPair CreateDefault();
 
-        //public static MarginAssetPair CreateDefault()
-        //{
-        //    return new MarginAssetPair
-        //    {
-        //        Accuracy = 5,
-        //    };
-        //}
+        Task<IEnumerable<IMarginAssetPair>> GetAllAsync();
+
+        Task<IMarginAssetPair> GetAsync(string id);
+
+        Task UpdateAsync(IMarginAssetPair marginAssetPair);
     }
 }

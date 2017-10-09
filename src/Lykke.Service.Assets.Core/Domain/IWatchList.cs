@@ -4,14 +4,14 @@ namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IWatchList
     {
-        IEnumerable<string> AssetIds { get; }
+        IEnumerable<string> AssetIds { get; set; }
 
-        string Id { get; }
+        string Id { get; set; }
 
-        string Name { get; }
+        string Name { get; set; }
 
-        int Order { get; }
+        int Order { get; set; }
 
-        bool ReadOnly { get; }
+        bool ReadOnly { get; set; }
     }
 }
