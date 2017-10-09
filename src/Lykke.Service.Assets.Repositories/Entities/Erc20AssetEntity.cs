@@ -1,4 +1,4 @@
-﻿using Lykke.Job.Asset.Core.Domain;
+﻿using Lykke.Service.Asset.Core.Domain;
 using Lykke.Service.Assets.Core.Domain;
 using Microsoft.WindowsAzure.Storage.Table;
 

@@ -3,15 +3,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Common;
 using Common.Log;
-using Lykke.Job.Asset.IncomingMessages;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
-using Lykke.Service.Asset.Core.Services;
-using Lykke.Service.Asset.Core.Domain;
-using Lykke.Service.Asset.Core.Services;
-using Lykke.Service.Asset.Core.Domain;
+using Lykke.Service.Assets.Core.Services;
+using Lykke.Job.Asset.IncomingMessages;
+using Lykke.Service.Assets.Core.Domain;
 
-namespace Lykke.Job.Asset.RabbitSubscribers
+namespace Lykke.Service.Asset.RabbitSubscribers
 {
     public class ErcContractSubscriber : IStartable, IStopable
     {

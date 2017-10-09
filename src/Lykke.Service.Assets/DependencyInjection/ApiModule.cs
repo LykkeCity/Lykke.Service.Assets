@@ -9,6 +9,8 @@ using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.Service.Assets.Services;
+using Lykke.Service.Asset.RabbitSubscribers;
+using AzureStorage.Tables.Templates.Index;
 
 namespace Lykke.Service.Assets.DependencyInjection
 {
@@ -40,6 +42,10 @@ namespace Lykke.Service.Assets.DependencyInjection
             RegisterAssetExtendedInfoRepository(builder);
             RegisterAssetCategoryRepository(builder);
             RegisterAssetGroupsRepository(builder);
+
+            RegisterServicesForJobs(builder);
+            RegisterRepositoriesForJobs(builder);
+            RegisterRabbitMqSubscribers(builder);
         }
 
         private void RegisterAssetGroupsRepository(ContainerBuilder builder)
@@ -137,6 +143,34 @@ namespace Lykke.Service.Assets.DependencyInjection
                 .As<IDictionaryManager<IAssetPair>>()
                 .WithParameter(new TypedParameter(typeof(TimeSpan), _settings.AssetsService.Dictionaries.CacheExpirationPeriod))
                 .SingleInstance();
+        }
+
+        private void RegisterRabbitMqSubscribers(ContainerBuilder builder)
+        {
+            // TODO: You should register each subscriber in DI container as IStartable singleton and autoactivate it
+
+            builder.RegisterType<ErcContractSubscriber>()
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.AssetsService.Rabbit.ConnectionString));
+        }
+
+        private void RegisterServicesForJobs(ContainerBuilder builder)
+        {
+            builder.RegisterType<ErcContractProcessor>()
+                .As<IErcContractProcessor>().SingleInstance();
+        }
+
+        private void RegisterRepositoriesForJobs(ContainerBuilder builder)
+        {
+            builder.RegisterInstance<IErc20AssetRepository>(
+                new Erc20AssetRepository(AzureTableStorage<Erc20AssetEntity>
+                .Create(_dbSettingsManager.Nested(x => x.AssetsService.Dictionaries.DbConnectionString),
+                    "Erc20Asset", _log),
+                 AzureTableStorage<AzureIndex>
+                .Create(_dbSettingsManager.Nested(x => x.AssetsService.Dictionaries.DbConnectionString),
+                    "Erc20Asset", _log)));
         }
     }
 }

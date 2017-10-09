@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
-using Lykke.Job.Asset.Core.Repositories;
-using Lykke.Job.Asset.Core.Domain;
 using AzureStorage.Tables.Templates.Index;
 using AutoMapper;
 
