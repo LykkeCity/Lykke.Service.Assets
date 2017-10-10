@@ -10,12 +10,7 @@ namespace Lykke.Service.Assets
         {
             CreateMap<IAssetAttributes, AssetAttributes>();
             CreateMap<IAssetAttribute,  AssetAttribute>();
-
-            //CreateMap<IAsset,            Asset>();
-            
-            //CreateMap<IAssetCategory,    AssetCategory>();
-            //CreateMap<IAssetDescription, AssetDescription>();
-            //CreateMap<IAssetPair,        AssetPair>();
+            CreateMap<IAssetCategory,   AssetCategory>();
         }
     }
 }
