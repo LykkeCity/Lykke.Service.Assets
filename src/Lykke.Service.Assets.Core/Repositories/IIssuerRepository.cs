@@ -6,12 +6,16 @@ namespace Lykke.Service.Assets.Core.Repositories
 {
     public interface IIssuerRepository
     {
-        Task RegisterIssuerAsync(IIssuer issuer);
+        Task AddAsync(IIssuer issuer);
 
-        Task EditIssuerAsync(string id, IIssuer issuer);
+        Task<IEnumerable<IIssuer>> GetAllAsync();
 
-        Task<IEnumerable<IIssuer>> GetAllIssuersAsync();
+        Task<IIssuer> GetAsync(string id);
 
-        Task<IIssuer> GetIssuerAsync(string id);
+        Task<IEnumerable<IIssuer>> GetAsync(IEnumerable<string> ids);
+
+        Task RemoveAsync(string id);
+
+        Task UpdateAsync(IIssuer issuer);
     }
 }

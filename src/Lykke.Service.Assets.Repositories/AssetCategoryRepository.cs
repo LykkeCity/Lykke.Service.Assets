@@ -52,11 +52,8 @@ namespace Lykke.Service.Assets.Repositories
         {
             await _assetCategoryTable.ReplaceAsync(GetPartitionKey(), GetRowKey(assetCategory.Id), x =>
             {
-                x.AndroidIconUrl = assetCategory.AndroidIconUrl;
-                x.IosIconUrl     = assetCategory.IosIconUrl;
-                x.Name           = assetCategory.Name;
-                x.SortOrder      = assetCategory.SortOrder;
-
+                Mapper.Map(assetCategory, x);
+                
                 return x;
             });
         }

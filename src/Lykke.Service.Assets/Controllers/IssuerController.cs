@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Lykke.Service.Assets.Core.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Lykke.Service.Assets.Controllers
 {
@@ -7,12 +8,18 @@ namespace Lykke.Service.Assets.Controllers
     /// <summary>
     ///     Controller for erc 20 tokens
     /// </summary>
-    [Route("api/[controller]")]
-    public class IssuerController
+    [Route("api/issuers")]
+    public class IssuerController : Controller
     {
-        public IssuerController()
-        {
+        private readonly IIssuerService _issuerService;
 
+
+        public IssuerController(
+            IIssuerService issuerService)
+        {
+            _issuerService = issuerService;
         }
+
+
     }
 }

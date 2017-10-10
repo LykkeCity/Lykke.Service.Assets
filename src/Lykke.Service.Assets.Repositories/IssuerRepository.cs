@@ -1,50 +1,69 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AzureStorage;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    /*public class IssuerRepository : IIssuerRepository, IDictionaryRepository<IIssuer>
+    public class IssuerRepository : IIssuerRepository
     {
-        private readonly INoSQLTableStorage<IssuerEntity> _tableStorage;
+        private readonly INoSQLTableStorage<IssuerEntity> _issuerTable;
 
-        public IssuerRepository(INoSQLTableStorage<IssuerEntity> tableStorage)
+
+        public IssuerRepository(
+            INoSQLTableStorage<IssuerEntity> issuerTable)
         {
-            _tableStorage = tableStorage;
+            _issuerTable = issuerTable;
         }
 
-        public Task RegisterIssuerAsync(IIssuer issuer)
+        public async Task AddAsync(IIssuer issuer)
         {
-            var newIssuer = IssuerEntity.Create(issuer);
-            return _tableStorage.InsertAsync(newIssuer);
-        }
+            var entity = Mapper.Map<IssuerEntity>(issuer);
 
-        public async Task EditIssuerAsync(string id, IIssuer issuer)
-        {
-            await _tableStorage.DeleteAsync(IssuerEntity.GeneratePartitionKey(), IssuerEntity.GenerateRowKey(id));
-            await RegisterIssuerAsync(issuer);
-        }
+            entity.PartitionKey = GetPartitionKey();
+            entity.RowKey       = GetRowKey(issuer.Id);
 
-        public async Task<IEnumerable<IIssuer>> GetAllIssuersAsync()
-        {
-            var partitionKey = IssuerEntity.GeneratePartitionKey();
-            return await _tableStorage.GetDataAsync(partitionKey);
-        }
-
-        public async Task<IIssuer> GetIssuerAsync(string id)
-        {
-            var partitionKey = IssuerEntity.GeneratePartitionKey();
-            var rowKey = IssuerEntity.GenerateRowKey(id);
-
-            return await _tableStorage.GetDataAsync(partitionKey, rowKey);
+            await _issuerTable.InsertAsync(entity);
         }
 
         public async Task<IEnumerable<IIssuer>> GetAllAsync()
         {
-            return await GetAllIssuersAsync();
+            return await _issuerTable.GetDataAsync();
         }
-    }*/
+
+        public async Task<IIssuer> GetAsync(string id)
+        {
+            return await _issuerTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
+        public async Task<IEnumerable<IIssuer>> GetAsync(IEnumerable<string> ids)
+        {
+            return await _issuerTable.GetDataAsync(GetPartitionKey(), ids.Select(GetRowKey));
+        }
+
+        public async Task RemoveAsync(string id)
+        {
+            await _issuerTable.DeleteIfExistAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
+        public async Task UpdateAsync(IIssuer issuer)
+        {
+            await _issuerTable.ReplaceAsync(GetPartitionKey(), GetRowKey(issuer.Id), x =>
+            {
+                Mapper.Map(issuer, x);
+
+                return x;
+            });
+        }
+
+        private static string GetPartitionKey()
+            => "Issuer";
+
+        private static string GetRowKey(string id)
+            => id;
+    }
 }
