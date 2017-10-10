@@ -7,11 +7,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
     {
         public string AndroidIconUrl { get; set; }
 
-        public string Id
-        {
-            get => RowKey;
-            set => RowKey = value;
-        }
+        public string Id => RowKey;
 
         public string IosIconUrl { get; set; }
 

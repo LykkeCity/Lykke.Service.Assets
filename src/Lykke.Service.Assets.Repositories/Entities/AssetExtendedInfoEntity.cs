@@ -13,7 +13,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public string FullName { get; set; }
 
-        public string Id { get; set; }
+        public string Id => RowKey;
 
         public string MarketCapitalization { get; set; }
 

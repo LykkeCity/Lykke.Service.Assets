@@ -41,7 +41,6 @@ namespace Lykke.Service.Assets.Repositories
 
             entity.PartitionKey = GetPartitionKey(userId);
             entity.RowKey       = GetRowKey(watchList.Id);
-            entity.UserId       = userId;
 
             await _customWatchListTable.InsertOrReplaceAsync(entity);
         }

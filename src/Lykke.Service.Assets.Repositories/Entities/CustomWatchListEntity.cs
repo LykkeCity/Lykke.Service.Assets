@@ -7,7 +7,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
     {
         public IEnumerable<string> AssetIds { get; set; }
 
-        public string Id { get; set; }
+        public string Id => RowKey;
 
         public string Name { get; set; }
 
@@ -15,6 +15,6 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public bool ReadOnly { get; set; }
 
-        public string UserId { get; set; }
+        public string UserId => PartitionKey;
     }
 }

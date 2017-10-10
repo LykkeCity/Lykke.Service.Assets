@@ -25,7 +25,6 @@ namespace Lykke.Service.Assets.Repositories
             await _assetCategoryTable.InsertAsync(new AssetCategoryEntity
             {
                 AndroidIconUrl = assetCategory.AndroidIconUrl,
-                Id             = assetCategory.Id,
                 IosIconUrl     = assetCategory.IosIconUrl,
                 Name           = assetCategory.Name,
                 PartitionKey   = GetPartitionKey(),

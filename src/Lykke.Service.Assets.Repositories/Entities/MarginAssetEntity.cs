@@ -9,7 +9,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public double DustLimit { get; set; }
 
-        public string Id { get; set; }
+        public string Id => RowKey;
 
         public string IdIssuer { get; set; }
 
