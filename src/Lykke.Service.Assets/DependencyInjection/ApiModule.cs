@@ -156,23 +156,6 @@ namespace Lykke.Service.Assets.DependencyInjection
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.AssetsService.Rabbit.ConnectionString));
         }
-
-        private void RegisterServicesForJobs(ContainerBuilder builder)
-        {
-            builder.RegisterType<ErcContractProcessor>()
-                .As<IErcContractProcessor>().SingleInstance();
-        }
-
-        private void RegisterRepositoriesForJobs(ContainerBuilder builder)
-        {
-            builder.RegisterInstance<IErc20AssetRepository>(
-                new Erc20AssetRepository(AzureTableStorage<Erc20AssetEntity>
-                .Create(_dbSettingsManager.Nested(x => x.AssetsService.Dictionaries.DbConnectionString),
-                    "Erc20Asset", _log),
-                 AzureTableStorage<AzureIndex>
-                .Create(_dbSettingsManager.Nested(x => x.AssetsService.Dictionaries.DbConnectionString),
-                    "Erc20Asset", _log)));
-        }
         */
     }
 }
