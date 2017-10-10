@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using AzureStorage.Tables;
 using Common.Log;
 using JetBrains.Annotations;
@@ -11,6 +13,8 @@ using Lykke.Logs;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.DependencyInjection;
 using Lykke.Service.Assets.Models;
+using Lykke.Service.Assets.Repositories;
+using Lykke.Service.Assets.Services;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
 using Microsoft.AspNetCore.Builder;
@@ -25,23 +29,31 @@ namespace Lykke.Service.Assets
     [UsedImplicitly]
     public class Startup
     {
-        private IContainer ApplicationContainer { get; set; }
+        private readonly IConfigurationRoot _configuration;
+
+        private IContainer _applicationContainer;
+
 
         public Startup(IHostingEnvironment env)
         {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfiles(typeof(AutoMapperProfile));
+            });
+
+            Mapper.AssertConfigurationIsValid();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+
+            _configuration = builder.Build();
         }
 
-        private IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        [UsedImplicitly]
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services
@@ -57,24 +69,25 @@ namespace Lykke.Service.Assets
                 {
                     options.DefaultLykkeConfiguration("v1", "Assets Service");
                 });
-
-            var settings = HttpSettingsLoader.Load<ApplicationSettings>(Configuration.GetConnectionString("SettingsUrl"));
-            var log      = CreateLog(services, settings);
+            
+            var settings = _configuration.LoadSettings<ApplicationSettings>("ConnectionStrings:SettingsUrl");
+            var log      = CreateLog(services, settings.CurrentValue);
             var builder  = new ContainerBuilder();
 
-            builder.RegisterModule(new ApiModule(settings, log));
+            builder.RegisterModule(new ApiModule(settings.CurrentValue, log));
+            builder.RegisterModule(new RepositoriesModule(log, settings));
+            builder.RegisterModule(new ServicesModule());
+
             builder.Populate(services);
 
-            ApplicationContainer = builder.Build();
+            _applicationContainer = builder.Build();
 
-            return new AutofacServiceProvider(ApplicationContainer);
+            return new AutofacServiceProvider(_applicationContainer);
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        [UsedImplicitly]
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseLykkeMiddleware(Constants.ComponentName, ex => ErrorResponse.Create("Technical problem"));
@@ -89,7 +102,7 @@ namespace Lykke.Service.Assets
 
         private void CleanUp()
         {
-            ApplicationContainer.Dispose();
+            _applicationContainer.Dispose();
         }
 
         private static ILog CreateLog(IServiceCollection services, ApplicationSettings settings)
@@ -113,6 +126,13 @@ namespace Lykke.Service.Assets
             {
                 const string appName = "Lykke.Service.Assets";
 
+                var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager
+                (
+                    appName,
+                    slackService,
+                    consoleLogger
+                );
+
                 //var persistenceManager = new LykkeLogToAzureStoragePersistenceManager
                 //(
                 //    appName,
@@ -120,12 +140,7 @@ namespace Lykke.Service.Assets
                 //    consoleLogger
                 //);
 
-                var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager
-                (
-                    appName,
-                    slackService,
-                    consoleLogger
-                );
+
 
                 //var azureStorageLogger = new LykkeLogToAzureStorage
                 //(

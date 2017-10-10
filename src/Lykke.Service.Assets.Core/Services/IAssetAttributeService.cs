@@ -6,9 +6,9 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IAssetAttributeService
     {
-        Task AddAsync(string assetId, IAssetAttribute attribute);
+        Task<IAssetAttribute> AddAsync(string assetId, IAssetAttribute attribute);
 
-        Task AddAsync(string assetId, string key, string value);
+        Task<IAssetAttribute> AddAsync(string assetId, string key, string value);
 
         Task<IAssetAttribute> GetAsync(string assetId, string key);
 

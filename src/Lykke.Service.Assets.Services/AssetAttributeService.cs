@@ -19,14 +19,22 @@ namespace Lykke.Service.Assets.Services
             _assetAttributeRepository = assetAttributeRepository;
         }
 
-        public async Task AddAsync(string assetId, IAssetAttribute attribute)
+        public async Task<IAssetAttribute> AddAsync(string assetId, IAssetAttribute attribute)
         {
             await _assetAttributeRepository.AddAsync(assetId, attribute);
+
+            return attribute;
         }
 
-        public async Task AddAsync(string assetId, string key, string value)
+        public async Task<IAssetAttribute> AddAsync(string assetId, string key, string value)
         {
-            await AddAsync(assetId, new AssetAttribute { Key = key, Value = value });
+            var attribute = new AssetAttribute
+            {
+                Key   = key,
+                Value = value
+            };
+
+            return await AddAsync(assetId, attribute);
         }
 
         public async Task<IAssetAttribute> GetAsync(string assetId, string key)
@@ -49,16 +57,23 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IEnumerable<IAssetAttributes>> GetAllAsync(string assetId)
         {
-            var assetAttributes = await _assetAttributeRepository.GetAllAsync(assetId);
+            var assetAttributes = (await _assetAttributeRepository.GetAllAsync(assetId)).ToArray();
 
-            return new[]
+            if (assetAttributes.Any())
             {
-                new AssetAttributes
+                return new[]
                 {
-                    AssetId    = assetId,
-                    Attributes = assetAttributes
-                }
-            };
+                    new AssetAttributes
+                    {
+                        AssetId    = assetId,
+                        Attributes = assetAttributes
+                    }
+                };
+            }
+            else
+            {
+                return new AssetAttributes[0];
+            }
         }
 
         public async Task RemoveAsync(string assetId, string key)
