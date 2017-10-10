@@ -3,6 +3,7 @@ using Lykke.Service.Assets.Core.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 
@@ -22,14 +23,12 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task AddAsync(IAssetCategory assetCategory)
         {
-            await _assetCategoryTable.InsertAsync(new AssetCategoryEntity
-            {
-                AndroidIconUrl = assetCategory.AndroidIconUrl,
-                IosIconUrl     = assetCategory.IosIconUrl,
-                Name           = assetCategory.Name,
-                PartitionKey   = GetPartitionKey(),
-                SortOrder      = assetCategory.SortOrder
-            });
+            var entity = Mapper.Map<AssetCategoryEntity>(assetCategory);
+
+            entity.PartitionKey = GetPartitionKey();
+            entity.RowKey       = GetRowKey(assetCategory.Id);
+
+            await _assetCategoryTable.InsertAsync(entity);
         }
 
         public async Task<IAssetCategory> GetAsync(string id)

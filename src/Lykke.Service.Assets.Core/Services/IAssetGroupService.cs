@@ -10,7 +10,7 @@ namespace Lykke.Service.Assets.Core.Services
 
         Task AddClientToGroupAsync(string clientId, string groupName);
 
-        Task AddGroupAsync(IAssetGroup group);
+        Task<IAssetGroup> AddGroupAsync(IAssetGroup group);
 
         Task<bool> CashInViaBankCardEnabledAsync(string clientId, bool isIosDevice);
 

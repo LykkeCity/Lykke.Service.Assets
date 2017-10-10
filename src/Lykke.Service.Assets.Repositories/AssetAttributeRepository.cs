@@ -3,6 +3,7 @@ using Lykke.Service.Assets.Core.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 
@@ -20,12 +21,12 @@ namespace Lykke.Service.Assets.Repositories
         
         public async Task AddAsync(string assetId, IAssetAttribute attribute)
         {
-            await _assetAttributeTable.InsertAsync(new AssetAttributeEntity
-            {
-                AssetId = assetId,
-                Key     = attribute.Key,
-                Value   = attribute.Value
-            });
+            var entity = Mapper.Map<AssetAttributeEntity>(attribute);
+
+            entity.PartitionKey = GetPartitionKey(assetId);
+            entity.RowKey       = GetRowKey(attribute.Key);
+
+            await _assetAttributeTable.InsertAsync(entity);
         }
 
         public async Task<IAssetAttribute> GetAsync(string assetId, string key)

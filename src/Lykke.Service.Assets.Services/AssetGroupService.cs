@@ -72,9 +72,11 @@ namespace Lykke.Service.Assets.Services
             await _assetGroupClientLinkRepository.AddAsync(assetGroupClientLink);
         }
 
-        public async Task AddGroupAsync(IAssetGroup group)
+        public async Task<IAssetGroup> AddGroupAsync(IAssetGroup group)
         {
             await _assetGroupRepository.AddAsync(group);
+
+            return group;
         }
         
         public async Task<bool> CashInViaBankCardEnabledAsync(string clientId, bool isIosDevice)

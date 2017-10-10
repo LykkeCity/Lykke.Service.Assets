@@ -25,7 +25,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpDelete("{id}")]
         [SwaggerOperation("AssetRemove")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> Delete(string id)
         {
             await _assetService.RemoveAsync(id);
@@ -35,7 +35,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpPost("{id}/disable")]
         [SwaggerOperation("AssetDisable")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> Disable(string id)
         {
             await _assetService.DisableAsync(id);
