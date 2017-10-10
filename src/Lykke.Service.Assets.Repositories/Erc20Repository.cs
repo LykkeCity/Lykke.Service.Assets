@@ -57,6 +57,7 @@ namespace Lykke.Service.Assets.Repositories
         public async Task SaveAsync(IErc20Asset erc20Asset)
         {
             Erc20AssetEntity entity = Mapper.Map<Erc20AssetEntity>(erc20Asset);
+            Fill(entity);
 
             await _erc20AssetEntityTable.InsertOrMergeAsync(entity);
             await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Asset.AssetId, entity));
@@ -65,9 +66,16 @@ namespace Lykke.Service.Assets.Repositories
         public async Task UpdateAsync(IErc20Asset erc20Asset)
         {
             Erc20AssetEntity entity = Mapper.Map<Erc20AssetEntity>(erc20Asset);
+            Fill(entity);
 
             await _erc20AssetEntityTable.InsertOrReplaceAsync(entity);
             await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Asset.AssetId, entity));
+        }
+
+        private void Fill(Erc20AssetEntity entity)
+        {
+            entity.PartitionKey = Erc20AssetEntity.GeneratePartitionKey();
+            entity.RowKey = Erc20AssetEntity.GenerateRowKey(entity.Address);
         }
     }
 }

@@ -8,6 +8,7 @@ using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Job.Asset.IncomingMessages;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Asset.RabbitSubscribers
 {

@@ -17,8 +17,12 @@ namespace Lykke.Service.Assets.Services
             _assetSettingsRepository = assetSettingsRepository;
         }
 
+        public async Task AddAsync(IAssetSettings settings)
+        {
+            await _assetSettingsRepository.UpsertAsync(settings);
+        }
 
-        public async Task AddOrUpdateAsync(IAssetSettings settings)
+        public async Task UpdateAsync(IAssetSettings settings)
         {
             await _assetSettingsRepository.UpsertAsync(settings);
         }

@@ -6,7 +6,9 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IAssetSettingsService
     {
-        Task AddOrUpdateAsync(IAssetSettings settings);
+        Task AddAsync(IAssetSettings settings);
+
+        Task UpdateAsync(IAssetSettings settings);
         
         Task<IEnumerable<IAssetSettings>> GetAllAsync();
 

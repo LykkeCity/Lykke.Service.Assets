@@ -15,10 +15,12 @@ namespace Lykke.Service.Assets
             CreateMap<IAssetCategory,   AssetCategory>();
             CreateMap<IAssetExtendedInfo, AssetExtendedInfo>();
             CreateMap<IErc20Asset, Erc20TokenModel>().ReverseMap();
+            CreateMap<IAssetSettings, AssetSettings>().ReverseMap();
 
             #region Entities
 
             CreateMap<IErc20Asset, Erc20AssetEntity>().ReverseMap();
+            CreateMap<IAssetSettings, AssetSettingsEntity>().ReverseMap();
 
             #endregion
         }
