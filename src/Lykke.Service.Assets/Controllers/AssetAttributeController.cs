@@ -21,16 +21,14 @@ namespace Lykke.Service.Assets.Controllers
             _assetAttributeService = assetAttributeService;
         }
 
-        [HttpPost("{assetId}")]
-        [SwaggerOperation("AssetAttributeAdd")]
-        [ProducesResponseType((int) HttpStatusCode.Created)]
-        public async Task<IActionResult> Post(string assetId, [FromBody] AssetAttribute attribute)
+        [HttpDelete("{assetId}/{key}")]
+        [SwaggerOperation("AssetAttributeRemove")]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Delete(string assetId, string key)
         {
-            return Created
-            (
-                uri:   $"api/assets/{assetId}/attribute/{attribute.Key}",
-                value: await _assetAttributeService.AddAsync(assetId, attribute)
-            );
+            await _assetAttributeService.RemoveAsync(assetId, key);
+
+            return NoContent();
         }
 
         [HttpGet]
@@ -45,7 +43,7 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpGet("{assetId}")]
-        [SwaggerOperation("AssetAttributeGetAllForAsset")]
+        [SwaggerOperation("AssetAttributeGet")]
         [ProducesResponseType(typeof(AssetAttributes), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string assetId)
@@ -77,15 +75,19 @@ namespace Lykke.Service.Assets.Controllers
                 return NotFound();
             }
         }
-        
-        [HttpDelete("{assetId}/{key}")]
-        [SwaggerOperation("AssetAttributeRemove")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Delete(string assetId, string key)
-        {
-            await _assetAttributeService.RemoveAsync(assetId, key);
 
-            return NoContent();
+        [HttpPost("{assetId}")]
+        [SwaggerOperation("AssetAttributeAdd")]
+        [ProducesResponseType((int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Post(string assetId, [FromBody] AssetAttribute attribute)
+        {
+            attribute = Mapper.Map<AssetAttribute>(await _assetAttributeService.AddAsync(assetId, attribute));
+
+            return Created
+            (
+                uri:   $"api/asset-attributes/{assetId}/{attribute.Key}",
+                value: attribute
+            );
         }
 
         [HttpPut("{assetId}")]

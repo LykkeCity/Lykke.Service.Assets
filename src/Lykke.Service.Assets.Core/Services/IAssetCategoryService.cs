@@ -6,7 +6,7 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IAssetCategoryService
     {
-        Task AddAsync(IAssetCategory assetCategory);
+        Task<IAssetCategory> AddAsync(IAssetCategory assetCategory);
 
         Task<IAssetCategory> GetAsync(string id);
 

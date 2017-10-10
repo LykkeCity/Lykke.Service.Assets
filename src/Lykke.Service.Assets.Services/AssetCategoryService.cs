@@ -18,9 +18,11 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task AddAsync(IAssetCategory assetCategory)
+        public async Task<IAssetCategory> AddAsync(IAssetCategory assetCategory)
         {
             await _assetCategoryRepository.AddAsync(assetCategory);
+
+            return assetCategory;
         }
 
         public async Task<IAssetCategory> GetAsync(string id)
