@@ -6,7 +6,7 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IAssetExtendedInfoService
     {
-        Task AddOrUpdateAsync(IAssetExtendedInfo assetInfo);
+        Task<IAssetExtendedInfo> AddAsync(IAssetExtendedInfo assetInfo);
 
         IAssetExtendedInfo CreateDefault(string id);
 
@@ -15,5 +15,7 @@ namespace Lykke.Service.Assets.Core.Services
         Task<IAssetExtendedInfo> GetAsync(string id);
 
         Task RemoveAsync(string id);
+
+        Task UpdateAsync(IAssetExtendedInfo assetInfo);
     }
 }

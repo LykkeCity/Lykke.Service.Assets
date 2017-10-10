@@ -4,8 +4,8 @@ namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IAssetAttributes
     {
-        string AssetId { get; set; }
+        string AssetId { get; }
 
-        IEnumerable<IAssetAttribute> Attributes { get; set; }
+        IEnumerable<IAssetAttribute> Attributes { get; }
     }
 }

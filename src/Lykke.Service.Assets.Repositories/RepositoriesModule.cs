@@ -39,6 +39,11 @@ namespace Lykke.Service.Assets.Repositories
                 .SingleInstance();
 
             builder
+                .RegisterType<AssetExtendedInfoRepository>()
+                .As<IAssetExtendedInfoRepository>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<AssetRepository>()
                 .As<IAssetRepository>()
                 .SingleInstance();
@@ -84,6 +89,19 @@ namespace Lykke.Service.Assets.Repositories
             builder
                 .RegisterInstance(assetCategoryTable)
                 .As<INoSQLTableStorage<AssetCategoryEntity>>();
+
+            // Asset extended info
+
+            var assetExtendedInfoTable = AzureTableStorage<AssetExtendedInfoEntity>.Create
+            (
+                _settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
+                "Dictionaries",
+                _log
+            );
+
+            builder
+                .RegisterInstance(assetExtendedInfoTable)
+                .As<INoSQLTableStorage<AssetExtendedInfoEntity>>();
         }
     }
 }

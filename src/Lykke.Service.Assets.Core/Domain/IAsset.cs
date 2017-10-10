@@ -2,90 +2,90 @@ namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IAsset
     {
-        int Accuracy { get; set; }
+        int Accuracy { get; }
 
-        string AssetAddress { get; set; }
+        string AssetAddress { get; }
 
-        bool BankCardsDepositEnabled { get; set; }
+        bool BankCardsDepositEnabled { get; }
 
-        Blockchain Blockchain { get; set; }
+        Blockchain Blockchain { get; }
 
-        string BlockChainAssetId { get; set; }
+        string BlockChainAssetId { get; }
 
-        bool BlockchainDepositEnabled { get; set; }
+        bool BlockchainDepositEnabled { get; }
 
-        string BlockChainId { get; set; }
+        string BlockChainId { get; }
 
-        bool BlockchainWithdrawal { get; set; }
+        bool BlockchainWithdrawal { get; }
 
-        bool BuyScreen { get; set; }
+        bool BuyScreen { get; }
 
-        string CategoryId { get; set; }
+        string CategoryId { get; }
 
-        bool CrosschainWithdrawal { get; set; }
+        bool CrosschainWithdrawal { get; }
 
-        int DefaultOrder { get; set; }
+        int DefaultOrder { get; }
 
-        string DefinitionUrl { get; set; }
+        string DefinitionUrl { get; }
 
-        string DisplayId { get; set; }
+        string DisplayId { get; }
 
-        double DustLimit { get; set; }
+        double DustLimit { get; }
 
         /// <summary>
         ///     Base asset for forward withdrawal.
         /// </summary>
-        string ForwardBaseAsset { get; set; }
+        string ForwardBaseAsset { get; }
 
         /// <summary>
         ///     Lock period for forward withdrawal.
         /// </summary>
-        int ForwardFrozenDays { get; set; }
+        int ForwardFrozenDays { get; }
 
-        string ForwardMemoUrl { get; set; }
+        string ForwardMemoUrl { get; }
 
-        bool ForwardWithdrawal { get; set; }
+        bool ForwardWithdrawal { get; }
 
-        bool HideDeposit { get; set; }
+        bool HideDeposit { get; }
 
-        bool HideIfZero { get; set; }
+        bool HideIfZero { get; }
 
-        bool HideWithdraw { get; set; }
+        bool HideWithdraw { get; }
 
-        string IconUrl { get; set; }
+        string IconUrl { get; }
 
-        string Id { get; set; }
+        string Id { get; }
 
-        string IdIssuer { get; set; }
+        string IdIssuer { get; }
 
-        bool IsBase { get; set; }
+        bool IsBase { get; }
 
-        bool IsDisabled { get; set; }
+        bool IsDisabled { get; }
 
-        bool IssueAllowed { get; set; }
+        bool IssueAllowed { get; }
 
-        bool KycNeeded { get; set; }
+        bool KycNeeded { get; }
 
         /// <summary>
         ///     Value lower that this property is considered "low volume" and may have some limitations,
         ///     e.g. cash out timeout limits
         /// </summary>
-        double? LowVolumeAmount { get; set; }
+        double? LowVolumeAmount { get; }
 
-        int MultiplierPower { get; set; }
+        int MultiplierPower { get; }
 
-        string Name { get; set; }
+        string Name { get; }
 
-        bool NotLykkeAsset { get; set; }
+        bool NotLykkeAsset { get; }
 
-        string[] PartnerIds { get; set; }
+        string[] PartnerIds { get; }
 
-        bool SellScreen { get; set; }
+        bool SellScreen { get; }
 
-        bool SwiftDepositEnabled { get; set; }
+        bool SwiftDepositEnabled { get; }
 
-        bool SwiftWithdrawal { get; set; }
+        bool SwiftWithdrawal { get; }
 
-        string Symbol { get; set; }
+        string Symbol { get; }
     }
 }

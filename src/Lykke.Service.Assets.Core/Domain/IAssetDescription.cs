@@ -2,24 +2,24 @@
 {
     public interface IAssetDescription
     {
-        string AssetClass { get; set; }
+        string AssetClass { get; }
 
-        string AssetDescriptionUrl { get; set; }
+        string AssetDescriptionUrl { get; }
 
-        string AssetId { get; set; }
+        string AssetId { get; }
 
-        string Description { get; set; }
+        string Description { get; }
 
-        string FullName { get; set; }
+        string FullName { get; }
 
-        string Id { get; set; }
+        string Id { get; }
 
-        string IssuerName { get; set; }
+        string IssuerName { get; }
 
-        string MarketCapitalization { get; set; }
+        string MarketCapitalization { get; }
 
-        string NumberOfCoins { get; set; }
+        string NumberOfCoins { get; }
 
-        int PopIndex { get; set; }
+        int PopIndex { get; }
     }
 }

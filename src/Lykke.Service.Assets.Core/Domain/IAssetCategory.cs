@@ -2,14 +2,14 @@
 {
     public interface IAssetCategory
     {
-        string AndroidIconUrl { get; set; }
+        string AndroidIconUrl { get; }
 
-        string Id { get; set; }
+        string Id { get; }
 
-        string IosIconUrl { get; set; }
+        string IosIconUrl { get; }
 
-        string Name { get; set; }
+        string Name { get; }
 
-        int SortOrder { get; set; }
+        int SortOrder { get; }
     }
 }

@@ -20,9 +20,11 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task AddOrUpdateAsync(IAssetExtendedInfo assetInfo)
+        public async Task<IAssetExtendedInfo> AddAsync(IAssetExtendedInfo assetInfo)
         {
             await _assetExtendedInfoRepository.UpsertAsync(assetInfo);
+
+            return assetInfo;
         }
 
         public IAssetExtendedInfo CreateDefault(string id)
@@ -52,6 +54,11 @@ namespace Lykke.Service.Assets.Services
         public async Task RemoveAsync(string id)
         {
             await _assetExtendedInfoRepository.RemoveAsync(id);
+        }
+
+        public async Task UpdateAsync(IAssetExtendedInfo assetInfo)
+        {
+            await _assetExtendedInfoRepository.UpsertAsync(assetInfo);
         }
     }
 }

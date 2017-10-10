@@ -4,7 +4,7 @@
     {
         string IconUrl { get; }
 
-        string Id { get; set; }
+        string Id { get; }
 
         string Name { get; }
     }

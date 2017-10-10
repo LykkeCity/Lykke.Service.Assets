@@ -2,16 +2,16 @@
 {
     public interface IMarginAssetPair
     {
-        int Accuracy { get; set; }
+        int Accuracy { get; }
 
-        string BaseAssetId { get; set; }
+        string BaseAssetId { get; }
 
-        string Id { get; set; }
+        string Id { get; }
 
-        int InvertedAccuracy { get; set; }
+        int InvertedAccuracy { get; }
 
-        string Name { get; set; }
+        string Name { get; }
 
-        string QuotingAssetId { get; set; }
+        string QuotingAssetId { get; }
     }
 }

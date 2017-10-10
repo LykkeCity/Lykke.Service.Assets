@@ -2,8 +2,8 @@
 {
     public interface IAssetAttribute
     {
-        string Key { get; set; }
+        string Key { get; }
 
-        string Value { get; set; }
+        string Value { get; }
     }
 }

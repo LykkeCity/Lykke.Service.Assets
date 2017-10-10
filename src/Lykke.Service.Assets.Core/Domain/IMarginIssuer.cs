@@ -2,10 +2,10 @@
 {
     public interface IMarginIssuer
     {
-        string IconUrl { get; set; }
+        string IconUrl { get; }
 
-        string Id { get; set; }
+        string Id { get; }
 
-        string Name { get; set; }
+        string Name { get; }
     }
 }

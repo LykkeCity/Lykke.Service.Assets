@@ -1,43 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lykke.Service.Assets.Core.Domain
+﻿namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IErc20Asset
     {
-        string AssetId { get; set; }
+        string AssetId { get; }
 
-        string Address { get; set; }
+        string Address { get; }
 
-        string BlockHash { get; set; }
+        string BlockHash { get; }
 
-        int BlockTimestamp { get; set; }
+        int BlockTimestamp { get; }
 
-        string DeployerAddress { get; set; }
+        string DeployerAddress { get; }
 
-        uint? TokenDecimals { get; set; }
+        uint? TokenDecimals { get; }
 
-        string TokenName { get; set; }
+        string TokenName { get; }
 
-        string TokenSymbol { get; set; }
+        string TokenSymbol { get; }
 
-        string TokenTotalSupply { get; set; }
+        string TokenTotalSupply { get; }
 
-        string TransactionHash { get; set; }
+        string TransactionHash { get; }
     }
 
     public class Erc20Asset : IErc20Asset
     {
         public string AssetId { get; set; }
+
         public string Address { get; set; }
+
         public string BlockHash { get; set; }
+
         public int BlockTimestamp { get; set; }
+
         public string DeployerAddress { get; set; }
+
         public uint? TokenDecimals { get; set; }
+
         public string TokenName { get; set; }
+
         public string TokenSymbol { get; set; }
+
         public string TokenTotalSupply { get; set; }
+
         public string TransactionHash { get; set; }
     }
 }

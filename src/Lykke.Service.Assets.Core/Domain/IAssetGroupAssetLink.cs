@@ -2,14 +2,14 @@
 {
     public interface IAssetGroupAssetLink
     {
-        string AssetId { get; set; }
+        string AssetId { get; }
 
-        bool ClientsCanCashInViaBankCards { get; set; }
+        bool ClientsCanCashInViaBankCards { get; }
 
-        bool IsIosDevice { get; set; }
+        bool IsIosDevice { get; }
 
-        string GroupName { get; set; }
+        string GroupName { get; }
 
-        bool SwiftDepositEnabled { get; set; }
+        bool SwiftDepositEnabled { get; }
     }
 }

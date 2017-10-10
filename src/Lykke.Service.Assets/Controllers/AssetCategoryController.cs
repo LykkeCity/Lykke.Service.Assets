@@ -34,7 +34,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet]
         [SwaggerOperation("AssetCategoryGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<AssetCategory>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<AssetCategory>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             var assetCategories = (await _assetCategoryService.GetAllAsync())

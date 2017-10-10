@@ -18,6 +18,11 @@ namespace Lykke.Service.Assets.Services
                 .SingleInstance();
 
             builder
+                .RegisterType<AssetExtendedInfoService>()
+                .As<IAssetExtendedInfoService>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<AssetService>()
                 .As<IAssetService>()
                 .SingleInstance();

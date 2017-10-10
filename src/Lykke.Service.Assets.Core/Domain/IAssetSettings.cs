@@ -2,26 +2,26 @@
 {
     public interface IAssetSettings
     {
-        string Asset { get; set; }
+        string Asset { get; }
 
-        decimal CashinCoef { get; set; }
+        decimal CashinCoef { get; }
 
-        string ChangeWallet { get; set; }
+        string ChangeWallet { get; }
 
-        decimal Dust { get; set; }
+        decimal Dust { get; }
 
-        string HotWallet { get; set; }
+        string HotWallet { get; }
 
-        int MaxOutputsCount { get; set; }
+        int MaxOutputsCount { get; }
 
-        int MaxOutputsCountInTx { get; set; }
+        int MaxOutputsCountInTx { get; }
 
-        decimal MinBalance { get; set; }
+        decimal MinBalance { get; }
 
-        int MinOutputsCount { get; set; }
+        int MinOutputsCount { get; }
 
-        decimal OutputSize { get; set; }
+        decimal OutputSize { get; }
 
-        int PrivateIncrement { get; set; }
+        int PrivateIncrement { get; }
     }
 }
