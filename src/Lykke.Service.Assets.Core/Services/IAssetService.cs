@@ -7,11 +7,11 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IAssetService
     {
-        Task AddAsync(IAsset asset);
+        Task<IAsset> AddAsync(IAsset asset);
 
-        Task Disable(string id);
+        Task DisableAsync(string id);
 
-        Task Enable(string id);
+        Task EnableAsync(string id);
 
         Task<IEnumerable<IAsset>> GetAllAsync();
 
@@ -20,6 +20,8 @@ namespace Lykke.Service.Assets.Core.Services
         Task<IAsset> GetAsync(string id);
 
         Task<IEnumerable<IAsset>> GetForCategoryAsync(string categoryId);
+
+        Task RemoveAsync(string id);
 
         Task UpdateAsync(IAsset asset);
     }

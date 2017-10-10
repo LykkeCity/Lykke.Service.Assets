@@ -103,52 +103,5 @@ namespace Lykke.Service.Assets.Models
         public bool SwiftWithdrawal { get; set; }
 
         public string Symbol { get; set; }
-
-
-        // TODO: Replace with automapper
-        public static Asset Create(IAsset src)
-        {
-            return new Asset
-            {
-                Id = src.Id,
-                Name = src.Name,
-                Symbol = src.Symbol,
-                IdIssuer = src.IdIssuer,
-                IsBase = src.IsBase,
-                BlockChainId = src.BlockChainId,
-                BlockChainAssetId = src.BlockChainAssetId,
-                HideIfZero = src.HideIfZero,
-                AssetAddress = src.AssetAddress,
-                Accuracy = src.Accuracy,
-                MultiplierPower = src.MultiplierPower,
-                IsDisabled = src.IsDisabled,
-                HideDeposit = src.HideDeposit,
-                HideWithdraw = src.HideWithdraw,
-                DefaultOrder = src.DefaultOrder,
-                KycNeeded = src.KycNeeded,
-                BankCardsDepositEnabled = src.BankCardsDepositEnabled,
-                SwiftDepositEnabled = src.SwiftDepositEnabled,
-                BlockchainDepositEnabled = src.BlockchainDepositEnabled,
-                CategoryId = src.CategoryId,
-                Blockchain = src.Blockchain,
-                DefinitionUrl = src.DefinitionUrl,
-                PartnerIds = src.PartnerIds,
-                NotLykkeAsset = src.NotLykkeAsset,
-                IssueAllowed = src.IssueAllowed,
-                LowVolumeAmount = src.LowVolumeAmount,
-                DisplayId = src.DisplayId,
-                BuyScreen = src.BuyScreen,
-                SellScreen = src.SellScreen,
-                BlockchainWithdrawal = src.BlockchainWithdrawal,
-                SwiftWithdrawal = src.SwiftWithdrawal,
-                ForwardWithdrawal = src.ForwardWithdrawal,
-                CrosschainWithdrawal = src.CrosschainWithdrawal,
-                ForwardFrozenDays = src.ForwardFrozenDays,
-                ForwardBaseAsset = src.ForwardBaseAsset,
-                ForwardMemoUrl = src.ForwardMemoUrl,
-                IconUrl = src.IconUrl,
-                DustLimit = src.DustLimit
-            };
-        }
     }
 }

@@ -16,6 +16,11 @@ namespace Lykke.Service.Assets.Services
                 .RegisterType<AssetCategoryService>()
                 .As<IAssetCategoryService>()
                 .SingleInstance();
+
+            builder
+                .RegisterType<AssetService>()
+                .As<IAssetService>()
+                .SingleInstance();
         }
     }
 }

@@ -37,10 +37,28 @@ namespace Lykke.Service.Assets.Repositories
                 .RegisterType<AssetCategoryRepository>()
                 .As<IAssetCategoryRepository>()
                 .SingleInstance();
+
+            builder
+                .RegisterType<AssetRepository>()
+                .As<IAssetRepository>()
+                .SingleInstance();
         }
         
         private void LoadTables(ContainerBuilder builder)
         {
+            // Assets
+
+            var assetTable = AzureTableStorage<AssetEntity>.Create
+            (
+                _settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
+                "Dictionaries",
+                _log
+            );
+
+            builder
+                .RegisterInstance(assetTable)
+                .As<INoSQLTableStorage<AssetEntity>>();
+
             // Asset attributes
 
             var assetAttributeTable = AzureTableStorage<AssetAttributeEntity>.Create

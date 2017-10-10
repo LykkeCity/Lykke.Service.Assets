@@ -10,7 +10,7 @@ using Swashbuckle.SwaggerGen.Annotations;
 
 namespace Lykke.Service.Assets.Controllers
 {
-    [Route("api/asset-categories")]
+    [Route("api/v2/asset-categories")]
     public class AssetCategoryController : Controller
     {
         private readonly IAssetCategoryService _assetCategoryService;
@@ -70,7 +70,7 @@ namespace Lykke.Service.Assets.Controllers
 
             return Created
             (
-                uri:   $"api/asset-categories/{assetCategory.Id}",
+                uri:   $"api/v2/asset-categories/{assetCategory.Id}",
                 value: assetCategory
             );
         }

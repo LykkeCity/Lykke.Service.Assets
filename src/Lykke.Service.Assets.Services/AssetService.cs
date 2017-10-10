@@ -21,12 +21,14 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task AddAsync(IAsset asset)
+        public async Task<IAsset> AddAsync(IAsset asset)
         {
             await _assetRepository.AddAsync(asset);
+
+            return asset;
         }
 
-        public async Task Disable(string id)
+        public async Task DisableAsync(string id)
         {
             var asset = Mapper.Map<Asset>(_assetRepository.GetAsync(id));
 
@@ -35,7 +37,7 @@ namespace Lykke.Service.Assets.Services
             await UpdateAsync(asset);
         }
 
-        public async Task Enable(string id)
+        public async Task EnableAsync(string id)
         {
             var asset = Mapper.Map<Asset>(_assetRepository.GetAsync(id));
 
@@ -64,6 +66,11 @@ namespace Lykke.Service.Assets.Services
             var assets = await _assetRepository.GetAllAsync();
 
             return assets.Where(x => x.CategoryId == categoryId);
+        }
+
+        public async Task RemoveAsync(string id)
+        {
+            await _assetRepository.RemoveAsync(id);
         }
 
         public async Task UpdateAsync(IAsset asset)

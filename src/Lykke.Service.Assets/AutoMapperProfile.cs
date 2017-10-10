@@ -8,6 +8,7 @@ namespace Lykke.Service.Assets
     {
         public AutoMapperProfile()
         {
+            CreateMap<IAsset,           Models.Asset>();
             CreateMap<IAssetAttributes, AssetAttributes>();
             CreateMap<IAssetAttribute,  AssetAttribute>();
             CreateMap<IAssetCategory,   AssetCategory>();
