@@ -40,10 +40,18 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IErc20Asset> GetByAssetIdAsync(string assetId)
         {
-            AzureIndex index   = await _indexAssetIdTable.GetDataAsync(_assetPartition, assetId);
-            IErc20Asset entity = await _erc20AssetEntityTable.GetDataAsync(index);
+            AzureIndex indexes   = await _indexAssetIdTable.GetDataAsync(_assetPartition, assetId);
+            IErc20Asset entity = await _erc20AssetEntityTable.GetDataAsync(indexes);
 
             return entity;
+        }
+
+        public async Task<IEnumerable<IErc20Asset>> GetByAssetIdAsync(string[] assetIds)
+        {
+            IEnumerable<AzureIndex> indexes   = await _indexAssetIdTable.GetDataAsync(_assetPartition, assetIds);
+            IEnumerable<IErc20Asset> entities = await _erc20AssetEntityTable.GetDataAsync(indexes);
+
+            return entities;
         }
 
         public async Task SaveAsync(IErc20Asset erc20Asset)
@@ -51,6 +59,14 @@ namespace Lykke.Service.Assets.Repositories
             Erc20AssetEntity entity = Mapper.Map<Erc20AssetEntity>(erc20Asset);
 
             await _erc20AssetEntityTable.InsertOrMergeAsync(entity);
+            await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Asset.AssetId, entity));
+        }
+
+        public async Task UpdateAsync(IErc20Asset erc20Asset)
+        {
+            Erc20AssetEntity entity = Mapper.Map<Erc20AssetEntity>(erc20Asset);
+
+            await _erc20AssetEntityTable.InsertOrReplaceAsync(entity);
             await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Asset.AssetId, entity));
         }
     }

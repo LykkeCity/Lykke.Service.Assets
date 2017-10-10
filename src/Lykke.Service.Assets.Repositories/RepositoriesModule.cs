@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using AzureStorage;
 using AzureStorage.Tables;
+using AzureStorage.Tables.Templates.Index;
 using Common.Log;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Repositories;
@@ -37,6 +38,14 @@ namespace Lykke.Service.Assets.Repositories
                 .RegisterType<AssetCategoryRepository>()
                 .As<IAssetCategoryRepository>()
                 .SingleInstance();
+
+            builder.RegisterInstance<IErc20AssetRepository>(
+                new Erc20AssetRepository(AzureTableStorage<Erc20AssetEntity>
+                .Create(_settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
+                    "Erc20Asset", _log),
+                 AzureTableStorage<AzureIndex>
+                .Create(_settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
+                    "Erc20Asset", _log)));
 
             builder
                 .RegisterType<AssetExtendedInfoRepository>()
