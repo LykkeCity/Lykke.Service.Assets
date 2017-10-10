@@ -2,7 +2,6 @@
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Models;
 using Lykke.Service.Assets.Models.Requests;
-using Lykke.Service.Assets.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 using System.Linq;

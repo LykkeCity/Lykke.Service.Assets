@@ -31,6 +31,11 @@ namespace Lykke.Service.Assets.Repositories
             return await _assetPairTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
         }
 
+        public async Task RemoveAsync(string id)
+        {
+            await _assetPairTable.DeleteIfExistAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
         public async Task UpsertAsync(IAssetPair assetPair)
         {
             var entity = Mapper.Map<AssetPairEntity>(assetPair);

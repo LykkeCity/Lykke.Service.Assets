@@ -19,9 +19,11 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task AddOrUpdateAsync(IAssetPair assetPair)
+        public async Task<IAssetPair> AddAsync(IAssetPair assetPair)
         {
             await _assetPairRepository.UpsertAsync(assetPair);
+
+            return assetPair;
         }
 
         public IAssetPair CreateDefault()
@@ -41,6 +43,16 @@ namespace Lykke.Service.Assets.Services
         public async Task<IAssetPair> GetAsync(string id)
         {
             return await _assetPairRepository.GetAsync(id);
+        }
+
+        public async Task RemoveAsync(string id)
+        {
+            await _assetPairRepository.RemoveAsync(id);
+        }
+
+        public async Task UpdateAsync(IAssetPair assetPair)
+        {
+            await _assetPairRepository.UpsertAsync(assetPair);
         }
     }
 }

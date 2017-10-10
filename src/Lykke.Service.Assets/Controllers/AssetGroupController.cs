@@ -33,17 +33,17 @@ namespace Lykke.Service.Assets.Controllers
             return NoContent();
         }
 
-        [HttpPost("{groupName}/clients/{assetId}")]
+        [HttpPost("{groupName}/clients/{clientId}")]
         [SwaggerOperation("AssetGroupAddClient")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> AddClient(string clientId, string groupName)
         {
             await _assetGroupService.AddClientToGroupAsync(clientId, groupName);
-
+        
             return NoContent();
         }
 
-        [HttpPost("{groupName}/assets/{assetId}")]
+        [HttpDelete("{groupName}/assets/{assetId}")]
         [SwaggerOperation("AssetGroupRemoveAsset")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAsset(string assetId, string groupName)
@@ -53,13 +53,13 @@ namespace Lykke.Service.Assets.Controllers
             return NoContent();
         }
 
-        [HttpPost("{groupName}/clients/{assetId}")]
+        [HttpDelete("{groupName}/clients/{clientId}")]
         [SwaggerOperation("AssetGroupRemoveClient")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteClient(string clientId, string groupName)
         {
             await _assetGroupService.RemoveClientFromGroupAsync(clientId, groupName);
-
+        
             return NoContent();
         }
 
@@ -75,7 +75,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet("{groupName}/asset-ids")]
         [SwaggerOperation("AssetGroupGetAssetIds")]
-        [ProducesResponseType(typeof(IEnumerable<string>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAssetIds(string groupName)
         {
             var assetIds = await _assetGroupService.GetAssetIdsForGroupAsync(groupName);
@@ -85,7 +85,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet("{groupName}/client-ids")]
         [SwaggerOperation("AssetGroupGetClientIds")]
-        [ProducesResponseType(typeof(IEnumerable<string>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetClientIds(string groupName)
         {
             var assetIds = await _assetGroupService.GetClientIdsForGroupAsync(groupName);
@@ -95,8 +95,8 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet("{groupName}")]
         [SwaggerOperation("AssetGroupGet")]
-        [ProducesResponseType(typeof(IEnumerable<AssetGroup>), (int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<AssetGroup>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetGroup(string groupName)
         {
             var assetGroup = await _assetGroupService.GetGroupAsync(groupName);
@@ -113,7 +113,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet]
         [SwaggerOperation("AssetGroupGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<AssetGroup>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<AssetGroup>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetGroups()
         {
             var assetGroups = (await _assetGroupService.GetAllGroupsAsync())
@@ -124,7 +124,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpPost]
         [SwaggerOperation("AssetGroupAdd")]
-        [ProducesResponseType(typeof(AssetGroup), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(AssetGroup), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> PostGroup([FromBody] IAssetGroup group)
         {
             group = Mapper.Map<AssetGroup>(await _assetGroupService.AddGroupAsync(group));
@@ -138,7 +138,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpPut]
         [SwaggerOperation("AssetGroupUpdate")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> PutGroup([FromBody] IAssetGroup group)
         {
             await _assetGroupService.UpdateGroupAsync(group);

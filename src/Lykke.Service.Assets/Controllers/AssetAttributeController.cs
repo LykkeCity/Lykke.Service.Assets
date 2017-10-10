@@ -7,6 +7,7 @@ using Lykke.Service.Assets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 
+
 namespace Lykke.Service.Assets.Controllers
 {
     [Route("api/v2/asset-attributes")]
