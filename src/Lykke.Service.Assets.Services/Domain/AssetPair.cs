@@ -1,10 +1,8 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
-using Microsoft.WindowsAzure.Storage.Table;
 
-
-namespace Lykke.Service.Assets.Repositories.Entities
+namespace Lykke.Service.Assets.Services.Domain
 {
-    public class AssetPairEntity : TableEntity, IAssetPair
+    public class AssetPair : IAssetPair
     {
         public int Accuracy { get; set; }
 

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AzureStorage;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
@@ -8,20 +10,60 @@ using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    /*public class AssetRepository : IDictionaryRepository<IAsset>
+    public class AssetRepository : IAssetRepository
     {
-        private readonly INoSQLTableStorage<AssetEntity> _tableStorage;
+        private readonly INoSQLTableStorage<AssetEntity> _assetTable;
 
 
-        public AssetRepository(INoSQLTableStorage<AssetEntity> tableStorage)
+        public AssetRepository(INoSQLTableStorage<AssetEntity> assetTable)
         {
-            _tableStorage = tableStorage;
+            _assetTable = assetTable;
         }
 
+        public async Task AddAsync(IAsset asset)
+        {
+            var entity = Mapper.Map<AssetEntity>(asset);
+
+            entity.PartitionKey = GetPartitionKey();
+            entity.RowKey       = GetRowKey(asset.Id);
+
+            await _assetTable.InsertAsync(entity);
+        }
 
         public async Task<IEnumerable<IAsset>> GetAllAsync()
         {
-            return await _tableStorage.GetDataAsync();
+            return await _assetTable.GetDataAsync();
         }
-    }*/
+
+        public async Task<IAsset> GetAsync(string id)
+        {
+            return await _assetTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
+        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids)
+        {
+            return await _assetTable.GetDataAsync(GetPartitionKey(), ids.Select(GetRowKey));
+        }
+
+        public async Task RemoveAsync(string id)
+        {
+            await _assetTable.DeleteAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
+        public async Task UpdateAsync(IAsset asset)
+        {
+            await _assetTable.MergeAsync(GetPartitionKey(), GetRowKey(asset.Id), x =>
+            {
+                Mapper.Map(asset, x);
+
+                return x;
+            });
+        }
+
+        public static string GetPartitionKey()
+            => "Asset";
+
+        public static string GetRowKey(string id)
+            => id;
+    }
 }

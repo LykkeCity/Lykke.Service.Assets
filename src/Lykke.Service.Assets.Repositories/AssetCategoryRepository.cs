@@ -9,9 +9,6 @@ namespace Lykke.Service.Assets.Repositories
 {
     public class AssetCategoryRepository : IAssetCategoryRepository
     {
-        private const string AssetCategoryPartitionKey = "AssetCategory";
-
-
         private readonly INoSQLTableStorage<AssetCategoryEntity> _assetCategoryTable;
 
 
@@ -30,14 +27,14 @@ namespace Lykke.Service.Assets.Repositories
                 Id             = assetCategory.Id,
                 IosIconUrl     = assetCategory.IosIconUrl,
                 Name           = assetCategory.Name,
-                PartitionKey   = AssetCategoryPartitionKey,
+                PartitionKey   = GetPartitionKey(),
                 SortOrder      = assetCategory.SortOrder
             });
         }
 
         public async Task<IAssetCategory> GetAsync(string id)
         {
-            return await _assetCategoryTable.GetDataAsync(AssetCategoryPartitionKey, id);
+            return await _assetCategoryTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
         }
 
         public async Task<IEnumerable<IAssetCategory>> GetAllAsync()
@@ -47,12 +44,12 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task RemoveAsync(string id)
         {
-            await _assetCategoryTable.DeleteIfExistAsync(AssetCategoryPartitionKey, id);
+            await _assetCategoryTable.DeleteIfExistAsync(GetPartitionKey(), GetRowKey(id));
         }
 
         public async Task UpdateAsync(IAssetCategory assetCategory)
         {
-            await _assetCategoryTable.ReplaceAsync(AssetCategoryPartitionKey, assetCategory.Id, x =>
+            await _assetCategoryTable.ReplaceAsync(GetPartitionKey(), GetRowKey(assetCategory.Id), x =>
             {
                 x.AndroidIconUrl = assetCategory.AndroidIconUrl;
                 x.IosIconUrl     = assetCategory.IosIconUrl;
@@ -62,5 +59,11 @@ namespace Lykke.Service.Assets.Repositories
                 return x;
             });
         }
+
+        private static string GetPartitionKey()
+            => "AssetCategory";
+
+        private static string GetRowKey(string id)
+            => id;
     }
 }

@@ -30,7 +30,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IAssetAttribute> GetAsync(string assetId, string key)
         {
-            return await _assetAttributeTable.GetDataAsync(assetId, key);
+            return await _assetAttributeTable.GetDataAsync(GetPartitionKey(assetId), GetRowKey(key));
         }
 
         public async Task<IEnumerable<(string AssetId, IAssetAttribute Attribute)>> GetAllAsync()
@@ -41,22 +41,28 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAssetAttribute>> GetAllAsync(string assetId)
         {
-            return await _assetAttributeTable.GetDataAsync(assetId);
+            return await _assetAttributeTable.GetDataAsync(GetPartitionKey(assetId));
         }
 
         public async Task RemoveAsync(string assetId, string key)
         {
-            await _assetAttributeTable.DeleteIfExistAsync(assetId, key);
+            await _assetAttributeTable.DeleteIfExistAsync(GetPartitionKey(assetId), GetRowKey(key));
         }
 
         public async Task UpdateAsync(string assetId, IAssetAttribute attribute)
         {
-            await _assetAttributeTable.MergeAsync(assetId, attribute.Key, x =>
+            await _assetAttributeTable.MergeAsync(GetPartitionKey(assetId), GetRowKey(attribute.Key), x =>
             {
                 x.Value = attribute.Value;
 
                 return x;
             });
         }
+
+        private static string GetPartitionKey(string assetId)
+            => assetId;
+
+        private static string GetRowKey(string key)
+            => key;
     }
 }

@@ -2,22 +2,22 @@
 {
     public interface IAssetPair
     {
-        int Accuracy { get; }
+        int Accuracy { get; set; }
 
-        string BaseAssetId { get; }
+        string BaseAssetId { get; set; }
 
         string Id { get; set; }
 
-        int InvertedAccuracy { get; }
+        int InvertedAccuracy { get; set; }
 
-        bool IsDisabled { get; }
+        bool IsDisabled { get; set; }
 
-        string Name { get; }
+        string Name { get; set; }
 
-        string QuotingAssetId { get; }
+        string QuotingAssetId { get; set; }
 
-        string Source { get; }
+        string Source { get; set; }
 
-        string Source2 { get; }
+        string Source2 { get; set; }
     }
 }
