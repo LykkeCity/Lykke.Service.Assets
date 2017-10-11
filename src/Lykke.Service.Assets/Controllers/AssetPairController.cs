@@ -38,10 +38,10 @@ namespace Lykke.Service.Assets.Controllers
         [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
-            var assets = (await _assetPairService.GetAllAsync())
+            var assetPair = (await _assetPairService.GetAllAsync())
                 .Select(Mapper.Map<AssetPair>);
 
-            return Ok(assets);
+            return Ok(assetPair);
         }
 
         [HttpGet("{id}")]
@@ -50,16 +50,27 @@ namespace Lykke.Service.Assets.Controllers
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var asset = await _assetPairService.GetAsync(id);
+            var assetPair = await _assetPairService.GetAsync(id);
 
-            if (asset != null)
+            if (assetPair != null)
             {
-                return Ok(Mapper.Map<AssetPair>(asset));
+                return Ok(Mapper.Map<AssetPair>(assetPair));
             }
             else
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("AssetPairExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetExists(string id)
+        {
+            var assetPairExists = await _assetPairService.GetAsync(id) != null;
+
+            return Ok(assetPairExists);
         }
 
         [HttpGet("default")]
