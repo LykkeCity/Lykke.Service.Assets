@@ -45,7 +45,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet("{id}")]
         [SwaggerOperation("AssetExtendedInfoGet")]
-        [ProducesResponseType(typeof(Models.Asset), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AssetExtendedInfo), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
@@ -69,6 +69,19 @@ namespace Lykke.Service.Assets.Controllers
             var assetExtendedInfo = _assetExtendedInfoService.CreateDefault(id);
 
             return Ok(Mapper.Map<AssetExtendedInfo>(assetExtendedInfo));
+        }
+
+        [HttpGet("{id}/or-default")]
+        [SwaggerOperation("AssetExtendedInfoGetOrGetDefault")]
+        [ProducesResponseType(typeof(AssetExtendedInfo), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetOrGetDefault(string id)
+        {
+            var asset = await _assetExtendedInfoService.GetAsync(id);
+
+            return asset != null 
+                 ? Ok(Mapper.Map<AssetExtendedInfo>(asset))
+                 : GetDefault(id);
         }
 
         [HttpPost]
