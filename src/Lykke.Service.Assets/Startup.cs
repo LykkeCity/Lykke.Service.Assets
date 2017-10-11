@@ -91,7 +91,7 @@ namespace Lykke.Service.Assets
             loggerFactory.AddConsole(_configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseLykkeMiddleware(Constants.ComponentName, ex => ErrorResponse.Create("Technical problem"));
+            app.UseLykkeMiddleware(Constants.ComponentName, ex => Error.Create("Technical problem"));
 
             app.UseMvc();
             app.UseSwagger();

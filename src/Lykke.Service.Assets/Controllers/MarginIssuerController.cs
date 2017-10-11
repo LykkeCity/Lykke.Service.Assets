@@ -13,7 +13,7 @@ namespace Lykke.Service.Assets.Controllers
     /// <summary>
     ///     Controller for Margin Issuers
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v2/margin-issuers")]
     public class MarginIssuerController : Controller
     {
         private readonly IMarginIssuerService _marginIssuerService;
@@ -24,49 +24,49 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpGet]
-        [SwaggerOperation("GetAllAsync")]
-        [ProducesResponseType(typeof(ListResponse<MarginIssuer>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("MarginIssuerGetAll")]
+        [ProducesResponseType(typeof(ListOf<MarginIssuer>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAllAsync()
         {
             var issuers = await _marginIssuerService.GetAllAsync();
-            var responseList = issuers?.Select(x => Mapper.Map<MarginIssuer>(x));
+            var responseList = issuers?.Select(Mapper.Map<MarginIssuer>);
 
-            return Ok(new ListResponse<MarginIssuer>()
+            return Ok(new ListOf<MarginIssuer>()
             {
-                List = responseList
+                Items = responseList
             });
         }
 
         [HttpGet("{id}")]
-        [SwaggerOperation("GetAsync")]
+        [SwaggerOperation("MarginIssuerGet")]
         [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAsync([FromRoute] string id)
         {
-            var issuer = await _marginIssuerService.GetAsync(id);
+            var issuer   = await _marginIssuerService.GetAsync(id);
             var response = Mapper.Map<MarginIssuer>(issuer);
 
             return Ok(response);
         }
 
-        [HttpPost("createDefault")]
-        [SwaggerOperation("CreateDefaultAsync")]
+        [HttpGet("default")]
+        [SwaggerOperation("MarginIssuerCreateDefault")]
         [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> CreateDefaultAsync()
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public IActionResult GetDefault()
         {
-            var issuer = _marginIssuerService.CreateDefault();
+            var issuer   = _marginIssuerService.CreateDefault();
             var response = Mapper.Map<MarginIssuer>(issuer);
 
             return Ok(response);
         }
 
         [HttpPost]
-        [SwaggerOperation("AddAsync")]
+        [SwaggerOperation("MarginIssuerAdd")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> AddAsync([FromBody] MarginIssuer marginIssuer)
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Post([FromBody] MarginIssuer marginIssuer)
         {
             await _marginIssuerService.AddAsync(marginIssuer);
 
@@ -74,10 +74,10 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpPut]
-        [SwaggerOperation("UpdateAsync")]
+        [SwaggerOperation("MarginIssuerUpdate")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> UpdateAsync([FromBody] MarginIssuer marginIssuer)
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Put([FromBody] MarginIssuer marginIssuer)
         {
             await _marginIssuerService.UpdateAsync(marginIssuer);
 

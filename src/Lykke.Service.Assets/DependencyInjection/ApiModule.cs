@@ -9,7 +9,6 @@ using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.Service.Assets.Services;
-using Lykke.Service.Asset.RabbitSubscribers;
 using AzureStorage.Tables.Templates.Index;
 
 namespace Lykke.Service.Assets.DependencyInjection

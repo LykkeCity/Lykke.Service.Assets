@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Models

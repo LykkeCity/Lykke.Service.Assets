@@ -39,8 +39,8 @@ namespace Lykke.Service.Assets.Repositories
                 .As<IAssetCategoryRepository>()
                 .SingleInstance();
 
-            builder.RegisterInstance<IErc20AssetRepository>(
-                new Erc20AssetRepository(AzureTableStorage<Erc20AssetEntity>
+            builder.RegisterInstance<IErc20TokenRepository>(
+                new Erc20TokenRepository(AzureTableStorage<Erc20TokenEntity>
                 .Create(_settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
                     "Erc20Asset", _log),
                  AzureTableStorage<AzureIndex>

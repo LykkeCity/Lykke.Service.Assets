@@ -3,14 +3,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Common;
 using Common.Log;
+using Lykke.Job.Asset.IncomingMessages;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Job.Asset.IncomingMessages;
-using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Services.Domain;
 
-namespace Lykke.Service.Asset.RabbitSubscribers
+namespace Lykke.Service.Assets.RabbitSubscribers
 {
     public class ErcContractSubscriber : IStartable, IStopable
     {
@@ -53,7 +52,7 @@ namespace Lykke.Service.Asset.RabbitSubscribers
         {
             // TODO: Orchestrate execution flow here and delegate actual business logic implementation to services layer
             // Do not implement actual business logic here
-            Erc20Asset message = new Erc20Asset()
+            Erc20Token message = new Erc20Token()
             {
                 Address = arg.Address,
                 AssetId = null,

@@ -1,6 +1,6 @@
 ﻿namespace Lykke.Service.Assets.Core.Domain
 {
-    public interface IErc20Asset
+    public interface IErc20Token
     {
         string AssetId { get; }
 

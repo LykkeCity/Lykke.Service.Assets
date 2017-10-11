@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Lykke.Service.Assets.Models
 {
-    public class ErrorResponse
+    public class Error
     {
         public Dictionary<string, List<string>> ErrorMessages { get; } = new Dictionary<string, List<string>>();
 
-        public static ErrorResponse Create(ModelStateDictionary modelState)
+        public static Error Create(ModelStateDictionary modelState)
         {
-            var response = new ErrorResponse();
+            var response = new Error();
 
             foreach (var state in modelState)
             {
@@ -28,18 +28,18 @@ namespace Lykke.Service.Assets.Models
             return response;
         }
 
-        public static ErrorResponse Create(string message)
+        public static Error Create(string message)
         {
-            var response = new ErrorResponse();
+            var response = new Error();
 
             response.ErrorMessages.Add(string.Empty, new List<string> { message });
 
             return response;
         }
 
-        public static ErrorResponse Create(string field, string message)
+        public static Error Create(string field, string message)
         {
-            var response = new ErrorResponse();
+            var response = new Error();
 
             response.ErrorMessages.Add(field, new List<string> { message });
 

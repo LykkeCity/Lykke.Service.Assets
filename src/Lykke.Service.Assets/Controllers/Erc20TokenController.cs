@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Models;
-using Lykke.Service.Assets.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Requests;
 
 namespace Lykke.Service.Assets.Controllers
 {
@@ -14,67 +14,65 @@ namespace Lykke.Service.Assets.Controllers
     /// <summary>
     ///     Controller for erc 20 tokens
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v2/erc20-tokens")]
     public class Erc20TokenController : Controller
     {
-        private readonly IErc20AssetService _erc20AssetService;
+        private readonly IErc20TokenService _erc20TokenService;
 
-        public Erc20TokenController(IErc20AssetService erc20AssetService)
+        public Erc20TokenController(IErc20TokenService erc20TokenService)
         {
-            _erc20AssetService = erc20AssetService;
+            _erc20TokenService = erc20TokenService;
         }
 
         [HttpGet]
-        [SwaggerOperation("GetAllAsync")]
-        [ProducesResponseType(typeof(ListResponse<Erc20TokenModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("Erc20TokenGetAll")]
+        [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAllAsync()
         {
-            var allTokens    = await _erc20AssetService.GetAllAsync();
-            var responseList = allTokens?.Select(x => Mapper.Map<Erc20TokenModel>(x));
+            var allTokens    = await _erc20TokenService.GetAllAsync();
+            var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
-            return Ok(new ListResponse<Erc20TokenModel>()
+            return Ok(new ListOf<Erc20Token>()
             {
-                List = responseList
+                Items = responseList
             });
         }
 
-        [HttpPost("getByAssetIds")]
-        [SwaggerOperation("GetByAssetIdsAsync")]
-        [ProducesResponseType(typeof(ListResponse<Erc20TokenModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetByIdsAsync([FromBody]GetByIdsRequest assetIds)
+        [HttpPost("specification")]
+        [SwaggerOperation("Erc20TokenGetBySpecification")]
+        [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Get([FromBody]Erc20TokenSpecification specification)
         {
-            var ids          = assetIds.Ids;
-            var allTokens    = await _erc20AssetService.GetAsync(ids?.ToArray());
-            var responseList = allTokens?.Select(x => Mapper.Map<Erc20TokenModel>(x));
+            var ids          = specification.Ids;
+            var allTokens    = await _erc20TokenService.GetAsync(ids?.ToArray());
+            var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
-            return Ok(new ListResponse<Erc20TokenModel>()
+            return Ok(new ListOf<Erc20Token>()
             {
-                List = responseList
+                Items = responseList
             });
         }
 
         [HttpPost]
-        [SwaggerOperation("CreateTokenAsync")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> CreateTokenAsync([FromBody]Erc20TokenModel token)
+        [SwaggerOperation("Erc20TokenAdd")]
+        [ProducesResponseType(typeof(Erc20Token), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateTokenAsync([FromBody]Erc20Token token)
         {
-            await _erc20AssetService.AddAsync(token);
+            await _erc20TokenService.AddAsync(token);
 
             return Ok();
         }
 
         [HttpPut]
-        [SwaggerOperation("UpdateTokenAsync")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> UpdateTokenAsync([FromBody]Erc20TokenModel token)
+        [SwaggerOperation("Erc20TokenUpdate")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> UpdateTokenAsync([FromBody]Erc20Token token)
         {
-            await _erc20AssetService.UpdateAsync(token);
+            await _erc20TokenService.UpdateAsync(token);
 
-            return Ok();
+            return NoContent();
         }
     }
 }

@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Core.Repositories
 {
-    public interface IErc20AssetRepository
+    public interface IErc20TokenRepository
     {
-        Task<IEnumerable<IErc20Asset>> GetAllAsync();
+        Task<IEnumerable<IErc20Token>> GetAllAsync();
 
-        Task<IErc20Asset> GetByAddressAsync(string tokenAddress);
+        Task<IErc20Token> GetByAddressAsync(string tokenAddress);
 
-        Task<IErc20Asset> GetByAssetIdAsync(string assetId);
+        Task<IErc20Token> GetByAssetIdAsync(string assetId);
 
-        Task<IEnumerable<IErc20Asset>> GetByAssetIdAsync(string[] assetIds);
+        Task<IEnumerable<IErc20Token>> GetByAssetIdAsync(string[] assetIds);
 
-        Task SaveAsync(IErc20Asset erc20Asset);
+        Task SaveAsync(IErc20Token erc20Token);
 
-        Task UpdateAsync(IErc20Asset erc20Asset);
+        Task UpdateAsync(IErc20Token erc20Token);
     }
 }

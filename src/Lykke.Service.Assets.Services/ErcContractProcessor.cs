@@ -10,21 +10,21 @@ namespace Lykke.Service.Assets.Services
 {
     public class ErcContractProcessor : IErcContractProcessor
     {
-        private readonly IErc20AssetRepository _erc20AssetRepository;
+        private readonly IErc20TokenRepository _erc20TokenRepository;
 
-        public ErcContractProcessor(IErc20AssetRepository erc20AssetRepository)
+        public ErcContractProcessor(IErc20TokenRepository erc20TokenRepository)
         {
-            _erc20AssetRepository = erc20AssetRepository;
+            _erc20TokenRepository = erc20TokenRepository;
         }
 
         //TODO: Add more logic here
-        public async Task ProcessErc20ContractAsync(IErc20Asset message)
+        public async Task ProcessErc20ContractAsync(IErc20Token message)
         {
-            var existingContract = await _erc20AssetRepository.GetByAddressAsync(message.Address);
+            var existingContract = await _erc20TokenRepository.GetByAddressAsync(message.Address);
 
             if (existingContract != null)
             {
-                await _erc20AssetRepository.SaveAsync(message);
+                await _erc20TokenRepository.SaveAsync(message);
             }
         }
     }

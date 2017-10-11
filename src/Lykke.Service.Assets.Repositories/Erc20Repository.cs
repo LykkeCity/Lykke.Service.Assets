@@ -10,72 +10,72 @@ using AutoMapper;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class Erc20AssetRepository : IErc20AssetRepository
+    public class Erc20TokenRepository : IErc20TokenRepository
     {
         private const string _assetPartition = "ErcAssetId";
         private readonly INoSQLTableStorage<AzureIndex> _indexAssetIdTable;
-        private readonly INoSQLTableStorage<Erc20AssetEntity> _erc20AssetEntityTable;
+        private readonly INoSQLTableStorage<Erc20TokenEntity> _erc20AssetEntityTable;
 
-        public Erc20AssetRepository(INoSQLTableStorage<Erc20AssetEntity> erc20AssetEntityTable, 
+        public Erc20TokenRepository(INoSQLTableStorage<Erc20TokenEntity> erc20AssetEntityTable, 
             INoSQLTableStorage<AzureIndex> indexAssetIdTable)
         {
             _indexAssetIdTable          = indexAssetIdTable;
             _erc20AssetEntityTable      = erc20AssetEntityTable;
         }
 
-        public async Task<IEnumerable<IErc20Asset>> GetAllAsync()
+        public async Task<IEnumerable<IErc20Token>> GetAllAsync()
         {
             var allEntities = await _erc20AssetEntityTable.GetDataAsync();
 
             return allEntities;
         }
 
-        public async Task<IErc20Asset> GetByAddressAsync(string tokenAddress)
+        public async Task<IErc20Token> GetByAddressAsync(string tokenAddress)
         {
-            IErc20Asset entity = await _erc20AssetEntityTable.GetDataAsync(Erc20AssetEntity.GeneratePartitionKey(), 
-                Erc20AssetEntity.GenerateRowKey(tokenAddress));
+            IErc20Token entity = await _erc20AssetEntityTable.GetDataAsync(Erc20TokenEntity.GeneratePartitionKey(), 
+                Erc20TokenEntity.GenerateRowKey(tokenAddress));
 
             return entity;
         }
 
-        public async Task<IErc20Asset> GetByAssetIdAsync(string assetId)
+        public async Task<IErc20Token> GetByAssetIdAsync(string assetId)
         {
             AzureIndex indexes   = await _indexAssetIdTable.GetDataAsync(_assetPartition, assetId);
-            IErc20Asset entity = await _erc20AssetEntityTable.GetDataAsync(indexes);
+            IErc20Token entity = await _erc20AssetEntityTable.GetDataAsync(indexes);
 
             return entity;
         }
 
-        public async Task<IEnumerable<IErc20Asset>> GetByAssetIdAsync(string[] assetIds)
+        public async Task<IEnumerable<IErc20Token>> GetByAssetIdAsync(string[] assetIds)
         {
             IEnumerable<AzureIndex> indexes   = await _indexAssetIdTable.GetDataAsync(_assetPartition, assetIds);
-            IEnumerable<IErc20Asset> entities = await _erc20AssetEntityTable.GetDataAsync(indexes);
+            IEnumerable<IErc20Token> entities = await _erc20AssetEntityTable.GetDataAsync(indexes);
 
             return entities;
         }
 
-        public async Task SaveAsync(IErc20Asset erc20Asset)
+        public async Task SaveAsync(IErc20Token erc20Token)
         {
-            Erc20AssetEntity entity = Mapper.Map<Erc20AssetEntity>(erc20Asset);
+            Erc20TokenEntity entity = Mapper.Map<Erc20TokenEntity>(erc20Token);
             Fill(entity);
 
             await _erc20AssetEntityTable.InsertOrMergeAsync(entity);
-            await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Asset.AssetId, entity));
+            await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Token.AssetId, entity));
         }
 
-        public async Task UpdateAsync(IErc20Asset erc20Asset)
+        public async Task UpdateAsync(IErc20Token erc20Token)
         {
-            Erc20AssetEntity entity = Mapper.Map<Erc20AssetEntity>(erc20Asset);
+            Erc20TokenEntity entity = Mapper.Map<Erc20TokenEntity>(erc20Token);
             Fill(entity);
 
             await _erc20AssetEntityTable.InsertOrReplaceAsync(entity);
-            await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Asset.AssetId, entity));
+            await _indexAssetIdTable.InsertOrReplaceAsync(new AzureIndex(_assetPartition, erc20Token.AssetId, entity));
         }
 
-        private void Fill(Erc20AssetEntity entity)
+        private void Fill(Erc20TokenEntity entity)
         {
-            entity.PartitionKey = Erc20AssetEntity.GeneratePartitionKey();
-            entity.RowKey = Erc20AssetEntity.GenerateRowKey(entity.Address);
+            entity.PartitionKey = Erc20TokenEntity.GeneratePartitionKey();
+            entity.RowKey = Erc20TokenEntity.GenerateRowKey(entity.Address);
         }
     }
 }

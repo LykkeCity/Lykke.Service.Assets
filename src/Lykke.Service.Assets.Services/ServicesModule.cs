@@ -17,8 +17,8 @@ namespace Lykke.Service.Assets.Services
                 .As<IAssetCategoryService>()
                 .SingleInstance();
 
-            builder.RegisterType<Erc20AssetService>().
-                As<IErc20AssetService>().SingleInstance();
+            builder.RegisterType<Erc20TokenService>().
+                As<IErc20TokenService>().SingleInstance();
 
 
             builder.RegisterType<ErcContractProcessor>().

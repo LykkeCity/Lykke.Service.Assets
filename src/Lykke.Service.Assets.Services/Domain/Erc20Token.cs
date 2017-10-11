@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lykke.Service.Assets.Services.Domain
 {
-    public class Erc20Asset : IErc20Asset
+    public class Erc20Token : IErc20Token
     {
         public string AssetId { get; set; }
         public string Address { get; set; }

@@ -125,7 +125,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpPost]
         [SwaggerOperation("AssetGroupAdd")]
         [ProducesResponseType(typeof(AssetGroup), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> PostGroup([FromBody] IAssetGroup group)
+        public async Task<IActionResult> PostGroup([FromBody] AssetGroup group)
         {
             group = Mapper.Map<AssetGroup>(await _assetGroupService.AddGroupAsync(group));
 
@@ -139,7 +139,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpPut]
         [SwaggerOperation("AssetGroupUpdate")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> PutGroup([FromBody] IAssetGroup group)
+        public async Task<IActionResult> PutGroup([FromBody] AssetGroup group)
         {
             await _assetGroupService.UpdateGroupAsync(group);
 

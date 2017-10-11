@@ -1,7 +1,4 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lykke.Service.Assets.Models
 {

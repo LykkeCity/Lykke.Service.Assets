@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class Erc20AssetEntity : TableEntity, IErc20Asset
+    public class Erc20TokenEntity : TableEntity, IErc20Token
     {
         public string AssetId          { get; set; }
         public string Address          { get; set; }
