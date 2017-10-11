@@ -67,9 +67,9 @@ namespace Lykke.Service.Assets.Controllers
         [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.OK)]
         public IActionResult GetDefault()
         {
-            var assetExtendedInfo = _assetPairService.CreateDefault();
+            var assetPair = _assetPairService.CreateDefault();
 
-            return Ok(Mapper.Map<AssetPair>(assetExtendedInfo));
+            return Ok(Mapper.Map<AssetPair>(assetPair));
         }
 
         [HttpPost]

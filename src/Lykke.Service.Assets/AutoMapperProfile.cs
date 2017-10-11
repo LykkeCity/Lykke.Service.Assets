@@ -18,6 +18,7 @@ namespace Lykke.Service.Assets
             CreateMap<IAssetPair,         AssetPair>();
             CreateMap<IAssetSettings,     AssetSettings>();
             CreateMap<IErc20Token,        Erc20Token>();
+            CreateMap<IIssuer,            Issuer>();
             CreateMap<IMarginAssetPair,   MarginAssetPair>();
             CreateMap<IMarginIssuer,      MarginIssuer>();
         }

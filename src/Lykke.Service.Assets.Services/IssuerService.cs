@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.Services
 {
@@ -21,6 +22,11 @@ namespace Lykke.Service.Assets.Services
             await _issuerRepository.AddAsync(issuer);
 
             return issuer;
+        }
+
+        public IIssuer CreateDefault()
+        {
+            return new Issuer();
         }
 
         public async Task<IEnumerable<IIssuer>> GetAllAsync()

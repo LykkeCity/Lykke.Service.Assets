@@ -7,7 +7,9 @@ namespace Lykke.Service.Assets.Core.Services
     public interface IIssuerService
     {
         Task<IIssuer> AddAsync(IIssuer issuer);
-        
+
+        IIssuer CreateDefault();
+
         Task<IEnumerable<IIssuer>> GetAllAsync();
 
         Task<IIssuer> GetAsync(string id);
