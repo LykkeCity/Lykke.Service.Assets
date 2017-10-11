@@ -67,6 +67,28 @@ namespace Lykke.Service.Assets.Controllers
             }
         }
 
+        [HttpGet("{assetId}/exists")]
+        [SwaggerOperation("AssetSettingsExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetExists(string assetId)
+        {
+            var assetSettingsExists = await _assetSettingsService.GetAsync(assetId) != null;
+
+            return Ok(assetSettingsExists);
+        }
+
+        [HttpGet("default")]
+        [SwaggerOperation("AssetSettingsGetDefault")]
+        [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public IActionResult GetDefault()
+        {
+            var assetSettings = _assetSettingsService.CreateDefault();
+            var response      = Mapper.Map<AssetSettings>(assetSettings);
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [SwaggerOperation("AssetSettingsAdd")]
         [ProducesResponseType(typeof(AssetSettings), (int)HttpStatusCode.Created)]
@@ -76,7 +98,7 @@ namespace Lykke.Service.Assets.Controllers
 
             return Created
             (
-                uri: $"api/v2/asset-settings/{settings.Asset}",
+                uri:   $"api/v2/asset-settings/{settings.Asset}",
                 value: settings
             );
         }

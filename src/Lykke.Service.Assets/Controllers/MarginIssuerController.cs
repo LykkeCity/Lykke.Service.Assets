@@ -51,7 +51,7 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpGet("default")]
-        [SwaggerOperation("MarginIssuerCreateDefault")]
+        [SwaggerOperation("MarginIssuerGetDefault")]
         [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public IActionResult GetDefault()
