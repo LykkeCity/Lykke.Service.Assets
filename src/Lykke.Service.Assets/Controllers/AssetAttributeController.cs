@@ -44,7 +44,7 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpGet("{assetId}")]
-        [SwaggerOperation("AssetAttributeGet")]
+        [SwaggerOperation("AssetAttributesGet")]
         [ProducesResponseType(typeof(AssetAttributes), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string assetId)
