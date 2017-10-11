@@ -6151,7 +6151,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetAllAsyncWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> Erc20TokenGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -6161,11 +6161,11 @@ namespace Lykke.Service.Assets.Client
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "GetAllAsync", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "Erc20TokenGetAll", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Erc20Token").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/erc20-tokens").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -6282,13 +6282,10 @@ namespace Lykke.Service.Assets.Client
         /// <exception cref="HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Error>> UpdateTokenAsyncWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> Erc20TokenUpdateWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (token != null)
             {
@@ -6303,11 +6300,11 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("token", token);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "UpdateTokenAsync", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "Erc20TokenUpdate", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Erc20Token").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/erc20-tokens").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -6350,7 +6347,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            if ((int)_statusCode != 204)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -6373,27 +6370,9 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<Error>();
+            var _result = new HttpOperationResponse();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
-            // Deserialize Response
-            if ((int)_statusCode == 404)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = SafeJsonConvert.DeserializeObject<Error>(_responseContent, DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -6418,7 +6397,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Error>> CreateTokenAsyncWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<Erc20Token>> Erc20TokenAddWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (token != null)
             {
@@ -6433,11 +6412,11 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("token", token);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "CreateTokenAsync", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "Erc20TokenAdd", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Erc20Token").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/erc20-tokens").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -6480,7 +6459,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            if ((int)_statusCode != 201)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -6503,16 +6482,16 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<Error>();
+            var _result = new HttpOperationResponse<Erc20Token>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 404)
+            if ((int)_statusCode == 201)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<Error>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<Erc20Token>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -6531,7 +6510,7 @@ namespace Lykke.Service.Assets.Client
             return _result;
         }
 
-        /// <param name='assetIds'>
+        /// <param name='specification'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -6548,7 +6527,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByAssetIdsAsyncWithHttpMessagesAsync(GetByIdsRequest assetIds = default(GetByIdsRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -6557,13 +6536,13 @@ namespace Lykke.Service.Assets.Client
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("assetIds", assetIds);
+                tracingParameters.Add("specification", specification);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "GetByAssetIdsAsync", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "Erc20TokenGetBySpecification", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Erc20Token/getByAssetIds").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/erc20-tokens/specification").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -6586,9 +6565,9 @@ namespace Lykke.Service.Assets.Client
 
             // Serialize Request
             string _requestContent = null;
-            if(assetIds != null)
+            if(specification != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(assetIds, SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(specification, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
@@ -9992,7 +9971,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetAllAsyncWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> Erc20TokenGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='token'>
         /// </param>
@@ -10002,7 +9981,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<Error>> UpdateTokenAsyncWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> Erc20TokenUpdateWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='token'>
         /// </param>
@@ -10012,9 +9991,9 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<Error>> CreateTokenAsyncWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<Erc20Token>> Erc20TokenAddWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
-        /// <param name='assetIds'>
+        /// <param name='specification'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -10022,7 +10001,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetByAssetIdsAsyncWithHttpMessagesAsync(GetByIdsRequest assetIds = default(GetByIdsRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns service alive status
@@ -11500,9 +11479,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static object GetAllAsync(this IAssetsService operations)
+            public static object Erc20TokenGetAll(this IAssetsService operations)
             {
-                return operations.GetAllAsyncAsync().GetAwaiter().GetResult();
+                return operations.Erc20TokenGetAllAsync().GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -11511,9 +11490,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAllAsyncAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> Erc20TokenGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetAllAsyncWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.Erc20TokenGetAllWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -11524,9 +11503,9 @@ namespace Lykke.Service.Assets.Client
             /// </param>
             /// <param name='token'>
             /// </param>
-            public static Error UpdateTokenAsync(this IAssetsService operations, Erc20Token token = default(Erc20Token))
+            public static void Erc20TokenUpdate(this IAssetsService operations, Erc20Token token = default(Erc20Token))
             {
-                return operations.UpdateTokenAsyncAsync(token).GetAwaiter().GetResult();
+                operations.Erc20TokenUpdateAsync(token).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -11537,9 +11516,32 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Error> UpdateTokenAsyncAsync(this IAssetsService operations, Erc20Token token = default(Erc20Token), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task Erc20TokenUpdateAsync(this IAssetsService operations, Erc20Token token = default(Erc20Token), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.UpdateTokenAsyncWithHttpMessagesAsync(token, null, cancellationToken).ConfigureAwait(false))
+                (await operations.Erc20TokenUpdateWithHttpMessagesAsync(token, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='token'>
+            /// </param>
+            public static Erc20Token Erc20TokenAdd(this IAssetsService operations, Erc20Token token = default(Erc20Token))
+            {
+                return operations.Erc20TokenAddAsync(token).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='token'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<Erc20Token> Erc20TokenAddAsync(this IAssetsService operations, Erc20Token token = default(Erc20Token), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.Erc20TokenAddWithHttpMessagesAsync(token, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -11548,50 +11550,24 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='token'>
+            /// <param name='specification'>
             /// </param>
-            public static Error CreateTokenAsync(this IAssetsService operations, Erc20Token token = default(Erc20Token))
+            public static object Erc20TokenGetBySpecification(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification))
             {
-                return operations.CreateTokenAsyncAsync(token).GetAwaiter().GetResult();
+                return operations.Erc20TokenGetBySpecificationAsync(specification).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='token'>
+            /// <param name='specification'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Error> CreateTokenAsyncAsync(this IAssetsService operations, Erc20Token token = default(Erc20Token), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> Erc20TokenGetBySpecificationAsync(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateTokenAsyncWithHttpMessagesAsync(token, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='assetIds'>
-            /// </param>
-            public static object GetByAssetIdsAsync(this IAssetsService operations, GetByIdsRequest assetIds = default(GetByIdsRequest))
-            {
-                return operations.GetByAssetIdsAsyncAsync(assetIds).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='assetIds'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetByAssetIdsAsyncAsync(this IAssetsService operations, GetByIdsRequest assetIds = default(GetByIdsRequest), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetByAssetIdsAsyncWithHttpMessagesAsync(assetIds, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.Erc20TokenGetBySpecificationWithHttpMessagesAsync(specification, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -13365,20 +13341,20 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class GetByIdsRequest
+    public partial class Erc20TokenSpecification
     {
         /// <summary>
-        /// Initializes a new instance of the GetByIdsRequest class.
+        /// Initializes a new instance of the Erc20TokenSpecification class.
         /// </summary>
-        public GetByIdsRequest()
+        public Erc20TokenSpecification()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the GetByIdsRequest class.
+        /// Initializes a new instance of the Erc20TokenSpecification class.
         /// </summary>
-        public GetByIdsRequest(IList<string> ids = default(IList<string>))
+        public Erc20TokenSpecification(IList<string> ids = default(IList<string>))
         {
             Ids = ids;
             CustomInit();

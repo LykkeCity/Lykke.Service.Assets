@@ -9,8 +9,6 @@ using Swashbuckle.SwaggerGen.Annotations;
 
 namespace Lykke.Service.Assets.Controllers
 {
-    //TODO: Test carefully
-
     [Route("api/v2/assets")]
     public class AssetController : Controller
     {
