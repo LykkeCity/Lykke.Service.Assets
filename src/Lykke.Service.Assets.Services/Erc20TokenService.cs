@@ -42,5 +42,10 @@ namespace Lykke.Service.Assets.Services
         {
             await _erc20TokenRepository.SaveAsync(token);
         }
+
+        public async Task<IErc20Token> GetByTokenAddressAsync(string address)
+        {
+            return await _erc20TokenRepository.GetByAddressAsync(address);
+        }
     }
 }
