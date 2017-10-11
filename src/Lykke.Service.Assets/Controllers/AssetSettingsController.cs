@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpDelete("{assetId}")]
-        [SwaggerOperation("AssetSettingsDelete")]
+        [SwaggerOperation("AssetSettingsRemove")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAsync(string assetId)
         {

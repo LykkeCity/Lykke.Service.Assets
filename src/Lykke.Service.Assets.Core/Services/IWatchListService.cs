@@ -6,9 +6,9 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IWatchListService
     {
-        Task AddOrUpdateCustomAsync(string userId, IWatchList watchList);
+        Task<IWatchList> AddCustomAsync(string userId, IWatchList watchList);
 
-        Task AddOrUpdatePredefinedAsync(IWatchList watchList);
+        Task<IWatchList> AddPredefinedAsync(IWatchList watchList);
 
         Task<IEnumerable<IWatchList>> GetAllAsync(string userId);
 
@@ -23,5 +23,9 @@ namespace Lykke.Service.Assets.Core.Services
         Task RemoveCustomAsync(string userId, string watchListId);
 
         Task RemovePredefinedAsync(string watchListId);
+
+        Task UpdateCustomAsync(string userId, IWatchList watchList);
+
+        Task UpdatePredefinedAsync(IWatchList watchList);
     }
 }

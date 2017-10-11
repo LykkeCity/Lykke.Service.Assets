@@ -22,14 +22,18 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task AddOrUpdateCustomAsync(string userId, IWatchList watchList)
+        public async Task<IWatchList> AddCustomAsync(string userId, IWatchList watchList)
         {
             await _customWatchListRepository.UpsertAsync(userId, watchList);
+
+            return watchList;
         }
 
-        public async Task AddOrUpdatePredefinedAsync(IWatchList watchList)
+        public async Task<IWatchList> AddPredefinedAsync(IWatchList watchList)
         {
             await _predefinedWatchListsRepository.UpsertAsync(watchList);
+
+            return watchList;
         }
         
         public async Task<IEnumerable<IWatchList>> GetAllAsync(string userId)
@@ -68,6 +72,16 @@ namespace Lykke.Service.Assets.Services
         public async Task RemovePredefinedAsync(string watchListId)
         {
             await _predefinedWatchListsRepository.RemoveAsync(watchListId);
+        }
+
+        public async Task UpdateCustomAsync(string userId, IWatchList watchList)
+        {
+            await _customWatchListRepository.UpsertAsync(userId, watchList);
+        }
+
+        public async Task UpdatePredefinedAsync(IWatchList watchList)
+        {
+            await _predefinedWatchListsRepository.UpsertAsync(watchList);
         }
     }
 }
