@@ -40,6 +40,11 @@ namespace Lykke.Service.Assets.Repositories
             return await _marginAssetPairTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
         }
 
+        public async Task RemoveAsync(string id)
+        {
+            await _marginAssetPairTable.DeleteIfExistAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
         public async Task UpdateAsync(IMarginAssetPair marginAssetPair)
         {
             await _marginAssetPairTable.MergeAsync(GetPartitionKey(), GetRowKey(marginAssetPair.Id), x =>

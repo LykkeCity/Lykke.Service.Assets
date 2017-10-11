@@ -12,6 +12,8 @@ namespace Lykke.Service.Assets.Core.Repositories
 
         Task<IMarginAssetPair> GetAsync(string id);
 
+        Task RemoveAsync(string id);
+
         Task UpdateAsync(IMarginAssetPair marginAssetPair);
     }
 }
