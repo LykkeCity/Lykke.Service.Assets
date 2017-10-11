@@ -5853,7 +5853,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> AssetSettingsGetDefaultWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<MarginIssuer>> AssetSettingsGetDefaultWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -5904,7 +5904,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            if ((int)_statusCode != 200)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -5927,7 +5927,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<object>();
+            var _result = new HttpOperationResponse<MarginIssuer>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -5937,24 +5937,6 @@ namespace Lykke.Service.Assets.Client
                 try
                 {
                     _result.Body = SafeJsonConvert.DeserializeObject<MarginIssuer>(_responseContent, DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
-            // Deserialize Response
-            if ((int)_statusCode == 404)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = SafeJsonConvert.DeserializeObject<Error>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -11197,7 +11179,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> AssetSettingsGetDefaultWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<MarginIssuer>> AssetSettingsGetDefaultWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='clientId'>
         /// </param>
@@ -12761,7 +12743,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static object AssetSettingsGetDefault(this IAssetsService operations)
+            public static MarginIssuer AssetSettingsGetDefault(this IAssetsService operations)
             {
                 return operations.AssetSettingsGetDefaultAsync().GetAwaiter().GetResult();
             }
@@ -12772,7 +12754,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> AssetSettingsGetDefaultAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<MarginIssuer> AssetSettingsGetDefaultAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AssetSettingsGetDefaultWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
