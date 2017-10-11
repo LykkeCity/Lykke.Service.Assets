@@ -3524,7 +3524,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<AssetGroup>>> AssetGroupGetWithHttpMessagesAsync(string groupName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<AssetGroup>> AssetGroupGetWithHttpMessagesAsync(string groupName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (groupName == null)
             {
@@ -3604,7 +3604,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<AssetGroup>>();
+            var _result = new HttpOperationResponse<AssetGroup>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -3613,7 +3613,7 @@ namespace Lykke.Service.Assets.Client
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<IList<AssetGroup>>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<AssetGroup>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -6510,6 +6510,155 @@ namespace Lykke.Service.Assets.Client
             return _result;
         }
 
+        /// <param name='address'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<object>> Erc20TokenGetByAddressWithHttpMessagesAsync(string address, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (address == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "address");
+            }
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("address", address);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "Erc20TokenGetByAddress", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/erc20-tokens/{address}").ToString();
+            _url = _url.Replace("{address}", System.Uri.EscapeDataString(address));
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("GET");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<object>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 200)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<Erc20Token>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 404)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<Error>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
         /// <param name='specification'>
         /// </param>
         /// <param name='customHeaders'>
@@ -8067,7 +8216,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<WatchList>> WatchListGetPredefinedWithHttpMessagesAsync(string watchListId, string userId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<WatchList>> WatchListGetCustomWithHttpMessagesAsync(string watchListId, string userId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (watchListId == null)
             {
@@ -8083,7 +8232,7 @@ namespace Lykke.Service.Assets.Client
                 tracingParameters.Add("watchListId", watchListId);
                 tracingParameters.Add("userId", userId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "WatchListGetPredefined", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "WatchListGetCustom", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -8330,7 +8479,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<WatchList>> WatchListGetPredefined1WithHttpMessagesAsync(string watchListId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<WatchList>> WatchListGetPredefinedWithHttpMessagesAsync(string watchListId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (watchListId == null)
             {
@@ -8345,7 +8494,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("watchListId", watchListId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "WatchListGetPredefined1", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "WatchListGetPredefined", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -9765,7 +9914,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<AssetGroup>>> AssetGroupGetWithHttpMessagesAsync(string groupName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<AssetGroup>> AssetGroupGetWithHttpMessagesAsync(string groupName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='groupName'>
         /// </param>
@@ -9993,6 +10142,16 @@ namespace Lykke.Service.Assets.Client
         /// </param>
         Task<HttpOperationResponse<Erc20Token>> Erc20TokenAddWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='address'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> Erc20TokenGetByAddressWithHttpMessagesAsync(string address, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <param name='specification'>
         /// </param>
         /// <param name='customHeaders'>
@@ -10118,7 +10277,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<WatchList>> WatchListGetPredefinedWithHttpMessagesAsync(string watchListId, string userId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<WatchList>> WatchListGetCustomWithHttpMessagesAsync(string watchListId, string userId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='watchListId'>
         /// </param>
@@ -10140,7 +10299,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<WatchList>> WatchListGetPredefined1WithHttpMessagesAsync(string watchListId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<WatchList>> WatchListGetPredefinedWithHttpMessagesAsync(string watchListId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='watchListId'>
         /// </param>
@@ -10957,7 +11116,7 @@ namespace Lykke.Service.Assets.Client
             /// </param>
             /// <param name='groupName'>
             /// </param>
-            public static IList<AssetGroup> AssetGroupGet(this IAssetsService operations, string groupName)
+            public static AssetGroup AssetGroupGet(this IAssetsService operations, string groupName)
             {
                 return operations.AssetGroupGetAsync(groupName).GetAwaiter().GetResult();
             }
@@ -10970,7 +11129,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<AssetGroup>> AssetGroupGetAsync(this IAssetsService operations, string groupName, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<AssetGroup> AssetGroupGetAsync(this IAssetsService operations, string groupName, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AssetGroupGetWithHttpMessagesAsync(groupName, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -11550,6 +11709,32 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='address'>
+            /// </param>
+            public static object Erc20TokenGetByAddress(this IAssetsService operations, string address)
+            {
+                return operations.Erc20TokenGetByAddressAsync(address).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='address'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> Erc20TokenGetByAddressAsync(this IAssetsService operations, string address, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.Erc20TokenGetByAddressWithHttpMessagesAsync(address, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
             /// <param name='specification'>
             /// </param>
             public static object Erc20TokenGetBySpecification(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification))
@@ -11850,9 +12035,9 @@ namespace Lykke.Service.Assets.Client
             /// </param>
             /// <param name='userId'>
             /// </param>
-            public static WatchList WatchListGetPredefined(this IAssetsService operations, string watchListId, string userId = default(string))
+            public static WatchList WatchListGetCustom(this IAssetsService operations, string watchListId, string userId = default(string))
             {
-                return operations.WatchListGetPredefinedAsync(watchListId, userId).GetAwaiter().GetResult();
+                return operations.WatchListGetCustomAsync(watchListId, userId).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -11865,9 +12050,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<WatchList> WatchListGetPredefinedAsync(this IAssetsService operations, string watchListId, string userId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<WatchList> WatchListGetCustomAsync(this IAssetsService operations, string watchListId, string userId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.WatchListGetPredefinedWithHttpMessagesAsync(watchListId, userId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.WatchListGetCustomWithHttpMessagesAsync(watchListId, userId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -11905,9 +12090,9 @@ namespace Lykke.Service.Assets.Client
             /// </param>
             /// <param name='watchListId'>
             /// </param>
-            public static WatchList WatchListGetPredefined1(this IAssetsService operations, string watchListId)
+            public static WatchList WatchListGetPredefined(this IAssetsService operations, string watchListId)
             {
-                return operations.WatchListGetPredefined1Async(watchListId).GetAwaiter().GetResult();
+                return operations.WatchListGetPredefinedAsync(watchListId).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -11918,9 +12103,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<WatchList> WatchListGetPredefined1Async(this IAssetsService operations, string watchListId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<WatchList> WatchListGetPredefinedAsync(this IAssetsService operations, string watchListId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.WatchListGetPredefined1WithHttpMessagesAsync(watchListId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.WatchListGetPredefinedWithHttpMessagesAsync(watchListId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

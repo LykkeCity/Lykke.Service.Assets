@@ -23,19 +23,7 @@ namespace Lykke.Service.Assets.Controllers
         {
             _erc20TokenService = erc20TokenService;
         }
-
-        [HttpGet("{address}")]
-        [SwaggerOperation("Erc20TokenGetByAddressAsync")]
-        [ProducesResponseType(typeof(Erc20Token), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Erc20TokenGetByAddressAsync(string address)
-        {
-            var token = await _erc20TokenService.GetByTokenAddressAsync(address);
-            var response = Mapper.Map<Erc20Token>(token);
-
-            return Ok(response);
-        }
-
+        
         [HttpGet]
         [SwaggerOperation("Erc20TokenGetAll")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
@@ -49,6 +37,26 @@ namespace Lykke.Service.Assets.Controllers
             {
                 Items = responseList
             });
+        }
+
+        [HttpGet("{address}")]
+        [SwaggerOperation("Erc20TokenGetByAddress")]
+        [ProducesResponseType(typeof(Erc20Token), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Get(string address)
+        {
+            var token = await _erc20TokenService.GetByTokenAddressAsync(address);
+
+            if (token != null)
+            {
+                var response = Mapper.Map<Erc20Token>(token);
+
+                return Ok(response);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("specification")]

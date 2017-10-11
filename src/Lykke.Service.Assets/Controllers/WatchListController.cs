@@ -65,12 +65,12 @@ namespace Lykke.Service.Assets.Controllers
         }
 
         [HttpGet("custom/{watchListId}")]
-        [SwaggerOperation("WatchListGetPredefined")]
+        [SwaggerOperation("WatchListGetCustom")]
         [ProducesResponseType(typeof(WatchList), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetCustom(string watchListId, [FromQuery] string userId)
         {
-            var watchList = await _watchListService.GetPredefinedAsync(watchListId);
+            var watchList = await _watchListService.GetCustomAsync(watchListId, userId);
 
             if (watchList != null)
             {
