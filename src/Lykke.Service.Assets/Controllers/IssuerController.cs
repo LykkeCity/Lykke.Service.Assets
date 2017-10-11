@@ -37,6 +37,17 @@ namespace Lykke.Service.Assets.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("IssuerExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetExists(string id)
+        {
+            var issuerExists = await _issuerService.GetAsync(id) != null;
+
+            return Ok(issuerExists);
+        }
+
         [HttpGet]
         [SwaggerOperation("IssuerGetAll")]
         [ProducesResponseType(typeof(IEnumerable<Issuer>), (int)HttpStatusCode.OK)]
