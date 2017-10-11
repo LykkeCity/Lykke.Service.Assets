@@ -40,6 +40,7 @@ namespace Lykke.Service.Assets
             {
                 cfg.AddProfiles(typeof(AutoMapperProfile));
                 cfg.AddProfiles(typeof(Repositories.AutoMapperProfile));
+                cfg.AddProfiles(typeof(Services.AutoMapperProfile));
             });
 
             Mapper.AssertConfigurationIsValid();
