@@ -2,7 +2,7 @@
 
 namespace Lykke.Service.Assets.Repositories.DTOs
 {
-    public class AssetGroupClientLink : IAssetGroupClientLink
+    public class ClientAssetGroupLinkDto : IClientAssetGroupLink
     {
         public bool ClientsCanCashInViaBankCards { get; set; }
 

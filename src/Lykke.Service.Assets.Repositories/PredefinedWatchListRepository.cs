@@ -26,14 +26,14 @@ namespace Lykke.Service.Assets.Repositories
         {
             var entities = await _predefinedWatchListTable.GetDataAsync();
 
-            return entities.Select(Mapper.Map<WatchList>);
+            return entities.Select(Mapper.Map<WatchListDto>);
         }
 
         public async Task<IWatchList> GetAsync(string watchListId)
         {
             var entity = await _predefinedWatchListTable.GetDataAsync(GetPartitionKey(), GetRowKey(watchListId));
 
-            return Mapper.Map<WatchList>(entity);
+            return Mapper.Map<WatchListDto>(entity);
         }
 
         public async Task RemoveAsync(string watchListId)

@@ -36,21 +36,21 @@ namespace Lykke.Service.Assets.Repositories
         {
             var entity = await _assetGroupTable.GetDataAsync(GetPartitionKey(groupName), GetRowKey(assetId));
 
-            return Mapper.Map<AssetGroupAssetLink>(entity);
+            return Mapper.Map<AssetGroupAssetLinkDto>(entity);
         }
 
         public async Task<IEnumerable<IAssetGroupAssetLink>> GetAllAsync()
         {
             var entities = await _assetGroupTable.GetDataAsync();
 
-            return entities.Select(Mapper.Map<AssetGroupAssetLink>);
+            return entities.Select(Mapper.Map<AssetGroupAssetLinkDto>);
         }
 
         public async Task<IEnumerable<IAssetGroupAssetLink>> GetAllAsync(string groupName)
         {
             var entities = await _assetGroupTable.GetDataAsync(GetPartitionKey(groupName));
 
-            return entities.Select(Mapper.Map<AssetGroupAssetLink>);
+            return entities.Select(Mapper.Map<AssetGroupAssetLinkDto>);
         }
 
         public async Task RemoveAsync(string assetId, string groupName)

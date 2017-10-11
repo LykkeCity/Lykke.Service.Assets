@@ -3,7 +3,7 @@ using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Repositories.DTOs
 {
-    public class WatchList : IWatchList
+    public class WatchListDto : IWatchList
     {
         public IEnumerable<string> AssetIds { get; set; }
 
