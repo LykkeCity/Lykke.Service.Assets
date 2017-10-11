@@ -95,7 +95,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet("{groupName}")]
         [SwaggerOperation("AssetGroupGet")]
-        [ProducesResponseType(typeof(IEnumerable<AssetGroup>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AssetGroup), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetGroup(string groupName)
         {
