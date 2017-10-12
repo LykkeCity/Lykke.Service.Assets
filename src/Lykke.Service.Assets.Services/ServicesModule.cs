@@ -33,6 +33,51 @@ namespace Lykke.Service.Assets.Services
                 .RegisterType<AssetService>()
                 .As<IAssetService>()
                 .SingleInstance();
+
+            builder
+                .RegisterType<AssetPairService>()
+                .As<IAssetPairService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<AssetGroupService>()
+                .As<IAssetGroupService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<AssetPairService>()
+                .As<IAssetPairService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<AssetSettingsService>()
+                .As<IAssetSettingsService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<IssuerService>()
+                .As<IIssuerService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<MarginAssetPairService>()
+                .As<IMarginAssetPairService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<MarginAssetService>()
+                .As<IMarginAssetService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<MarginIssuerService>()
+                .As<IMarginIssuerService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<WatchListService>()
+                .As<IWatchListService>()
+                .SingleInstance();
         }
     }
 }
