@@ -26,8 +26,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpGet]
         [SwaggerOperation("MarginIssuerGetAll")]
         [ProducesResponseType(typeof(ListOf<MarginIssuer>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAll()
         {
             var issuers = await _marginIssuerService.GetAllAsync();
             var responseList = issuers?.Select(Mapper.Map<MarginIssuer>);
@@ -41,31 +40,46 @@ namespace Lykke.Service.Assets.Controllers
         [HttpGet("{id}")]
         [SwaggerOperation("MarginIssuerGet")]
         [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetAsync([FromRoute] string id)
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Get([FromRoute] string id)
         {
             var issuer   = await _marginIssuerService.GetAsync(id);
-            var response = Mapper.Map<MarginIssuer>(issuer);
 
-            return Ok(response);
+            if (issuer != null)
+            {
+                return Ok(Mapper.Map<MarginIssuer>(issuer));
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            
         }
 
         [HttpGet("default")]
         [SwaggerOperation("MarginIssuerGetDefault")]
         [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public IActionResult GetDefault()
         {
-            var issuer   = _marginIssuerService.CreateDefault();
-            var response = Mapper.Map<MarginIssuer>(issuer);
+            var issuer = _marginIssuerService.CreateDefault();
+            
+            return Ok(Mapper.Map<MarginIssuer>(issuer));
+        }
 
-            return Ok(response);
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("MarginIssuerExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetExists([FromRoute] string id)
+        {
+            var issuerExists = await _marginIssuerService.GetAsync(id) != null;
+
+            return Ok(issuerExists);
         }
 
         [HttpPost]
         [SwaggerOperation("MarginIssuerAdd")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Post([FromBody] MarginIssuer marginIssuer)
         {
             await _marginIssuerService.AddAsync(marginIssuer);
@@ -76,7 +90,6 @@ namespace Lykke.Service.Assets.Controllers
         [HttpPut]
         [SwaggerOperation("MarginIssuerUpdate")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Put([FromBody] MarginIssuer marginIssuer)
         {
             await _marginIssuerService.UpdateAsync(marginIssuer);
