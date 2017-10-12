@@ -76,7 +76,7 @@ namespace Lykke.Service.Assets
             var log      = CreateLog(services, settings.CurrentValue);
             var builder  = new ContainerBuilder();
 
-            builder.RegisterModule(new ApiModule(settings.CurrentValue, log));
+            builder.RegisterModule(new ApiModule(settings, log));
             builder.RegisterModule(new RepositoriesModule(log, settings));
             builder.RegisterModule(new ServicesModule());
 

@@ -31,7 +31,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
             // about RabbitMq subscriber configuration
 
             var settings = RabbitMqSubscriptionSettings
-                .CreateForSubscriber(_connectionString, "lykke.ethereum.indexer", "erccontracts")
+                .CreateForSubscriber(_connectionString, "lykke.ethereum.indexer.erccontracts","lykke.service.assets")
                 .MakeDurable();
             // TODO: Make additional configuration, using fluent API here:
             // ex: .MakeDurable()
