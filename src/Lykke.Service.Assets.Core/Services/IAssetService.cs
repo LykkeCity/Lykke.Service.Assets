@@ -9,6 +9,8 @@ namespace Lykke.Service.Assets.Core.Services
     {
         Task<IAsset> AddAsync(IAsset asset);
 
+        IAsset CreateDefault();
+
         Task DisableAsync(string id);
 
         Task EnableAsync(string id);

@@ -97,6 +97,26 @@ namespace Lykke.Service.Assets.Controllers
             });
         }
 
+        [HttpGet("default")]
+        [SwaggerOperation("AssetGetDefault")]
+        [ProducesResponseType(typeof(Asset), (int)HttpStatusCode.OK)]
+        public IActionResult GetDefault()
+        {
+            var asset = _assetService.CreateDefault();
+
+            return Ok(Mapper.Map<Asset>(asset));
+        }
+
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("AssetExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public IActionResult GetExists(string id)
+        {
+            var assetExists = _assetService.GetAsync(id) != null;
+
+            return Ok(assetExists);
+        }
+
         [HttpPost]
         [SwaggerOperation("AssetAdd")]
         [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.Created)]

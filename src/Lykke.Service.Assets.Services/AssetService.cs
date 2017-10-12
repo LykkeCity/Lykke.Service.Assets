@@ -28,6 +28,11 @@ namespace Lykke.Service.Assets.Services
             return asset;
         }
 
+        public IAsset CreateDefault()
+        {
+            return new Asset();
+        }
+
         public async Task DisableAsync(string id)
         {
             var asset = Mapper.Map<Asset>(_assetRepository.GetAsync(id));
