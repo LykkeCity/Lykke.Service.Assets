@@ -62,7 +62,6 @@ namespace Lykke.Service.Assets.Controllers
         [HttpPost("specification")]
         [SwaggerOperation("Erc20TokenGetBySpecification")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get([FromBody]Erc20TokenSpecification specification)
         {
             var ids          = specification.Ids;

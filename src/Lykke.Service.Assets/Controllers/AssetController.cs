@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Models;
+using Lykke.Service.Assets.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 
@@ -53,7 +55,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet]
         [SwaggerOperation("AssetGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<Models.Asset>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<Asset>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             var assets = (await _assetService.GetAllAsync())
@@ -64,7 +66,7 @@ namespace Lykke.Service.Assets.Controllers
 
         [HttpGet("{id}")]
         [SwaggerOperation("AssetGet")]
-        [ProducesResponseType(typeof(Models.Asset), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
@@ -72,7 +74,7 @@ namespace Lykke.Service.Assets.Controllers
 
             if (asset != null)
             {
-                return Ok(Mapper.Map<Models.Asset>(asset));
+                return Ok(Mapper.Map<Asset>(asset));
             }
             else
             {
@@ -80,12 +82,27 @@ namespace Lykke.Service.Assets.Controllers
             }
         }
 
+        [HttpPost("specification")]
+        [SwaggerOperation("AssetGetBySpecification")]
+        [ProducesResponseType(typeof(ListOf<Asset>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Get([FromBody] AssetSpecification specification)
+        {
+            var ids          = specification.Ids;
+            var allTokens    = await _assetService.GetAsync(ids?.ToArray());
+            var responseList = allTokens?.Select(Mapper.Map<Asset>);
+
+            return Ok(new ListOf<Asset>
+            {
+                Items = responseList
+            });
+        }
+
         [HttpPost]
         [SwaggerOperation("AssetAdd")]
-        [ProducesResponseType(typeof(Models.Asset), (int) HttpStatusCode.Created)]
-        public async Task<IActionResult> Post([FromBody] Models.Asset asset)
+        [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Post([FromBody] Asset asset)
         {
-            asset = Mapper.Map<Models.Asset>(await _assetService.AddAsync(asset));
+            asset = Mapper.Map<Asset>(await _assetService.AddAsync(asset));
 
             return Created
             (
@@ -97,7 +114,7 @@ namespace Lykke.Service.Assets.Controllers
         [HttpPut]
         [SwaggerOperation("AssetUpdate")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Put([FromBody] Models.Asset asset)
+        public async Task<IActionResult> Put([FromBody] Asset asset)
         {
             await _assetService.UpdateAsync(asset);
 

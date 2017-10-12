@@ -961,6 +961,132 @@ namespace Lykke.Service.Assets.Client
             return _result;
         }
 
+        /// <param name='specification'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<ListOfAsset>> AssetGetBySpecificationWithHttpMessagesAsync(AssetSpecification specification = default(AssetSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("specification", specification);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetGetBySpecification", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/assets/specification").ToString();
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            if(specification != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(specification, SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<ListOfAsset>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 200)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ListOfAsset>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
         /// <param name='assetId'>
         /// </param>
         /// <param name='key'>
@@ -7150,7 +7276,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ListOfErc20Token>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -7208,7 +7334,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            if ((int)_statusCode != 200)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -7231,7 +7357,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<object>();
+            var _result = new HttpOperationResponse<ListOfErc20Token>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -7241,24 +7367,6 @@ namespace Lykke.Service.Assets.Client
                 try
                 {
                     _result.Body = SafeJsonConvert.DeserializeObject<ListOfErc20Token>(_responseContent, DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
-            // Deserialize Response
-            if ((int)_statusCode == 404)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = SafeJsonConvert.DeserializeObject<Error>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -12125,6 +12233,16 @@ namespace Lykke.Service.Assets.Client
         /// </param>
         Task<HttpOperationResponse<Asset>> AssetAddWithHttpMessagesAsync(Asset asset = default(Asset), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='specification'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<ListOfAsset>> AssetGetBySpecificationWithHttpMessagesAsync(AssetSpecification specification = default(AssetSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <param name='assetId'>
         /// </param>
         /// <param name='key'>
@@ -12637,7 +12755,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ListOfErc20Token>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns service alive status
@@ -13210,6 +13328,32 @@ namespace Lykke.Service.Assets.Client
             public static async Task<Asset> AssetAddAsync(this IAssetsService operations, Asset asset = default(Asset), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AssetAddWithHttpMessagesAsync(asset, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='specification'>
+            /// </param>
+            public static ListOfAsset AssetGetBySpecification(this IAssetsService operations, AssetSpecification specification = default(AssetSpecification))
+            {
+                return operations.AssetGetBySpecificationAsync(specification).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='specification'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ListOfAsset> AssetGetBySpecificationAsync(this IAssetsService operations, AssetSpecification specification = default(AssetSpecification), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.AssetGetBySpecificationWithHttpMessagesAsync(specification, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -14474,7 +14618,7 @@ namespace Lykke.Service.Assets.Client
             /// </param>
             /// <param name='specification'>
             /// </param>
-            public static object Erc20TokenGetBySpecification(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification))
+            public static ListOfErc20Token Erc20TokenGetBySpecification(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification))
             {
                 return operations.Erc20TokenGetBySpecificationAsync(specification).GetAwaiter().GetResult();
             }
@@ -14487,7 +14631,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> Erc20TokenGetBySpecificationAsync(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ListOfErc20Token> Erc20TokenGetBySpecificationAsync(this IAssetsService operations, Erc20TokenSpecification specification = default(Erc20TokenSpecification), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.Erc20TokenGetBySpecificationWithHttpMessagesAsync(specification, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -15742,6 +15886,112 @@ namespace Lykke.Service.Assets.Client.Models
         public virtual void Validate()
         {
         }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class AssetSpecification
+    {
+        /// <summary>
+        /// Initializes a new instance of the AssetSpecification class.
+        /// </summary>
+        public AssetSpecification()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the AssetSpecification class.
+        /// </summary>
+        public AssetSpecification(IList<string> ids = default(IList<string>))
+        {
+            Ids = ids;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Ids")]
+        public IList<string> Ids { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfAsset
+    {
+        /// <summary>
+        /// Initializes a new instance of the ListOfAsset class.
+        /// </summary>
+        public ListOfAsset()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfAsset class.
+        /// </summary>
+        public ListOfAsset(IList<Asset> items = default(IList<Asset>))
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<Asset> Items { get; set; }
+
     }
 }
 // <auto-generated>
