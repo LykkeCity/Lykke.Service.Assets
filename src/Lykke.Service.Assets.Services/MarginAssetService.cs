@@ -19,9 +19,11 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task AddAsync(IMarginAsset marginAsset)
+        public async Task<IMarginAsset> AddAsync(IMarginAsset marginAsset)
         {
             await _marginAssetRepository.AddAsync(marginAsset);
+
+            return marginAsset;
         }
 
         public IMarginAsset CreateDefault()
@@ -37,6 +39,11 @@ namespace Lykke.Service.Assets.Services
         public async Task<IMarginAsset> GetAsync(string id)
         {
             return await _marginAssetRepository.GetAsync(id);
+        }
+
+        public async Task RemoveAsync(string id)
+        {
+            await _marginAssetRepository.RemoveAsync(id);
         }
 
         public async Task UpdateAsync(IMarginAsset marginAsset)

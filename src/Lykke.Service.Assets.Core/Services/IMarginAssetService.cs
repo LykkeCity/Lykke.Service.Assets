@@ -6,13 +6,15 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IMarginAssetService
     {
-        Task AddAsync(IMarginAsset marginAsset);
+        Task<IMarginAsset> AddAsync(IMarginAsset marginAsset);
 
         IMarginAsset CreateDefault();
 
         Task<IEnumerable<IMarginAsset>> GetAllAsync();
 
         Task<IMarginAsset> GetAsync(string id);
+
+        Task RemoveAsync(string id);
 
         Task UpdateAsync(IMarginAsset marginAsset);
     }

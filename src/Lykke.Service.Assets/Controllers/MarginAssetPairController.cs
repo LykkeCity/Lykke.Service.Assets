@@ -50,16 +50,36 @@ namespace Lykke.Service.Assets.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var assetCategory = await _marginAssetPairService.GetAsync(id);
+            var marginAssetPair = await _marginAssetPairService.GetAsync(id);
 
-            if (assetCategory != null)
+            if (marginAssetPair != null)
             {
-                return Ok(Mapper.Map<MarginAssetPair>(assetCategory));
+                return Ok(Mapper.Map<MarginAssetPair>(marginAssetPair));
             }
             else
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet("default")]
+        [SwaggerOperation("MarginAssetPairGetDefault")]
+        [ProducesResponseType(typeof(MarginAssetPair), (int)HttpStatusCode.OK)]
+        public IActionResult GetDefault()
+        {
+            var marginAssetPair = _marginAssetPairService.CreateDefault();
+
+            return Ok(Mapper.Map<MarginAssetPair>(marginAssetPair));
+        }
+
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("MarginAssetPairExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetExists(string id)
+        {
+            var marginAssetPairExists = await _marginAssetPairService.GetAsync(id) != null;
+
+            return Ok(marginAssetPairExists);
         }
 
         [HttpPost]
