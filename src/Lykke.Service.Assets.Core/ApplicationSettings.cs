@@ -7,7 +7,7 @@ namespace Lykke.Service.Assets.Core
     public class ApplicationSettings
     {
         public AssetsSettings AssetsService { get; set; }
-
+        
         public SlackNotificationsSettings SlackNotifications { get; set; }
 
         [UsedImplicitly]

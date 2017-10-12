@@ -1,8 +1,6 @@
-﻿using Lykke.Service.Assets.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Repositories
 {

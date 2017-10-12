@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using AzureStorage;
 using AzureStorage.Tables;
 using AzureStorage.Tables.Templates.Index;
@@ -7,6 +8,7 @@ using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.SettingsReader;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories
 {
@@ -23,94 +25,87 @@ namespace Lykke.Service.Assets.Repositories
 
         protected override void Load(ContainerBuilder builder)
         {
-            LoadRepositories(builder);
-            LoadTables(builder);
+            const string assetIssuerTableName = "AssetIssuers";
+            const string dictionaryTableName  = "Dictionaries";
+            const string erc20TokenTableName  = "Erc20Tokens";
+            const string watchListTableName   = "WatchLists";
+
+            string ClientPersonalInfoConnectionString(ApplicationSettings x) => x.AssetsService.Db.ClientPersonalInfoConnString;
+            string DictionariesConnectionString(ApplicationSettings x)       => x.AssetsService.Dictionaries.DbConnectionString;
+            
+
+            var assetAttributeTable      = CreateTable<AssetAttributeEntity>(DictionariesConnectionString, "AssetAttributes");
+            var assetCategoryTable       = CreateTable<AssetCategoryEntity>(DictionariesConnectionString, "AssetCategories");
+            var assetExtendedInfoTable   = CreateTable<AssetExtendedInfoEntity>(DictionariesConnectionString, dictionaryTableName);
+            var assetGroupTable          = CreateTable<AssetGroupEntity>(ClientPersonalInfoConnectionString, "AssetGroups");
+            var assetPairTable           = CreateTable<AssetPairEntity>(DictionariesConnectionString, dictionaryTableName);
+            var assetSettingsTable       = CreateTable<AssetSettingsEntity>(DictionariesConnectionString, "AssetSettings");
+            var assetTable               = CreateTable<AssetEntity>(DictionariesConnectionString, dictionaryTableName);
+            var customWatchListTable     = CreateTable<CustomWatchListEntity>(DictionariesConnectionString, watchListTableName);
+            var erc20TokenTable          = CreateTable<Erc20TokenEntity>(DictionariesConnectionString, erc20TokenTableName);
+            var erc20IndexTable          = CreateTable<AzureIndex>(DictionariesConnectionString, erc20TokenTableName);
+            var issuerTable              = CreateTable<IssuerEntity>(DictionariesConnectionString, assetIssuerTableName);
+            var marginAssetPairTable     = CreateTable<MarginAssetPairEntity>(DictionariesConnectionString, dictionaryTableName);
+            var marginAssetTable         = CreateTable<MarginAssetEntity>(DictionariesConnectionString, dictionaryTableName);
+            var marginIssuerTable        = CreateTable<MarginIssuerEntity>(DictionariesConnectionString, assetIssuerTableName);
+            var predefinedWatchListTable = CreateTable<PredefinedWatchListEntity>(DictionariesConnectionString, watchListTableName);
+
+            builder.RegisterInstance<IAssetAttributeRepository>
+                (new AssetAttributeRepository(assetAttributeTable));
+
+            builder.RegisterInstance<IAssetCategoryRepository>
+                (new AssetCategoryRepository(assetCategoryTable));
+
+            builder.RegisterInstance<IAssetExtendedInfoRepository>
+                (new AssetExtendedInfoRepository(assetExtendedInfoTable));
+
+            builder.RegisterInstance<IAssetGroupAssetLinkRepository>
+                (new AssetGroupAssetLinkRepository(assetGroupTable));
+
+            builder.RegisterInstance<IAssetGroupClientLinkRepository>
+                (new AssetGroupClientLinkRepository(assetGroupTable));
+
+            builder.RegisterInstance<IAssetGroupRepository>
+                (new AssetGroupRepository(assetGroupTable));
+
+            builder.RegisterInstance<IAssetPairRepository>
+                (new AssetPairRepository(assetPairTable));
+
+            builder.RegisterInstance<IAssetRepository>
+                (new AssetRepository(assetTable));
+
+            builder.RegisterInstance<IAssetSettingsRepository>
+                (new AssetSettingsRepository(assetSettingsTable));
+
+            builder.RegisterInstance<IClientAssetGroupLinkRepository>
+                (new ClientAssetGroupLinkRepository(assetGroupTable));
+
+            builder.RegisterInstance<ICustomWatchListRepository>
+                (new CustomWatchListRepository(customWatchListTable));
+
+            builder.RegisterInstance<IErc20TokenRepository>
+                (new Erc20TokenRepository(erc20TokenTable, erc20IndexTable));
+
+            builder.RegisterInstance<IIssuerRepository>
+                (new IssuerRepository(issuerTable));
+
+            builder.RegisterInstance<IMarginAssetPairRepository>
+                (new MarginAssetPairRepository(marginAssetPairTable));
+
+            builder.RegisterInstance<IMarginAssetRepository>
+                (new MarginAssetRepository(marginAssetTable));
+
+            builder.RegisterInstance<IMarginIssuerRepository>
+                (new MarginIssuerRepository(marginIssuerTable));
+
+            builder.RegisterInstance<IPredefinedWatchListRepository>
+                (new PredefinedWatchListRepository(predefinedWatchListTable));
         }
 
-        private void LoadRepositories(ContainerBuilder builder)
+        private INoSQLTableStorage<T> CreateTable<T>(Func<ApplicationSettings, string> connectionString, string name)
+            where T : TableEntity, new()
         {
-            builder
-                .RegisterType<AssetAttributeRepository>()
-                .As<IAssetAttributeRepository>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<AssetCategoryRepository>()
-                .As<IAssetCategoryRepository>()
-                .SingleInstance();
-
-            builder.RegisterInstance<IErc20TokenRepository>(
-                new Erc20TokenRepository(AzureTableStorage<Erc20TokenEntity>
-                .Create(_settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
-                    "Erc20Asset", _log),
-                 AzureTableStorage<AzureIndex>
-                .Create(_settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
-                    "Erc20Asset", _log)));
-
-            builder
-                .RegisterType<AssetExtendedInfoRepository>()
-                .As<IAssetExtendedInfoRepository>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<AssetRepository>()
-                .As<IAssetRepository>()
-                .SingleInstance();
-        }
-        
-        private void LoadTables(ContainerBuilder builder)
-        {
-            // Assets
-
-            var assetTable = AzureTableStorage<AssetEntity>.Create
-            (
-                _settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
-                "Dictionaries",
-                _log
-            );
-
-            builder
-                .RegisterInstance(assetTable)
-                .As<INoSQLTableStorage<AssetEntity>>();
-
-            // Asset attributes
-
-            var assetAttributeTable = AzureTableStorage<AssetAttributeEntity>.Create
-            (
-                _settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
-                "AssetAttributes",
-                _log
-            );
-
-            builder
-                .RegisterInstance(assetAttributeTable)
-                .As<INoSQLTableStorage<AssetAttributeEntity>>();
-
-            // Asset category
-
-            var assetCategoryTable = AzureTableStorage<AssetCategoryEntity>.Create
-            (
-                _settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
-                "AssetCategories",
-                _log
-            );
-
-            builder
-                .RegisterInstance(assetCategoryTable)
-                .As<INoSQLTableStorage<AssetCategoryEntity>>();
-
-            // Asset extended info
-
-            var assetExtendedInfoTable = AzureTableStorage<AssetExtendedInfoEntity>.Create
-            (
-                _settings.ConnectionString(x => x.AssetsService.Dictionaries.DbConnectionString),
-                "Dictionaries",
-                _log
-            );
-
-            builder
-                .RegisterInstance(assetExtendedInfoTable)
-                .As<INoSQLTableStorage<AssetExtendedInfoEntity>>();
+            return AzureTableStorage<T>.Create(_settings.ConnectionString(connectionString), name, _log);
         }
     }
 }

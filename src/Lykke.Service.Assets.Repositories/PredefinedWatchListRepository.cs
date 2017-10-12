@@ -11,7 +11,7 @@ using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
 {
-    public class PredefinedWatchListRepository : IPredefinedWatchListsRepository
+    public class PredefinedWatchListRepository : IPredefinedWatchListRepository
     {
         private readonly INoSQLTableStorage<PredefinedWatchListEntity> _predefinedWatchListTable;
 

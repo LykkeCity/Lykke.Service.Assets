@@ -4,7 +4,7 @@ using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Repositories
 {
-    public interface IPredefinedWatchListsRepository
+    public interface IPredefinedWatchListRepository
     {
         Task<IEnumerable<IWatchList>> GetAllAsync();
 
