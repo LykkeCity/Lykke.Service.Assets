@@ -27,11 +27,11 @@ namespace Lykke.Service.Assets.Services
             return assetInfo;
         }
 
-        public IAssetExtendedInfo CreateDefault(string id)
+        public IAssetExtendedInfo CreateDefault()
         {
             return new AssetExtendedInfo
             {
-                Id                   = id,
+                Id                   = string.Empty,
                 PopIndex             = 0,
                 MarketCapitalization = string.Empty,
                 Description          = string.Empty,

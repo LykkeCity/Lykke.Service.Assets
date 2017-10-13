@@ -8,7 +8,7 @@ namespace Lykke.Service.Assets.Core.Services
     {
         Task<IAssetExtendedInfo> AddAsync(IAssetExtendedInfo assetInfo);
 
-        IAssetExtendedInfo CreateDefault(string id);
+        IAssetExtendedInfo CreateDefault();
 
         Task<IEnumerable<IAssetExtendedInfo>> GetAllAsync();
 
