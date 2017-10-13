@@ -23,7 +23,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAssetPair>> GetAllAsync()
         {
-            return await _assetPairTable.GetDataAsync();
+            return await _assetPairTable.GetDataAsync(GetPartitionKey());
         }
 
         public async Task<IAssetPair> GetAsync(string id)
@@ -43,7 +43,7 @@ namespace Lykke.Service.Assets.Repositories
             entity.PartitionKey = GetPartitionKey();
             entity.RowKey       = GetRowKey(assetPair.Id);
 
-            await _assetPairTable.InsertAsync(entity);
+            await _assetPairTable.InsertOrReplaceAsync(entity);
         }
 
         public static string GetPartitionKey()

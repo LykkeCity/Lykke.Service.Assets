@@ -32,7 +32,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IMarginAssetPair>> GetAllAsync()
         {
-            return await _marginAssetPairTable.GetDataAsync();
+            return await _marginAssetPairTable.GetDataAsync(GetPartitionKey());
         }
 
         public async Task<IMarginAssetPair> GetAsync(string id)

@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets.Repositories
         
         public async Task<IEnumerable<IWatchList>> GetAllAsync()
         {
-            var entities = await _predefinedWatchListTable.GetDataAsync();
+            var entities = await _predefinedWatchListTable.GetDataAsync(GetPartitionKey());
 
             return entities.Select(Mapper.Map<WatchListDto>);
         }

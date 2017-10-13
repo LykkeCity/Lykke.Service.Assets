@@ -38,7 +38,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAssetCategory>> GetAllAsync()
         {
-            return (await _assetCategoryTable.GetDataAsync())
+            return (await _assetCategoryTable.GetDataAsync(GetPartitionKey()))
                 .OrderBy(x => x.SortOrder)
                 .ThenBy(x => x.Name);
         }

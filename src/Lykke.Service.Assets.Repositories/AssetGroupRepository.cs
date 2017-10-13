@@ -34,7 +34,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAssetGroup>> GetAllAsync()
         {
-            var entities = await _assetGroupTable.GetDataAsync();
+            var entities = await _assetGroupTable.GetDataAsync(GetPartitionKey());
 
             return entities.Select(Mapper.Map<AssetGroupDto>);
         }

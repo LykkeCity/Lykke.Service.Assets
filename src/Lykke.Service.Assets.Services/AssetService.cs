@@ -35,7 +35,7 @@ namespace Lykke.Service.Assets.Services
 
         public async Task DisableAsync(string id)
         {
-            var asset = Mapper.Map<Asset>(_assetRepository.GetAsync(id));
+            var asset = Mapper.Map<Asset>(await _assetRepository.GetAsync(id));
 
             asset.IsDisabled = true;
 
@@ -44,7 +44,7 @@ namespace Lykke.Service.Assets.Services
 
         public async Task EnableAsync(string id)
         {
-            var asset = Mapper.Map<Asset>(_assetRepository.GetAsync(id));
+            var asset = Mapper.Map<Asset>(await _assetRepository.GetAsync(id));
 
             asset.IsDisabled = false;
 

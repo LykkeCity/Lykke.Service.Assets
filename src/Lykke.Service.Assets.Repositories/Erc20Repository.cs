@@ -40,7 +40,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IErc20Token>> GetAllAsync()
         {
-            var allEntities = await _erc20AssetEntityTable.GetDataAsync();
+            var allEntities = await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey());
 
             return allEntities;
         }

@@ -14,6 +14,8 @@ namespace Lykke.Service.Assets.Responses.V2
 
         public string HotWallet { get; set; }
 
+        public decimal? MaxBalance { get; set; }
+
         public int MaxOutputsCount { get; set; }
 
         public int MaxOutputsCountInTx { get; set; }

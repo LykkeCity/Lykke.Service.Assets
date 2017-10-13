@@ -12,6 +12,8 @@
 
         string HotWallet { get; }
 
+        decimal? MaxBalance { get; }
+
         int MaxOutputsCount { get; }
 
         int MaxOutputsCountInTx { get; }

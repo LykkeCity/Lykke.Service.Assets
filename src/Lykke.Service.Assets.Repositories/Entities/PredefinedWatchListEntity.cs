@@ -5,7 +5,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
 {
     public class PredefinedWatchListEntity : TableEntity
     {
-        public IEnumerable<string> AssetIds { get; set; }
+        public string AssetIds { get; set; }
 
         public string Id => RowKey;
 

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Requests.V2;
-using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -29,7 +28,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [SwaggerOperation("Erc20TokenGetAll")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> Get()
         {
             var allTokens    = await _erc20TokenService.GetAllAsync();
             var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
@@ -69,7 +68,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             var allTokens    = await _erc20TokenService.GetAsync(ids?.ToArray());
             var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
-            return Ok(new ListOf<Erc20Token>()
+            return Ok(new ListOf<Erc20Token>
             {
                 Items = responseList
             });
@@ -78,7 +77,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpPost]
         [SwaggerOperation("Erc20TokenAdd")]
         [ProducesResponseType(typeof(Erc20Token), (int) HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateTokenAsync([FromBody]Erc20Token token)
+        public async Task<IActionResult> Post([FromBody]Erc20Token token)
         {
             await _erc20TokenService.AddAsync(token);
 
@@ -88,11 +87,21 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpPut]
         [SwaggerOperation("Erc20TokenUpdate")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> UpdateTokenAsync([FromBody]Erc20Token token)
+        public async Task<IActionResult> Put([FromBody]Erc20Token token)
         {
             await _erc20TokenService.UpdateAsync(token);
 
             return NoContent();
         }
+
+        //[HttpPut("{address}/verify")]
+        //[SwaggerOperation("Erc20TokenVerify")]
+        //[ProducesResponseType((int)HttpStatusCode.NoContent)]
+        //public async Task<IActionResult> Put(string address)
+        //{
+        //    await _erc20TokenService.VerifyAsync(address);
+        //
+        //    return NoContent();
+        //}
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetSettingsEntity : TableEntity, IAssetSettings
+    public class AssetSettingsEntity : EntityBase, IAssetSettings
     {
-        public string Asset { get; set; }
+        public string Asset => RowKey;
 
         public decimal CashinCoef { get; set; }
 
@@ -14,6 +13,8 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public decimal Dust { get; set; }
 
         public string HotWallet { get; set; }
+
+        public decimal? MaxBalance { get; set; }
 
         public int MaxOutputsCount { get; set; }
 

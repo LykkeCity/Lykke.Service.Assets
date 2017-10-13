@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -34,7 +35,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet]
         [SwaggerOperation("AssetAttributeGetAll")]
-        [ProducesResponseType(typeof(AssetAttributes), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<AssetAttributes>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             var assetAttributes = (await _assetAttributeService.GetAllAsync())

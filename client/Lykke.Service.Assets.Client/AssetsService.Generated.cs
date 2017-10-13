@@ -1607,7 +1607,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<AssetAttributes>> AssetAttributeGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<AssetAttributes>>> AssetAttributeGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1681,7 +1681,7 @@ namespace Lykke.Service.Assets.Client
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<AssetAttributes>();
+            var _result = new HttpOperationResponse<IList<AssetAttributes>>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1690,7 +1690,7 @@ namespace Lykke.Service.Assets.Client
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<AssetAttributes>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<AssetAttributes>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -12539,7 +12539,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<AssetAttributes>> AssetAttributeGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<AssetAttributes>>> AssetAttributeGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='assetId'>
         /// </param>
@@ -13733,7 +13733,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static AssetAttributes AssetAttributeGetAll(this IAssetsService operations)
+            public static IList<AssetAttributes> AssetAttributeGetAll(this IAssetsService operations)
             {
                 return operations.AssetAttributeGetAllAsync().GetAwaiter().GetResult();
             }
@@ -13744,7 +13744,7 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<AssetAttributes> AssetAttributeGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<AssetAttributes>> AssetAttributeGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AssetAttributeGetAllWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
@@ -16845,13 +16845,14 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetSettings class.
         /// </summary>
-        public AssetSettings(double cashinCoef, double dust, int maxOutputsCount, int maxOutputsCountInTx, double minBalance, int minOutputsCount, double outputSize, int privateIncrement, string asset = default(string), string changeWallet = default(string), string hotWallet = default(string))
+        public AssetSettings(double cashinCoef, double dust, int maxOutputsCount, int maxOutputsCountInTx, double minBalance, int minOutputsCount, double outputSize, int privateIncrement, string asset = default(string), string changeWallet = default(string), string hotWallet = default(string), double? maxBalance = default(double?))
         {
             Asset = asset;
             CashinCoef = cashinCoef;
             ChangeWallet = changeWallet;
             Dust = dust;
             HotWallet = hotWallet;
+            MaxBalance = maxBalance;
             MaxOutputsCount = maxOutputsCount;
             MaxOutputsCountInTx = maxOutputsCountInTx;
             MinBalance = minBalance;
@@ -16890,6 +16891,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "HotWallet")]
         public string HotWallet { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MaxBalance")]
+        public double? MaxBalance { get; set; }
 
         /// <summary>
         /// </summary>

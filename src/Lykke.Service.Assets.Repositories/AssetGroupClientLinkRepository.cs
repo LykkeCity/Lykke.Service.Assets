@@ -13,6 +13,8 @@ namespace Lykke.Service.Assets.Repositories
 {
     public class AssetGroupClientLinkRepository : IAssetGroupClientLinkRepository
     {
+        private const string PartitionKeyPrefix = "GroupClientLink_";
+
         private readonly INoSQLTableStorage<AssetGroupEntity> _assetGroupTable;
 
 
@@ -42,7 +44,8 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAssetGroupClientLink>> GetAllAsync()
         {
-            var entities = await _assetGroupTable.GetDataAsync();
+            var entities = (await _assetGroupTable.GetDataAsync())
+                .Where(x => x.PartitionKey.StartsWith(PartitionKeyPrefix));
 
             return entities.Select(Mapper.Map<AssetGroupClientLinkDto>);
         }
@@ -70,7 +73,7 @@ namespace Lykke.Service.Assets.Repositories
         }
 
         private static string GetPartitionKey(string clientId)
-            => $"GroupClientLink_{clientId}";
+            => $"{PartitionKeyPrefix}{clientId}";
 
         private static string GetRowKey(string groupName)
             => groupName;

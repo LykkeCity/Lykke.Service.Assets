@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;

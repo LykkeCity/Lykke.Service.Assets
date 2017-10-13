@@ -32,7 +32,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IIssuer>> GetAllAsync()
         {
-            return await _issuerTable.GetDataAsync();
+            return await _issuerTable.GetDataAsync(GetPartitionKey());
         }
 
         public async Task<IIssuer> GetAsync(string id)

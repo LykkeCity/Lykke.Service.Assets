@@ -22,7 +22,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAssetExtendedInfo>> GetAllAsync()
         {
-            return await _assetExtendedInfoTable.GetDataAsync();
+            return await _assetExtendedInfoTable.GetDataAsync(GetPartitionKey());
         }
 
         public async Task<IAssetExtendedInfo> GetAsync(string id)
