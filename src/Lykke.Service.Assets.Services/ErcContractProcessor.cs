@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets.Services
 
             if (existingContract != null)
             {
-                await _erc20TokenRepository.SaveAsync(message);
+                await _erc20TokenRepository.AddAsync(message);
             }
         }
     }
