@@ -9,6 +9,7 @@ using Swashbuckle.SwaggerGen.Annotations;
 
 namespace Lykke.Service.Assets.Controllers.V1
 {
+    /// <inheritdoc />
     /// <summary>
     /// Controller for asset pairs
     /// </summary>
