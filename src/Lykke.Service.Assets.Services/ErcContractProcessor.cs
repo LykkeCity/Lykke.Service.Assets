@@ -22,7 +22,7 @@ namespace Lykke.Service.Assets.Services
         {
             var existingContract = await _erc20TokenRepository.GetByAddressAsync(message.Address);
 
-            if (existingContract != null)
+            if (existingContract == null)
             {
                 await _erc20TokenRepository.AddAsync(message);
             }

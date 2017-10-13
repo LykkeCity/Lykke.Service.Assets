@@ -30,9 +30,17 @@ namespace Lykke.Service.Assets.RabbitSubscribers
             // NOTE: Read https://github.com/LykkeCity/Lykke.RabbitMqDotNetBroker/blob/master/README.md to learn
             // about RabbitMq subscriber configuration
 
-            var settings = RabbitMqSubscriptionSettings
-                .CreateForSubscriber(_connectionString, "lykke.ethereum.indexer.erccontracts","lykke.service.assets")
-                .MakeDurable();
+            var settings = new RabbitMqSubscriptionSettings()
+            {
+                ConnectionString = _connectionString,
+                QueueName = "lykke.service.assets",
+                ExchangeName = "lykke.ethereum.indexer.erccontracts",
+                DeadLetterExchangeName = "lykke.ethereum.indexer.erccontracts.dlx",
+                RoutingKey = "",
+                IsDurable = true
+            };
+                //.CreateForSubscriber(_connectionString, "lykke.ethereum.indexer.erccontracts","lykke.service.assets")
+                //.MakeDurable();
             // TODO: Make additional configuration, using fluent API here:
             // ex: .MakeDurable()
 

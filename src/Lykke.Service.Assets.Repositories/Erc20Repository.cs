@@ -32,7 +32,10 @@ namespace Lykke.Service.Assets.Repositories
             SetEntityKeys(entity);
 
             await _erc20AssetEntityTable.InsertOrReplaceAsync(entity);
-            await _indexAssetIdTable.InsertOrReplaceAsync(index);
+            if (erc20Token.AssetId != null)
+            {
+                await _indexAssetIdTable.InsertOrReplaceAsync(index);
+            }
         }
 
         public async Task<IEnumerable<IErc20Token>> GetAllAsync()
@@ -73,7 +76,11 @@ namespace Lykke.Service.Assets.Repositories
             SetEntityKeys(entity);
 
             await _erc20AssetEntityTable.InsertOrMergeAsync(entity);
-            await _indexAssetIdTable.InsertOrMergeAsync(index);
+
+            if (erc20Token.AssetId != null)
+            {
+                await _indexAssetIdTable.InsertOrMergeAsync(index);
+            }
         }
 
         private static void SetEntityKeys(Erc20TokenEntity entity)
