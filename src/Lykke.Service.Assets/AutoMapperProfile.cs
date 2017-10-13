@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.Models;
+using Lykke.Service.Assets.Responses.V2;
 
 namespace Lykke.Service.Assets
 {

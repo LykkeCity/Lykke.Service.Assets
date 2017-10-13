@@ -54,6 +54,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Requests\v1\" />
+  </ItemGroup>
+
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <ItemGroup>
       <DocFile Include="bin\*\*\Lykke.Service.Assets.xml" />

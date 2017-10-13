@@ -1,9 +1,8 @@
 ﻿using System;
-using Lykke.Service.Assets.Models;
+using Lykke.Service.Assets.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.SwaggerGen.Annotations;
-
 
 namespace Lykke.Service.Assets.Controllers
 {
