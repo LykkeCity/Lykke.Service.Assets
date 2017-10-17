@@ -8,12 +8,12 @@ using Swashbuckle.SwaggerGen.Annotations;
 namespace Lykke.Service.Assets.Controllers.V2
 {
     [Route("/api/v2/clients")]
-    public class ClientController : Controller
+    public class ClientsController : Controller
     {
         private readonly IAssetGroupService _assetGroupService;
 
 
-        public ClientController(
+        public ClientsController(
             IAssetGroupService assetGroupService)
         {
             _assetGroupService = assetGroupService;
@@ -29,22 +29,22 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(assetIds);
         }
 
-        [HttpGet("{clientId}/cash-in-via-bank-card-enabled")]
-        [SwaggerOperation("ClientIsAllowedToCashInViaBankCard")]
+        [HttpGet("{clientId}/swift-deposit-enabled")]
+        [SwaggerOperation("ClientIsAllowedMakeSwiftDeposit")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> GetCashInViaBankCardEnabled(string clientId, [FromQuery] bool isIosDevice)
+        public async Task<IActionResult> IsAllowedMakeSwiftDeposit(string clientId, [FromQuery] bool isIosDevice)
         {
-            var result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
+            var result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }
 
-        [HttpGet("{clientId}/swift-deposit-enabled")]
-        [SwaggerOperation("ClientIsAllowedMakeSwiftDeposit")]
+        [HttpGet("{clientId}/cash-in-via-bank-card-enabled")]
+        [SwaggerOperation("ClientIsAllowedToCashInViaBankCard")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> GetSwiftDepositEnabled(string clientId, [FromQuery] bool isIosDevice)
+        public async Task<IActionResult> IsAllowedToCashInViaBankCard(string clientId, [FromQuery] bool isIosDevice)
         {
-            var result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
+            var result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }

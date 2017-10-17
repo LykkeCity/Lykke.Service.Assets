@@ -11,37 +11,39 @@ using Swashbuckle.SwaggerGen.Annotations;
 namespace Lykke.Service.Assets.Controllers.V2
 {
     [Route("/api/v2/margin-assets")]
-    public class MarginAssetController : Controller
+    public class MarginAssetsController : Controller
     {
         private readonly IMarginAssetService _marginAssetService;
 
 
-        public MarginAssetController(
+        public MarginAssetsController(
             IMarginAssetService marginAssetService)
         {
             _marginAssetService = marginAssetService;
         }
 
-
-        [HttpDelete("{id}")]
-        [SwaggerOperation("MarginAssetRemove")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Delete(string id)
+        [HttpPost]
+        [SwaggerOperation("MarginAssetAdd")]
+        [ProducesResponseType(typeof(MarginAsset), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> Add([FromBody] MarginAsset marginAsset)
         {
-            await _marginAssetService.RemoveAsync(id);
+            marginAsset = Mapper.Map<MarginAsset>(await _marginAssetService.AddAsync(marginAsset));
 
-            return NoContent();
+            return Created
+            (
+                uri:   $"/api/v2/margin-assets/{marginAsset.Id}",
+                value: marginAsset
+            );
         }
 
-        [HttpGet]
-        [SwaggerOperation("MarginAssetGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<MarginAsset>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("MarginAssetExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Exists(string id)
         {
-            var marginAssets = (await _marginAssetService.GetAllAsync())
-                .Select(Mapper.Map<MarginAsset>);
+            var marginAssetPairExists = await _marginAssetService.GetAsync(id) != null;
 
-            return Ok(marginAssets);
+            return Ok(marginAssetPairExists);
         }
 
         [HttpGet("{id}")]
@@ -62,6 +64,17 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
         }
 
+        [HttpGet]
+        [SwaggerOperation("MarginAssetGetAll")]
+        [ProducesResponseType(typeof(IEnumerable<MarginAsset>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
+        {
+            var marginAssets = (await _marginAssetService.GetAllAsync())
+                .Select(Mapper.Map<MarginAsset>);
+
+            return Ok(marginAssets);
+        }
+
         [HttpGet("default")]
         [SwaggerOperation("MarginAssetGetDefault")]
         [ProducesResponseType(typeof(MarginAsset), (int)HttpStatusCode.OK)]
@@ -72,34 +85,21 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(Mapper.Map<MarginAsset>(marginAssetPair));
         }
 
-        [HttpGet("{id}/exists")]
-        [SwaggerOperation("MarginAssetExists")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetExists(string id)
+
+        [HttpDelete("{id}")]
+        [SwaggerOperation("MarginAssetRemove")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Remove(string id)
         {
-            var marginAssetPairExists = await _marginAssetService.GetAsync(id) != null;
+            await _marginAssetService.RemoveAsync(id);
 
-            return Ok(marginAssetPairExists);
-        }
-
-        [HttpPost]
-        [SwaggerOperation("MarginAssetAdd")]
-        [ProducesResponseType(typeof(MarginAsset), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> Post([FromBody] MarginAsset marginAsset)
-        {
-            marginAsset = Mapper.Map<MarginAsset>(await _marginAssetService.AddAsync(marginAsset));
-
-            return Created
-            (
-                uri:   $"/api/v2/margin-assets/{marginAsset.Id}",
-                value: marginAsset
-            );
+            return NoContent();
         }
 
         [HttpPut]
         [SwaggerOperation("MarginAssetUpdate")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Put([FromBody] MarginAsset assetCategory)
+        public async Task<IActionResult> Update([FromBody] MarginAsset assetCategory)
         {
             await _marginAssetService.UpdateAsync(assetCategory);
 

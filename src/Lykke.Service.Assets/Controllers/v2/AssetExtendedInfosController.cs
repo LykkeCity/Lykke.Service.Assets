@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -12,36 +11,38 @@ using Swashbuckle.SwaggerGen.Annotations;
 namespace Lykke.Service.Assets.Controllers.V2
 {
     [Route("api/v2/asset-extended-infos")]
-    public class AssetExtendedInfoController : Controller
+    public class AssetExtendedInfosController : Controller
     {
         private readonly IAssetExtendedInfoService _assetExtendedInfoService;
 
-        public AssetExtendedInfoController(
+        public AssetExtendedInfosController(
             IAssetExtendedInfoService assetExtendedInfoService)
         {
             _assetExtendedInfoService = assetExtendedInfoService;
         }
 
-
-        [HttpDelete("{id}")]
-        [SwaggerOperation("AssetExtendedInfoRemove")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Delete(string id)
+        [HttpPost]
+        [SwaggerOperation("AssetExtendedInfoAdd")]
+        [ProducesResponseType(typeof(AssetExtendedInfo), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Add([FromBody] AssetExtendedInfo assetInfo)
         {
-            await _assetExtendedInfoService.RemoveAsync(id);
+            assetInfo = Mapper.Map<AssetExtendedInfo>(await _assetExtendedInfoService.AddAsync(assetInfo));
 
-            return NoContent();
+            return Created
+            (
+                uri:   $"api/v2/asset-extended-infos/{assetInfo.Id}",
+                value: assetInfo
+            );
         }
 
-        [HttpGet]
-        [SwaggerOperation("AssetExtendedInfoGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<AssetExtendedInfo>), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("AssetExtendedInfoExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Exists(string id)
         {
-            var assets = (await _assetExtendedInfoService.GetAllAsync())
-                .Select(Mapper.Map<AssetExtendedInfo>);
+            var extendedInfoExists = await _assetExtendedInfoService.GetAsync(id) != null;
 
-            return Ok(assets);
+            return Ok(extendedInfoExists);
         }
 
         [HttpGet("{id}")]
@@ -62,6 +63,17 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
         }
 
+        [HttpGet]
+        [SwaggerOperation("AssetExtendedInfoGetAll")]
+        [ProducesResponseType(typeof(IEnumerable<AssetExtendedInfo>), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
+        {
+            var assets = (await _assetExtendedInfoService.GetAllAsync())
+                .Select(Mapper.Map<AssetExtendedInfo>);
+
+            return Ok(assets);
+        }
+
         [HttpGet("default")]
         [SwaggerOperation("AssetExtendedInfoGetDefault")]
         [ProducesResponseType(typeof(AssetExtendedInfo), (int) HttpStatusCode.OK)]
@@ -72,24 +84,21 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(Mapper.Map<AssetExtendedInfo>(assetExtendedInfo));
         }
 
-        [HttpPost]
-        [SwaggerOperation("AssetExtendedInfoAdd")]
-        [ProducesResponseType(typeof(AssetExtendedInfo), (int) HttpStatusCode.Created)]
-        public async Task<IActionResult> Post([FromBody] AssetExtendedInfo assetInfo)
-        {
-            assetInfo = Mapper.Map<AssetExtendedInfo>(await _assetExtendedInfoService.AddAsync(assetInfo));
 
-            return Created
-            (
-                uri:   $"api/v2/asset-extended-infos/{assetInfo.Id}",
-                value: assetInfo
-            );
+        [HttpDelete("{id}")]
+        [SwaggerOperation("AssetExtendedInfoRemove")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Remove(string id)
+        {
+            await _assetExtendedInfoService.RemoveAsync(id);
+
+            return NoContent();
         }
 
         [HttpPut]
         [SwaggerOperation("AssetExtendedInfoUpdate")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Put([FromBody] AssetExtendedInfo assetInfo)
+        public async Task<IActionResult> Update([FromBody] AssetExtendedInfo assetInfo)
         {
             await _assetExtendedInfoService.UpdateAsync(assetInfo);
 

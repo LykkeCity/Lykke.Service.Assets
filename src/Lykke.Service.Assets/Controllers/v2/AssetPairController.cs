@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -23,26 +22,29 @@ namespace Lykke.Service.Assets.Controllers.V2
             _assetPairService = assetPairService;
         }
 
-
-        [HttpDelete("{id}")]
-        [SwaggerOperation("AssetPairRemove")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Delete(string id)
+        [HttpPost]
+        [SwaggerOperation("AssetPairAdd")]
+        [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Add([FromBody] AssetPair assetPair)
         {
-            await _assetPairService.RemoveAsync(id);
+            assetPair = Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
 
-            return NoContent();
+            return Created
+            (
+                uri:   $"api/v2/asset-pairs/{assetPair.Id}",
+                value: assetPair
+            );
         }
 
-        [HttpGet]
-        [SwaggerOperation("AssetPairGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("AssetPairExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Exists(string id)
         {
-            var assetPair = (await _assetPairService.GetAllAsync())
-                .Select(Mapper.Map<AssetPair>);
+            var assetPairExists = await _assetPairService.GetAsync(id) != null;
 
-            return Ok(assetPair);
+            return Ok(assetPairExists);
         }
 
         [HttpGet("{id}")]
@@ -63,15 +65,15 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
         }
 
-        [HttpGet("{id}/exists")]
-        [SwaggerOperation("AssetPairExists")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetExists(string id)
+        [HttpGet]
+        [SwaggerOperation("AssetPairGetAll")]
+        [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
         {
-            var assetPairExists = await _assetPairService.GetAsync(id) != null;
+            var assetPair = (await _assetPairService.GetAllAsync())
+                .Select(Mapper.Map<AssetPair>);
 
-            return Ok(assetPairExists);
+            return Ok(assetPair);
         }
 
         [HttpGet("default")]
@@ -84,24 +86,21 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(Mapper.Map<AssetPair>(assetPair));
         }
 
-        [HttpPost]
-        [SwaggerOperation("AssetPairAdd")]
-        [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.Created)]
-        public async Task<IActionResult> Post([FromBody] AssetPair assetPair)
-        {
-            assetPair = Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
 
-            return Created
-            (
-                uri:   $"api/v2/asset-pairs/{assetPair.Id}",
-                value: assetPair
-            );
+        [HttpDelete("{id}")]
+        [SwaggerOperation("AssetPairRemove")]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Remove(string id)
+        {
+            await _assetPairService.RemoveAsync(id);
+
+            return NoContent();
         }
 
         [HttpPut]
         [SwaggerOperation("AssetPairUpdate")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Put([FromBody] AssetPair assetPair)
+        public async Task<IActionResult> Update([FromBody] AssetPair assetPair)
         {
             await _assetPairService.UpdateAsync(assetPair);
 

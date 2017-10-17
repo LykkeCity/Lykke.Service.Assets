@@ -14,6 +14,8 @@ namespace Lykke.Service.Assets.Core.Services
 
         Task<IMarginIssuer> GetAsync(string id);
 
+        Task RemoveAsync(string id);
+
         Task UpdateAsync(IMarginIssuer marginIssuer);
     }
 }

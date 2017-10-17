@@ -39,6 +39,11 @@ namespace Lykke.Service.Assets.Services
             return await _marginIssuerRepository.GetAsync(id);
         }
 
+        public async Task RemoveAsync(string id)
+        {
+            await _marginIssuerRepository.RemoveAsync(id);
+        }
+
         public async Task UpdateAsync(IMarginIssuer marginIssuer)
         {
             await _marginIssuerRepository.UpdateAsync(marginIssuer);

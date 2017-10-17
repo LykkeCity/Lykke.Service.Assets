@@ -41,6 +41,11 @@ namespace Lykke.Service.Assets.Repositories
             return await _marginIssuerTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
         }
 
+        public async Task RemoveAsync(string id)
+        {
+            await _marginIssuerTable.DeleteIfExistAsync(GetPartitionKey(), GetRowKey(id));
+        }
+
         public async Task UpdateAsync(IMarginIssuer marginIssuer)
         {
             await _marginIssuerTable.MergeAsync(GetPartitionKey(), GetRowKey(marginIssuer.Id), x =>

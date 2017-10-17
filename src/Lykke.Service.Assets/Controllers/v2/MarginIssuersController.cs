@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -15,27 +14,33 @@ namespace Lykke.Service.Assets.Controllers.V2
     ///     Controller for Margin Issuers
     /// </summary>
     [Route("api/v2/margin-issuers")]
-    public class MarginIssuerController : Controller
+    public class MarginIssuersController : Controller
     {
         private readonly IMarginIssuerService _marginIssuerService;
 
-        public MarginIssuerController(IMarginIssuerService marginIssuerService)
+        public MarginIssuersController(IMarginIssuerService marginIssuerService)
         {
             _marginIssuerService = marginIssuerService;
         }
 
-        [HttpGet]
-        [SwaggerOperation("MarginIssuerGetAll")]
-        [ProducesResponseType(typeof(ListOf<MarginIssuer>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAll()
+        [HttpPost]
+        [SwaggerOperation("MarginIssuerAdd")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Add([FromBody] MarginIssuer marginIssuer)
         {
-            var issuers = await _marginIssuerService.GetAllAsync();
-            var responseList = issuers?.Select(Mapper.Map<MarginIssuer>);
+            await _marginIssuerService.AddAsync(marginIssuer);
 
-            return Ok(new ListOf<MarginIssuer>()
-            {
-                Items = responseList
-            });
+            return Ok();
+        }
+
+        [HttpGet("{id}/exists")]
+        [SwaggerOperation("MarginIssuerExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Exists([FromRoute] string id)
+        {
+            var issuerExists = await _marginIssuerService.GetAsync(id) != null;
+
+            return Ok(issuerExists);
         }
 
         [HttpGet("{id}")]
@@ -54,8 +59,20 @@ namespace Lykke.Service.Assets.Controllers.V2
             {
                 return NotFound();
             }
+        }
 
-            
+        [HttpGet]
+        [SwaggerOperation("MarginIssuerGetAll")]
+        [ProducesResponseType(typeof(ListOf<MarginIssuer>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
+        {
+            var issuers = await _marginIssuerService.GetAllAsync();
+            var responseList = issuers?.Select(Mapper.Map<MarginIssuer>);
+
+            return Ok(new ListOf<MarginIssuer>()
+            {
+                Items = responseList
+            });
         }
 
         [HttpGet("default")]
@@ -68,30 +85,20 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(Mapper.Map<MarginIssuer>(issuer));
         }
 
-        [HttpGet("{id}/exists")]
-        [SwaggerOperation("MarginIssuerExists")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetExists([FromRoute] string id)
+        [HttpDelete("{id}")]
+        [SwaggerOperation("MarginIssuerRemove")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Remove(string id)
         {
-            var issuerExists = await _marginIssuerService.GetAsync(id) != null;
+            await _marginIssuerService.RemoveAsync(id);
 
-            return Ok(issuerExists);
-        }
-
-        [HttpPost]
-        [SwaggerOperation("MarginIssuerAdd")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Post([FromBody] MarginIssuer marginIssuer)
-        {
-            await _marginIssuerService.AddAsync(marginIssuer);
-
-            return Ok();
+            return NoContent();
         }
 
         [HttpPut]
         [SwaggerOperation("MarginIssuerUpdate")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Put([FromBody] MarginIssuer marginIssuer)
+        public async Task<IActionResult> Update([FromBody] MarginIssuer marginIssuer)
         {
             await _marginIssuerService.UpdateAsync(marginIssuer);
 

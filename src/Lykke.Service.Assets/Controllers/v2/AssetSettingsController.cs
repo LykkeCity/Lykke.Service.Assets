@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -24,28 +23,28 @@ namespace Lykke.Service.Assets.Controllers.V2
             _assetSettingsService = assetSettingsService;
         }
 
-        [HttpDelete("{assetId}")]
-        [SwaggerOperation("AssetSettingsRemove")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteAsync(string assetId)
+        [HttpPost]
+        [SwaggerOperation("AssetSettingsAdd")]
+        [ProducesResponseType(typeof(AssetSettings), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> Add([FromBody] AssetSettings settings)
         {
-            await _assetSettingsService.RemoveAsync(assetId);
+            settings = Mapper.Map<AssetSettings>(await _assetSettingsService.AddAsync(settings));
 
-            return NoContent();
+            return Created
+            (
+                uri:   $"api/v2/asset-settings/{settings.Asset}",
+                value: settings
+            );
         }
 
-        [HttpGet]
-        [SwaggerOperation("AssetSettingsGetAll")]
-        [ProducesResponseType(typeof(ListOf<AssetSettings>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        [HttpGet("{assetId}/exists")]
+        [SwaggerOperation("AssetSettingsExists")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Exists(string assetId)
         {
-            var allSettings = await _assetSettingsService.GetAllAsync();
-            var responseList = allSettings?.Select(Mapper.Map<AssetSettings>);
+            var assetSettingsExists = await _assetSettingsService.GetAsync(assetId) != null;
 
-            return Ok(new ListOf<AssetSettings>
-            {
-                Items = responseList
-            });
+            return Ok(assetSettingsExists);
         }
 
         [HttpGet("{assetId}")]
@@ -67,14 +66,18 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
         }
 
-        [HttpGet("{assetId}/exists")]
-        [SwaggerOperation("AssetSettingsExists")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetExists(string assetId)
+        [HttpGet]
+        [SwaggerOperation("AssetSettingsGetAll")]
+        [ProducesResponseType(typeof(ListOf<AssetSettings>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll()
         {
-            var assetSettingsExists = await _assetSettingsService.GetAsync(assetId) != null;
+            var allSettings = await _assetSettingsService.GetAllAsync();
+            var responseList = allSettings?.Select(Mapper.Map<AssetSettings>);
 
-            return Ok(assetSettingsExists);
+            return Ok(new ListOf<AssetSettings>
+            {
+                Items = responseList
+            });
         }
 
         [HttpGet("default")]
@@ -88,24 +91,20 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(response);
         }
 
-        [HttpPost]
-        [SwaggerOperation("AssetSettingsAdd")]
-        [ProducesResponseType(typeof(AssetSettings), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> Post([FromBody] AssetSettings settings)
+        [HttpDelete("{assetId}")]
+        [SwaggerOperation("AssetSettingsRemove")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Remove(string assetId)
         {
-            settings = Mapper.Map<AssetSettings>(await _assetSettingsService.AddAsync(settings));
+            await _assetSettingsService.RemoveAsync(assetId);
 
-            return Created
-            (
-                uri:   $"api/v2/asset-settings/{settings.Asset}",
-                value: settings
-            );
+            return NoContent();
         }
 
         [HttpPut]
         [SwaggerOperation("AssetSettingsUpdate")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> Put([FromBody] AssetSettings settings)
+        public async Task<IActionResult> Update([FromBody] AssetSettings settings)
         {
             await _assetSettingsService.UpdateAsync(settings);
 
