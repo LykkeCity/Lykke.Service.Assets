@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Common;
 using Common.Log;
-using Lykke.Job.Asset.IncomingMessages;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.IncomingMessages;
 using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.RabbitSubscribers

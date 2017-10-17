@@ -1,4 +1,4 @@
-﻿namespace Lykke.Job.Asset.IncomingMessages
+﻿namespace Lykke.Service.Assets.IncomingMessages
 {
     // NOTE: This is incoming message example
     public class Erc20ContractCreatedMessage

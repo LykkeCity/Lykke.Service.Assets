@@ -37,7 +37,6 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpGet]
         [SwaggerOperation("Erc20TokenGetAll")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAll()
         {
             var allTokens    = await _erc20TokenService.GetAllAsync();
@@ -52,7 +51,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpGet("{address}")]
         [SwaggerOperation("Erc20TokenGetByAddress")]
         [ProducesResponseType(typeof(Erc20Token), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByAddress(string address)
         {
             var token = await _erc20TokenService.GetByTokenAddressAsync(address);
@@ -93,15 +92,5 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return NoContent();
         }
-
-        //[HttpPut("{address}/verify")]
-        //[SwaggerOperation("Erc20TokenVerify")]
-        //[ProducesResponseType((int)HttpStatusCode.NoContent)]
-        //public async Task<IActionResult> Put(string address)
-        //{
-        //    await _erc20TokenService.VerifyAsync(address);
-        //
-        //    return NoContent();
-        //}
     }
 }
