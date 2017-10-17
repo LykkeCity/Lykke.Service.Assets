@@ -17,11 +17,16 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/erc20-tokens")]
     public class Erc20TokensController : Controller
     {
-        private readonly IErc20TokenService _erc20TokenService;
+        private readonly IErc20TokenAssetService _erc20TokenAssetService;
+        private readonly IErc20TokenService      _erc20TokenService;
 
-        public Erc20TokensController(IErc20TokenService erc20TokenService)
+
+        public Erc20TokensController(
+            IErc20TokenAssetService erc20TokenAssetService,
+            IErc20TokenService erc20TokenService)
         {
-            _erc20TokenService = erc20TokenService;
+            _erc20TokenAssetService = erc20TokenAssetService;
+            _erc20TokenService      = erc20TokenService;
         }
 
         [HttpPost]
@@ -32,6 +37,20 @@ namespace Lykke.Service.Assets.Controllers.V2
             await _erc20TokenService.AddAsync(token);
 
             return Ok();
+        }
+
+        [HttpPut("{address}/create-asset")]
+        [SwaggerOperation("Erc20TokenCreateAsset")]
+        [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateAsset(string address)
+        {
+            var asset = Mapper.Map<Asset>(await _erc20TokenAssetService.CreateAssetForErc20TokenAsync(address));
+
+            return Created
+            (
+                uri:   $"api/v2/assets/{asset.Id}",
+                value: asset
+            );
         }
 
         [HttpGet]
@@ -89,7 +108,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetBySpecification([FromBody]Erc20TokenSpecification specification)
         {
             var ids          = specification.Ids;
-            var allTokens    = await _erc20TokenService.GetAsync(ids?.ToArray());
+            var allTokens    = await _erc20TokenService.GetByAssetIdsAsync(ids?.ToArray());
             var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
             return Ok(new ListOf<Erc20Token>

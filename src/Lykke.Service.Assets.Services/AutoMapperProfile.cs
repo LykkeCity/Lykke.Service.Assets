@@ -8,7 +8,8 @@ namespace Lykke.Service.Assets.Services
     {
         public AutoMapperProfile()
         {
-            CreateMap<IAsset, Asset>();
+            CreateMap<IAsset,      Asset>();
+            CreateMap<IErc20Token, Erc20Token>();
         }
     }
 }

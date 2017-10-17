@@ -20,7 +20,7 @@ namespace Lykke.Service.Assets.Services
         //TODO: Add more logic here
         public async Task ProcessErc20ContractAsync(IErc20Token message)
         {
-            var existingContract = await _erc20TokenRepository.GetByAddressAsync(message.Address);
+            var existingContract = await _erc20TokenRepository.GetByTokenAddressAsync(message.Address);
 
             if (existingContract == null)
             {

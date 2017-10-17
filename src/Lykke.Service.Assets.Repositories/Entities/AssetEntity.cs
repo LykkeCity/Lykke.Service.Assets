@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Common;
-using Lykke.Service.Assets.Core.Domain;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetEntity : TableEntity, IAsset
+    public class AssetEntity : TableEntity
     {
         public int Accuracy { get; set; }
 
@@ -17,7 +10,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public bool BankCardsDepositEnabled { get; set; }
 
-        public Blockchain Blockchain { get; set; }
+        public string Blockchain { get; set; }
 
         public string BlockChainAssetId { get; set; }
 
@@ -76,13 +69,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string Name { get; set; }
 
         public bool NotLykkeAsset { get; set; }
-
-        public string[] PartnerIds
-        {
-            get => PartnersIdsJson?.DeserializeJson<string[]>();
-            set => PartnersIdsJson = value?.ToJson();
-        }
-
+        
         public string PartnersIdsJson { get; set; }
 
         public bool SellScreen { get; set; }
@@ -93,25 +80,6 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public string Symbol { get; set; }
 
-        
-        public override void ReadEntity(IDictionary<string, EntityProperty> properties,
-            OperationContext operationContext)
-        {
-            base.ReadEntity(properties, operationContext);
-
-            foreach (var p in GetType().GetProperties()
-                .Where(x => x.PropertyType.GetTypeInfo().IsEnum && properties.ContainsKey(x.Name)))
-                p.SetValue(this, Enum.Parse(p.PropertyType, properties[p.Name].StringValue));
-        }
-
-        public override IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
-        {
-            var properties = base.WriteEntity(operationContext);
-
-            foreach (var p in GetType().GetProperties().Where(x => x.PropertyType.GetTypeInfo().IsEnum))
-                properties.Add(p.Name, new EntityProperty(p.GetValue(this).ToString()));
-
-            return properties;
-        }
+        public string Type { get; set; }
     }
 }

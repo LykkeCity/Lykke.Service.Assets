@@ -87,5 +87,7 @@ namespace Lykke.Service.Assets.Core.Domain
         bool SwiftWithdrawal { get; }
 
         string Symbol { get; }
+
+        AssetType? Type { get; }
     }
 }

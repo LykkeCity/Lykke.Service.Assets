@@ -8,16 +8,16 @@ namespace Lykke.Service.Assets.Core.Services
     public interface IErc20TokenService
     {
         Task<IErc20Token> AddAsync(IErc20Token erc20Token);
-
+        
         Task<IEnumerable<IErc20Token>> GetAllAsync();
 
-        Task<IEnumerable<IErc20Token>> GetAsync(string[] ids);
+        Task<IEnumerable<IErc20Token>> GetByAssetIdsAsync(string[] assetIds);
 
-        Task<IErc20Token> GetAsync(string id);
+        Task<IErc20Token> GetByAssetIdAsync(string assetId);
 
         Task UpdateAsync(IErc20Token erc20Token);
 
-        Task<IErc20Token> GetByTokenAddressAsync(string address);
+        Task<IErc20Token> GetByTokenAddressAsync(string tokenAddress);
 
         Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync();
     }

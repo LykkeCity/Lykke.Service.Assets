@@ -22,20 +22,20 @@ namespace Lykke.Service.Assets.Services
 
             return token;
         }
-
+        
         public async Task<IEnumerable<IErc20Token>> GetAllAsync()
         {
             return await _erc20TokenRepository.GetAllAsync();
         }
 
-        public async Task<IEnumerable<IErc20Token>> GetAsync(string[] ids)
+        public async Task<IEnumerable<IErc20Token>> GetByAssetIdsAsync(string[] assetIds)
         {
-            return await _erc20TokenRepository.GetByAssetIdAsync(ids);
+            return await _erc20TokenRepository.GetByAssetIdAsync(assetIds);
         }
 
-        public async Task<IErc20Token> GetAsync(string id)
+        public async Task<IErc20Token> GetByAssetIdAsync(string assetId)
         {
-            return await _erc20TokenRepository.GetByAssetIdAsync(id);
+            return await _erc20TokenRepository.GetByAssetIdAsync(assetId);
         }
 
         public async Task UpdateAsync(IErc20Token token)
@@ -43,9 +43,9 @@ namespace Lykke.Service.Assets.Services
             await _erc20TokenRepository.AddAsync(token);
         }
 
-        public async Task<IErc20Token> GetByTokenAddressAsync(string address)
+        public async Task<IErc20Token> GetByTokenAddressAsync(string tokenAddress)
         {
-            return await _erc20TokenRepository.GetByAddressAsync(address);
+            return await _erc20TokenRepository.GetByTokenAddressAsync(tokenAddress);
         }
 
         public async Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync()

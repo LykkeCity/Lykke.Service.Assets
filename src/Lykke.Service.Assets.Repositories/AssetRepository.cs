@@ -5,6 +5,7 @@ using AutoMapper;
 using AzureStorage;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Repositories.Entities;
 
 
@@ -32,17 +33,21 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IAsset>> GetAllAsync()
         {
-            return await _assetTable.GetDataAsync(GetPartitionKey());
+            return (await _assetTable.GetDataAsync(GetPartitionKey()))
+                .Select(Mapper.Map<AssetDto>);
         }
 
         public async Task<IAsset> GetAsync(string id)
         {
-            return await _assetTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
+            var asset = await _assetTable.GetDataAsync(GetPartitionKey(), GetRowKey(id));
+
+            return Mapper.Map<AssetDto>(asset);
         }
 
         public async Task<IEnumerable<IAsset>> GetAsync(string[] ids)
         {
-            return await _assetTable.GetDataAsync(GetPartitionKey(), ids.Select(GetRowKey));
+            return (await _assetTable.GetDataAsync(GetPartitionKey(), ids.Select(GetRowKey)))
+                .Select(Mapper.Map<AssetDto>);
         }
 
         public async Task RemoveAsync(string id)
