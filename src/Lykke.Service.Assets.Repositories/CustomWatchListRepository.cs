@@ -5,6 +5,8 @@ using AzureStorage;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
+using Lykke.Service.Assets.Repositories.DTOs;
+using System.Linq;
 
 namespace Lykke.Service.Assets.Repositories
 {
@@ -22,17 +24,21 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IWatchList>> GetAllAsync(string userId)
         {
-            throw new System.NotImplementedException();
+            var entities = await _customWatchListTable.GetDataAsync(GetPartitionKey(userId));
+
+            return entities.Select(Mapper.Map<WatchListDto>);
         }
 
         public async Task<IWatchList> GetAsync(string userId, string watchListId)
         {
-            throw new System.NotImplementedException();
+            var entity = await _customWatchListTable.GetDataAsync(GetPartitionKey(userId), GetRowKey(watchListId));
+
+            return Mapper.Map<WatchListDto>(entity);
         }
 
         public async Task RemoveAsync(string userId, string watchListId)
         {
-            throw new System.NotImplementedException();
+            var entity = await _customWatchListTable.DeleteIfExistAsync(GetPartitionKey(userId), GetRowKey(watchListId));
         }
 
         public async Task UpsertAsync(string userId, IWatchList watchList)
