@@ -12,7 +12,7 @@
 
         string DeployerAddress { get; }
 
-        uint? TokenDecimals { get; }
+        int? TokenDecimals { get; }
 
         string TokenName { get; }
 

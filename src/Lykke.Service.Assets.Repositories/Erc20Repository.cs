@@ -23,13 +23,12 @@ namespace Lykke.Service.Assets.Repositories
             _erc20AssetEntityTable = erc20AssetEntityTable;
         }
 
-        
+
         public async Task AddAsync(IErc20Token erc20Token)
         {
             var entity = Mapper.Map<Erc20TokenEntity>(erc20Token);
-            var index  = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
-
             SetEntityKeys(entity);
+            var index  = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
 
             await _erc20AssetEntityTable.InsertOrReplaceAsync(entity);
             if (erc20Token.AssetId != null)
@@ -71,9 +70,8 @@ namespace Lykke.Service.Assets.Repositories
         public async Task UpdateAsync(IErc20Token erc20Token)
         {
             var entity = Mapper.Map<Erc20TokenEntity>(erc20Token);
-            var index  = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
-
             SetEntityKeys(entity);
+            var index  = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
 
             await _erc20AssetEntityTable.InsertOrMergeAsync(entity);
 

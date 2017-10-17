@@ -15,7 +15,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public string DeployerAddress { get; set; }
 
-        public uint? TokenDecimals { get; set; }
+        public int? TokenDecimals { get; set; }
 
         public string TokenName { get; set; }
 

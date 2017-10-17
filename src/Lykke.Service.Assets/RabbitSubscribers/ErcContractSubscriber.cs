@@ -67,7 +67,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 BlockHash = arg.BlockHash,
                 BlockTimestamp = arg.BlockTimestamp,
                 DeployerAddress = arg.DeployerAddress,
-                TokenDecimals = arg.TokenDecimals,
+                TokenDecimals = (int?)arg.TokenDecimals,
                 TokenName = arg.TokenName,
                 TokenSymbol = arg.TokenSymbol,
                 TokenTotalSupply = arg.TokenTotalSupply,
