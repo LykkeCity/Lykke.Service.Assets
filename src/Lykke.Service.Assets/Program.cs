@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseUrls("http://localhost:5000")
+                .UseUrls("http://*:5000")
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();
