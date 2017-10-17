@@ -40,7 +40,22 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAll()
         {
-            var allTokens    = await _erc20TokenService.GetAllAsync();
+            var allTokens = await _erc20TokenService.GetAllAsync();
+            var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
+
+            return Ok(new ListOf<Erc20Token>()
+            {
+                Items = responseList
+            });
+        }
+
+        [HttpGet("assets")]
+        [SwaggerOperation("Erc20TokenGetAllWithAssets")]
+        [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Erc20TokenGetAllWithAssets()
+        {
+            var allTokens = await _erc20TokenService.GetAllWithAssetsAsync();
             var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
             return Ok(new ListOf<Erc20Token>()

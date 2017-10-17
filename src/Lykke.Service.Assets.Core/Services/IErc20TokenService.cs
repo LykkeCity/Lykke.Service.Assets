@@ -18,5 +18,7 @@ namespace Lykke.Service.Assets.Core.Services
         Task UpdateAsync(IErc20Token erc20Token);
 
         Task<IErc20Token> GetByTokenAddressAsync(string address);
+
+        Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync();
     }
 }
