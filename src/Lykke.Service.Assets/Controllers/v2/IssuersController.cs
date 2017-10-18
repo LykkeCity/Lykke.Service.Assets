@@ -81,7 +81,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(assets);
         }
 
-        [HttpGet("default")]
+        [HttpGet("__default")]
         [SwaggerOperation("IssuerGetDefault")]
         [ProducesResponseType(typeof(Issuer), (int)HttpStatusCode.OK)]
         public IActionResult GetDefault()

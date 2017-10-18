@@ -75,7 +75,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             });
         }
 
-        [HttpGet("default")]
+        [HttpGet("__default")]
         [SwaggerOperation("MarginIssuerGetDefault")]
         [ProducesResponseType(typeof(MarginIssuer), (int)HttpStatusCode.OK)]
         public IActionResult GetDefault()

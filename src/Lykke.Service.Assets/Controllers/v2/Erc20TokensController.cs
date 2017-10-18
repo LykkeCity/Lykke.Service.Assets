@@ -67,16 +67,15 @@ namespace Lykke.Service.Assets.Controllers.V2
             });
         }
 
-        [HttpGet("assets")]
+        [HttpGet("with-assets")]
         [SwaggerOperation("Erc20TokenGetAllWithAssets")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Erc20TokenGetAllWithAssets()
         {
-            var allTokens = await _erc20TokenService.GetAllWithAssetsAsync();
+            var allTokens    = await _erc20TokenService.GetAllWithAssetsAsync();
             var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
-            return Ok(new ListOf<Erc20Token>()
+            return Ok(new ListOf<Erc20Token>
             {
                 Items = responseList
             });
@@ -102,7 +101,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
         }
 
-        [HttpPost("specification")]
+        [HttpPost("__specification")]
         [SwaggerOperation("Erc20TokenGetBySpecification")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetBySpecification([FromBody]Erc20TokenSpecification specification)

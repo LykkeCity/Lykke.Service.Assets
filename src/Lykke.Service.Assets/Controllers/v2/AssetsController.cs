@@ -95,7 +95,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(assets);
         }
 
-        [HttpPost("specification")]
+        [HttpPost("__specification")]
         [SwaggerOperation("AssetGetBySpecification")]
         [ProducesResponseType(typeof(ListOf<Asset>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetByspecification([FromBody] AssetSpecification specification)

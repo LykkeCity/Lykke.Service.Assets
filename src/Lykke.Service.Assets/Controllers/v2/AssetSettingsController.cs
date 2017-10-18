@@ -80,7 +80,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             });
         }
 
-        [HttpGet("default")]
+        [HttpGet("__default")]
         [SwaggerOperation("AssetSettingsGetDefault")]
         [ProducesResponseType(typeof(AssetSettings), (int)HttpStatusCode.OK)]
         public IActionResult GetDefault()

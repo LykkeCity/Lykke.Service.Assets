@@ -74,7 +74,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(assets);
         }
 
-        [HttpGet("default")]
+        [HttpGet("__default")]
         [SwaggerOperation("AssetExtendedInfoGetDefault")]
         [ProducesResponseType(typeof(AssetExtendedInfo), (int) HttpStatusCode.OK)]
         public IActionResult GetDefault()
