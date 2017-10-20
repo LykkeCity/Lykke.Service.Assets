@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -23,6 +25,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IAsset> AddAsync(IAsset asset)
         {
+            await ValidateAsset(asset);
+
             await _assetRepository.AddAsync(asset);
 
             return asset;
@@ -80,7 +84,37 @@ namespace Lykke.Service.Assets.Services
 
         public async Task UpdateAsync(IAsset asset)
         {
+            await ValidateAsset(asset);
+
             await _assetRepository.UpdateAsync(asset);
+        }
+
+        private async Task ValidateAsset(IAsset asset)
+        {
+            ValidateAccuracyAndMultiplierPower(asset);
+
+            await ValidateBlockchainAssetId(asset);
+        }
+
+        private static void ValidateAccuracyAndMultiplierPower(IAsset asset)
+        {
+            if (asset.Accuracy > asset.MultiplierPower)
+            {
+                throw new ValidationException($"Asset accuracy [{asset.Accuracy}] should be less or equal to multiplier power [{asset.MultiplierPower}].");
+            }
+        }
+        
+        private async Task ValidateBlockchainAssetId(IAsset asset)
+        {
+            if (!string.IsNullOrEmpty(asset.BlockChainAssetId))
+            {
+                var assets = await _assetRepository.GetAllAsync();
+
+                if (assets.Any(x => x.BlockChainAssetId == asset.BlockChainAssetId && x.Id != asset.Id))
+                {
+                    throw new ValidationException($"Another asset [{asset.Id}] with specified BlockChainAssetId [{asset.BlockChainAssetId}] already exists");
+                }
+            }
         }
     }
 }

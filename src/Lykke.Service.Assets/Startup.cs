@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -89,7 +90,25 @@ namespace Lykke.Service.Assets
             loggerFactory.AddConsole(_configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseLykkeMiddleware(Constants.ComponentName, ex => Error.Create("Technical problem"));
+            app.UseLykkeMiddleware(Constants.ComponentName, ex =>
+            {
+                string errorMessage;
+
+                switch (ex)
+                {
+                    case InvalidOperationException ioe:
+                        errorMessage = $"Invalid operation: {ioe.Message}";
+                        break;
+                    case ValidationException ve:
+                        errorMessage = $"Validation error: {ve.Message}";
+                        break;
+                    default:
+                        errorMessage = "Technical problem";
+                        break;
+                }
+
+                return Error.Create(errorMessage);
+            });
 
             app.UseMvc();
             app.UseSwagger();
