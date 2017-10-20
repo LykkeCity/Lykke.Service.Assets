@@ -107,7 +107,7 @@ namespace Lykke.Service.Assets
                         break;
                 }
 
-                return Error.Create(errorMessage);
+                return Error.Create(Constants.ComponentName, errorMessage);
             });
 
             app.UseMvc();
