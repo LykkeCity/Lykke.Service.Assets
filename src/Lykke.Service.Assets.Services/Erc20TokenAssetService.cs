@@ -28,7 +28,7 @@ namespace Lykke.Service.Assets.Services
         {
             var erc20Token = Mapper.Map<Erc20Token>(await _erc20TokenService.GetByTokenAddressAsync(tokenAddress));
 
-            if (string.IsNullOrEmpty(erc20Token.AssetId))
+            if (!string.IsNullOrEmpty(erc20Token.AssetId))
             {
                 throw new InvalidOperationException($"Asset for the token with specified address [{tokenAddress}] already exists.");
             }
