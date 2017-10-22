@@ -38,7 +38,7 @@ namespace Lykke.Service.Assets.Services
             var blockchainAndDisplayIds = await GetBlockchainAndDisplayIdsAsync(erc20Token);
             var tokenDecimals           = erc20Token.TokenDecimals ?? 0;
 
-            asset.Accuracy          = tokenDecimals;
+            asset.Accuracy          = GetAssetAccuracy(tokenDecimals);
             asset.AssetAddress      = erc20Token.Address;
             asset.Blockchain        = Blockchain.Ethereum;
             asset.BlockChainId      = blockchainAndDisplayIds.BlockchainId;
@@ -69,6 +69,13 @@ namespace Lykke.Service.Assets.Services
 
             
             return asset;
+        }
+
+        private static int GetAssetAccuracy(int tokenDecimals)
+        {
+            const int defaultAccuracy = 6;
+
+            return tokenDecimals >= defaultAccuracy ? defaultAccuracy : tokenDecimals;
         }
 
         private static string GetAssetName(IErc20Token token)
