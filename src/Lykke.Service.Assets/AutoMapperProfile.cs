@@ -4,7 +4,7 @@ using Lykke.Service.Assets.Responses.V2;
 
 namespace Lykke.Service.Assets
 {
-    internal class AutoMapperProfile : Profile
+    public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {

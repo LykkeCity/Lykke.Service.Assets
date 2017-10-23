@@ -6,9 +6,9 @@ namespace Lykke.Service.Assets.Client.Models.Extensions
 {
     public static class AssetExtensions
     {
-        public static int Multiplier(this Asset asset)
+        public static double Multiplier(this Asset asset)
         {
-            return (int) Math.Pow(10, asset.MultiplierPower * -1);
+            return Math.Pow(10, asset.MultiplierPower * -1);
         }
 
         public static string GetFirstAssetId(this IEnumerable<Asset> assets)
