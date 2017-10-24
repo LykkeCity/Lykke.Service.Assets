@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Controllers.V2;
 using Lykke.Service.Assets.Core.Domain;
@@ -15,79 +16,55 @@ namespace Lykke.Service.Assets.Tests.v2
     public class AssetAttributesControllerTests
     {
         [TestMethod]
-        public async Task Add__AssetId_And_Attribute_Passed__Correct_Created_Response_Returned()
+        public async Task Add__AssetId_And_Attribute_Passed__Correct_CreatedResult_Returned()
         {
-            var serviceMock = CreateServiceMock();
-
-            var assetId        = Guid.NewGuid().ToString();
-            var inputAttribute = new AssetAttribute
-            {
-                Key   = Guid.NewGuid().ToString(),
-                Value = Guid.NewGuid().ToString()
-            };
-            
+            var serviceMock   = CreateServiceMock();
+            var attributeMock = GenerateAssetAttribute();
+            var assetId       = Guid.NewGuid().ToString();
 
             serviceMock
                 .Setup(x => x.AddAsync(It.IsAny<string>(), It.IsAny<IAssetAttribute>()))
-                .ReturnsAsync(() => new MockAssetAttribute
-                {
-                    Key   = inputAttribute.Key,
-                    Value = inputAttribute.Value
-                });
+                .ReturnsAsync(() => attributeMock);
             
 
             var controller   = CreateController(serviceMock);
-            var actionResult = await controller.Add(assetId, inputAttribute);
+            var actionResult = await controller.Add(assetId, new AssetAttribute
+            {
+                Key   = attributeMock.Key,
+                Value = attributeMock.Value
+            });
             
+            Assert.That.IsActionResultOfType<CreatedResult>(actionResult, out var createdResult);
+            Assert.That.IsInstanceOfType<AssetAttribute>(createdResult.Value, out var attribute);
+            Assert.That.AreEquivalent(attributeMock, attribute);
+            
+            var expectedLocation = $"api/v2/asset-attributes/{assetId}/{attribute.Key}";
 
-            Assert.IsInstanceOfType(actionResult, typeof(CreatedResult));
-            var createdResult = (CreatedResult) actionResult;
-
-
-            Assert.IsInstanceOfType(createdResult.Value, typeof(IAssetAttribute));
-            var outputAttribute = (IAssetAttribute) createdResult.Value;
-
-
-            Assert.AreEqual(inputAttribute.Key,   outputAttribute.Key);
-            Assert.AreEqual(inputAttribute.Value, outputAttribute.Value);
-
-
-            var expectedLocation = $"api/v2/asset-attributes/{assetId}/{outputAttribute.Key}";
             Assert.AreEqual(expectedLocation, createdResult.Location);
         }
 
         [TestMethod]
-        public async Task Get__Asset_And_Key_Exists__Correct_Ok_Response_Returned()
+        public async Task Get__Asset_And_Key_Exists__Correct_OkResult_Returned()
         {
-            var serviceMock = CreateServiceMock();
-
-            var assetId = Guid.NewGuid().ToString();
-            var key     = Guid.NewGuid().ToString();
-            var value   = Guid.NewGuid().ToString();
+            var serviceMock   = CreateServiceMock();
+            var assetId       = Guid.NewGuid().ToString();
+            var attributeMock = GenerateAssetAttribute();
 
             serviceMock
                 .Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(() => new MockAssetAttribute
-                {
-                    Key   = key,
-                    Value = value
-                });
+                .ReturnsAsync(() => attributeMock);
 
             var controller   = CreateController(serviceMock);
-            var actionResult = await controller.Get(assetId, key);
+            var actionResult = await controller.Get(assetId, attributeMock.Key);
 
-            Assert.IsInstanceOfType(actionResult, typeof(OkObjectResult));
-            var okResult = (OkObjectResult)actionResult;
 
-            Assert.IsInstanceOfType(okResult.Value, typeof(IAssetAttribute));
-            var outputAttribute = (IAssetAttribute)okResult.Value;
-
-            Assert.AreEqual(key,   outputAttribute.Key);
-            Assert.AreEqual(value, outputAttribute.Value);
+            Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
+            Assert.That.IsInstanceOfType<AssetAttribute>(okResult.Value, out var attribute);
+            Assert.That.AreEquivalent(attributeMock, attribute);
         }
 
         [TestMethod]
-        public async Task Get__Either_Asset_Or_Key_Not_Exists__NotFound_Response_Returned()
+        public async Task Get__Either_Asset_Or_Key_Not_Exists__NotFoundResult_Returned()
         {
             var serviceMock = CreateServiceMock();
 
@@ -101,6 +78,111 @@ namespace Lykke.Service.Assets.Tests.v2
             Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
         }
 
+        [TestMethod]
+        public async Task GetAll__Asset_Attributes_Exists__Correct_OkResult_Returned()
+        {
+            var serviceMock    = CreateServiceMock();
+            var attributesMock = GenerateAssetAttributes();
+
+            serviceMock
+                .Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new [] { attributesMock });
+
+            var controller   = CreateController(serviceMock);
+            var actionResult = await controller.GetAll();
+
+            Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
+            Assert.That.IsInstanceOfType<IEnumerable<AssetAttributes>>(okResult.Value, out var attributes);
+            Assert.AreEqual(1, attributes.Count());
+            Assert.That.AreEquivalent(attributesMock, attributes.Single());
+        }
+
+        [TestMethod]
+        public async Task GetAll__Asset_Attributes_Not_Exists__Correct_OkResult_Returned()
+        {
+            var serviceMock = CreateServiceMock();
+
+            serviceMock
+                .Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<IAssetAttributes>());
+
+            var controller   = CreateController(serviceMock);
+            var actionResult = await controller.GetAll();
+
+            Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
+            Assert.That.IsInstanceOfType<IEnumerable<AssetAttributes>>(okResult.Value, out var attributes);
+            Assert.IsFalse(attributes.Any());
+        }
+
+        [TestMethod]
+        public async Task GetAllForAsset__Asset_Exists__Correct_OkResult_Returned()
+        {
+            var serviceMock    = CreateServiceMock();
+            var attributesMock = GenerateAssetAttributes();
+
+            serviceMock
+                .Setup(x => x.GetAllAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new[] { attributesMock });
+
+            var controller   = CreateController(serviceMock);
+            var actionResult = await controller.GetAllForAsset(attributesMock.AssetId);
+
+            Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
+            Assert.That.IsInstanceOfType<AssetAttributes>(okResult.Value, out var attributes);
+            Assert.That.AreEquivalent(attributesMock, attributes);
+        }
+
+        [TestMethod]
+        public async Task GetAllForAsset__Asset_Not_Exists__NotFoundResult_Returned()
+        {
+            var serviceMock = CreateServiceMock();
+            var assetId     = Guid.NewGuid().ToString();
+
+            serviceMock
+                .Setup(x => x.GetAllAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new List<IAssetAttributes>());
+
+            var controller   = CreateController(serviceMock);
+            var actionResult = await controller.GetAllForAsset(assetId);
+
+            Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task Remove__NoContentResult_Returned()
+        {
+            var serviceMock = CreateServiceMock();
+
+            serviceMock
+                .Setup(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
+
+            var controller   = CreateController(serviceMock);
+            var actionResult = await controller.Remove("", "");
+
+            Assert.IsInstanceOfType(actionResult, typeof(NoContentResult));
+
+            serviceMock
+                .Verify(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task Update__NoContentResult_Returned()
+        {
+            var serviceMock = CreateServiceMock();
+
+            serviceMock
+                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<AssetAttribute>()))
+                .Returns(Task.FromResult(false));
+
+            var controller   = CreateController(serviceMock);
+            var actionResult = await controller.Update("", new AssetAttribute());
+
+            Assert.IsInstanceOfType(actionResult, typeof(NoContentResult));
+
+            serviceMock
+                .Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<AssetAttribute>()), Times.Once);
+        }
 
         private static AssetAttributesController CreateController(IMock<IAssetAttributeService> serviceMock)
         {
@@ -112,17 +194,71 @@ namespace Lykke.Service.Assets.Tests.v2
             return new Mock<IAssetAttributeService>();
         }
 
+        private static MockAssetAttributes GenerateAssetAttributes()
+        {
+            return new MockAssetAttributes
+            {
+                AssetId = Guid.NewGuid().ToString(),
+                Attributes = new[]
+                {
+                    GenerateAssetAttribute()
+                }
+            };
+        }
+
+        private static MockAssetAttribute GenerateAssetAttribute()
+        {
+            return new MockAssetAttribute
+            {
+                Key   = Guid.NewGuid().ToString(),
+                Value = Guid.NewGuid().ToString()
+            };
+        }
+
 
         public class MockAssetAttribute : IAssetAttribute
         {
             public string Key { get; set; }
+
             public string Value { get; set; }
         }
 
         public class MockAssetAttributes : IAssetAttributes
         {
             public string AssetId { get; set; }
+
             public IEnumerable<IAssetAttribute> Attributes { get; set; }
+        }
+    }
+
+    public static class AssetAttributeAsserts
+    {
+        public static void AreEquivalent(this Assert assert, IAssetAttribute expected, AssetAttribute actual)
+        {
+            if (expected.Key   != actual.Key
+            ||  expected.Value != actual.Value)
+            {
+                throw new AssertFailedException("Asset attributes do not match.");
+            }
+        }
+
+        public static void AreEquivalent(this Assert assert, IAssetAttributes expected, AssetAttributes actual)
+        {
+            var actualAttributes   = actual.Attributes.ToArray();
+            var expectedAttributes = expected.Attributes.ToArray();
+        
+            if (expected.AssetId          == actual.AssetId
+            &&  expectedAttributes.Length == actualAttributes.Length)
+            {
+                for (var i = 0; i < expectedAttributes.Length; i++)
+                {
+                    assert.AreEquivalent(expectedAttributes[i], actualAttributes[i]);
+                }
+            }
+            else
+            {
+                throw new AssertFailedException("Asset attributes do not match.");
+            }
         }
     }
 }
