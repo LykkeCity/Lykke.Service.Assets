@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using AzureStorage.Tables;
 using Common.Log;
 using JetBrains.Annotations;
 using Lykke.AzureQueueIntegration;
@@ -71,7 +72,7 @@ namespace Lykke.Service.Assets
                 });
             
             var settings = _configuration.LoadSettings<ApplicationSettings>("ConnectionStrings:SettingsUrl");
-            var log      = CreateLog(services, settings.CurrentValue);
+            var log      = CreateLog(services, settings);
             var builder  = new ContainerBuilder();
 
             builder.RegisterModule(new ApiModule(settings, log));
@@ -123,7 +124,7 @@ namespace Lykke.Service.Assets
             _applicationContainer.Dispose();
         }
 
-        private static ILog CreateLog(IServiceCollection services, ApplicationSettings settings)
+        private static ILog CreateLog(IServiceCollection services, IReloadingManager<ApplicationSettings> settings)
         {
             var consoleLogger   = new LogToConsole();
             var aggregateLogger = new AggregateLogger();
@@ -133,11 +134,11 @@ namespace Lykke.Service.Assets
             // Creating slack notification service, which logs own azure queue processing messages to aggregate log
             var slackService = services.UseSlackNotificationsSenderViaAzureQueue(new AzureQueueSettings
             {
-                ConnectionString = settings.SlackNotifications.AzureQueue.ConnectionString,
-                QueueName        = settings.SlackNotifications.AzureQueue.QueueName
+                ConnectionString = settings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
+                QueueName        = settings.CurrentValue.SlackNotifications.AzureQueue.QueueName
             }, aggregateLogger);
 
-            var dbLogConnectionString = settings.AssetsService.Logs.DbConnectionString;
+            var dbLogConnectionString = settings.CurrentValue.AssetsService.Logs.DbConnectionString;
 
             // Creating azure storage logger, which logs own messages to concole log
             if (!string.IsNullOrEmpty(dbLogConnectionString) && !(dbLogConnectionString.StartsWith("${") && dbLogConnectionString.EndsWith("}")))
@@ -150,27 +151,27 @@ namespace Lykke.Service.Assets
                     slackService,
                     consoleLogger
                 );
+                
+                var persistenceManager = new LykkeLogToAzureStoragePersistenceManager
+                (
+                    appName,
+                    AzureTableStorage<LogEntity>.Create(settings.ConnectionString(x => x.AssetsService.Logs.DbConnectionString), "AssetsServiceLog", consoleLogger),
+                    consoleLogger
+                );
 
-                //var persistenceManager = new LykkeLogToAzureStoragePersistenceManager
-                //(
-                //    appName,
-                //    AzureTableStorage<LogEntity>.Create(() => dbLogConnectionString, "AssetsServiceLog", consoleLogger),
-                //    consoleLogger
-                //);
 
 
+                var azureStorageLogger = new LykkeLogToAzureStorage
+                (
+                    appName,
+                    persistenceManager,
+                    slackNotificationsManager,
+                    consoleLogger
+                );
 
-                //var azureStorageLogger = new LykkeLogToAzureStorage
-                //(
-                //    appName,
-                //    persistenceManager,
-                //    slackNotificationsManager,
-                //    consoleLogger
-                //);
+                azureStorageLogger.Start();
 
-                //azureStorageLogger.Start();
-
-                //aggregateLogger.AddLog(azureStorageLogger);
+                aggregateLogger.AddLog(azureStorageLogger);
             }
 
             return aggregateLogger;
