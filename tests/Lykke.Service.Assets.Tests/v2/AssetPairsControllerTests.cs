@@ -113,8 +113,8 @@ namespace Lykke.Service.Assets.Tests.v2
             var actionResult = await controller.GetAll();
 
             Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
-            Assert.That.IsInstanceOfType<IEnumerable<AssetPair>>(okResult.Value, out var assetExtendedInfos);
-            Assert.IsFalse(assetExtendedInfos.Any());
+            Assert.That.IsInstanceOfType<IEnumerable<AssetPair>>(okResult.Value, out var assetPairs);
+            Assert.IsFalse(assetPairs.Any());
         }
 
         [TestMethod]
