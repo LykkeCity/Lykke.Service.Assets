@@ -16,7 +16,7 @@ namespace Lykke.Service.Assets.Tests.v2
     public class AssetCategoriesControllerTests
     {
         [TestMethod]
-        public async Task Add()
+        public async Task Add__Correct_CreatedResult_Returned()
         {
             var serviceMock  = CreateServiceMock();
             var categoryMock = GenerateAssetCategory();
