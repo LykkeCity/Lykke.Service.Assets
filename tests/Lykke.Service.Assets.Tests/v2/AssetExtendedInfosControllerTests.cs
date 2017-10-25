@@ -81,7 +81,7 @@ namespace Lykke.Service.Assets.Tests.v2
         }
 
         [TestMethod]
-        public async Task GetAll__Asset_Extended_Info_Exist__Correct_OkResult_Returned()
+        public async Task GetAll__Asset_Extended_Infos_Exist__Correct_OkResult_Returned()
         {
             var serviceMock      = CreateServiceMock();
             var extendedInfoMock = GenerateAssetExtendedInfo();
