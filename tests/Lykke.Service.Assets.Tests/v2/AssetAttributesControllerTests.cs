@@ -16,7 +16,7 @@ namespace Lykke.Service.Assets.Tests.v2
     public class AssetAttributesControllerTests
     {
         [TestMethod]
-        public async Task Add__AssetId_And_Attribute_Passed__Correct_CreatedResult_Returned()
+        public async Task Add__Correct_CreatedResult_Returned()
         {
             var serviceMock   = CreateServiceMock();
             var attributeMock = GenerateAssetAttribute();
@@ -79,7 +79,7 @@ namespace Lykke.Service.Assets.Tests.v2
         }
 
         [TestMethod]
-        public async Task GetAll__Asset_Attributes_Exists__Correct_OkResult_Returned()
+        public async Task GetAll__Asset_Attributes_Exist__Correct_OkResult_Returned()
         {
             var serviceMock    = CreateServiceMock();
             var attributesMock = GenerateAssetAttributes();
@@ -98,7 +98,7 @@ namespace Lykke.Service.Assets.Tests.v2
         }
 
         [TestMethod]
-        public async Task GetAll__Asset_Attributes_Not_Exists__Correct_OkResult_Returned()
+        public async Task GetAll__Asset_Attributes_Not_Exist__Correct_OkResult_Returned()
         {
             var serviceMock = CreateServiceMock();
 
