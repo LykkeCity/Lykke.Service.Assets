@@ -11,12 +11,12 @@ using Swashbuckle.SwaggerGen.Annotations;
 namespace Lykke.Service.Assets.Controllers.V2
 {
     [Route("api/v2/asset-pairs")]
-    public class AssetPairController : Controller
+    public class AssetPairsController : Controller
     {
         private readonly IAssetPairService _assetPairService;
 
 
-        public AssetPairController(
+        public AssetPairsController(
             IAssetPairService assetPairService)
         {
             _assetPairService = assetPairService;

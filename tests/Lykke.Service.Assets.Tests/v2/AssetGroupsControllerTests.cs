@@ -303,7 +303,7 @@ namespace Lykke.Service.Assets.Tests.v2
             return new Mock<IAssetGroupService>();
         }
 
-        public MockAssetGroup GenerateAssetGroup()
+        private static MockAssetGroup GenerateAssetGroup()
         {
             return new MockAssetGroup
             {
