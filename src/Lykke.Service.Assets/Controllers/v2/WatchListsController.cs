@@ -99,7 +99,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetCustom(string watchListId, [FromQuery] string userId)
         {
-            var watchList = await _watchListService.GetCustomAsync(watchListId, userId);
+            var watchList = await _watchListService.GetCustomAsync(userId, watchListId);
 
             if (watchList != null)
             {
