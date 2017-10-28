@@ -17,7 +17,7 @@ namespace Lykke.Service.Assets.Services
             ICustomWatchListRepository customWatchListRepository,
             IPredefinedWatchListRepository predefinedWatchListRepository)
         {
-            _customWatchListRepository      = customWatchListRepository;
+            _customWatchListRepository     = customWatchListRepository;
             _predefinedWatchListRepository = predefinedWatchListRepository;
         }
 
@@ -38,10 +38,19 @@ namespace Lykke.Service.Assets.Services
         
         public async Task<IEnumerable<IWatchList>> GetAllAsync(string userId)
         {
-            var customWatchLists     = await GetAllCustomAsync(userId);
-            var predefinedWatchLists = await GetAllPredefinedAsync();
+            var allWatchListsForUser = new Dictionary<string, IWatchList>();
 
-            return customWatchLists.Concat(predefinedWatchLists);
+            foreach (var predefinedWatchList in await GetAllPredefinedAsync())
+            {
+                allWatchListsForUser[predefinedWatchList.Id] = predefinedWatchList;
+            }
+
+            foreach (var customWatchList in await GetAllCustomAsync(userId))
+            {
+                allWatchListsForUser[customWatchList.Id] = customWatchList;
+            }
+
+            return allWatchListsForUser.Select(x => x.Value);
         }
 
         public async Task<IEnumerable<IWatchList>> GetAllCustomAsync(string userId)

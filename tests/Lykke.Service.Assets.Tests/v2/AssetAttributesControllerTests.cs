@@ -36,7 +36,7 @@ namespace Lykke.Service.Assets.Tests.v2
             
             Assert.That.IsActionResultOfType<CreatedResult>(actionResult, out var createdResult);
             Assert.That.IsInstanceOfType<AssetAttribute>(createdResult.Value, out var attribute);
-            Assert.That.AreEquivalent(attributeMock, attribute);
+            Assert.That.PropertiesAreEqual(attributeMock, attribute);
             
             var expectedLocation = $"api/v2/asset-attributes/{assetId}/{attribute.Key}";
 
@@ -60,7 +60,7 @@ namespace Lykke.Service.Assets.Tests.v2
 
             Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
             Assert.That.IsInstanceOfType<AssetAttribute>(okResult.Value, out var attribute);
-            Assert.That.AreEquivalent(attributeMock, attribute);
+            Assert.That.PropertiesAreEqual(attributeMock, attribute);
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace Lykke.Service.Assets.Tests.v2
             Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
             Assert.That.IsInstanceOfType<IEnumerable<AssetAttributes>>(okResult.Value, out var attributes);
             Assert.AreEqual(1, attributes.Count());
-            Assert.That.AreEquivalent(attributesMock, attributes.Single());
+            Assert.That.PropertiesAreEqual(attributesMock, attributes.Single());
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace Lykke.Service.Assets.Tests.v2
 
             Assert.That.IsActionResultOfType<OkObjectResult>(actionResult, out var okResult);
             Assert.That.IsInstanceOfType<AssetAttributes>(okResult.Value, out var attributes);
-            Assert.That.AreEquivalent(attributesMock, attributes);
+            Assert.That.PropertiesAreEqual(attributesMock, attributes);
         }
 
         [TestMethod]
@@ -233,16 +233,13 @@ namespace Lykke.Service.Assets.Tests.v2
 
     public static class AssetAttributeAsserts
     {
-        public static void AreEquivalent(this Assert assert, IAssetAttribute expected, AssetAttribute actual)
+        public static void PropertiesAreEqual(this Assert assert, IAssetAttribute expected, AssetAttribute actual)
         {
-            if (expected.Key   != actual.Key
-            ||  expected.Value != actual.Value)
-            {
-                throw new AssertFailedException("Asset attributes do not match.");
-            }
+            Assert.AreEqual(expected.Key,   actual.Key);
+            Assert.AreEqual(expected.Value, actual.Value);
         }
 
-        public static void AreEquivalent(this Assert assert, IAssetAttributes expected, AssetAttributes actual)
+        public static void PropertiesAreEqual(this Assert assert, IAssetAttributes expected, AssetAttributes actual)
         {
             var actualAttributes   = actual.Attributes.ToArray();
             var expectedAttributes = expected.Attributes.ToArray();
@@ -252,7 +249,7 @@ namespace Lykke.Service.Assets.Tests.v2
             {
                 for (var i = 0; i < expectedAttributes.Length; i++)
                 {
-                    assert.AreEquivalent(expectedAttributes[i], actualAttributes[i]);
+                    assert.PropertiesAreEqual(expectedAttributes[i], actualAttributes[i]);
                 }
             }
             else

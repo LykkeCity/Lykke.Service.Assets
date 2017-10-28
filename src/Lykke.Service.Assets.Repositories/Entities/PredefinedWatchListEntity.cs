@@ -13,6 +13,6 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public int Order { get; set; }
 
-        public bool ReadOnly => false;
+        public bool ReadOnly => true;
     }
 }

@@ -38,7 +38,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task RemoveAsync(string userId, string watchListId)
         {
-            var entity = await _customWatchListTable.DeleteIfExistAsync(GetPartitionKey(userId), GetRowKey(watchListId));
+            await _customWatchListTable.DeleteIfExistAsync(GetPartitionKey(userId), GetRowKey(watchListId));
         }
 
         public async Task UpsertAsync(string userId, IWatchList watchList)
