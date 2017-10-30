@@ -39,7 +39,7 @@ namespace Lykke.Service.Assets.Services
             var tokenDecimals           = erc20Token.TokenDecimals ?? 0;
 
             asset.Accuracy          = GetAssetAccuracy(tokenDecimals);
-            asset.AssetAddress      = erc20Token.Address;
+            asset.AssetAddress      = string.Empty;
             asset.Blockchain        = Blockchain.Ethereum;
             asset.BlockChainId      = blockchainAndDisplayIds.BlockchainId;
             asset.BlockChainAssetId = erc20Token.Address;
