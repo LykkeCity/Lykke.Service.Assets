@@ -1,4 +1,4 @@
-﻿# EthereumSamurai API Client Generation
+﻿# Lykke.Service.Assets API Client Generation
 
 1) Launch Lykke.Service.Assets on port 5000
 2) Run ```autorest readme.md```
