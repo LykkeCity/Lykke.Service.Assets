@@ -37,7 +37,7 @@ namespace Lykke.Service.Assets.Cache
                 return factory();
             });
         }
-
+        
         protected async Task<T> GetAsync(string partitionKey, string itemKey, Func<ICacheEntry, Task<T>> factory)
         {
             var recordKey = $"{KeyPrefix}:{partitionKey}:{itemKey}";

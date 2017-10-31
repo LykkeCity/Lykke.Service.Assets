@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Lykke.Service.Assets.Cache;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +15,16 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/asset-pairs")]
     public class AssetPairsController : Controller
     {
-        private readonly IAssetPairService _assetPairService;
+        private readonly IAssetPairService  _assetPairService;
+        private readonly ICache<IAssetPair> _cache;
 
 
         public AssetPairsController(
-            IAssetPairService assetPairService)
+            IAssetPairService assetPairService,
+            ICache<IAssetPair> cache)
         {
             _assetPairService = assetPairService;
+            _cache            = cache;
         }
 
         [HttpPost]
@@ -27,6 +32,8 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.Created)]
         public async Task<IActionResult> Add([FromBody] AssetPair assetPair)
         {
+            await _cache.InvalidateAsync();
+
             assetPair = Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
 
             return Created
@@ -42,9 +49,9 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Exists(string id)
         {
-            var assetPairExists = await _assetPairService.GetAsync(id) != null;
-
-            return Ok(assetPairExists);
+            var assetPairExists = await _cache.GetAsync(id, () => _assetPairService.GetAsync(id));
+            
+            return Ok(assetPairExists != null);
         }
 
         [HttpGet("{id}")]
@@ -53,8 +60,8 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var assetPair = await _assetPairService.GetAsync(id);
-
+            var assetPair = await _cache.GetAsync(id, () => _assetPairService.GetAsync(id));
+            
             if (assetPair != null)
             {
                 return Ok(Mapper.Map<AssetPair>(assetPair));
@@ -70,10 +77,10 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            var assetPair = (await _assetPairService.GetAllAsync())
+            var assetPairs = (await _cache.GetListAsync("All", () => _assetPairService.GetAllAsync()))
                 .Select(Mapper.Map<AssetPair>);
 
-            return Ok(assetPair);
+            return Ok(assetPairs);
         }
 
         [HttpGet("__default")]
@@ -92,6 +99,8 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> Remove(string id)
         {
+            await _cache.InvalidateAsync();
+
             await _assetPairService.RemoveAsync(id);
 
             return NoContent();
@@ -102,6 +111,8 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Update([FromBody] AssetPair assetPair)
         {
+            await _cache.InvalidateAsync();
+
             await _assetPairService.UpdateAsync(assetPair);
 
             return NoContent();
