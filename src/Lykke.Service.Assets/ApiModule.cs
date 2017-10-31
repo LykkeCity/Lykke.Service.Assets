@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Common.Log;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.RabbitSubscribers;
-using Lykke.Service.Assets.Repositories;
-using Lykke.Service.Assets.Services;
 using Lykke.SettingsReader;
 
 namespace Lykke.Service.Assets
@@ -27,8 +27,10 @@ namespace Lykke.Service.Assets
 
             builder.RegisterInstance(_settings).SingleInstance();
             builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
-            builder.RegisterModule(new RepositoriesModule(_settings, _log));
-            builder.RegisterModule(new ServicesModule());
+
+            RegisterCache<IAsset>(builder, "Assets");
+            RegisterCache<IAssetPair>(builder, "AssetPairs");
+
             RegisterRabbitMqSubscribers(builder);
         }
 
@@ -41,6 +43,15 @@ namespace Lykke.Service.Assets
                 .AutoActivate()
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Rabbit.ConnectionString));
+        }
+
+        private void RegisterCache<T>(ContainerBuilder builder, string partitionKey)
+        {
+            builder.RegisterType<Cache<T>>()
+                .As<ICache<T>>()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Dictionaries.CacheExpirationPeriod))
+                .WithParameter(TypedParameter.From(partitionKey));
         }
     }
 }

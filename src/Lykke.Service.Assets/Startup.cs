@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Converters;
 
 namespace Lykke.Service.Assets
@@ -89,6 +88,8 @@ namespace Lykke.Service.Assets
                         options.DefaultLykkeConfiguration("v1", "Assets Service");
                     });
 
+                services.AddMemoryCache();
+
                 var settings = _configuration.LoadSettings<ApplicationSettings>();
 
                 _log = CreateLogWithSlack(services, settings);
@@ -152,7 +153,7 @@ namespace Lykke.Service.Assets
                 app.UseSwagger();
                 app.UseSwaggerUi();
                 app.UseStaticFiles();
-
+                
                 appLifetime.ApplicationStarted.Register(()  => StartApplication().Wait());
                 appLifetime.ApplicationStopping.Register(() => StopApplication().Wait());
                 appLifetime.ApplicationStopped.Register(()  => CleanUp().Wait());
