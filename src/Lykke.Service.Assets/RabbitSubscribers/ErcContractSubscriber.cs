@@ -30,19 +30,9 @@ namespace Lykke.Service.Assets.RabbitSubscribers
             // NOTE: Read https://github.com/LykkeCity/Lykke.RabbitMqDotNetBroker/blob/master/README.md to learn
             // about RabbitMq subscriber configuration
 
-            var settings = new RabbitMqSubscriptionSettings()
-            {
-                ConnectionString = _connectionString,
-                QueueName = "lykke.service.assets",
-                ExchangeName = "lykke.ethereum.indexer.erccontracts",
-                DeadLetterExchangeName = "lykke.ethereum.indexer.erccontracts.dlx",
-                RoutingKey = "",
-                IsDurable = true
-            };
-                //.CreateForSubscriber(_connectionString, "lykke.ethereum.indexer.erccontracts","lykke.service.assets")
-                //.MakeDurable();
-            // TODO: Make additional configuration, using fluent API here:
-            // ex: .MakeDurable()
+            var settings = RabbitMqSubscriptionSettings
+                .CreateForSubscriber(_connectionString, "ethereum.indexer.erccontracts", "service.assets")
+                .MakeDurable();
 
             _subscriber = new RabbitMqSubscriber<Erc20ContractCreatedMessage>(settings,
                     new ResilientErrorHandlingStrategy(_log, settings,
@@ -74,14 +64,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 TransactionHash = arg.TransactionHash
             };
 
-            try
-            {
-                await _ercContractProcessor.ProcessErc20ContractAsync(message);
-
-            } catch (Exception e)
-            {
-                //TODO: Add retry logic
-            }
+            await _ercContractProcessor.ProcessErc20ContractAsync(message);
         }
 
         public void Dispose()
@@ -91,7 +74,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
 
         public void Stop()
         {
-            _subscriber.Stop();
+            _subscriber?.Stop();
         }
     }
 }
