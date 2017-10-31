@@ -22,8 +22,7 @@ namespace Lykke.Service.Assets.Responses.V2
         public string MarketCapitalization { get; set; }
 
         public string NumberOfCoins { get; set; }
-
-        [Required]
+        
         public int PopIndex { get; set; }
 
 

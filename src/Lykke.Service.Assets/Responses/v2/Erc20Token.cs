@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Responses.V2
 {
     public class Erc20Token : IErc20Token
     {
-        [Required]
         public string AssetId { get; set; }
-
-        [Required]
+        
         public string Address { get; set; }
 
         public string BlockHash { get; set; }
