@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -13,18 +16,51 @@ namespace Lykke.Service.Assets.Controllers
     [Route("api/[controller]")]
     public class IsAliveController : Controller
     {
+        private readonly IHealthService _healthService;
+
+        public IsAliveController(IHealthService healthService)
+        {
+            _healthService = healthService;
+        }
+
         /// <summary>
-        ///    Returns service alive status
+        ///    Checks service is alive
         /// </summary>
         [HttpGet]
         [SwaggerOperation("IsAlive")]
-        public IsAlive IsAlive()
+        [ProducesResponseType(typeof(IsAliveResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse),   (int)HttpStatusCode.InternalServerError)]
+        public IActionResult Get()
         {
-            return new IsAlive
+            var healthViloationMessage = _healthService.GetHealthViolationMessage();
+            if (healthViloationMessage != null)
             {
+                return StatusCode
+                (
+                    (int) HttpStatusCode.InternalServerError,
+                    ErrorResponse.Create($"Service is unhealthy: {healthViloationMessage}")
+                );
+            }
+
+            var issueIndicators = _healthService.GetHealthIssues()
+                .Select(i => new IsAliveResponse.IssueIndicator
+                {
+                    Type  = i.Type,
+                    Value = i.Value
+                });
+            
+            return Ok(new IsAliveResponse
+            {
+                Name    = PlatformServices.Default.Application.ApplicationName,
+                Version = PlatformServices.Default.Application.ApplicationVersion,
                 Env     = Environment.GetEnvironmentVariable("ENV_INFO"),
-                Version = PlatformServices.Default.Application.ApplicationVersion
-            };
+#if DEBUG
+                IsDebug = true,
+#else
+                IsDebug = false,
+#endif
+                IssueIndicators = issueIndicators
+            });
         }
     }
 }

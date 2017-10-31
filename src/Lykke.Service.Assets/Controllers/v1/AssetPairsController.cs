@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v1;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;

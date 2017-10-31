@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Lykke.Service.Assets.Responses.v1
+namespace Lykke.Service.Assets.Responses
 {
-    [Obsolete]
     public class ErrorResponse
     {
         public Dictionary<string, List<string>> ErrorMessages { get; } = new Dictionary<string, List<string>>();

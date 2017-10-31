@@ -1,18 +1,25 @@
-﻿namespace Lykke.Service.Assets.Responses
+﻿using System.Collections.Generic;
+
+namespace Lykke.Service.Assets.Responses
 {
-    /// <summary>
-    ///    Checks service is alive response
-    /// </summary>
-    public class IsAlive
+    public class IsAliveResponse
     {
-        /// <summary>
-        ///     Environment variables
-        /// </summary>
         public string Env { get; set; }
 
-        /// <summary>
-        ///     API version
-        /// </summary>
+        public bool IsDebug { get; set; }
+
+        public IEnumerable<IssueIndicator> IssueIndicators { get; set; }
+
+        public string Name { get; set; }
+
         public string Version { get; set; }
+
+
+        public class IssueIndicator
+        {
+            public string Type { get; set; }
+
+            public string Value { get; set; }
+        }
     }
 }

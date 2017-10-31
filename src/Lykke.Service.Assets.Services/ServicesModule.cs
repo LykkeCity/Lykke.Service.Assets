@@ -60,6 +60,11 @@ namespace Lykke.Service.Assets.Services
                 .SingleInstance();
 
             builder
+                .RegisterType<HealthService>()
+                .As<IHealthService>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<IssuerService>()
                 .As<IIssuerService>()
                 .SingleInstance();
