@@ -17,7 +17,7 @@ namespace Lykke.Service.Assets.Repositories
         private readonly ILog                                   _log;
         private readonly IReloadingManager<ApplicationSettings> _settings;
 
-        public RepositoriesModule(ILog log, IReloadingManager<ApplicationSettings> settings)
+        public RepositoriesModule(IReloadingManager<ApplicationSettings> settings, ILog log)
         {
             _log      = log;
             _settings = settings;

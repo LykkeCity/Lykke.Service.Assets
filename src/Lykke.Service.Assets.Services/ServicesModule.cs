@@ -85,6 +85,16 @@ namespace Lykke.Service.Assets.Services
                 .SingleInstance();
 
             builder
+                .RegisterType<StartupManager>()
+                .As<IStartupManager>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<ShutdownManager>()
+                .As<IShutdownManager>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<WatchListService>()
                 .As<IWatchListService>()
                 .SingleInstance();

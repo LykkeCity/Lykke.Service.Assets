@@ -27,7 +27,7 @@ namespace Lykke.Service.Assets
 
             builder.RegisterInstance(_settings).SingleInstance();
             builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
-            builder.RegisterModule(new RepositoriesModule(_log, _settings));
+            builder.RegisterModule(new RepositoriesModule(_settings, _log));
             builder.RegisterModule(new ServicesModule());
             RegisterRabbitMqSubscribers(builder);
         }
