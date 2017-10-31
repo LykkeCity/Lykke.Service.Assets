@@ -16,7 +16,6 @@ namespace Lykke.Service.Assets.Controllers.V1
     /// </summary>
     [Obsolete]
     [Route("api/[controller]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class AssetPairsController : Controller
     {
         private readonly IAssetPairService _assetPairService;
@@ -30,7 +29,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         /// Forcibly updates asset pairs cache
         /// </summary>
         /// <returns></returns>
-        [HttpPost("updateCache")]
+        [HttpPost("updateCache"), Obsolete]
         [SwaggerOperation("UpdateAssetPairsCache")]
         public async Task UpdateCache()
         {
@@ -41,7 +40,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         /// Returns asset pair by ID
         /// </summary>
         /// <param name="assetPairId">Asset pair ID</param>
-        [HttpGet("{assetPairId}")]
+        [HttpGet("{assetPairId}"), Obsolete]
         [SwaggerOperation("GetAssetPair")]
         [ProducesResponseType(typeof(AssetPairResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
@@ -60,7 +59,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         /// <summary>
         /// Returns all asset pairs
         /// </summary>
-        [HttpGet]
+        [HttpGet, Obsolete]
         [ProducesResponseType(typeof(AssetPairResponseModel[]), (int)HttpStatusCode.OK)]
         [SwaggerOperation("GetAssetPairs")]
         public async Task<IActionResult> GetAll()

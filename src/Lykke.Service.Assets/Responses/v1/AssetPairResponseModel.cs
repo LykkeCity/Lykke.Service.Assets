@@ -1,10 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Responses.v1
 {
-    [Obsolete]
     public class AssetPairResponseModel
     {
         public string Id { get; set; }
