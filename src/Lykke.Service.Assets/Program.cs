@@ -12,7 +12,7 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         private static void Main(string[] args)
         {
-            Console.WriteLine($"LykkeService version {Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion}");
+            Console.WriteLine($"Assets service version {Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion}");
 
 #if DEBUG
             Console.WriteLine("Is DEBUG");
