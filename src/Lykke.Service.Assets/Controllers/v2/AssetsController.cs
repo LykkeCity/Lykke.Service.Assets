@@ -16,8 +16,9 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/assets")]
     public class AssetsController : Controller
     {
-        private readonly IAssetService  _assetService;
-        private readonly ICache<IAsset> _cache;
+        private readonly IAssetService         _assetService;
+        private readonly IAssetCategoryService _assetCategoryService;
+        private readonly ICache<IAsset>        _cache;
 
         public AssetsController(
             IAssetService assetService,
@@ -119,6 +120,29 @@ namespace Lykke.Service.Assets.Controllers.V2
             {
                 Items = responseList
             });
+        }
+
+        [HttpGet("{id}/category")]
+        [SwaggerOperation("AssetGet")]
+        [ProducesResponseType(typeof(AssetCategory), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetCategory(string id)
+        {
+            var asset = await _cache.GetAsync(id, () => _assetService.GetAsync(id));
+
+            if (asset == null)
+            {
+                return NotFound("Asset not found");
+            }
+
+            var assetCategory = await _assetCategoryService.GetAsync(asset.CategoryId ?? "");
+
+            if (assetCategory == null)
+            {
+                return NotFound("Asset category not found");
+            }
+
+            return Ok(Mapper.Map<AssetCategory>(assetCategory));
         }
 
         [HttpGet("default")]

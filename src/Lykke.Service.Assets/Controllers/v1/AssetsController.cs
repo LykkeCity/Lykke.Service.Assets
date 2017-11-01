@@ -2,9 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Cache;
-using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v1;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +17,12 @@ namespace Lykke.Service.Assets.Controllers.V1
     [Route("api/[controller]")]
     public class AssetsController : Controller
     {
-        private readonly IAssetService  _assetService;
-        private readonly ICache<IAsset> _cache;
+        private readonly IAssetManager _assetManager;
 
         public AssetsController(
-            IAssetService assetService,
-            ICache<IAsset> cache)
+            IAssetManager assetManager)
         {
-            _assetService = assetService;
-            _cache        = cache;
+            _assetManager = assetManager;
         }
 
         /// <summary>
@@ -38,7 +33,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("UpdateAssetsCache")]
         public async Task UpdateCache()
         {
-            await _cache.InvalidateAsync();
+            await _assetManager.InvalidateCache();
         }
 
         /// <summary>
@@ -51,7 +46,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string assetId)
         {
-            var asset = await _cache.GetAsync(assetId, () => _assetService.GetAsync(assetId));
+            var asset = await _assetManager.GetAsync(assetId);
 
             if (asset == null)
             {
@@ -69,7 +64,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("GetAssets")]
         public async Task<IActionResult> GetAll()
         {
-            var assets = await _cache.GetListAsync("All", () => _assetService.GetAllAsync());
+            var assets = await _assetManager.GetAllAsync();
             
             return Ok(assets.Select(AssetResponseModel.Create));
         }

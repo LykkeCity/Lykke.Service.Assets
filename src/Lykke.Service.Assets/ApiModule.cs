@@ -3,6 +3,7 @@ using Common.Log;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.SettingsReader;
 
@@ -30,6 +31,21 @@ namespace Lykke.Service.Assets
 
             RegisterCache<IAsset>(builder, "Assets");
             RegisterCache<IAssetPair>(builder, "AssetPairs");
+
+            builder
+                .RegisterType<AssetManager>()
+                .As<IAssetManager>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<AssetPairManager>()
+                .As<IAssetPairManager>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<Erc20TokenAssetManager>()
+                .As<IErc20TokenAssetManager>()
+                .SingleInstance();
 
             RegisterRabbitMqSubscribers(builder);
         }

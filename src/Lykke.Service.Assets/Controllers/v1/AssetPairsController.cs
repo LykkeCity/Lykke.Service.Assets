@@ -2,9 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Cache;
-using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v1;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +18,13 @@ namespace Lykke.Service.Assets.Controllers.V1
     [Route("api/[controller]")]
     public class AssetPairsController : Controller
     {
-        private readonly IAssetPairService  _assetPairService;
-        private readonly ICache<IAssetPair> _cache;
+        private readonly IAssetPairManager  _assetPairManager;
+
 
         public AssetPairsController(
-            IAssetPairService assetPairService,
-            ICache<IAssetPair> cache)
+            IAssetPairManager assetPairManager)
         {
-            _assetPairService = assetPairService;
-            _cache            = cache;
+            _assetPairManager = assetPairManager;
         }
 
         /// <summary>
@@ -39,7 +35,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("UpdateAssetPairsCache")]
         public async Task UpdateCache()
         {
-            await _cache.InvalidateAsync();
+            await _assetPairManager.InvalidateCache();
         }
 
         /// <summary>
@@ -52,7 +48,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string assetPairId)
         {
-            var assetPair = await _cache.GetAsync(assetPairId, () => _assetPairService.GetAsync(assetPairId));
+            var assetPair = await _assetPairManager.GetAsync(assetPairId);
 
             if (assetPair == null)
             {
@@ -70,7 +66,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("GetAssetPairs")]
         public async Task<IActionResult> GetAll()
         {
-            var assetPairs = await _cache.GetListAsync("All", () => _assetPairService.GetAllAsync());
+            var assetPairs = await _assetPairManager.GetAllAsync();
 
             return Ok(assetPairs.Select(AssetPairResponseModel.Create));
         }
