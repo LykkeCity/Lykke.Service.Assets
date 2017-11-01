@@ -6,7 +6,7 @@ namespace Lykke.Service.Assets.Client
 {
     public static class ServiceCollectionExtensions
     {
-        public static void UseAssetsClient(this IServiceCollection services, AssetServiceSettings settings)
+        public static void RegisterAssetsClient(this IServiceCollection services, AssetServiceSettings settings)
         {
             services
                 .AddSingleton<IAssetsService>(x => new AssetsService(settings.BaseUri, settings.Handlers));
