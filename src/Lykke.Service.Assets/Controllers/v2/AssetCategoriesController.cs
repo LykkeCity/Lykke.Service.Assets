@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -13,12 +13,13 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/asset-categories")]
     public class AssetCategoriesController : Controller
     {
-        private readonly IAssetCategoryService _assetCategoryService;
+        private readonly IAssetCategoryManager _assetCategoryManager;
 
 
-        public AssetCategoriesController(IAssetCategoryService assetCategoryService)
+        public AssetCategoriesController(
+            IAssetCategoryManager assetCategoryManager)
         {
-            _assetCategoryService = assetCategoryService;
+            _assetCategoryManager = assetCategoryManager;
         }
 
         [HttpPost]
@@ -26,7 +27,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(AssetCategory), (int) HttpStatusCode.Created)]
         public async Task<IActionResult> Add([FromBody] AssetCategory assetCategory)
         {
-            assetCategory = Mapper.Map<AssetCategory>(await _assetCategoryService.AddAsync(assetCategory));
+            assetCategory = Mapper.Map<AssetCategory>(await _assetCategoryManager.AddAsync(assetCategory));
 
             return Created
             (
@@ -41,7 +42,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var assetCategory = await _assetCategoryService.GetAsync(id);
+            var assetCategory = await _assetCategoryManager.GetAsync(id);
 
             if (assetCategory != null)
             {
@@ -58,7 +59,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(IEnumerable<AssetCategory>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            var assetCategories = (await _assetCategoryService.GetAllAsync())
+            var assetCategories = (await _assetCategoryManager.GetAllAsync())
                 .Select(Mapper.Map<AssetCategory>);
             
             return Ok(assetCategories);
@@ -70,7 +71,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> Remove(string id)
         {
-            await _assetCategoryService.RemoveAsync(id);
+            await _assetCategoryManager.RemoveAsync(id);
 
             return NoContent();
         }
@@ -80,7 +81,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
         public async Task<IActionResult> Update([FromBody] AssetCategory assetCategory)
         {
-            await _assetCategoryService.UpdateAsync(assetCategory);
+            await _assetCategoryManager.UpdateAsync(assetCategory);
 
             return NoContent();
         }

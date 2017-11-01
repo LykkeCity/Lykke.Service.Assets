@@ -30,11 +30,17 @@ namespace Lykke.Service.Assets
             builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
 
             RegisterCache<IAsset>(builder, "Assets");
+            RegisterCache<IAssetCategory>(builder, "AssetCategories");
             RegisterCache<IAssetPair>(builder, "AssetPairs");
 
             builder
                 .RegisterType<AssetManager>()
                 .As<IAssetManager>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<AssetCategoryManager>()
+                .As<IAssetCategoryManager>()
                 .SingleInstance();
 
             builder
