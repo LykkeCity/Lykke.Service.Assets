@@ -44,8 +44,6 @@ namespace Lykke.Service.Assets
 
             _configuration = builder.Build();
             _environment   = env;
-
-            ConfigureAutoMapper();
         }
 
 
