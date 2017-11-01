@@ -1,14 +1,23 @@
 ﻿namespace Lykke.Service.Assets.Core.Domain
 {
-    public interface IAssetPair : IDictionaryItem
+    public interface IAssetPair
     {
-        string Name { get; }
-        string BaseAssetId { get; }
-        string QuotingAssetId { get; }
         int Accuracy { get; }
+
+        string BaseAssetId { get; }
+
+        string Id { get; }
+
         int InvertedAccuracy { get; }
-        string Source { get; }
-        string Source2 { get; }
+
         bool IsDisabled { get; }
+
+        string Name { get; }
+
+        string QuotingAssetId { get; }
+
+        string Source { get; }
+
+        string Source2 { get; }
     }
 }

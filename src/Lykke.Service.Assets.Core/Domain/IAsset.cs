@@ -1,56 +1,93 @@
 namespace Lykke.Service.Assets.Core.Domain
 {
-    public interface IAsset : IDictionaryItem
+    public interface IAsset
     {
-        string Id { get; }
-        string BlockChainId { get; }
-        string BlockChainAssetId { get; }
-        string Name { get; }
-        string Symbol { get; }
-        string IdIssuer { get; }
-        bool IsBase { get; }
-        bool HideIfZero { get; }
         int Accuracy { get; }
-        int MultiplierPower { get; }
-        bool IsDisabled { get; }
-        bool HideWithdraw { get; }
-        bool HideDeposit { get; }
-        int DefaultOrder { get; }
-        bool KycNeeded { get; }
-        string AssetAddress { get; }
-        double DustLimit { get; }
-        string CategoryId { get; }
-        Blockchain Blockchain { get; }
-        string DefinitionUrl { get; }
-        string[] PartnerIds { get; }
-        bool NotLykkeAsset { get; }
-        bool IssueAllowed { get; }
-        /// <summary>
-        /// Value lower that this property is considered "low volume" and may have some limitations,
-        /// e.g. cash out timeout limits
-        /// </summary>
-        double? LowVolumeAmount { get; set; }
-        string DisplayId { get; set; }
 
-        //deposit flags
+        string AssetAddress { get; }
+
         bool BankCardsDepositEnabled { get; }
-        bool SwiftDepositEnabled { get; }
+
+        Blockchain Blockchain { get; }
+
+        string BlockChainAssetId { get; }
+
         bool BlockchainDepositEnabled { get; }
+
+        string BlockChainId { get; }
+
+        bool BlockchainWithdrawal { get; }
+
         bool BuyScreen { get; }
 
-        //withdraw flags
-        bool SellScreen { get; }
-        bool BlockchainWithdrawal { get; }
-        bool SwiftWithdrawal { get; }
-        bool ForwardWithdrawal { get; }
+        string CategoryId { get; }
+
         bool CrosschainWithdrawal { get; }
 
-        //lock period for forward withdrawal
-        int ForwardFrozenDays { get; }
-        //base asset for forward withdrawal
+        int DefaultOrder { get; }
+
+        string DefinitionUrl { get; }
+
+        string DisplayId { get; }
+
+        double DustLimit { get; }
+
+        /// <summary>
+        ///     Base asset for forward withdrawal.
+        /// </summary>
         string ForwardBaseAsset { get; }
+
+        /// <summary>
+        ///     Lock period for forward withdrawal.
+        /// </summary>
+        int ForwardFrozenDays { get; }
+
         string ForwardMemoUrl { get; }
 
+        bool ForwardWithdrawal { get; }
+
+        bool HideDeposit { get; }
+
+        bool HideIfZero { get; }
+
+        bool HideWithdraw { get; }
+
         string IconUrl { get; }
+
+        string Id { get; }
+
+        string IdIssuer { get; }
+
+        bool IsBase { get; }
+
+        bool IsDisabled { get; }
+
+        bool IssueAllowed { get; }
+
+        bool KycNeeded { get; }
+
+        /// <summary>
+        ///     Value lower that this property is considered "low volume" and may have some limitations,
+        ///     e.g. cash out timeout limits
+        /// </summary>
+        double? LowVolumeAmount { get; }
+
+        int MultiplierPower { get; }
+
+        string Name { get; }
+
+        bool NotLykkeAsset { get; }
+
+        string[] PartnerIds { get; }
+
+        bool SellScreen { get; }
+
+        bool SwiftDepositEnabled { get; }
+
+        bool SwiftWithdrawal { get; }
+
+        string Symbol { get; }
+
+        AssetType? Type { get; }
     }
 }

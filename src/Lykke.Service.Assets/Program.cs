@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Loader;
-using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Hosting;
 
@@ -13,30 +12,49 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         private static void Main(string[] args)
         {
-            var webHostCancellationTokenSource = new CancellationTokenSource();
-            var end = new ManualResetEvent(false);
+            Console.WriteLine($"Assets service version {Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion}");
 
-            AssemblyLoadContext.Default.Unloading += ctx =>
+#if DEBUG
+            Console.WriteLine("Is DEBUG");
+#else
+            Console.WriteLine("Is RELEASE");
+#endif           
+
+            Console.WriteLine($"ENV_INFO: {Environment.GetEnvironmentVariable("ENV_INFO")}");
+
+            try
             {
-                Console.WriteLine("SIGTERM recieved");
-                webHostCancellationTokenSource.Cancel(false);
+                var host = new WebHostBuilder()
+                    .UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseIISIntegration()
+                    .UseUrls("http://*:5000")
+                    .UseStartup<Startup>()
+                    .UseApplicationInsights()
+                    .Build();
 
-                end.WaitOne();
-            };
+                host.Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Fatal error:");
+                Console.WriteLine(e);
+                
+                var delay = TimeSpan.FromMinutes(1);
 
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseUrls("http://*:5000")
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
+                Console.WriteLine();
+                Console.WriteLine($"Process will be terminated in {delay}. Press any key to terminate immediately.");
+
+                Task.WhenAny
+                (
+                    Task.Delay(delay),
+                    Task.Run(() =>
+                    {
+                        Console.ReadKey(true);
+                    })
+                ).Wait();
+            }
             
-            host.Run(webHostCancellationTokenSource.Token);
-
-            end.Set();
-
             Console.WriteLine("Terminated");
         }
     }
