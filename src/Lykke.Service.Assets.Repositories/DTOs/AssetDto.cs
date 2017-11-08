@@ -81,5 +81,7 @@ namespace Lykke.Service.Assets.Repositories.DTOs
         public string Symbol { get; set; }
 
         public AssetType? Type { get; set; }
+
+        public bool IsTrusted { get; set; }
     }
 }

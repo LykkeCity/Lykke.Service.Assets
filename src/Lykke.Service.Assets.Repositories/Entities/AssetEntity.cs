@@ -1,4 +1,4 @@
-using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
@@ -81,5 +81,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string Symbol { get; set; }
 
         public string Type { get; set; }
+
+        public bool IsTrusted { get; set; }
     }
 }
