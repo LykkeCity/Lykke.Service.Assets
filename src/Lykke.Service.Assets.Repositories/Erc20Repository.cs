@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AzureStorage;
@@ -53,8 +55,8 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IErc20Token> GetByAssetIdAsync(string assetId)
         {
-            var indexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetId);
-            var entity  = await _erc20AssetEntityTable.GetDataAsync(indexes);
+            var index  = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetId);
+            var entity = await _erc20AssetEntityTable.GetDataAsync(index);
 
             return entity;
         }
@@ -62,9 +64,8 @@ namespace Lykke.Service.Assets.Repositories
         public async Task<IEnumerable<IErc20Token>> GetByAssetIdAsync(string[] assetIds)
         {
             var indexes  = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetIds);
-            var entities = await _erc20AssetEntityTable.GetDataAsync(indexes, PieceSize);
 
-            return entities;
+            return await GetByAssetIndexesAsync(indexes);
         }
         
         public async Task UpdateAsync(IErc20Token erc20Token)
@@ -83,8 +84,24 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync()
         {
-            var allIndexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition);
-            var entities = await _erc20AssetEntityTable.GetDataAsync(allIndexes, PieceSize);
+            var indexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition);
+
+            return await GetByAssetIndexesAsync(indexes);
+        }
+
+        private async Task<IEnumerable<IErc20Token>> GetByAssetIndexesAsync(IEnumerable<AzureIndex> assetIndexes)
+        {
+            var entities = new List<IErc20Token>();
+
+            foreach (var rowKey in assetIndexes.Select(x => x.PrimaryRowKey))
+            {
+                var entity = await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), rowKey);
+
+                if (entity != null)
+                {
+                    entities.Add(entity);
+                }
+            }
 
             return entities;
         }
