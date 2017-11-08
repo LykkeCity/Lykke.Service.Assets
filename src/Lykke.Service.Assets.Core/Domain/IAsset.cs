@@ -1,4 +1,4 @@
-namespace Lykke.Service.Assets.Core.Domain
+﻿namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IAsset
     {
@@ -89,5 +89,7 @@ namespace Lykke.Service.Assets.Core.Domain
         string Symbol { get; }
 
         AssetType? Type { get; }
+
+        bool IsTrusted { get; }
     }
 }
