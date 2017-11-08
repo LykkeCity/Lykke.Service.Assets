@@ -12,7 +12,7 @@ namespace Lykke.Service.Assets.Repositories
     public class Erc20TokenRepository : IErc20TokenRepository
     {
         private const string AssetIndexPartition = "Erc20TokenAssetId";
-
+        private const int PieceSize = 1000;
         private readonly INoSQLTableStorage<Erc20TokenEntity> _erc20AssetEntityTable;
         private readonly INoSQLTableStorage<AzureIndex>       _indexAssetIdTable;
 
@@ -62,7 +62,7 @@ namespace Lykke.Service.Assets.Repositories
         public async Task<IEnumerable<IErc20Token>> GetByAssetIdAsync(string[] assetIds)
         {
             var indexes  = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetIds);
-            var entities = await _erc20AssetEntityTable.GetDataAsync(indexes);
+            var entities = await _erc20AssetEntityTable.GetDataAsync(indexes, PieceSize);
 
             return entities;
         }
@@ -84,7 +84,7 @@ namespace Lykke.Service.Assets.Repositories
         public async Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync()
         {
             var allIndexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition);
-            var entities = await _erc20AssetEntityTable.GetDataAsync(allIndexes);
+            var entities = await _erc20AssetEntityTable.GetDataAsync(allIndexes, PieceSize);
 
             return entities;
         }
