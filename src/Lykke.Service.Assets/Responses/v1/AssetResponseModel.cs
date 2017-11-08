@@ -81,6 +81,9 @@ namespace Lykke.Service.Assets.Responses.v1
         public string ForwardMemoUrl { get; set; }
         
         public string IconUrl { get; set; }
+
+        public bool IsTrusted { get; set; }
+
         // ReSharper restore UnusedAutoPropertyAccessor.Global
         // ReSharper restore MemberCanBePrivate.Global
 
@@ -125,7 +128,8 @@ namespace Lykke.Service.Assets.Responses.v1
                 ForwardBaseAsset = src.ForwardBaseAsset,
                 ForwardMemoUrl = src.ForwardMemoUrl,
                 IconUrl = src.IconUrl,
-                DustLimit = src.DustLimit
+                DustLimit = src.DustLimit,
+                IsTrusted = src.IsTrusted
             };
         }
     }
