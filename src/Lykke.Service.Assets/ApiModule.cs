@@ -32,6 +32,12 @@ namespace Lykke.Service.Assets
             RegisterCache<IAsset>(builder, "Assets");
             RegisterCache<IAssetCategory>(builder, "AssetCategories");
             RegisterCache<IAssetPair>(builder, "AssetPairs");
+            RegisterCache<IErc20Token>(builder, "Erc20Tokens");
+
+            builder
+               .RegisterType<Erc20TokenManager>()
+               .As<IErc20TokenManager>()
+               .SingleInstance();
 
             builder
                 .RegisterType<AssetManager>()

@@ -19,12 +19,12 @@ namespace Lykke.Service.Assets.Controllers.V2
     public class Erc20TokensController : Controller
     {
         private readonly IErc20TokenAssetManager _erc20TokenAssetManager;
-        private readonly IErc20TokenService      _erc20TokenService;
+        private readonly IErc20TokenManager _erc20TokenService;
 
 
         public Erc20TokensController(
             IErc20TokenAssetManager erc20TokenAssetManager,
-            IErc20TokenService erc20TokenService)
+            IErc20TokenManager erc20TokenService)
         {
             _erc20TokenAssetManager = erc20TokenAssetManager;
             _erc20TokenService      = erc20TokenService;
