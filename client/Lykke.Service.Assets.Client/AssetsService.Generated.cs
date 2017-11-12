@@ -5954,6 +5954,137 @@ namespace Lykke.Service.Assets.Client
             return _result;
         }
 
+        /// <param name='id'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public async Task<HttpOperationResponse<AssetCategory>> AssetGetCategoryWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (id == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "id");
+            }
+            // Tracing
+            bool _shouldTrace = ServiceClientTracing.IsEnabled;
+            string _invocationId = null;
+            if (_shouldTrace)
+            {
+                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
+                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("id", id);
+                tracingParameters.Add("cancellationToken", cancellationToken);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetGetCategory", tracingParameters);
+            }
+            // Construct URL
+            var _baseUrl = BaseUri.AbsoluteUri;
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/assets/{id}/category").ToString();
+            _url = _url.Replace("{id}", System.Uri.EscapeDataString(id));
+            // Create HTTP transport objects
+            var _httpRequest = new HttpRequestMessage();
+            HttpResponseMessage _httpResponse = null;
+            _httpRequest.Method = new HttpMethod("GET");
+            _httpRequest.RequestUri = new System.Uri(_url);
+            // Set Headers
+
+
+            if (customHeaders != null)
+            {
+                foreach(var _header in customHeaders)
+                {
+                    if (_httpRequest.Headers.Contains(_header.Key))
+                    {
+                        _httpRequest.Headers.Remove(_header.Key);
+                    }
+                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                }
+            }
+
+            // Serialize Request
+            string _requestContent = null;
+            // Send Request
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
+            }
+            cancellationToken.ThrowIfCancellationRequested();
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+            }
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200 && (int)_statusCode != 404)
+            {
+                var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                if (_httpResponse.Content != null) {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                }
+                else {
+                    _responseContent = string.Empty;
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+                if (_shouldTrace)
+                {
+                    ServiceClientTracing.Error(_invocationId, ex);
+                }
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = new HttpOperationResponse<AssetCategory>();
+            _result.Request = _httpRequest;
+            _result.Response = _httpResponse;
+            // Deserialize Response
+            if ((int)_statusCode == 200)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<AssetCategory>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            if (_shouldTrace)
+            {
+                ServiceClientTracing.Exit(_invocationId, _result);
+            }
+            return _result;
+        }
+
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -13975,6 +14106,16 @@ namespace Lykke.Service.Assets.Client
         /// </param>
         Task<HttpOperationResponse<ListOfAsset>> AssetGetBySpecificationWithHttpMessagesAsync(AssetSpecification specification = default(AssetSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='id'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<AssetCategory>> AssetGetCategoryWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
@@ -15808,6 +15949,32 @@ namespace Lykke.Service.Assets.Client
             public static async Task<ListOfAsset> AssetGetBySpecificationAsync(this IAssetsService operations, AssetSpecification specification = default(AssetSpecification), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AssetGetBySpecificationWithHttpMessagesAsync(specification, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            public static AssetCategory AssetGetCategory(this IAssetsService operations, string id)
+            {
+                return operations.AssetGetCategoryAsync(id).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<AssetCategory> AssetGetCategoryAsync(this IAssetsService operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.AssetGetCategoryWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -18046,7 +18213,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
         /// <param name="type">Possible values include: 'Erc20Token'</param>
-        public Asset(int accuracy, bool bankCardsDepositEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string categoryId = default(string), string definitionUrl = default(string), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
+        public Asset(int accuracy, bool bankCardsDepositEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string categoryId = default(string), string definitionUrl = default(string), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
         {
             Accuracy = accuracy;
             AssetAddress = assetAddress;
@@ -18087,6 +18254,7 @@ namespace Lykke.Service.Assets.Client.Models
             SwiftWithdrawal = swiftWithdrawal;
             Symbol = symbol;
             Type = type;
+            IsTrusted = isTrusted;
             CustomInit();
         }
 
@@ -18293,6 +18461,11 @@ namespace Lykke.Service.Assets.Client.Models
         public AssetType? Type { get; set; }
 
         /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTrusted")]
+        public bool IsTrusted { get; set; }
+
+        /// <summary>
         /// Validate the object.
         /// </summary>
         /// <exception cref="ValidationException">
@@ -18446,7 +18619,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
-        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, int multiplierPower, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, double dustLimit, Blockchain blockchain, bool notLykkeAsset, bool issueAllowed, bool bankCardsDepositEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, bool buyScreen, bool sellScreen, bool blockchainWithdrawal, bool swiftWithdrawal, bool forwardWithdrawal, bool crosschainWithdrawal, int forwardFrozenDays, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string), string definitionUrl = default(string), IList<string> partnerIds = default(IList<string>), double? lowVolumeAmount = default(double?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string))
+        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, int multiplierPower, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, double dustLimit, Blockchain blockchain, bool notLykkeAsset, bool issueAllowed, bool bankCardsDepositEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, bool buyScreen, bool sellScreen, bool blockchainWithdrawal, bool swiftWithdrawal, bool forwardWithdrawal, bool crosschainWithdrawal, int forwardFrozenDays, bool isTrusted, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string), string definitionUrl = default(string), IList<string> partnerIds = default(IList<string>), double? lowVolumeAmount = default(double?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string))
         {
             Id = id;
             BlockChainId = blockChainId;
@@ -18486,6 +18659,7 @@ namespace Lykke.Service.Assets.Client.Models
             ForwardBaseAsset = forwardBaseAsset;
             ForwardMemoUrl = forwardMemoUrl;
             IconUrl = iconUrl;
+            IsTrusted = isTrusted;
             CustomInit();
         }
 
@@ -18684,6 +18858,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "IconUrl")]
         public string IconUrl { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTrusted")]
+        public bool IsTrusted { get; set; }
 
         /// <summary>
         /// Validate the object.
