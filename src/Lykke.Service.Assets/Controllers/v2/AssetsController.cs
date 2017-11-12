@@ -114,7 +114,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         }
 
         [HttpGet("{id}/category")]
-        [SwaggerOperation("AssetGet")]
+        [SwaggerOperation("AssetGetCategory")]
         [ProducesResponseType(typeof(AssetCategory), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetCategory(string id)

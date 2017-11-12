@@ -5977,7 +5977,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<AssetCategory>> AssetGet1WithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<AssetCategory>> AssetGetCategoryWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (id == null)
             {
@@ -5992,7 +5992,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("id", id);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "AssetGet1", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetGetCategory", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -14114,7 +14114,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<AssetCategory>> AssetGet1WithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<AssetCategory>> AssetGetCategoryWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15959,9 +15959,9 @@ namespace Lykke.Service.Assets.Client
             /// </param>
             /// <param name='id'>
             /// </param>
-            public static AssetCategory AssetGet1(this IAssetsService operations, string id)
+            public static AssetCategory AssetGetCategory(this IAssetsService operations, string id)
             {
-                return operations.AssetGet1Async(id).GetAwaiter().GetResult();
+                return operations.AssetGetCategoryAsync(id).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -15972,9 +15972,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<AssetCategory> AssetGet1Async(this IAssetsService operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<AssetCategory> AssetGetCategoryAsync(this IAssetsService operations, string id, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.AssetGet1WithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetGetCategoryWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
