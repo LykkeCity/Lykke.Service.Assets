@@ -29,7 +29,7 @@ namespace Lykke.Service.Assets.Managers
 
         public async Task<IAssetCategory> GetAsync(string id)
         {
-            return await _cache.GetAsync("id", () => _assetCategoryService.GetAsync(id));
+            return await _cache.GetAsync(id, () => _assetCategoryService.GetAsync(id));
         }
 
         public async Task<IEnumerable<IAssetCategory>> GetAllAsync()
