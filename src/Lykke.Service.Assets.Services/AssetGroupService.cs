@@ -46,30 +46,15 @@ namespace Lykke.Service.Assets.Services
             await _assetGroupAssetLinkRepository.AddAsync(assetGroupAssetLink);
         }
 
+        // TODO: Obsolete
         public async Task AddClientToGroupAsync(string clientId, string groupName)
         {
-            var assetGroup = await _assetGroupRepository.GetAsync(groupName);
+            await AddClientToGroupAsync(clientId, groupName, false);
+        }
 
-            var assetClientGroupLink = new ClientAssetGroupLink
-            {
-                ClientId                     = clientId,
-                ClientsCanCashInViaBankCards = assetGroup.ClientsCanCashInViaBankCards,
-                GroupName                    = assetGroup.Name,
-                IsIosDevice                  = assetGroup.IsIosDevice,
-                SwiftDepositEnabled          = assetGroup.SwiftDepositEnabled
-            };
-
-            var assetGroupClientLink = new AssetGroupClientLink
-            {
-                ClientId                     = clientId,
-                ClientsCanCashInViaBankCards = assetGroup.ClientsCanCashInViaBankCards,
-                GroupName                    = assetGroup.Name,
-                IsIosDevice                  = assetGroup.IsIosDevice,
-                SwiftDepositEnabled          = assetGroup.SwiftDepositEnabled
-            };
-
-            await _clientAssetGroupLinkRepository.AddAsync(assetClientGroupLink);
-            await _assetGroupClientLinkRepository.AddAsync(assetGroupClientLink);
+        public async Task AddClientToGroupOrReplaceAsync(string clientId, string groupName)
+        {
+            await AddClientToGroupAsync(clientId, groupName, true);
         }
 
         public async Task<IAssetGroup> AddGroupAsync(IAssetGroup group)
@@ -179,6 +164,40 @@ namespace Lykke.Service.Assets.Services
             }
 
             await _assetGroupRepository.UpdateAsync(group);
+        }
+
+        private async Task AddClientToGroupAsync(string clientId, string groupName, bool replace)
+        {
+            var assetGroup = await _assetGroupRepository.GetAsync(groupName);
+
+            var assetClientGroupLink = new ClientAssetGroupLink
+            {
+                ClientId = clientId,
+                ClientsCanCashInViaBankCards = assetGroup.ClientsCanCashInViaBankCards,
+                GroupName = assetGroup.Name,
+                IsIosDevice = assetGroup.IsIosDevice,
+                SwiftDepositEnabled = assetGroup.SwiftDepositEnabled
+            };
+
+            var assetGroupClientLink = new AssetGroupClientLink
+            {
+                ClientId = clientId,
+                ClientsCanCashInViaBankCards = assetGroup.ClientsCanCashInViaBankCards,
+                GroupName = assetGroup.Name,
+                IsIosDevice = assetGroup.IsIosDevice,
+                SwiftDepositEnabled = assetGroup.SwiftDepositEnabled
+            };
+
+            if (replace)
+            {
+                await _clientAssetGroupLinkRepository.AddOrReplaceAsync(assetClientGroupLink);
+                await _assetGroupClientLinkRepository.AddOrReplaceAsync(assetGroupClientLink);
+            }
+            else
+            {
+                await _clientAssetGroupLinkRepository.AddAsync(assetClientGroupLink);
+                await _assetGroupClientLinkRepository.AddAsync(assetGroupClientLink);
+            }
         }
     }
 }

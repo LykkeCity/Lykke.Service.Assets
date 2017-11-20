@@ -8,6 +8,8 @@ namespace Lykke.Service.Assets.Core.Repositories
     {
         Task AddAsync(IAssetGroupClientLink groupClientLink);
 
+        Task AddOrReplaceAsync(IAssetGroupClientLink groupClientLink);
+
         Task<IAssetGroupClientLink> GetAsync(string clientId, string groupName);
 
         Task<IEnumerable<IAssetGroupClientLink>> GetAllAsync();

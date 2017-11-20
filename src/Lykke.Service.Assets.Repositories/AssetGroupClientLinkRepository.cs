@@ -35,6 +35,16 @@ namespace Lykke.Service.Assets.Repositories
             await _assetGroupTable.InsertAsync(entity);
         }
 
+        public async Task AddOrReplaceAsync(IAssetGroupClientLink groupClientLink)
+        {
+            var entity = Mapper.Map<AssetGroupEntity>(groupClientLink);
+
+            entity.PartitionKey = GetPartitionKey(groupClientLink.ClientId);
+            entity.RowKey = GetRowKey(groupClientLink.GroupName);
+
+            await _assetGroupTable.InsertOrReplaceAsync(entity);
+        }
+
         public async Task<IAssetGroupClientLink> GetAsync(string clientId, string groupName)
         {
             var entity = await _assetGroupTable.GetDataAsync(GetPartitionKey(clientId), GetRowKey(groupName));
