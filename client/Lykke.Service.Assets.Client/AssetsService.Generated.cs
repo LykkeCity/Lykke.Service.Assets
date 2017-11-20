@@ -3203,7 +3203,7 @@ namespace Lykke.Service.Assets.Client
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/asset-groups/{groupName}/clients/replace/{clientId}").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/asset-groups/{groupName}/clients/{clientId}/add-or-replace").ToString();
             _url = _url.Replace("{clientId}", System.Uri.EscapeDataString(clientId));
             _url = _url.Replace("{groupName}", System.Uri.EscapeDataString(groupName));
             // Create HTTP transport objects

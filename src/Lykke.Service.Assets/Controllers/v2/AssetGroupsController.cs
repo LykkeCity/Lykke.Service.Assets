@@ -56,7 +56,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             return NoContent();
         }
 
-        [HttpPost("{groupName}/clients/replace/{clientId}")]
+        [HttpPost("{groupName}/clients/{clientId}/add-or-replace")]
         [SwaggerOperation("AssetGroupAddOrReplaceClient")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> AddOrReplaceClient(string clientId, string groupName)
