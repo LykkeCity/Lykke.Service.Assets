@@ -46,14 +46,15 @@ namespace Lykke.Service.Assets.Services
             await _assetGroupAssetLinkRepository.AddAsync(assetGroupAssetLink);
         }
 
-        public Task AddClientToGroupAsync(string clientId, string groupName)
+        // TODO: Obsolete
+        public async Task AddClientToGroupAsync(string clientId, string groupName)
         {
-            return AddClientToGroupAsync(clientId, groupName, false);
+            await AddClientToGroupAsync(clientId, groupName, false);
         }
 
-        public Task AddClientToGroupOrReplaceAsync(string clientId, string groupName)
+        public async Task AddClientToGroupOrReplaceAsync(string clientId, string groupName)
         {
-            return AddClientToGroupAsync(clientId, groupName, true);
+            await AddClientToGroupAsync(clientId, groupName, true);
         }
 
         public async Task<IAssetGroup> AddGroupAsync(IAssetGroup group)
