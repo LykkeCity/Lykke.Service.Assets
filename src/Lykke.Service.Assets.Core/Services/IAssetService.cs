@@ -15,9 +15,9 @@ namespace Lykke.Service.Assets.Core.Services
 
         Task EnableAsync(string id);
 
-        Task<IEnumerable<IAsset>> GetAllAsync();
+        Task<IEnumerable<IAsset>> GetAllAsync(bool includeNonTradable);
 
-        Task<IEnumerable<IAsset>> GetAsync(string[] ids);
+        Task<IEnumerable<IAsset>> GetAsync(string[] ids, bool? isTradable);
 
         Task<IAsset> GetAsync(string id);
 

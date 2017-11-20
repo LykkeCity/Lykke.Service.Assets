@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,14 +54,14 @@ namespace Lykke.Service.Assets.Services
             await UpdateAsync(asset);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAllAsync()
+        public async Task<IEnumerable<IAsset>> GetAllAsync(bool includeNonTradable)
         {
-            return await _assetRepository.GetAllAsync();
+            return await _assetRepository.GetAllAsync(includeNonTradable);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids)
+        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids, bool? isTradable)
         {
-            return await _assetRepository.GetAsync(ids);
+            return await _assetRepository.GetAsync(ids, isTradable);
         }
 
         public async Task<IAsset> GetAsync(string id)
@@ -72,7 +71,7 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IEnumerable<IAsset>> GetForCategoryAsync(string categoryId)
         {
-            var assets = await _assetRepository.GetAllAsync();
+            var assets = await _assetRepository.GetAllAsync(true);
 
             return assets.Where(x => x.CategoryId == categoryId);
         }
@@ -108,7 +107,7 @@ namespace Lykke.Service.Assets.Services
         {
             if (!string.IsNullOrEmpty(asset.BlockChainAssetId))
             {
-                var assets = await _assetRepository.GetAllAsync();
+                var assets = await _assetRepository.GetAllAsync(true);
 
                 if (assets.Any(x => x.BlockChainAssetId == asset.BlockChainAssetId && x.Id != asset.Id))
                 {

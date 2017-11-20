@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -31,9 +31,10 @@ namespace Lykke.Service.Assets.Repositories
             await _assetTable.InsertAsync(entity);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAllAsync()
+        public async Task<IEnumerable<IAsset>> GetAllAsync(bool includeNonTradable)
         {
             return (await _assetTable.GetDataAsync(GetPartitionKey()))
+                .Where(x => includeNonTradable || x.IsTradable)
                 .Select(Mapper.Map<AssetDto>);
         }
 
@@ -44,9 +45,14 @@ namespace Lykke.Service.Assets.Repositories
             return Mapper.Map<AssetDto>(asset);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids)
+        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids, bool? isTradable)
         {
-            return (await _assetTable.GetDataAsync(GetPartitionKey(), ids.Select(GetRowKey)))
+            var assets = ids.Any()
+                ? await _assetTable.GetDataAsync(GetPartitionKey(), ids.Select(GetRowKey))
+                : await _assetTable.GetDataAsync(GetPartitionKey());
+
+            return assets
+                .Where(x => !isTradable.HasValue || x.IsTradable == isTradable.Value)
                 .Select(Mapper.Map<AssetDto>);
         }
 

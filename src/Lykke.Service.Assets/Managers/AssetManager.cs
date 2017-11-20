@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core.Domain;
@@ -47,16 +48,23 @@ namespace Lykke.Service.Assets.Managers
             await _assetService.EnableAsync(id);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAllAsync()
+        public async Task<IEnumerable<IAsset>> GetAllAsync(bool includeNonTradable)
         {
-            return await _cache.GetListAsync("All", _assetService.GetAllAsync);
+            var listKey = includeNonTradable ? "All" : "AllTradable";
+
+            return await _cache.GetListAsync(listKey, () => _assetService.GetAllAsync(includeNonTradable));
         }
 
-        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids)
+        public async Task<IEnumerable<IAsset>> GetAsync(string[] ids, bool? isTradable)
         {
-            var listKey = ids.GetMD5();
+            var listKey = ids.Any() ? ids.GetMD5() : "All";
 
-            return await _cache.GetListAsync($"ForIdsList:{listKey}", () => _assetService.GetAsync(ids));
+            if (isTradable.HasValue)
+            {
+                listKey = $"{listKey}:IsTradable_{isTradable.Value}";
+            }
+
+            return await _cache.GetListAsync($"ForIdsList:{listKey}", () => _assetService.GetAsync(ids, isTradable));
         }
 
         public async Task<IAsset> GetAsync(string id)

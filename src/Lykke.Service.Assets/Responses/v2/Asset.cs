@@ -60,6 +60,8 @@ namespace Lykke.Service.Assets.Responses.V2
 
         public bool IsDisabled { get; set; }
 
+        public bool IsTradable { get; set; }
+
         public bool IssueAllowed { get; set; }
 
         public bool KycNeeded { get; set; }
