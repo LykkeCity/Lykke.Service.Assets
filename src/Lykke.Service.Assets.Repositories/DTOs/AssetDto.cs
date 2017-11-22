@@ -30,6 +30,8 @@ namespace Lykke.Service.Assets.Repositories.DTOs
 
         public string DefinitionUrl { get; set; }
 
+        public int? DisplayAccuracy { get; set; }
+
         public string DisplayId { get; set; }
 
         public double DustLimit { get; set; }

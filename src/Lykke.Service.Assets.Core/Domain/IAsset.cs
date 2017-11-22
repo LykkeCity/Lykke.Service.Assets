@@ -28,6 +28,8 @@
 
         string DefinitionUrl { get; }
 
+        int? DisplayAccuracy { get; }
+
         string DisplayId { get; }
 
         double DustLimit { get; }
