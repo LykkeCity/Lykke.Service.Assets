@@ -54,6 +54,8 @@ namespace Lykke.Service.Assets.Responses.v1
 
         public double? LowVolumeAmount { get; set; }
 
+        public int? DisplayAccuracy { get; set; }
+
         public string DisplayId { get; set; }
         
         public bool BankCardsDepositEnabled { get; set; }
@@ -117,6 +119,7 @@ namespace Lykke.Service.Assets.Responses.v1
                 NotLykkeAsset = src.NotLykkeAsset,
                 IssueAllowed = src.IssueAllowed,
                 LowVolumeAmount = src.LowVolumeAmount,
+                DisplayAccuracy = src.DisplayAccuracy,
                 DisplayId = src.DisplayId,
                 BuyScreen = src.BuyScreen,
                 SellScreen = src.SellScreen,
