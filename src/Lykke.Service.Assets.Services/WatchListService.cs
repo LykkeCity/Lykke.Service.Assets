@@ -48,12 +48,13 @@ namespace Lykke.Service.Assets.Services
 
             var customWatchLists     = watchLists[0].ToArray();
             var predefinedWatchLists = watchLists[1].ToArray();
-            var allWatchListsForUser = new List<IWatchList>
-            {
-                predefinedWatchLists
-                    .FirstOrDefault(IsAllAssetsWatchList)
-            };
+            var allWatchListsForUser = new List<IWatchList>();
 
+            var allAssetsWatchList = predefinedWatchLists.FirstOrDefault(IsAllAssetsWatchList);
+            if (allAssetsWatchList != null)
+            {
+                allWatchListsForUser.Add(allAssetsWatchList);
+            }
 
             allWatchListsForUser.AddRange
             (
@@ -72,7 +73,6 @@ namespace Lykke.Service.Assets.Services
 
 
             return allWatchListsForUser
-                .Where(x => x != null)
                 .GroupBy(x => x.Id)
                 .Select(x => x.First());
         }
