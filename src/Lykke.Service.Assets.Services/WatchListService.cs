@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -119,7 +120,7 @@ namespace Lykke.Service.Assets.Services
         private static bool IsAllAssetsWatchList(IWatchList watchList)
         {
             // Legacy. Probably, we should use settings to detect all assets watch list.
-            return watchList.Name.Equals("All assets", StringComparison.InvariantCultureIgnoreCase);
+            return watchList.Name.Equals(Constants.AllAssetsWatchListName, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
