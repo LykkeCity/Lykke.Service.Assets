@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -38,19 +40,41 @@ namespace Lykke.Service.Assets.Services
         
         public async Task<IEnumerable<IWatchList>> GetAllAsync(string userId)
         {
-            var allWatchListsForUser = new Dictionary<string, IWatchList>();
+            var watchLists = await Task.WhenAll
+            (
+                GetAllCustomAsync(userId),
+                GetAllPredefinedAsync()
+            );
 
-            foreach (var predefinedWatchList in await GetAllPredefinedAsync())
+            var customWatchLists     = watchLists[0].ToArray();
+            var predefinedWatchLists = watchLists[1].ToArray();
+            var allWatchListsForUser = new List<IWatchList>();
+
+            var allAssetsWatchList = predefinedWatchLists.FirstOrDefault(IsAllAssetsWatchList);
+            if (allAssetsWatchList != null)
             {
-                allWatchListsForUser[predefinedWatchList.Id] = predefinedWatchList;
+                allWatchListsForUser.Add(allAssetsWatchList);
             }
 
-            foreach (var customWatchList in await GetAllCustomAsync(userId))
-            {
-                allWatchListsForUser[customWatchList.Id] = customWatchList;
-            }
+            allWatchListsForUser.AddRange
+            (
+                customWatchLists
+                    .OrderBy(x => x.Order)
+                    .ThenBy(x => x.Name)
+            );
 
-            return allWatchListsForUser.Select(x => x.Value);
+            allWatchListsForUser.AddRange
+            (
+                predefinedWatchLists
+                    .Where(x => !IsAllAssetsWatchList(x))
+                    .OrderBy(x => x.Order)
+                    .ThenBy(x => x.Name)
+            );
+
+
+            return allWatchListsForUser
+                .GroupBy(x => x.Id)
+                .Select(x => x.First());
         }
 
         public async Task<IEnumerable<IWatchList>> GetAllCustomAsync(string userId)
@@ -91,6 +115,12 @@ namespace Lykke.Service.Assets.Services
         public async Task UpdatePredefinedAsync(IWatchList watchList)
         {
             await _predefinedWatchListRepository.UpsertAsync(watchList);
+        }
+
+        private static bool IsAllAssetsWatchList(IWatchList watchList)
+        {
+            // Legacy. Probably, we should use settings to detect all assets watch list.
+            return watchList.Name.Equals(Constants.AllAssetsWatchListName, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
