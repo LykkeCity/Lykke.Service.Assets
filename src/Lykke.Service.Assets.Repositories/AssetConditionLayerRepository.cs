@@ -92,7 +92,7 @@ namespace Lykke.Service.Assets.Repositories
         public async Task InsetLayerAsync(IAssetConditionLayer layer)
         {
             var entity = new AssetConditionLayerEntity(GetAssetConditionLayerPartitionKey(),
-                GetAssetConditionLayerRowKey(layer.Id),
+                GetAssetConditionLayerRowKey(layer.Id.Trim().ToLower()),
                 layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
 
             await _assetConditionLayerTable.InsertAsync(entity);
