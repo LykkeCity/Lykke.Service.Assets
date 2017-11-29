@@ -50,6 +50,11 @@ namespace Lykke.Service.Assets.Services
                 .SingleInstance();
 
             builder
+                .RegisterType<AssetConditionService>()
+                .As<IAssetConditionService>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<AssetPairService>()
                 .As<IAssetPairService>()
                 .SingleInstance();

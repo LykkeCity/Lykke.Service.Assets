@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
@@ -13,12 +12,13 @@ namespace Lykke.Service.Assets.Repositories
 {
     public class AssetConditionLayerRepository : IAssetConditionLayerRepository
     {
-        private readonly INoSQLTableStorage<AssetConditionEntity> _assetAssetConditionTable;
+        private readonly INoSQLTableStorage<AssetConditionEntity> _assetConditionTable;
         private readonly INoSQLTableStorage<AssetConditionLayerEntity> _assetConditionLayerTable;
 
-        public AssetConditionLayerRepository(INoSQLTableStorage<AssetConditionEntity> assetAssetConditionTable, INoSQLTableStorage<AssetConditionLayerEntity> assetConditionLayerTable)
+        public AssetConditionLayerRepository(INoSQLTableStorage<AssetConditionEntity> assetConditionTable, 
+            INoSQLTableStorage<AssetConditionLayerEntity> assetConditionLayerTable)
         {
-            _assetAssetConditionTable = assetAssetConditionTable;
+            _assetConditionTable = assetConditionTable;
             _assetConditionLayerTable = assetConditionLayerTable;
         }
 
@@ -48,7 +48,7 @@ namespace Lykke.Service.Assets.Repositories
             var layers = await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey(), layerIdsList.Select(GetAssetConditionLayerRowKey))
                 ?? new List<AssetConditionLayerEntity>();
 
-            var assetConditions = (await _assetAssetConditionTable.GetDataAsync(layerIdsList.Select(GetAssetConditionPartitionKey))).ToList();
+            var assetConditions = (await _assetConditionTable.GetDataAsync(layerIdsList.Select(GetAssetConditionPartitionKey))).ToList();
             var result = new List<AssetConditionLayerDto>();
 
             foreach (var layer in layers)
@@ -62,6 +62,57 @@ namespace Lykke.Service.Assets.Repositories
             }
 
             return result;
+        }
+
+        public async Task<IReadOnlyList<IAssetConditionLayer>> GetLayerListAsync()
+        {
+            var layers = await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey())
+                ?? new List<AssetConditionLayerEntity>();
+
+            var result = new List<AssetConditionLayerDto>();
+            foreach (var layer in layers)
+            {
+                var dto = new AssetConditionLayerDto();
+                dto.Id = layer.Id;
+                dto.Description = layer.Description;
+                dto.Priority = layer.Priority;
+                result.Add(dto);
+            }
+            return result;
+        }
+
+        public async Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetConditions assetConditions)
+        {
+            var entity = new AssetConditionEntity(GetAssetConditionPartitionKey(layerId), GetAssetConditionRowKey(assetConditions.Asset), 
+                layerId, assetConditions.Asset, assetConditions.AvailableToClient);
+
+            await _assetConditionTable.InsertOrReplaceAsync(entity);
+        }
+
+        public async Task InsetLayerAsync(IAssetConditionLayer layer)
+        {
+            var entity = new AssetConditionLayerEntity(GetAssetConditionLayerPartitionKey(),
+                GetAssetConditionLayerRowKey(layer.Id),
+                layer.Priority, layer.Description);
+
+            await _assetConditionLayerTable.InsertAsync(entity);
+
+            if (layer.AssetConditions != null)
+            {
+                foreach (var assetCondition in layer.AssetConditions.Values)
+                {
+                    await InsertOrUpdateAssetConditionsToLayer(layer.Id, assetCondition);
+                }
+            }
+        }
+
+        public async Task DeleteLayerAsync(string layerId)
+        {
+            var assetConditions = await _assetConditionTable.GetDataAsync(GetAssetConditionPartitionKey(layerId));
+            await _assetConditionTable.DeleteAsync(assetConditions);
+
+            await _assetConditionLayerTable.DeleteAsync(GetAssetConditionLayerPartitionKey(),
+                GetAssetConditionLayerRowKey(layerId));
         }
     }
 }

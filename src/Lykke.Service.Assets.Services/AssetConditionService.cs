@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -12,12 +13,14 @@ namespace Lykke.Service.Assets.Services
     {
         private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
         private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
+        private readonly ILog _log;
 
         public AssetConditionService(IAssetConditionLayerRepository assetConditionLayerRepository, 
-            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository)
+            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository, ILog log)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
             _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
+            _log = log;
         }
 
         public async Task<IReadOnlyDictionary<string, IAssetConditions>> GetAssetConditionsByClient(string clientId)

@@ -10,5 +10,12 @@ namespace Lykke.Service.Assets.Core.Repositories
         Task AddAsync(string clientId, string layerId);
 
         Task RemoveAsync(string clientId, string layerId);
+
+        /// <summary>
+        /// Remove link to LayerId from all clients
+        /// </summary>
+        /// <param name="layerId"></param>
+        /// <returns></returns>
+        Task RemoveLayerFromClientsAsync(string layerId);
     }
 }
