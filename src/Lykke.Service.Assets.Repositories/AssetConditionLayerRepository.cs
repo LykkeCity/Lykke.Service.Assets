@@ -56,7 +56,7 @@ namespace Lykke.Service.Assets.Repositories
                 var dto = new AssetConditionLayerDto();
                 dto.Id = layer.Id;
                 dto.Description = layer.Description;
-                dto.Priority = layer.Priority;
+                dto.Priority = (decimal)layer.Priority;
                 dto.AssetConditions = assetConditions.Where(e => e.Layer == layer.Id).ToDictionary(e => e.Asset, e => e as IAssetConditions);
                 result.Add(dto);
             }
@@ -75,7 +75,7 @@ namespace Lykke.Service.Assets.Repositories
                 var dto = new AssetConditionLayerDto();
                 dto.Id = layer.Id;
                 dto.Description = layer.Description;
-                dto.Priority = layer.Priority;
+                dto.Priority = (decimal)layer.Priority;
                 result.Add(dto);
             }
             return result;
