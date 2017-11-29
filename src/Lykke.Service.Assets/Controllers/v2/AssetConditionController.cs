@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Requests.v2;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetLayersAsync()
         {
             var layers = await _assetConditionLayerRepository.GetLayerListAsync();
-            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description)).ToList();
+            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled)).ToList();
             return Ok(result);
         }
 
@@ -56,7 +57,7 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
             }
 
-            var result = new AssetConditionLayerDto(layer.Id, layer.Priority, layer.Description);
+            var result = new AssetConditionLayerDto(layer.Id, layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
             result.AssetConditions.AddRange(layer.AssetConditions.Values.Select(e => new AssetConditionDto(e.Asset, e.AvailableToClient)));
 
             return Ok(result);
@@ -96,8 +97,8 @@ namespace Lykke.Service.Assets.Controllers.V2
         }
 
         /// <summary>
-        /// Create asset condions Layer 
-        /// Add only layer without asset conditon list.
+        /// Create asset condions Layer
+        /// Create only layer without asset conditon list.
         /// After create need fill layers use method PutAssetConditionToLayers
         /// </summary>
         [HttpPost("layer")]
@@ -105,7 +106,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateLayersAsync([FromBody] AssetConditionLayerDto assetConditionLayer)
+        public async Task<IActionResult> CreateLayersAsync([FromBody] AssetConditionLayerRequestDto assetConditionLayer)
         {
             if (assetConditionLayer == null)
             {
@@ -124,6 +125,38 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
 
             await _assetConditionLayerRepository.InsetLayerAsync(assetConditionLayer);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Update asset condions Layer 
+        /// Update only layer without asset conditon list
+        /// </summary>
+        [HttpPut("layer")]
+        [SwaggerOperation("UpdateAssetConditionLayer")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateLayersAsync([FromBody] AssetConditionLayerRequestDto assetConditionLayer)
+        {
+            if (assetConditionLayer == null)
+            {
+                return BadRequest(ErrorResponse.Create("assetConditionLayer id null"));
+            }
+
+            if (string.IsNullOrEmpty(assetConditionLayer.Id))
+            {
+                return BadRequest(ErrorResponse.Create("Cannot add layer with empty id"));
+            }
+
+            var layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { assetConditionLayer.Id })).FirstOrDefault();
+            if (layer == null)
+            {
+                return BadRequest(ErrorResponse.Create($"Layer with id='{assetConditionLayer.Id}' not found"));
+            }
+
+            await _assetConditionLayerRepository.UpdateLayerAsync(assetConditionLayer);
 
             return Ok();
         }
@@ -216,7 +249,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
             var layerIds = await _assetConditionLayerLinkClientRepository.GetAllLayersByClientAsync(clientId);
             var layers = await _assetConditionLayerRepository.GetByIdsAsync(layerIds);
-            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description)).ToList();
+            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled)).ToList();
             return Ok(result);
         }
     }

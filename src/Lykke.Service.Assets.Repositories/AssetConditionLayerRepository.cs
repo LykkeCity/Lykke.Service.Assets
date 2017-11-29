@@ -53,7 +53,7 @@ namespace Lykke.Service.Assets.Repositories
 
             foreach (var layer in layers)
             {
-                var dto = new AssetConditionLayerDto();
+                var dto = new AssetConditionLayerDto(layer.Id, (decimal)layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
                 dto.Id = layer.Id;
                 dto.Description = layer.Description;
                 dto.Priority = (decimal)layer.Priority;
@@ -93,7 +93,7 @@ namespace Lykke.Service.Assets.Repositories
         {
             var entity = new AssetConditionLayerEntity(GetAssetConditionLayerPartitionKey(),
                 GetAssetConditionLayerRowKey(layer.Id),
-                layer.Priority, layer.Description);
+                layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
 
             await _assetConditionLayerTable.InsertAsync(entity);
 
@@ -104,6 +104,12 @@ namespace Lykke.Service.Assets.Repositories
                     await InsertOrUpdateAssetConditionsToLayer(layer.Id, assetCondition);
                 }
             }
+        }
+
+        public async Task UpdateLayerAsync(IAssetConditionLayer layer)
+        {
+            await _assetConditionLayerTable.ReplaceAsync(GetAssetConditionLayerPartitionKey(), GetAssetConditionLayerRowKey(layer.Id), 
+                current => current.Apply(layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled));
         }
 
         public async Task DeleteLayerAsync(string layerId)

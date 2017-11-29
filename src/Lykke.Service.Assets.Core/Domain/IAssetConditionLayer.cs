@@ -7,7 +7,7 @@ namespace Lykke.Service.Assets.Core.Domain
     /// The layer groups the condition of use of several assets.
     /// Also describes the rule for applying these settings and their purpose.
     /// </summary>
-    public interface IAssetConditionLayer
+    public interface IAssetConditionLayer : IAssetConditionLayerSettings
     {
         /// <summary>
         /// Identity of this asset conditions layer.
@@ -33,5 +33,7 @@ namespace Lykke.Service.Assets.Core.Domain
         /// Can be use with BackOffice
         /// </summary>
         string Description { get; }
+
+        
     }
 }

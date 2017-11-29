@@ -45,5 +45,21 @@ namespace Lykke.Service.Assets.Services
 
             return result.ToDictionary(e => e.Key, e => e.Value as IAssetConditions);
         }
+
+        public async Task<IAssetConditionLayerSettings> GetAssetConditionsLayerSettingsByClient(string clientId)
+        {
+            var layersIds = await _assetConditionLayerLinkClientRepository.GetAllLayersByClientAsync(clientId);
+            var layers = await _assetConditionLayerRepository.GetByIdsAsync(layersIds);
+
+            var result = new AssetConditionLayerSettings();
+
+            result.SwiftDepositEnabled = layers.Where(e => e.SwiftDepositEnabled.HasValue).OrderByDescending(e => e.Priority)
+                .FirstOrDefault()?.SwiftDepositEnabled;
+
+            result.ClientsCanCashInViaBankCards = layers.Where(e => e.ClientsCanCashInViaBankCards.HasValue).OrderByDescending(e => e.Priority)
+                .FirstOrDefault()?.ClientsCanCashInViaBankCards;
+
+            return result;
+        }
     }
 }

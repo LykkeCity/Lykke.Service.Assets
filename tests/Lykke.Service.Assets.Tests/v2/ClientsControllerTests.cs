@@ -20,10 +20,9 @@ namespace Lykke.Service.Assets.Tests.v2
         }
 
 
-        private static ClientsController CreateController(IMock<IAssetGroupService> serviceMock,
-            IMock<IAssetConditionService> assetConditionMock)
+        private static ClientsController CreateController(IMock<IAssetGroupService> serviceMock)
         {
-            return new ClientsController(serviceMock.Object, assetConditionMock.Object);
+            return new ClientsController(serviceMock.Object);
         }
 
         private static Mock<IAssetGroupService> CreateServiceMock()

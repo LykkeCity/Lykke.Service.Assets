@@ -12,15 +12,12 @@ namespace Lykke.Service.Assets.Controllers.V2
     public class ClientsController : Controller
     {
         private readonly IAssetGroupService _assetGroupService;
-        private readonly IAssetConditionService _assetConditionService;
 
 
         public ClientsController(
-            IAssetGroupService assetGroupService,
-            IAssetConditionService assetConditionService)
+            IAssetGroupService assetGroupService)
         {
             _assetGroupService = assetGroupService;
-            _assetConditionService = assetConditionService;
         }
 
         [HttpGet("{clientId}/asset-ids")]
@@ -29,11 +26,6 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetAssetIds(string clientId, [FromQuery] bool isIosDevice)
         {
             var assetIds = await _assetGroupService.GetAssetIdsForClient(clientId, isIosDevice);
-
-            var conditions = await _assetConditionService.GetAssetConditionsByClient(clientId);
-
-            assetIds = assetIds.Where(e => !conditions.ContainsKey(e) || (conditions[e].AvailableToClient ?? true));
-
             return Ok(assetIds);
         }
 
