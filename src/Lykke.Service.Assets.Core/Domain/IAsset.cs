@@ -64,6 +64,8 @@
 
         bool IsDisabled { get; }
 
+        bool IsTradable { get; }
+
         bool IssueAllowed { get; }
 
         bool KycNeeded { get; }

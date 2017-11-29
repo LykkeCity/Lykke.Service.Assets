@@ -90,9 +90,9 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpGet]
         [SwaggerOperation("AssetGetAll")]
         [ProducesResponseType(typeof(IEnumerable<Asset>), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool includeNonTradable = false)
         {
-            var assets = (await _assetManager.GetAllAsync())
+            var assets = (await _assetManager.GetAllAsync(includeNonTradable))
                 .Select(Mapper.Map<Asset>);
 
             return Ok(assets);
@@ -103,8 +103,9 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(ListOf<Asset>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetBySpecification([FromBody] AssetSpecification specification)
         {
-            var ids          = specification.Ids;
-            var allTokens    = await _assetManager.GetAsync(ids?.ToArray());
+            var ids          = specification?.Ids?.ToArray() ?? new string[0];
+            var isTradable   = specification?.IsTradable;
+            var allTokens    = await _assetManager.GetAsync(ids.ToArray(), isTradable);
             var responseList = allTokens?.Select(Mapper.Map<Asset>);
 
             return Ok(new ListOf<Asset>

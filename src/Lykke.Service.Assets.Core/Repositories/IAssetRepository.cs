@@ -8,11 +8,11 @@ namespace Lykke.Service.Assets.Core.Repositories
     {
         Task AddAsync(IAsset asset);
 
-        Task<IEnumerable<IAsset>> GetAllAsync();
+        Task<IEnumerable<IAsset>> GetAllAsync(bool includeNonTradable);
 
         Task<IAsset> GetAsync(string id);
 
-        Task<IEnumerable<IAsset>> GetAsync(string[] ids);
+        Task<IEnumerable<IAsset>> GetAsync(string[] ids, bool? isTradable);
 
         Task RemoveAsync(string id);
 

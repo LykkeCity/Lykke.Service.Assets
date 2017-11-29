@@ -4998,6 +4998,8 @@ namespace Lykke.Service.Assets.Client
             return _result;
         }
 
+        /// <param name='includeNonTradable'>
+        /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -5013,7 +5015,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<Asset>>> AssetGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<Asset>>> AssetGetAllWithHttpMessagesAsync(bool? includeNonTradable = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -5022,12 +5024,22 @@ namespace Lykke.Service.Assets.Client
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("includeNonTradable", includeNonTradable);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "AssetGetAll", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v2/assets").ToString();
+            List<string> _queryParameters = new List<string>();
+            if (includeNonTradable != null)
+            {
+                _queryParameters.Add(string.Format("includeNonTradable={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(includeNonTradable, SerializationSettings).Trim('"'))));
+            }
+            if (_queryParameters.Count > 0)
+            {
+                _url += "?" + string.Join("&", _queryParameters);
+            }
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -14148,13 +14160,15 @@ namespace Lykke.Service.Assets.Client
         /// </param>
         Task<HttpOperationResponse<IList<AssetPairResponseModel>>> GetAssetPairsWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='includeNonTradable'>
+        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<Asset>>> AssetGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<Asset>>> AssetGetAllWithHttpMessagesAsync(bool? includeNonTradable = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='asset'>
         /// </param>
@@ -15896,20 +15910,24 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static IList<Asset> AssetGetAll(this IAssetsService operations)
+            /// <param name='includeNonTradable'>
+            /// </param>
+            public static IList<Asset> AssetGetAll(this IAssetsService operations, bool? includeNonTradable = default(bool?))
             {
-                return operations.AssetGetAllAsync().GetAwaiter().GetResult();
+                return operations.AssetGetAllAsync(includeNonTradable).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='includeNonTradable'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<Asset>> AssetGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<Asset>> AssetGetAllAsync(this IAssetsService operations, bool? includeNonTradable = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.AssetGetAllWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetGetAllWithHttpMessagesAsync(includeNonTradable, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -18370,7 +18388,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
         /// <param name="type">Possible values include: 'Erc20Token'</param>
-        public Asset(int accuracy, bool bankCardsDepositEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
+        public Asset(int accuracy, bool bankCardsDepositEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
         {
             Accuracy = accuracy;
             AssetAddress = assetAddress;
@@ -18400,6 +18418,7 @@ namespace Lykke.Service.Assets.Client.Models
             IdIssuer = idIssuer;
             IsBase = isBase;
             IsDisabled = isDisabled;
+            IsTradable = isTradable;
             IssueAllowed = issueAllowed;
             KycNeeded = kycNeeded;
             LowVolumeAmount = lowVolumeAmount;
@@ -18564,6 +18583,11 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool IsTradable { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "IssueAllowed")]
         public bool IssueAllowed { get; set; }
 
@@ -18674,9 +18698,10 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetSpecification class.
         /// </summary>
-        public AssetSpecification(IList<string> ids = default(IList<string>))
+        public AssetSpecification(IList<string> ids = default(IList<string>), bool? isTradable = default(bool?))
         {
             Ids = ids;
+            IsTradable = isTradable;
             CustomInit();
         }
 
@@ -18689,6 +18714,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "Ids")]
         public IList<string> Ids { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool? IsTradable { get; set; }
 
     }
 }

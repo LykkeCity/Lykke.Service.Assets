@@ -46,6 +46,7 @@ namespace Lykke.Service.Assets.Services
             asset.DisplayId         = blockchainAndDisplayIds.DisplayId;
             asset.Id                = Guid.NewGuid().ToString();
             asset.IsDisabled        = true;
+            asset.IsTradable        = false;
             asset.MultiplierPower   = tokenDecimals;
             asset.Name              = GetAssetName(erc20Token);
             asset.Symbol            = erc20Token.TokenSymbol;
@@ -87,7 +88,7 @@ namespace Lykke.Service.Assets.Services
 
         private async Task<(string BlockchainId, string DisplayId)> GetBlockchainAndDisplayIdsAsync(IErc20Token token)
         {
-            var assets        = (await _assetService.GetAllAsync()).ToArray();
+            var assets        = (await _assetService.GetAllAsync(true)).ToArray();
             var blockchainIds = assets.Select(x => x.BlockChainId).ToArray();
             var displayIds    = assets.Select(x => x.DisplayId).ToArray();
 

@@ -64,7 +64,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("GetAssets")]
         public async Task<IActionResult> GetAll()
         {
-            var assets = await _assetManager.GetAllAsync();
+            var assets = await _assetManager.GetAllAsync(false);
             
             return Ok(assets.Select(AssetResponseModel.Create));
         }

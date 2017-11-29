@@ -61,7 +61,7 @@ namespace Lykke.Service.Assets.Client
 
         private async Task<IEnumerable<Asset>> GetUncachedAssetsAsync(CancellationToken cancellationToken)
         {
-            return await _assetsService.AssetGetAllAsync(cancellationToken);
+            return await _assetsService.AssetGetAllAsync(false, cancellationToken);
         }
 
         private async Task<IEnumerable<AssetPair>> GetUncachedAssetPairsAsync(CancellationToken cancellationToken)

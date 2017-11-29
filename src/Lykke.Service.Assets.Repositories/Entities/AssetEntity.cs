@@ -57,8 +57,10 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string IdIssuer { get; set; }
 
         public bool IsBase { get; set; }
-
+        
         public bool IsDisabled { get; set; }
+
+        public bool IsTradable { get; set; }
 
         public bool IssueAllowed { get; set; }
 

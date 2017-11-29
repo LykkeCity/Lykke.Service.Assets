@@ -16,12 +16,12 @@ namespace Lykke.Service.Assets.Repositories
         private const string AssetIndexPartition = "Erc20TokenAssetId";
         private const int PieceSize = 1000;
         private readonly INoSQLTableStorage<Erc20TokenEntity> _erc20AssetEntityTable;
-        private readonly INoSQLTableStorage<AzureIndex>       _indexAssetIdTable;
+        private readonly INoSQLTableStorage<AzureIndex> _indexAssetIdTable;
 
         public Erc20TokenRepository(INoSQLTableStorage<Erc20TokenEntity> erc20AssetEntityTable,
             INoSQLTableStorage<AzureIndex> indexAssetIdTable)
         {
-            _indexAssetIdTable     = indexAssetIdTable;
+            _indexAssetIdTable = indexAssetIdTable;
             _erc20AssetEntityTable = erc20AssetEntityTable;
         }
 
@@ -30,7 +30,7 @@ namespace Lykke.Service.Assets.Repositories
         {
             var entity = Mapper.Map<Erc20TokenEntity>(erc20Token);
             SetEntityKeys(entity);
-            var index  = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
+            var index = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
 
             await _erc20AssetEntityTable.InsertOrReplaceAsync(entity);
             if (erc20Token.AssetId != null)
@@ -55,7 +55,7 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IErc20Token> GetByAssetIdAsync(string assetId)
         {
-            var index  = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetId);
+            var index = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetId);
             var entity = await _erc20AssetEntityTable.GetDataAsync(index);
 
             return entity;
@@ -63,16 +63,16 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IErc20Token>> GetByAssetIdAsync(string[] assetIds)
         {
-            var indexes  = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetIds);
+            var indexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetIds);
 
             return await GetByAssetIndexesAsync(indexes);
         }
-        
+
         public async Task UpdateAsync(IErc20Token erc20Token)
         {
             var entity = Mapper.Map<Erc20TokenEntity>(erc20Token);
             SetEntityKeys(entity);
-            var index  = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
+            var index = new AzureIndex(AssetIndexPartition, erc20Token.AssetId, entity);
 
             await _erc20AssetEntityTable.InsertOrMergeAsync(entity);
 
@@ -86,17 +86,23 @@ namespace Lykke.Service.Assets.Repositories
         {
             var indexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition);
 
-            return await GetByAssetIndexesAsync(indexes);
+            return (await GetByAssetIndexesAsync(indexes))
+                // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
+                .Where(x => x.AssetId != null);
         }
 
         private async Task<IEnumerable<IErc20Token>> GetByAssetIndexesAsync(IEnumerable<AzureIndex> assetIndexes)
         {
+            var rowKeys = assetIndexes.Select(x => x.PrimaryRowKey)
+                // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
+                .Distinct();
+
+
             var entities = new List<IErc20Token>();
 
-            foreach (var rowKey in assetIndexes.Select(x => x.PrimaryRowKey))
+            foreach (var rowKey in rowKeys)
             {
                 var entity = await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), rowKey);
-
                 if (entity != null)
                 {
                     entities.Add(entity);
@@ -109,7 +115,7 @@ namespace Lykke.Service.Assets.Repositories
         private static void SetEntityKeys(Erc20TokenEntity entity)
         {
             entity.PartitionKey = GetPartitionKey();
-            entity.RowKey       = GetRowKey(entity.Address);
+            entity.RowKey = GetRowKey(entity.Address);
         }
 
         private static string GetPartitionKey()
