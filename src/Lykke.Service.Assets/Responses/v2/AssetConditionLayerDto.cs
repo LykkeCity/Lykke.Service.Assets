@@ -6,7 +6,7 @@ namespace Lykke.Service.Assets.Responses.V2
 {
     public class AssetConditionLayerDto : IAssetConditionLayer
     {
-        public AssetConditionLayerDto(string id, decimal priority, string description,
+        private AssetConditionLayerDto(string id, decimal priority, string description,
             bool? clientsCanCashInViaBankCards, bool? swiftDepositEnabled)
         {
             Id = id;
@@ -15,6 +15,14 @@ namespace Lykke.Service.Assets.Responses.V2
             ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
             SwiftDepositEnabled = swiftDepositEnabled;
             AssetConditions = new List<AssetConditionDto>();
+        }
+
+        public AssetConditionLayerDto(string id, decimal priority, string description,
+            bool? clientsCanCashInViaBankCards, bool? swiftDepositEnabled,
+            IReadOnlyDictionary<string, IAssetConditions> assetConditions)
+            : this(id, priority, description, clientsCanCashInViaBankCards, swiftDepositEnabled)
+        {
+            AssetConditions = assetConditions.Values.Select(e => new AssetConditionDto(e.Asset, e.AvailableToClient)).ToList();
         }
 
         public AssetConditionLayerDto()

@@ -38,7 +38,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetLayersAsync()
         {
             var layers = await _assetConditionLayerRepository.GetLayerListAsync();
-            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled)).ToList();
+            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled, e.AssetConditions)).ToList();
             return Ok(result);
         }
 
@@ -57,8 +57,7 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
             }
 
-            var result = new AssetConditionLayerDto(layer.Id, layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
-            result.AssetConditions.AddRange(layer.AssetConditions.Values.Select(e => new AssetConditionDto(e.Asset, e.AvailableToClient)));
+            var result = new AssetConditionLayerDto(layer.Id, layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled, layer.AssetConditions);
 
             return Ok(result);
         }
@@ -249,7 +248,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
             var layerIds = await _assetConditionLayerLinkClientRepository.GetAllLayersByClientAsync(clientId);
             var layers = await _assetConditionLayerRepository.GetByIdsAsync(layerIds);
-            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled)).ToList();
+            var result = layers.Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled, e.AssetConditions)).ToList();
             return Ok(result);
         }
     }
