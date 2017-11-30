@@ -1485,8 +1485,7 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Get all layers without list of assets.
-        /// Return only info about layer
+        /// Gets all layers without assets conditions (only info about layers).
         /// </summary>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1503,7 +1502,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<AssetConditionLayerDto>>> AssetConditionLayerGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<AssetConditionLayerDto>>> AssetConditionGetLayersWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1513,7 +1512,7 @@ namespace Lykke.Service.Assets.Client
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionLayerGetAll", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionGetLayers", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -1606,10 +1605,10 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Update asset condions Layer
-        /// Update only layer without asset conditon list
+        /// Updates layer without assets.
         /// </summary>
         /// <param name='assetConditionLayer'>
+        /// The model what describes layer.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1626,7 +1625,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> UpdateAssetConditionLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetConditionLayer != null)
             {
@@ -1641,7 +1640,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("assetConditionLayer", assetConditionLayer);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "UpdateAssetConditionLayer", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionUpdateLayer", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -1688,7 +1687,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 404 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1758,11 +1757,14 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Create asset condions Layer
-        /// Create only layer without asset conditon list.
-        /// After create need fill layers use method PutAssetConditionToLayers
+        /// Adds new layer without assets.
         /// </summary>
+        /// <remarks>
+        /// Creates only layer without asset conditon list.
+        /// After create need fill layers use method PutAssetConditionToLayers.
+        /// </remarks>
         /// <param name='assetConditionLayer'>
+        /// The model what describes layer.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1779,7 +1781,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> CreateAssetConditionLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetConditionLayer != null)
             {
@@ -1794,7 +1796,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("assetConditionLayer", assetConditionLayer);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "CreateAssetConditionLayer", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionAddLayer", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -1841,7 +1843,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1868,24 +1870,6 @@ namespace Lykke.Service.Assets.Client
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 404)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
-            // Deserialize Response
             if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -1911,9 +1895,10 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Get layer with list of assets.
+        /// Gets layer with assets conditions by specified id.
         /// </summary>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1936,7 +1921,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> AssetConditionLayerGetByIdWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> AssetConditionGetLayerByIdWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (layerId == null)
             {
@@ -1951,7 +1936,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("layerId", layerId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionLayerGetById", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionGetLayerById", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2063,11 +2048,13 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Set asset condition in layer
+        /// Adds asset condition to layer.
         /// </summary>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='assetCondition'>
+        /// The model what describes asset condition.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2090,7 +2077,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> PutAssetConditionToLayersWithHttpMessagesAsync(string layerId, AssetConditionDto assetCondition = default(AssetConditionDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddAssetConditionToLayerWithHttpMessagesAsync(string layerId, AssetConditionDto assetCondition = default(AssetConditionDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (layerId == null)
             {
@@ -2106,7 +2093,7 @@ namespace Lykke.Service.Assets.Client
                 tracingParameters.Add("layerId", layerId);
                 tracingParameters.Add("assetCondition", assetCondition);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "PutAssetConditionToLayers", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionAddAssetConditionToLayer", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2154,7 +2141,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 404 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 404 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2224,10 +2211,10 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Delete asset condition Layer.
-        /// With layer we delete all link from clients to this layer
+        /// Deletes layer and links to clients.
         /// </summary>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2250,7 +2237,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> DeleteAssetConditionToLayersWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionDeleteLayerWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (layerId == null)
             {
@@ -2265,7 +2252,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("layerId", layerId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "DeleteAssetConditionToLayers", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionDeleteLayer", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2307,7 +2294,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2359,11 +2346,13 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Set asset condition Layer to client
+        /// Adds layer to client.
         /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2386,7 +2375,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> SetAssetConditionLayerToClientWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddLayerToClientWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (clientId == null)
             {
@@ -2406,7 +2395,7 @@ namespace Lykke.Service.Assets.Client
                 tracingParameters.Add("clientId", clientId);
                 tracingParameters.Add("layerId", layerId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "SetAssetConditionLayerToClient", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionAddLayerToClient", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2449,7 +2438,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 404 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2476,6 +2465,24 @@ namespace Lykke.Service.Assets.Client
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
+            if ((int)_statusCode == 404)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new Microsoft.Rest.SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
             if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -2501,11 +2508,13 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Remove asset condition Layer from client
+        /// Removes layer from client.
         /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2528,7 +2537,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> RemoveAssetConditionLayerFromWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionRemoveLayerFromClientWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (clientId == null)
             {
@@ -2548,7 +2557,7 @@ namespace Lykke.Service.Assets.Client
                 tracingParameters.Add("clientId", clientId);
                 tracingParameters.Add("layerId", layerId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "RemoveAssetConditionLayerFrom", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionRemoveLayerFromClient", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2591,7 +2600,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2643,9 +2652,10 @@ namespace Lykke.Service.Assets.Client
         }
 
         /// <summary>
-        /// Get asset condition Layers by Client
+        /// Gets all layers by client id with assets conditions.
         /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2668,7 +2678,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> RemoveAssetConditionLayerFrom1WithHttpMessagesAsync(string clientId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> AssetConditionGetLayersByClientIdWithHttpMessagesAsync(string clientId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (clientId == null)
             {
@@ -2683,7 +2693,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("clientId", clientId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "RemoveAssetConditionLayerFrom1", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionGetLayersByClientId", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -15163,8 +15173,7 @@ namespace Lykke.Service.Assets.Client
         Task<HttpOperationResponse> AssetCategoryRemoveWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Get all layers without list of assets.
-        /// Return only info about layer
+        /// Gets all layers without assets conditions (only info about layers).
         /// </summary>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15172,13 +15181,13 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<AssetConditionLayerDto>>> AssetConditionLayerGetAllWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<AssetConditionLayerDto>>> AssetConditionGetLayersWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Update asset condions Layer
-        /// Update only layer without asset conditon list
+        /// Updates layer without assets.
         /// </summary>
         /// <param name='assetConditionLayer'>
+        /// The model what describes layer.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15186,14 +15195,17 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> UpdateAssetConditionLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Create asset condions Layer
-        /// Create only layer without asset conditon list.
-        /// After create need fill layers use method PutAssetConditionToLayers
+        /// Adds new layer without assets.
         /// </summary>
+        /// <remarks>
+        /// Creates only layer without asset conditon list.
+        /// After create need fill layers use method PutAssetConditionToLayers.
+        /// </remarks>
         /// <param name='assetConditionLayer'>
+        /// The model what describes layer.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15201,12 +15213,13 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> CreateAssetConditionLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddLayerWithHttpMessagesAsync(AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Get layer with list of assets.
+        /// Gets layer with assets conditions by specified id.
         /// </summary>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15214,14 +15227,16 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> AssetConditionLayerGetByIdWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> AssetConditionGetLayerByIdWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Set asset condition in layer
+        /// Adds asset condition to layer.
         /// </summary>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='assetCondition'>
+        /// The model what describes asset condition.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15229,13 +15244,13 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> PutAssetConditionToLayersWithHttpMessagesAsync(string layerId, AssetConditionDto assetCondition = default(AssetConditionDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddAssetConditionToLayerWithHttpMessagesAsync(string layerId, AssetConditionDto assetCondition = default(AssetConditionDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Delete asset condition Layer.
-        /// With layer we delete all link from clients to this layer
+        /// Deletes layer and links to clients.
         /// </summary>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15243,14 +15258,16 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> DeleteAssetConditionToLayersWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionDeleteLayerWithHttpMessagesAsync(string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Set asset condition Layer to client
+        /// Adds layer to client.
         /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15258,14 +15275,16 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> SetAssetConditionLayerToClientWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddLayerToClientWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Remove asset condition Layer from client
+        /// Removes layer from client.
         /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='layerId'>
+        /// The layer id.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15273,12 +15292,13 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> RemoveAssetConditionLayerFromWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionRemoveLayerFromClientWithHttpMessagesAsync(string clientId, string layerId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Get asset condition Layers by Client
+        /// Gets all layers by client id with assets conditions.
         /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -15286,7 +15306,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> RemoveAssetConditionLayerFrom1WithHttpMessagesAsync(string clientId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> AssetConditionGetLayersByClientIdWithHttpMessagesAsync(string clientId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -16594,20 +16614,18 @@ namespace Lykke.Service.Assets.Client
             }
 
             /// <summary>
-            /// Get all layers without list of assets.
-            /// Return only info about layer
+            /// Gets all layers without assets conditions (only info about layers).
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static IList<AssetConditionLayerDto> AssetConditionLayerGetAll(this IAssetsService operations)
+            public static IList<AssetConditionLayerDto> AssetConditionGetLayers(this IAssetsService operations)
             {
-                return operations.AssetConditionLayerGetAllAsync().GetAwaiter().GetResult();
+                return operations.AssetConditionGetLayersAsync().GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Get all layers without list of assets.
-            /// Return only info about layer
+            /// Gets all layers without assets conditions (only info about layers).
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -16615,285 +16633,307 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<AssetConditionLayerDto>> AssetConditionLayerGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<AssetConditionLayerDto>> AssetConditionGetLayersAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.AssetConditionLayerGetAllWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionGetLayersWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Update asset condions Layer
-            /// Update only layer without asset conditon list
+            /// Updates layer without assets.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='assetConditionLayer'>
+            /// The model what describes layer.
             /// </param>
-            public static ErrorResponse UpdateAssetConditionLayer(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto))
+            public static ErrorResponse AssetConditionUpdateLayer(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto))
             {
-                return operations.UpdateAssetConditionLayerAsync(assetConditionLayer).GetAwaiter().GetResult();
+                return operations.AssetConditionUpdateLayerAsync(assetConditionLayer).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Update asset condions Layer
-            /// Update only layer without asset conditon list
+            /// Updates layer without assets.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='assetConditionLayer'>
+            /// The model what describes layer.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> UpdateAssetConditionLayerAsync(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionUpdateLayerAsync(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.UpdateAssetConditionLayerWithHttpMessagesAsync(assetConditionLayer, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionUpdateLayerWithHttpMessagesAsync(assetConditionLayer, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Create asset condions Layer
-            /// Create only layer without asset conditon list.
-            /// After create need fill layers use method PutAssetConditionToLayers
+            /// Adds new layer without assets.
             /// </summary>
+            /// <remarks>
+            /// Creates only layer without asset conditon list.
+            /// After create need fill layers use method PutAssetConditionToLayers.
+            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='assetConditionLayer'>
+            /// The model what describes layer.
             /// </param>
-            public static ErrorResponse CreateAssetConditionLayer(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto))
+            public static ErrorResponse AssetConditionAddLayer(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto))
             {
-                return operations.CreateAssetConditionLayerAsync(assetConditionLayer).GetAwaiter().GetResult();
+                return operations.AssetConditionAddLayerAsync(assetConditionLayer).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Create asset condions Layer
-            /// Create only layer without asset conditon list.
-            /// After create need fill layers use method PutAssetConditionToLayers
+            /// Adds new layer without assets.
             /// </summary>
+            /// <remarks>
+            /// Creates only layer without asset conditon list.
+            /// After create need fill layers use method PutAssetConditionToLayers.
+            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='assetConditionLayer'>
+            /// The model what describes layer.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> CreateAssetConditionLayerAsync(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionAddLayerAsync(this IAssetsService operations, AssetConditionLayerRequestDto assetConditionLayer = default(AssetConditionLayerRequestDto), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateAssetConditionLayerWithHttpMessagesAsync(assetConditionLayer, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionAddLayerWithHttpMessagesAsync(assetConditionLayer, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Get layer with list of assets.
+            /// Gets layer with assets conditions by specified id.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
-            public static object AssetConditionLayerGetById(this IAssetsService operations, string layerId)
+            public static object AssetConditionGetLayerById(this IAssetsService operations, string layerId)
             {
-                return operations.AssetConditionLayerGetByIdAsync(layerId).GetAwaiter().GetResult();
+                return operations.AssetConditionGetLayerByIdAsync(layerId).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Get layer with list of assets.
+            /// Gets layer with assets conditions by specified id.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> AssetConditionLayerGetByIdAsync(this IAssetsService operations, string layerId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> AssetConditionGetLayerByIdAsync(this IAssetsService operations, string layerId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.AssetConditionLayerGetByIdWithHttpMessagesAsync(layerId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionGetLayerByIdWithHttpMessagesAsync(layerId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Set asset condition in layer
+            /// Adds asset condition to layer.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
             /// <param name='assetCondition'>
+            /// The model what describes asset condition.
             /// </param>
-            public static ErrorResponse PutAssetConditionToLayers(this IAssetsService operations, string layerId, AssetConditionDto assetCondition = default(AssetConditionDto))
+            public static ErrorResponse AssetConditionAddAssetConditionToLayer(this IAssetsService operations, string layerId, AssetConditionDto assetCondition = default(AssetConditionDto))
             {
-                return operations.PutAssetConditionToLayersAsync(layerId, assetCondition).GetAwaiter().GetResult();
+                return operations.AssetConditionAddAssetConditionToLayerAsync(layerId, assetCondition).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Set asset condition in layer
+            /// Adds asset condition to layer.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
             /// <param name='assetCondition'>
+            /// The model what describes asset condition.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> PutAssetConditionToLayersAsync(this IAssetsService operations, string layerId, AssetConditionDto assetCondition = default(AssetConditionDto), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionAddAssetConditionToLayerAsync(this IAssetsService operations, string layerId, AssetConditionDto assetCondition = default(AssetConditionDto), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PutAssetConditionToLayersWithHttpMessagesAsync(layerId, assetCondition, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionAddAssetConditionToLayerWithHttpMessagesAsync(layerId, assetCondition, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Delete asset condition Layer.
-            /// With layer we delete all link from clients to this layer
+            /// Deletes layer and links to clients.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
-            public static ErrorResponse DeleteAssetConditionToLayers(this IAssetsService operations, string layerId)
+            public static ErrorResponse AssetConditionDeleteLayer(this IAssetsService operations, string layerId)
             {
-                return operations.DeleteAssetConditionToLayersAsync(layerId).GetAwaiter().GetResult();
+                return operations.AssetConditionDeleteLayerAsync(layerId).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Delete asset condition Layer.
-            /// With layer we delete all link from clients to this layer
+            /// Deletes layer and links to clients.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> DeleteAssetConditionToLayersAsync(this IAssetsService operations, string layerId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionDeleteLayerAsync(this IAssetsService operations, string layerId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.DeleteAssetConditionToLayersWithHttpMessagesAsync(layerId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionDeleteLayerWithHttpMessagesAsync(layerId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Set asset condition Layer to client
+            /// Adds layer to client.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
-            public static ErrorResponse SetAssetConditionLayerToClient(this IAssetsService operations, string clientId, string layerId)
+            public static ErrorResponse AssetConditionAddLayerToClient(this IAssetsService operations, string clientId, string layerId)
             {
-                return operations.SetAssetConditionLayerToClientAsync(clientId, layerId).GetAwaiter().GetResult();
+                return operations.AssetConditionAddLayerToClientAsync(clientId, layerId).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Set asset condition Layer to client
+            /// Adds layer to client.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> SetAssetConditionLayerToClientAsync(this IAssetsService operations, string clientId, string layerId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionAddLayerToClientAsync(this IAssetsService operations, string clientId, string layerId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.SetAssetConditionLayerToClientWithHttpMessagesAsync(clientId, layerId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionAddLayerToClientWithHttpMessagesAsync(clientId, layerId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Remove asset condition Layer from client
+            /// Removes layer from client.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
-            public static ErrorResponse RemoveAssetConditionLayerFrom(this IAssetsService operations, string clientId, string layerId)
+            public static ErrorResponse AssetConditionRemoveLayerFromClient(this IAssetsService operations, string clientId, string layerId)
             {
-                return operations.RemoveAssetConditionLayerFromAsync(clientId, layerId).GetAwaiter().GetResult();
+                return operations.AssetConditionRemoveLayerFromClientAsync(clientId, layerId).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Remove asset condition Layer from client
+            /// Removes layer from client.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             /// <param name='layerId'>
+            /// The layer id.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> RemoveAssetConditionLayerFromAsync(this IAssetsService operations, string clientId, string layerId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionRemoveLayerFromClientAsync(this IAssetsService operations, string clientId, string layerId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.RemoveAssetConditionLayerFromWithHttpMessagesAsync(clientId, layerId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionRemoveLayerFromClientWithHttpMessagesAsync(clientId, layerId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Get asset condition Layers by Client
+            /// Gets all layers by client id with assets conditions.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
-            public static object RemoveAssetConditionLayerFrom1(this IAssetsService operations, string clientId)
+            public static object AssetConditionGetLayersByClientId(this IAssetsService operations, string clientId)
             {
-                return operations.RemoveAssetConditionLayerFrom1Async(clientId).GetAwaiter().GetResult();
+                return operations.AssetConditionGetLayersByClientIdAsync(clientId).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Get asset condition Layers by Client
+            /// Gets all layers by client id with assets conditions.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> RemoveAssetConditionLayerFrom1Async(this IAssetsService operations, string clientId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> AssetConditionGetLayersByClientIdAsync(this IAssetsService operations, string clientId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.RemoveAssetConditionLayerFrom1WithHttpMessagesAsync(clientId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionGetLayersByClientIdWithHttpMessagesAsync(clientId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

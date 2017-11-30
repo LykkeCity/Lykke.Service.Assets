@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
@@ -15,7 +14,7 @@ namespace Lykke.Service.Assets.Repositories
         private readonly INoSQLTableStorage<AssetConditionEntity> _assetConditionTable;
         private readonly INoSQLTableStorage<AssetConditionLayerEntity> _assetConditionLayerTable;
 
-        public AssetConditionLayerRepository(INoSQLTableStorage<AssetConditionEntity> assetConditionTable, 
+        public AssetConditionLayerRepository(INoSQLTableStorage<AssetConditionEntity> assetConditionTable,
             INoSQLTableStorage<AssetConditionLayerEntity> assetConditionLayerTable)
         {
             _assetConditionTable = assetConditionTable;
@@ -44,20 +43,31 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IReadOnlyList<IAssetConditionLayer>> GetByIdsAsync(IEnumerable<string> layerIds)
         {
-            var layerIdsList = layerIds.ToList();
-            var layers = await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey(), layerIdsList.Select(GetAssetConditionLayerRowKey))
-                ?? new List<AssetConditionLayerEntity>();
+            List<string> layerIdsList = layerIds.ToList();
 
-            var assetConditions = (await _assetConditionTable.GetDataAsync(layerIdsList.Select(GetAssetConditionPartitionKey))).ToList();
+            IEnumerable<AssetConditionLayerEntity> layers =
+                await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey(),
+                    layerIdsList.Select(GetAssetConditionLayerRowKey));
+
+            IList<AssetConditionEntity> assetConditions =
+                (await _assetConditionTable.GetDataAsync(layerIdsList.Select(GetAssetConditionPartitionKey)))
+                .ToList();
+
             var result = new List<AssetConditionLayerDto>();
 
-            foreach (var layer in layers)
+            foreach (AssetConditionLayerEntity layer in layers)
             {
-                var dto = new AssetConditionLayerDto(layer.Id, (decimal)layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
-                dto.Id = layer.Id;
-                dto.Description = layer.Description;
-                dto.Priority = (decimal)layer.Priority;
-                dto.AssetConditions = assetConditions.Where(e => e.Layer == layer.Id).ToDictionary(e => e.Asset, e => e as IAssetConditions);
+                var dto = new AssetConditionLayerDto
+                {
+                    Id = layer.Id,
+                    Description = layer.Description,
+                    Priority = (decimal)layer.Priority,
+                    SwiftDepositEnabled = layer.SwiftDepositEnabled,
+                    ClientsCanCashInViaBankCards = layer.ClientsCanCashInViaBankCards,
+                    AssetConditions = assetConditions.Where(e => e.Layer == layer.Id)
+                        .ToDictionary(e => e.Asset, e => e as IAssetConditions)
+                };
+
                 result.Add(dto);
             }
 
@@ -66,24 +76,32 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IReadOnlyList<IAssetConditionLayer>> GetLayerListAsync()
         {
-            var layers = await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey())
-                ?? new List<AssetConditionLayerEntity>();
+            IEnumerable<AssetConditionLayerEntity> layers =
+                await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey());
 
             var result = new List<AssetConditionLayerDto>();
-            foreach (var layer in layers)
+
+            foreach (AssetConditionLayerEntity layer in layers)
             {
-                var dto = new AssetConditionLayerDto();
-                dto.Id = layer.Id;
-                dto.Description = layer.Description;
-                dto.Priority = (decimal)layer.Priority;
+                var dto = new AssetConditionLayerDto
+                {
+                    Id = layer.Id,
+                    Description = layer.Description,
+                    Priority = (decimal) layer.Priority,
+                    SwiftDepositEnabled = layer.SwiftDepositEnabled,
+                    ClientsCanCashInViaBankCards = layer.ClientsCanCashInViaBankCards
+                };
+
                 result.Add(dto);
             }
+
             return result;
         }
 
         public async Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetConditions assetConditions)
         {
-            var entity = new AssetConditionEntity(GetAssetConditionPartitionKey(layerId), GetAssetConditionRowKey(assetConditions.Asset), 
+            var entity = new AssetConditionEntity(GetAssetConditionPartitionKey(layerId),
+                GetAssetConditionRowKey(assetConditions.Asset),
                 layerId, assetConditions.Asset, assetConditions.AvailableToClient);
 
             await _assetConditionTable.InsertOrReplaceAsync(entity);
@@ -108,8 +126,10 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task UpdateLayerAsync(IAssetConditionLayer layer)
         {
-            await _assetConditionLayerTable.ReplaceAsync(GetAssetConditionLayerPartitionKey(), GetAssetConditionLayerRowKey(layer.Id), 
-                current => current.Apply(layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled));
+            await _assetConditionLayerTable.ReplaceAsync(GetAssetConditionLayerPartitionKey(),
+                GetAssetConditionLayerRowKey(layer.Id),
+                current => current.Apply(layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards,
+                    layer.SwiftDepositEnabled));
         }
 
         public async Task DeleteLayerAsync(string layerId)
