@@ -107,9 +107,8 @@ namespace Lykke.Service.Assets.Services
             var cache = await _cacheManager.TryGetAssetForClient(clientId, isIosDevice);
             if (cache != null)
             {
-                return cache;
+                return cache; 
             }
-            
             var clientAssetIds = new List<string>();
             var clientAssetGroups =
                 (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).Where(x =>
