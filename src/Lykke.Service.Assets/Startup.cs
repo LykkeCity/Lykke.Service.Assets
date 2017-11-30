@@ -92,10 +92,24 @@ namespace Lykke.Service.Assets
 
                 _log = CreateLogWithSlack(services, settings);
 
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration;
+                    options.InstanceName = settings.CurrentValue.AssetsService.RadisSettings.InstanceName;
+                });
+
                 var builder = new ContainerBuilder();
 
                 builder.RegisterInstance(_log)
                     .As<ILog>()
+                    .SingleInstance();
+
+                builder.RegisterInstance(settings.CurrentValue.AssetsService.RadisSettings)
+                    .As<IAssetsForClientCacheManagerSettings>()
+                    .SingleInstance();
+
+                builder.RegisterType<AssetsForClientCacheManager>()
+                    .As<IAssetsForClientCacheManager>()
                     .SingleInstance();
 
                 builder.RegisterModule(new ApiModule(settings, _log));
@@ -115,7 +129,7 @@ namespace Lykke.Service.Assets
                 throw;
             }
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime appLifetime)
         {
             ConfigureAutoMapper();
