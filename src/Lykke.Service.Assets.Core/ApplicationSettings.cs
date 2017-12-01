@@ -65,7 +65,6 @@ namespace Lykke.Service.Assets.Core
         {
             public string RedisConfiguration { get; set; }
             public string InstanceName { get; set; }
-            public string AssetsForClientCacheKeyPattern { get; set; }
             public TimeSpan AssetsForClientCacheTimeSpan { get; set; }
         }
     }

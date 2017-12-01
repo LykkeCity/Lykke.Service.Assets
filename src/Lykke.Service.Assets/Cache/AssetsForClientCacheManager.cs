@@ -8,19 +8,39 @@ using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Services;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Lykke.Service.Assets.Services
+namespace Lykke.Service.Assets.Cache
 {
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
         private readonly IDistributedCache _cache;
         private readonly IAssetsForClientCacheManagerSettings _settings;
+        private readonly StackExchange.Redis.IServer _redisServer;
+        private readonly StackExchange.Redis.IDatabase _redisDatabase;
         private readonly ILog _log;
 
-        public AssetsForClientCacheManager(IDistributedCache cache, IAssetsForClientCacheManagerSettings settings, ILog log)
+        public AssetsForClientCacheManager(IDistributedCache cache, IAssetsForClientCacheManagerSettings settings,
+            StackExchange.Redis.IServer redisServer, StackExchange.Redis.IDatabase redisDatabase,
+            ILog log)
         {
             _cache = cache;
             _settings = settings;
+            _redisServer = redisServer;
+            _redisDatabase = redisDatabase;
             _log = log;
+        }
+
+        public async Task ClearCache(string reason)
+        {
+            var count = 0;
+            while(true)
+            {
+                var keys = _redisServer.Keys(pattern: _settings.InstanceName + ":Assets:Client:*", pageSize: 1000).ToArray();
+                count += keys.Length;
+                if (!keys.Any()) break;
+                await _redisDatabase.KeyDeleteAsync(keys);
+            }
+
+            await _log.WriteInfoAsync(nameof(AssetsForClientCacheManager), nameof(ClearCache), $"Clear assets cache, count of record: {count}, reason: {reason}");
         }
 
         public async Task RemoveClientFromChache(string clientId)

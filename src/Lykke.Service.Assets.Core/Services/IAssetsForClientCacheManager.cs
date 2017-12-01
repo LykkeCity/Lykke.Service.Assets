@@ -5,6 +5,7 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface IAssetsForClientCacheManager
     {
+        Task ClearCache(string reason);
         Task RemoveClientFromChache(string clientId);
 
         Task SaveAssetForClient(string clientId, bool isIosDevice, IEnumerable<string> clientAssetIds);

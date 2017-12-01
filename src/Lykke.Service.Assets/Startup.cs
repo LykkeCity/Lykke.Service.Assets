@@ -11,6 +11,7 @@ using Lykke.AzureQueueIntegration;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Logs;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Repositories;
@@ -23,6 +24,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Converters;
+using StackExchange.Redis;
 
 namespace Lykke.Service.Assets
 {
@@ -99,6 +101,20 @@ namespace Lykke.Service.Assets
                 });
 
                 var builder = new ContainerBuilder();
+
+
+                var redis = ConnectionMultiplexer.Connect(settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration);
+
+                builder.RegisterInstance(redis).SingleInstance();
+                builder.Register(
+                    c =>
+                        c.Resolve<ConnectionMultiplexer>()
+                            .GetServer(redis.GetEndPoints()[0]));
+
+                builder.Register(
+                    c =>
+                        c.Resolve<ConnectionMultiplexer>()
+                            .GetDatabase());
 
                 builder.RegisterInstance(_log)
                     .As<ILog>()

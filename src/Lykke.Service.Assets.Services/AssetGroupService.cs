@@ -51,6 +51,7 @@ namespace Lykke.Service.Assets.Services
             };
 
             await _assetGroupAssetLinkRepository.AddAsync(assetGroupAssetLink);
+            await _cacheManager.ClearCache($"AddAssetToGroupAsync {groupName}, {assetId}");
         }
 
         // TODO: Obsolete
@@ -62,7 +63,6 @@ namespace Lykke.Service.Assets.Services
         public async Task AddClientToGroupOrReplaceAsync(string clientId, string groupName)
         {
             await AddClientToGroupAsync(clientId, groupName, true);
-            await _cacheManager.RemoveClientFromChache(clientId);
         }
 
         public async Task<IAssetGroup> AddGroupAsync(IAssetGroup group)
@@ -109,6 +109,7 @@ namespace Lykke.Service.Assets.Services
             {
                 return cache; 
             }
+
             var clientAssetIds = new List<string>();
             var clientAssetGroups =
                 (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).Where(x =>
@@ -151,6 +152,7 @@ namespace Lykke.Service.Assets.Services
         public async Task RemoveAssetFromGroupAsync(string assetId, string groupName)
         {
             await _assetGroupAssetLinkRepository.RemoveAsync(assetId, groupName);
+            await _cacheManager.ClearCache($"RemoveAssetFromGroupAsync {groupName}, {assetId}");
         }
 
         public async Task RemoveClientFromGroupAsync(string clientId, string groupName)
@@ -175,6 +177,7 @@ namespace Lykke.Service.Assets.Services
             }
 
             await _assetGroupRepository.RemoveAsync(groupName);
+            await _cacheManager.ClearCache($"RemoveGroupAsync {groupName}");
         }
 
         public async Task<bool> SwiftDepositEnabledAsync(string clientId, bool isIosDevice)
@@ -216,6 +219,8 @@ namespace Lykke.Service.Assets.Services
             }
 
             await _assetGroupRepository.UpdateAsync(group);
+
+            await _cacheManager.ClearCache($"UpdateGroupAsync {group.Name}");
         }
 
         private async Task AddClientToGroupAsync(string clientId, string groupName, bool replace)
@@ -250,6 +255,10 @@ namespace Lykke.Service.Assets.Services
                 await _clientAssetGroupLinkRepository.AddAsync(assetClientGroupLink);
                 await _assetGroupClientLinkRepository.AddAsync(assetGroupClientLink);
             }
+
+            await _cacheManager.RemoveClientFromChache(clientId);
+
+            await _cacheManager.RemoveClientFromChache(clientId);
         }
     }
 }
