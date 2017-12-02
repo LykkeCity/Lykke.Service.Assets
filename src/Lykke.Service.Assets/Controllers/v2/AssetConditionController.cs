@@ -142,6 +142,11 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Asset condition layer id required"));
             }
 
+            if (!this.ValidateKey(assetConditionLayer.Id))
+            {
+                return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {assetConditionLayer.Id}"));
+            }
+
             IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { assetConditionLayer.Id })).FirstOrDefault();
 
             if (layer != null)
@@ -232,6 +237,16 @@ namespace Lykke.Service.Assets.Controllers.V2
             if (string.IsNullOrEmpty(clientId))
             {
                 return BadRequest(ErrorResponse.Create("Client id required"));
+            }
+
+            if (!this.ValidateKey(clientId))
+            {
+                return BadRequest(ErrorResponse.Create($"Incorect clientId: {clientId}"));
+            }
+
+            if (!this.ValidateKey(layerId))
+            {
+                return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {layerId}"));
             }
 
             IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { layerId }))
