@@ -239,11 +239,6 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Client id required"));
             }
 
-            if (!this.ValidateKey(clientId))
-            {
-                return BadRequest(ErrorResponse.Create($"Incorect clientId: {clientId}"));
-            }
-
             if (!this.ValidateKey(layerId))
             {
                 return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {layerId}"));
