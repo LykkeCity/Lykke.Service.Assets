@@ -50,6 +50,12 @@ namespace Lykke.Service.Assets.Repositories
             var marginIssuerTable        = CreateTable<MarginIssuerEntity>(DictionariesConnectionString, assetIssuerTableName);
             var predefinedWatchListTable = CreateTable<PredefinedWatchListEntity>(DictionariesConnectionString, watchListTableName);
 
+            var assetConditionTable      = CreateTable<AssetConditionEntity>(DictionariesConnectionString, "AssetConditionLayer");
+            var assetConditionLayerTable = CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, "AssetConditionLayer");
+            var assetConditionLayerLinkClientTable = 
+                CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, "AssetCondition");
+            
+
             builder.RegisterInstance<IAssetAttributeRepository>
                 (new AssetAttributeRepository(assetAttributeTable));
 
@@ -100,6 +106,12 @@ namespace Lykke.Service.Assets.Repositories
 
             builder.RegisterInstance<IPredefinedWatchListRepository>
                 (new PredefinedWatchListRepository(predefinedWatchListTable));
+
+            builder.RegisterInstance<IAssetConditionLayerRepository>(
+                new AssetConditionLayerRepository(assetConditionTable, assetConditionLayerTable));
+
+            builder.RegisterInstance<IAssetConditionLayerLinkClientRepository>(
+                new AssetConditionLayerLinkClientRepository(assetConditionLayerLinkClientTable));
         }
 
         private INoSQLTableStorage<T> CreateTable<T>(Func<ApplicationSettings, string> connectionString, string name)

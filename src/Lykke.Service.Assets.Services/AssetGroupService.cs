@@ -15,15 +15,18 @@ namespace Lykke.Service.Assets.Services
         private readonly IClientAssetGroupLinkRepository _clientAssetGroupLinkRepository;
         private readonly IAssetGroupClientLinkRepository _assetGroupClientLinkRepository;
         private readonly IAssetGroupRepository           _assetGroupRepository;
+        private readonly IAssetConditionService          _assetConditionService;
 
 
         public AssetGroupService(
             IClientAssetGroupLinkRepository clientAssetGroupLinkRepository,
             IAssetGroupClientLinkRepository assetGroupClientLinkRepository,
             IAssetGroupAssetLinkRepository  assetGroupAssetLinkRepository,
-            IAssetGroupRepository           assetGroupRepository)
+            IAssetGroupRepository           assetGroupRepository, 
+            IAssetConditionService          assetConditionService)
         {
             _assetGroupRepository           = assetGroupRepository;
+            _assetConditionService = assetConditionService;
             _clientAssetGroupLinkRepository = clientAssetGroupLinkRepository;
             _assetGroupClientLinkRepository = assetGroupClientLinkRepository;
             _assetGroupAssetLinkRepository  = assetGroupAssetLinkRepository;
@@ -68,11 +71,15 @@ namespace Lykke.Service.Assets.Services
         {
             var assetGroups = (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).ToArray();
 
-            var cashInViaBankCardsEnabledForDeviceInAnyGroup = assetGroups.Any(x => x.ClientsCanCashInViaBankCards && x.IsIosDevice == isIosDevice);
+            var cashInViaBankCardsEnableForDeviceInAnyGroup = assetGroups.Any(x => x.ClientsCanCashInViaBankCards && x.IsIosDevice == isIosDevice);
             var clientDeviceNotAssignedToAnyGroup            = assetGroups.All(x => x.IsIosDevice != isIosDevice);
 
-            return cashInViaBankCardsEnabledForDeviceInAnyGroup
-                || clientDeviceNotAssignedToAnyGroup;
+            var conditions = await _assetConditionService.GetAssetConditionsLayerSettingsByClient(clientId);
+            var conditionLayerCashInViaBankCardEnabled = conditions.SwiftDepositEnabled ?? true;
+
+            return
+                conditionLayerCashInViaBankCardEnabled && 
+                (cashInViaBankCardsEnableForDeviceInAnyGroup || clientDeviceNotAssignedToAnyGroup);
         }
 
         public async Task<IEnumerable<IAssetGroup>> GetAllGroupsAsync()
@@ -91,6 +98,10 @@ namespace Lykke.Service.Assets.Services
 
                 clientAssetIds.AddRange(groupAssetIds);
             }
+
+            var conditions = await _assetConditionService.GetAssetConditionsByClient(clientId);
+
+            clientAssetIds = clientAssetIds.Where(e => !conditions.ContainsKey(e) || (conditions[e].AvailableToClient ?? true)).ToList();
 
             return clientAssetIds;
         }
@@ -146,8 +157,12 @@ namespace Lykke.Service.Assets.Services
             var swiftDepositEnabledForDeviceInAnyGroup = assetGroups.Any(x => x.SwiftDepositEnabled && x.IsIosDevice == isIosDevice);
             var clientDeviceNotAssignedToAnyGroup      = assetGroups.All(x => x.IsIosDevice != isIosDevice);
 
-            return swiftDepositEnabledForDeviceInAnyGroup
-                || clientDeviceNotAssignedToAnyGroup;
+            var conditions = await _assetConditionService.GetAssetConditionsLayerSettingsByClient(clientId);
+            var conditionLayerSwiftDepositEnabled = conditions.SwiftDepositEnabled ?? true;
+
+            return
+                conditionLayerSwiftDepositEnabled &&
+                (swiftDepositEnabledForDeviceInAnyGroup || clientDeviceNotAssignedToAnyGroup);
         }
 
         public async Task UpdateGroupAsync(IAssetGroup group)

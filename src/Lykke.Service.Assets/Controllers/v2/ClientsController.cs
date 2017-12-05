@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Services;
@@ -25,7 +26,6 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetAssetIds(string clientId, [FromQuery] bool isIosDevice)
         {
             var assetIds = await _assetGroupService.GetAssetIdsForClient(clientId, isIosDevice);
-
             return Ok(assetIds);
         }
 
