@@ -19,7 +19,7 @@ namespace Lykke.Service.Assets.Responses.V2
 
         public AssetConditionLayerDto(string id, decimal priority, string description,
             bool? clientsCanCashInViaBankCards, bool? swiftDepositEnabled,
-            IReadOnlyDictionary<string, IAssetConditions> assetConditions)
+            IReadOnlyDictionary<string, IAssetCondition> assetConditions)
             : this(id, priority, description, clientsCanCashInViaBankCards, swiftDepositEnabled)
         {
             AssetConditions = assetConditions.Values.Select(e => new AssetConditionDto(e.Asset, e.AvailableToClient)).ToList();
@@ -37,7 +37,7 @@ namespace Lykke.Service.Assets.Responses.V2
         public bool? SwiftDepositEnabled { get; set; }
         public List<AssetConditionDto> AssetConditions { get; set; }
 
-        IReadOnlyDictionary<string, IAssetConditions> IAssetConditionLayer.AssetConditions
-            => AssetConditions.ToDictionary(e => e.Asset, e => (IAssetConditions)e);
+        IReadOnlyDictionary<string, IAssetCondition> IAssetConditionLayer.AssetConditions
+            => AssetConditions.ToDictionary(e => e.Asset, e => (IAssetCondition)e);
     }
 }

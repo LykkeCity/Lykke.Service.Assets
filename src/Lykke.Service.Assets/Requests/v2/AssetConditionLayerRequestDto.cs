@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Lykke.Service.Assets.Core.Domain;
 
-namespace Lykke.Service.Assets.Requests.v2
+namespace Lykke.Service.Assets.Requests.V2
 {
     public class AssetConditionLayerRequestDto : IAssetConditionLayer
     {
@@ -25,7 +25,7 @@ namespace Lykke.Service.Assets.Requests.v2
         public bool? ClientsCanCashInViaBankCards { get; set; }
         public bool? SwiftDepositEnabled { get; set; }
 
-        IReadOnlyDictionary<string, IAssetConditions> IAssetConditionLayer.AssetConditions
-            => new Dictionary<string, IAssetConditions>();
+        IReadOnlyDictionary<string, IAssetCondition> IAssetConditionLayer.AssetConditions
+            => new Dictionary<string, IAssetCondition>();
     }
 }

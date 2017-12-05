@@ -65,7 +65,7 @@ namespace Lykke.Service.Assets.Repositories
                     SwiftDepositEnabled = layer.SwiftDepositEnabled,
                     ClientsCanCashInViaBankCards = layer.ClientsCanCashInViaBankCards,
                     AssetConditions = assetConditions.Where(e => e.Layer == layer.Id)
-                        .ToDictionary(e => e.Asset, e => e as IAssetConditions)
+                        .ToDictionary(e => e.Asset, e => e as IAssetCondition)
                 };
 
                 result.Add(dto);
@@ -98,11 +98,11 @@ namespace Lykke.Service.Assets.Repositories
             return result;
         }
 
-        public async Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetConditions assetConditions)
+        public async Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetCondition assetCondition)
         {
             var entity = new AssetConditionEntity(GetAssetConditionPartitionKey(layerId),
-                GetAssetConditionRowKey(assetConditions.Asset),
-                layerId, assetConditions.Asset, assetConditions.AvailableToClient);
+                GetAssetConditionRowKey(assetCondition.Asset),
+                layerId, assetCondition.Asset, assetCondition.AvailableToClient);
 
             await _assetConditionTable.InsertOrReplaceAsync(entity);
         }

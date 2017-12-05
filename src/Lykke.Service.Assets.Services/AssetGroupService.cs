@@ -22,7 +22,8 @@ namespace Lykke.Service.Assets.Services
             IClientAssetGroupLinkRepository clientAssetGroupLinkRepository,
             IAssetGroupClientLinkRepository assetGroupClientLinkRepository,
             IAssetGroupAssetLinkRepository  assetGroupAssetLinkRepository,
-            IAssetGroupRepository           assetGroupRepository, IAssetConditionService assetConditionService)
+            IAssetGroupRepository           assetGroupRepository, 
+            IAssetConditionService          assetConditionService)
         {
             _assetGroupRepository           = assetGroupRepository;
             _assetConditionService = assetConditionService;

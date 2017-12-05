@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetConditionEntity : TableEntity, IAssetConditions
+    public class AssetConditionEntity : TableEntity, IAssetCondition
     {
         public AssetConditionEntity(string partitionKey, string rowKey, 
             string layer, string asset, bool? availableToClient) : base(partitionKey, rowKey)

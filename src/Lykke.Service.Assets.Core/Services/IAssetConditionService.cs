@@ -15,7 +15,7 @@ namespace Lykke.Service.Assets.Core.Services
         /// </summary>
         /// <param name="clientId">client identity</param>
         /// <returns>Dictionary by asset with asset conditions state</returns>
-        Task<IReadOnlyDictionary<string, IAssetConditions>> GetAssetConditionsByClient(string clientId);
+        Task<IReadOnlyDictionary<string, IAssetCondition>> GetAssetConditionsByClient(string clientId);
 
         /// <summary>
         /// Get actual asset conditions settings for all assets for client.

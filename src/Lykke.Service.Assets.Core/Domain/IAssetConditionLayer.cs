@@ -19,7 +19,7 @@ namespace Lykke.Service.Assets.Core.Domain
         /// Key - asset
         /// Valuet - asset conditions
         /// </summary>
-        IReadOnlyDictionary<string, IAssetConditions> AssetConditions { get; }
+        IReadOnlyDictionary<string, IAssetCondition> AssetConditions { get; }
 
         /// <summary>
         /// Prioryty of layer.

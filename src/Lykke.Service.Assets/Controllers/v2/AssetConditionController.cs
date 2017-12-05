@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
-using Lykke.Service.Assets.Requests.v2;
+using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;

@@ -13,22 +13,20 @@ namespace Lykke.Service.Assets.Services
     {
         private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
         private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
-        private readonly ILog _log;
 
         public AssetConditionService(IAssetConditionLayerRepository assetConditionLayerRepository, 
-            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository, ILog log)
+            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
             _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
-            _log = log;
         }
 
-        public async Task<IReadOnlyDictionary<string, IAssetConditions>> GetAssetConditionsByClient(string clientId)
+        public async Task<IReadOnlyDictionary<string, IAssetCondition>> GetAssetConditionsByClient(string clientId)
         {
             var layersIds = await _assetConditionLayerLinkClientRepository.GetAllLayersByClientAsync(clientId);
             var layers = await _assetConditionLayerRepository.GetByIdsAsync(layersIds);
 
-            var result = new Dictionary<string, AssetConditions>();
+            var result = new Dictionary<string, AssetCondition>();
 
             foreach (var layer in layers.OrderBy(e => e.Priority))
             {
@@ -36,14 +34,14 @@ namespace Lykke.Service.Assets.Services
                 {
                     if (!result.TryGetValue(condition.Key, out var value))
                     {
-                        value = new AssetConditions(condition.Key);
+                        value = new AssetCondition(condition.Key);
                         result[condition.Key] = value;
                     }
                     value.Apply(condition.Value);
                 }
             }
 
-            return result.ToDictionary(e => e.Key, e => e.Value as IAssetConditions);
+            return result.ToDictionary(e => e.Key, e => e.Value as IAssetCondition);
         }
 
         public async Task<IAssetConditionLayerSettings> GetAssetConditionsLayerSettingsByClient(string clientId)

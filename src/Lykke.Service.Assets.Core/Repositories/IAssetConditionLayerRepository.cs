@@ -8,7 +8,7 @@ namespace Lykke.Service.Assets.Core.Repositories
     {
         Task<IReadOnlyList<IAssetConditionLayer>> GetByIdsAsync(IEnumerable<string> layerIds);
         Task<IReadOnlyList<IAssetConditionLayer>> GetLayerListAsync();
-        Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetConditions assetConditions);
+        Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetCondition assetCondition);
         Task InsetLayerAsync(IAssetConditionLayer layer);
         Task UpdateLayerAsync(IAssetConditionLayer layer);
         Task DeleteLayerAsync(string layerId);

@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 
-namespace Lykke.Service.Assets.Repositories
+namespace Lykke.Service.Assets.Repositories.Entities
 {
     public class AssetConditionLayerLinkClientEntity : TableEntity
     {
