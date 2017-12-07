@@ -49,7 +49,9 @@ namespace Lykke.Service.Assets.Cache
             {
                 await _cache.RemoveAsync(GetKeyAvailableAssets(clientId, true));
                 await _cache.RemoveAsync(GetKeyAvailableAssets(clientId, false));
+                await _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, true));
                 await _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, false));
+                await _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, true));
                 await _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, false));
             }
             catch (Exception ex)
