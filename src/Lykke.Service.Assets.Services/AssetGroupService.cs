@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets.Services
             IClientAssetGroupLinkRepository clientAssetGroupLinkRepository,
             IAssetGroupClientLinkRepository assetGroupClientLinkRepository,
             IAssetGroupAssetLinkRepository  assetGroupAssetLinkRepository,
-            IAssetsForClientCacheManager    cacheManager
+            IAssetsForClientCacheManager    cacheManager,
             IAssetGroupRepository           assetGroupRepository, 
             IAssetConditionService          assetConditionService)
         {
