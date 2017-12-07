@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.V2;
@@ -18,15 +19,18 @@ namespace Lykke.Service.Assets.Controllers.V2
         private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
+        private readonly IAssetsForClientCacheManager _cacheManager;
 
         public AssetConditionsController(
             IAssetConditionLayerRepository assetConditionLayerRepository,
             IAssetRepository assetRepository,
-            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository)
+            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository,
+            IAssetsForClientCacheManager cacheManager)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
             _assetRepository = assetRepository;
             _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -113,6 +117,8 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayer(layer.Id, assetCondition);
 
+            await _cacheManager.ClearCache("AddAssetConditionToLayerAsync");
+
             return NoContent();
         }
 
@@ -192,6 +198,8 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             await _assetConditionLayerRepository.UpdateLayerAsync(assetConditionLayer);
 
+            await _cacheManager.ClearCache("UpdateLayerAsync");
+
             return NoContent();
         }
 
@@ -215,6 +223,8 @@ namespace Lykke.Service.Assets.Controllers.V2
             await _assetConditionLayerLinkClientRepository.RemoveLayerFromClientsAsync(layerId);
 
             await _assetConditionLayerRepository.DeleteLayerAsync(layerId);
+
+            await _cacheManager.ClearCache("DeleteLayerAsync");
 
             return NoContent();
         }
@@ -254,6 +264,8 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             await _assetConditionLayerLinkClientRepository.AddAsync(clientId, layer.Id);
 
+            await _cacheManager.RemoveClientFromChache(clientId);
+
             return NoContent();
         }
 
@@ -281,6 +293,8 @@ namespace Lykke.Service.Assets.Controllers.V2
             }
 
             await _assetConditionLayerLinkClientRepository.RemoveAsync(clientId, layerId);
+
+            await _cacheManager.RemoveClientFromChache(clientId);
 
             return NoContent();
         }
