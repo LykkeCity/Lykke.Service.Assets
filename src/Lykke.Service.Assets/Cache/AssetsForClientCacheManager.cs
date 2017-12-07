@@ -18,8 +18,11 @@ namespace Lykke.Service.Assets.Cache
         private readonly StackExchange.Redis.IDatabase _redisDatabase;
         private readonly ILog _log;
 
-        public AssetsForClientCacheManager(IDistributedCache cache, IAssetsForClientCacheManagerSettings settings,
-            StackExchange.Redis.IServer redisServer, StackExchange.Redis.IDatabase redisDatabase,
+        public AssetsForClientCacheManager(
+            IDistributedCache cache, 
+            IAssetsForClientCacheManagerSettings settings,
+            StackExchange.Redis.IServer redisServer, 
+            StackExchange.Redis.IDatabase redisDatabase,
             ILog log)
         {
             _cache = cache;
@@ -99,7 +102,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception ex)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveCashInViaBankCardEnabledForClient), clientId, ex);
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveSwiftDepositEnabledForClient), clientId, ex);
             }
         }
 
@@ -115,7 +118,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception ex)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveCashInViaBankCardEnabledForClient), clientId, ex);
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetAssetForClient), clientId, ex);
             }
             return null;
         }
@@ -132,7 +135,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception ex)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveCashInViaBankCardEnabledForClient), clientId, ex);
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetSaveCashInViaBankCardEnabledForClient), clientId, ex);
             }
             return null;
         }
@@ -149,7 +152,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception ex)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveCashInViaBankCardEnabledForClient), clientId, ex);
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetSaveSwiftDepositEnabledForClient), clientId, ex);
             }
             return null;
         }

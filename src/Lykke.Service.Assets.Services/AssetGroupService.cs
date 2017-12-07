@@ -257,8 +257,6 @@ namespace Lykke.Service.Assets.Services
             }
 
             await _cacheManager.RemoveClientFromChache(clientId);
-
-            await _cacheManager.RemoveClientFromChache(clientId);
         }
     }
 }

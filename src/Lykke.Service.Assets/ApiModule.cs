@@ -3,9 +3,11 @@ using Common.Log;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.SettingsReader;
+using StackExchange.Redis;
 
 namespace Lykke.Service.Assets
 {
@@ -34,6 +36,12 @@ namespace Lykke.Service.Assets
             RegisterCache<IAssetPair>(builder, "AssetPairs");
             RegisterCache<IErc20Token>(builder, "Erc20Tokens");
 
+            RegisterRedis(builder);
+
+            builder.RegisterInstance(_log)
+                .As<ILog>()
+                .SingleInstance();
+
             builder
                .RegisterType<Erc20TokenManager>()
                .As<IErc20TokenManager>()
@@ -60,6 +68,30 @@ namespace Lykke.Service.Assets
                 .SingleInstance();
 
             RegisterRabbitMqSubscribers(builder);
+
+            builder.RegisterInstance(_settings.CurrentValue.AssetsService.RadisSettings)
+                .As<IAssetsForClientCacheManagerSettings>()
+                .SingleInstance();
+
+            builder.RegisterType<AssetsForClientCacheManager>()
+                .As<IAssetsForClientCacheManager>()
+                .SingleInstance();
+        }
+
+        private void RegisterRedis(ContainerBuilder builder)
+        {
+            var redis = ConnectionMultiplexer.Connect(_settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration);
+
+            builder.RegisterInstance(redis).SingleInstance();
+            builder.Register(
+                c =>
+                    c.Resolve<ConnectionMultiplexer>()
+                        .GetServer(redis.GetEndPoints()[0]));
+
+            builder.Register(
+                c =>
+                    c.Resolve<ConnectionMultiplexer>()
+                        .GetDatabase());
         }
 
         private void RegisterRabbitMqSubscribers(ContainerBuilder builder)
