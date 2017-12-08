@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 
@@ -12,12 +13,15 @@ namespace Lykke.Service.Assets.Controllers.V2
     public class ClientsController : Controller
     {
         private readonly IAssetGroupService _assetGroupService;
+        private readonly IAssetConditionService _assetConditionService;
 
 
         public ClientsController(
-            IAssetGroupService assetGroupService)
+            IAssetGroupService assetGroupService,
+            IAssetConditionService assetConditionService)
         {
             _assetGroupService = assetGroupService;
+            _assetConditionService = assetConditionService;
         }
 
         [HttpGet("{clientId}/asset-ids")]
@@ -47,6 +51,17 @@ namespace Lykke.Service.Assets.Controllers.V2
             var result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
+        }
+
+        [HttpGet("{clientId}/asset-conditions")]
+        [SwaggerOperation("ClientGetAssetConditions")]
+        [ProducesResponseType(typeof(IEnumerable<AssetConditionDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAssetConditions(string clientId)
+        {
+            IReadOnlyDictionary<string, IAssetCondition> result =
+                await _assetConditionService.GetAssetConditionsByClient(clientId);
+
+            return Ok(result.Values);
         }
     }
 }

@@ -14,31 +14,12 @@ namespace Lykke.Service.Assets.Repositories
         private readonly INoSQLTableStorage<AssetConditionEntity> _assetConditionTable;
         private readonly INoSQLTableStorage<AssetConditionLayerEntity> _assetConditionLayerTable;
 
-        public AssetConditionLayerRepository(INoSQLTableStorage<AssetConditionEntity> assetConditionTable,
+        public AssetConditionLayerRepository(
+            INoSQLTableStorage<AssetConditionEntity> assetConditionTable,
             INoSQLTableStorage<AssetConditionLayerEntity> assetConditionLayerTable)
         {
             _assetConditionTable = assetConditionTable;
             _assetConditionLayerTable = assetConditionLayerTable;
-        }
-
-        public static string GetAssetConditionLayerPartitionKey()
-        {
-            return "ConditionLayer";
-        }
-
-        public static string GetAssetConditionLayerRowKey(string layerId)
-        {
-            return layerId;
-        }
-
-        public static string GetAssetConditionPartitionKey(string layerId)
-        {
-            return $"Condition_{layerId}";
-        }
-
-        public static string GetAssetConditionRowKey(string asset)
-        {
-            return asset;
         }
 
         public async Task<IReadOnlyList<IAssetConditionLayer>> GetByIdsAsync(IEnumerable<string> layerIds)
@@ -100,18 +81,26 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetCondition assetCondition)
         {
-            var entity = new AssetConditionEntity(GetAssetConditionPartitionKey(layerId),
+            var entity = new AssetConditionEntity(
+                GetAssetConditionPartitionKey(layerId),
                 GetAssetConditionRowKey(assetCondition.Asset),
-                layerId, assetCondition.Asset, assetCondition.AvailableToClient);
+                layerId,
+                assetCondition.Asset,
+                assetCondition.AvailableToClient,
+                assetCondition.Regulation);
 
             await _assetConditionTable.InsertOrReplaceAsync(entity);
         }
 
         public async Task InsetLayerAsync(IAssetConditionLayer layer)
         {
-            var entity = new AssetConditionLayerEntity(GetAssetConditionLayerPartitionKey(),
+            var entity = new AssetConditionLayerEntity(
+                GetAssetConditionLayerPartitionKey(),
                 GetAssetConditionLayerRowKey(layer.Id.Trim().ToLower()),
-                layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled);
+                layer.Priority,
+                layer.Description,
+                layer.ClientsCanCashInViaBankCards,
+                layer.SwiftDepositEnabled);
 
             await _assetConditionLayerTable.InsertAsync(entity);
 
@@ -139,6 +128,26 @@ namespace Lykke.Service.Assets.Repositories
 
             await _assetConditionLayerTable.DeleteAsync(GetAssetConditionLayerPartitionKey(),
                 GetAssetConditionLayerRowKey(layerId));
+        }
+        
+        private static string GetAssetConditionLayerPartitionKey()
+        {
+            return "ConditionLayer";
+        }
+
+        private static string GetAssetConditionLayerRowKey(string layerId)
+        {
+            return layerId;
+        }
+
+        private static string GetAssetConditionPartitionKey(string layerId)
+        {
+            return $"Condition_{layerId}";
+        }
+
+        private static string GetAssetConditionRowKey(string asset)
+        {
+            return asset;
         }
     }
 }

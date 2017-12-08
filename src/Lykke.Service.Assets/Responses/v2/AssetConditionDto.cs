@@ -16,5 +16,6 @@ namespace Lykke.Service.Assets.Responses.V2
 
         public string Asset { get; set; }
         public bool? AvailableToClient { get; set; }
+        public string Regulation { get; set; }
     }
 }
