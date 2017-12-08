@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Client", "4. Client", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets.Client", "client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj", "{747B8280-19C3-44F9-8B27-BB24CD1420A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.Services.Tests", "Lykke.Service.Assets.Services.Tests\Lykke.Service.Assets.Services.Tests.csproj", "{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.Services.Tests", "tests\Lykke.Service.Assets.Services.Tests\Lykke.Service.Assets.Services.Tests.csproj", "{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
