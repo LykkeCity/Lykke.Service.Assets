@@ -4,14 +4,15 @@ namespace Lykke.Service.Assets.Responses.V2
 {
     public class AssetConditionDto : IAssetCondition
     {
-        public AssetConditionDto(string asset, bool? availableToClient)
+        public AssetConditionDto()
+        {
+        }
+
+        public AssetConditionDto(string asset, bool? availableToClient, string regulation)
         {
             Asset = asset;
             AvailableToClient = availableToClient;
-        }
-
-        public AssetConditionDto()
-        {
+            Regulation = regulation;
         }
 
         public string Asset { get; set; }

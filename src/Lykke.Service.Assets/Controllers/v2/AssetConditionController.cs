@@ -115,9 +115,73 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
             }
 
-            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayer(layer.Id, assetCondition);
+            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayerAsync(layer.Id, assetCondition);
 
             await _cacheManager.ClearCache("AddAssetConditionToLayerAsync");
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Updates asset condition.
+        /// </summary>
+        /// <param name="layerId">The layer id.</param>
+        /// <param name="assetCondition">The model that describes asset condition.</param>
+        /// <response code="204">Asset condition successfully updated.</response>
+        /// <response code="400">Invalid model.</response>
+        /// <response code="404">Layer or asset not found.</response>
+        [HttpPut("layer/{layerId}/asset/conditions")]
+        [SwaggerOperation("AssetConditionUpdateAssetCondition")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateAssetConditionAsync(string layerId, [FromBody] AssetConditionDto assetCondition)
+        {
+            if (assetCondition == null)
+            {
+                return BadRequest(ErrorResponse.Create("Asset condition required"));
+            }
+
+            if (string.IsNullOrEmpty(assetCondition.Asset))
+            {
+                return BadRequest(ErrorResponse.Create("Asset required"));
+            }
+
+            IAsset asset = await _assetRepository.GetAsync(assetCondition.Asset);
+
+            if (asset == null)
+            {
+                return NotFound(ErrorResponse.Create($"asset '{assetCondition.Asset} not found"));
+            }
+
+            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { layerId })).FirstOrDefault();
+
+            if (layer == null)
+            {
+                return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
+            }
+
+            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayerAsync(layer.Id, assetCondition);
+
+            await _cacheManager.ClearCache("UpdateAssetConditionAsync");
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes asset condition.
+        /// </summary>
+        /// <param name="layerId">The layer id.</param>
+        /// <param name="asset">The asset.</param>
+        /// <response code="204">Asset condition successfully updated.</response>
+        [HttpDelete("layer/{layerId}/asset/{asset}")]
+        [SwaggerOperation("AssetConditionDeleteAssetCondition")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> DeleteAssetConditionAsync(string layerId, string asset)
+        {
+            await _assetConditionLayerRepository.DeleteAssetConditionsAsync(layerId, asset);
+
+            await _cacheManager.ClearCache("DeleteAssetConditionAsync");
 
             return NoContent();
         }

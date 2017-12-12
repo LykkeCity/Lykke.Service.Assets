@@ -79,7 +79,7 @@ namespace Lykke.Service.Assets.Repositories
             return result;
         }
 
-        public async Task InsertOrUpdateAssetConditionsToLayer(string layerId, IAssetCondition assetCondition)
+        public async Task InsertOrUpdateAssetConditionsToLayerAsync(string layerId, IAssetCondition assetCondition)
         {
             var entity = new AssetConditionEntity(
                 GetAssetConditionPartitionKey(layerId),
@@ -90,6 +90,11 @@ namespace Lykke.Service.Assets.Repositories
                 assetCondition.Regulation);
 
             await _assetConditionTable.InsertOrReplaceAsync(entity);
+        }
+
+        public async Task DeleteAssetConditionsAsync(string layerId, string asset)
+        {
+            await _assetConditionTable.DeleteAsync(GetAssetConditionPartitionKey(layerId), GetAssetConditionRowKey(asset));
         }
 
         public async Task InsetLayerAsync(IAssetConditionLayer layer)
@@ -108,7 +113,7 @@ namespace Lykke.Service.Assets.Repositories
             {
                 foreach (var assetCondition in layer.AssetConditions.Values)
                 {
-                    await InsertOrUpdateAssetConditionsToLayer(layer.Id, assetCondition);
+                    await InsertOrUpdateAssetConditionsToLayerAsync(layer.Id, assetCondition);
                 }
             }
         }

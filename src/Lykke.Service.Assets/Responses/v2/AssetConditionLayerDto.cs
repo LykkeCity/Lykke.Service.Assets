@@ -22,7 +22,7 @@ namespace Lykke.Service.Assets.Responses.V2
             IReadOnlyDictionary<string, IAssetCondition> assetConditions)
             : this(id, priority, description, clientsCanCashInViaBankCards, swiftDepositEnabled)
         {
-            AssetConditions = assetConditions.Values.Select(e => new AssetConditionDto(e.Asset, e.AvailableToClient)).ToList();
+            AssetConditions = assetConditions.Values.Select(e => new AssetConditionDto(e.Asset, e.AvailableToClient, e.Regulation)).ToList();
         }
 
         public AssetConditionLayerDto()
