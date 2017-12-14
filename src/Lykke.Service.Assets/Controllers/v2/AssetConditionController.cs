@@ -403,7 +403,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         /// <response code="200">The model that describes default layer.</response>
         /// <response code="400">Invalid model.</response>
         [HttpGet("layer/default")]
-        [SwaggerOperation("AssetConditionUpdateDefaultLayer")]
+        [SwaggerOperation("AssetConditionGetDefaultLayer")]
         [ProducesResponseType(typeof(AssetConditionDefaultLayerDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDefaultLayerAsync()
         {

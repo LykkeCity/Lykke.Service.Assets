@@ -2822,7 +2822,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<AssetConditionDefaultLayerDto>> AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<AssetConditionDefaultLayerDto>> AssetConditionGetDefaultLayerWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2832,7 +2832,7 @@ namespace Lykke.Service.Assets.Client
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionUpdateDefaultLayer", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionGetDefaultLayer", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2945,7 +2945,7 @@ namespace Lykke.Service.Assets.Client
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateDefaultLayer1WithHttpMessagesAsync(AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2956,7 +2956,7 @@ namespace Lykke.Service.Assets.Client
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("model", model);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionUpdateDefaultLayer1", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "AssetConditionUpdateDefaultLayer", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -15710,7 +15710,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<AssetConditionDefaultLayerDto>> AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<AssetConditionDefaultLayerDto>> AssetConditionGetDefaultLayerWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates default asset conditions layer.
@@ -15724,7 +15724,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateDefaultLayer1WithHttpMessagesAsync(AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -17775,9 +17775,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static AssetConditionDefaultLayerDto AssetConditionUpdateDefaultLayer(this IAssetsService operations)
+            public static AssetConditionDefaultLayerDto AssetConditionGetDefaultLayer(this IAssetsService operations)
             {
-                return operations.AssetConditionUpdateDefaultLayerAsync().GetAwaiter().GetResult();
+                return operations.AssetConditionGetDefaultLayerAsync().GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -17789,9 +17789,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<AssetConditionDefaultLayerDto> AssetConditionUpdateDefaultLayerAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<AssetConditionDefaultLayerDto> AssetConditionGetDefaultLayerAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionGetDefaultLayerWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -17806,9 +17806,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='model'>
             /// The model that describes default layer.
             /// </param>
-            public static ErrorResponse AssetConditionUpdateDefaultLayer1(this IAssetsService operations, AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto))
+            public static ErrorResponse AssetConditionUpdateDefaultLayer(this IAssetsService operations, AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto))
             {
-                return operations.AssetConditionUpdateDefaultLayer1Async(model).GetAwaiter().GetResult();
+                return operations.AssetConditionUpdateDefaultLayerAsync(model).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -17823,9 +17823,9 @@ namespace Lykke.Service.Assets.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> AssetConditionUpdateDefaultLayer1Async(this IAssetsService operations, AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AssetConditionUpdateDefaultLayerAsync(this IAssetsService operations, AssetConditionDefaultLayerDto model = default(AssetConditionDefaultLayerDto), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.AssetConditionUpdateDefaultLayer1WithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
