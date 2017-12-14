@@ -7,6 +7,7 @@ using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses;
+using Lykke.Service.Assets.Responses.v2;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
@@ -19,17 +20,20 @@ namespace Lykke.Service.Assets.Controllers.V2
         private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
+        private readonly IAssetConditionDefaultLayerService _assetConditionDefaultLayerService;
         private readonly IAssetsForClientCacheManager _cacheManager;
 
         public AssetConditionsController(
             IAssetConditionLayerRepository assetConditionLayerRepository,
             IAssetRepository assetRepository,
             IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository,
+            IAssetConditionDefaultLayerService assetConditionDefaultLayerService,
             IAssetsForClientCacheManager cacheManager)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
             _assetRepository = assetRepository;
             _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
+            _assetConditionDefaultLayerService = assetConditionDefaultLayerService;
             _cacheManager = cacheManager;
         }
 
@@ -389,6 +393,55 @@ namespace Lykke.Service.Assets.Controllers.V2
                 .ToList();
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns default asset conditions layer.
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">The model that describes default layer.</response>
+        /// <response code="400">Invalid model.</response>
+        [HttpGet("layer/default")]
+        [SwaggerOperation("AssetConditionUpdateDefaultLayer")]
+        [ProducesResponseType(typeof(AssetConditionDefaultLayerDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetDefaultLayerAsync()
+        {
+            IAssetConditionDefaultLayer defaultLayer = await _assetConditionDefaultLayerService.GetAsync();
+
+            var model = new AssetConditionDefaultLayerDto
+            {
+                SwiftDepositEnabled = defaultLayer?.SwiftDepositEnabled,
+                ClientsCanCashInViaBankCards = defaultLayer?.ClientsCanCashInViaBankCards,
+                Regulation = defaultLayer?.Regulation,
+                AvailableToClient = defaultLayer?.AvailableToClient
+            };
+
+            return Ok(model);
+        }
+
+        /// <summary>
+        /// Updates default asset conditions layer.
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <param name="model">The model that describes default layer.</param>
+        /// <response code="204">Default layer successfully updated.</response>
+        /// <response code="400">Invalid model.</response>
+        [HttpPost("layer/default")]
+        [SwaggerOperation("AssetConditionUpdateDefaultLayer")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateDefaultLayerAsync([FromBody] AssetConditionDefaultLayerDto model)
+        {
+            if (model == null)
+            {
+                return BadRequest(ErrorResponse.Create("Asset condition layer required"));
+            }
+
+            await _assetConditionDefaultLayerService.InsertOrUpdateAsync(model);
+
+            return NoContent();
         }
     }
 }

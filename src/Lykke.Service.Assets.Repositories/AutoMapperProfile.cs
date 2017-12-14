@@ -53,7 +53,7 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<IMarginAsset,       MarginAssetEntity>();
             CreateMap<IMarginAssetPair,   MarginAssetPairEntity>();
             CreateMap<IMarginIssuer,      MarginIssuerEntity>();
-            
+            CreateMap<IAssetConditionDefaultLayer, AssetConditionDefaultLayerEntity>();
 
             ForAllMaps((map, cfg) =>
             {

@@ -52,10 +52,9 @@ namespace Lykke.Service.Assets.Repositories
 
             var assetConditionTable      = CreateTable<AssetConditionEntity>(DictionariesConnectionString, "AssetConditionLayer");
             var assetConditionLayerTable = CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, "AssetConditionLayer");
-            var assetConditionLayerLinkClientTable = 
-                CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, "AssetCondition");
+            var assetConditionLayerLinkClientTable = CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, "AssetCondition");
+            var assetConditionDefaultLayerTable = CreateTable<AssetConditionDefaultLayerEntity>(DictionariesConnectionString, "AssetConditionLayer");
             
-
             builder.RegisterInstance<IAssetAttributeRepository>
                 (new AssetAttributeRepository(assetAttributeTable));
 
@@ -112,6 +111,9 @@ namespace Lykke.Service.Assets.Repositories
 
             builder.RegisterInstance<IAssetConditionLayerLinkClientRepository>(
                 new AssetConditionLayerLinkClientRepository(assetConditionLayerLinkClientTable));
+
+            builder.RegisterInstance<IAssetConditionDefaultLayerRepository>(
+                new AssetConditionDefaultLayerRepository(assetConditionDefaultLayerTable));
         }
 
         private INoSQLTableStorage<T> CreateTable<T>(Func<ApplicationSettings, string> connectionString, string name)
