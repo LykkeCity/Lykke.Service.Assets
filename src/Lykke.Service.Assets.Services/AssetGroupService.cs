@@ -86,7 +86,7 @@ namespace Lykke.Service.Assets.Services
             var clientDeviceNotAssignedToAnyGroup            = assetGroups.All(x => x.IsIosDevice != isIosDevice);
 
             var conditions = await _assetConditionService.GetAssetConditionsLayerSettingsByClient(clientId);
-            var conditionLayerCashInViaBankCardEnabled = conditions.SwiftDepositEnabled ?? true;
+            var conditionLayerCashInViaBankCardEnabled = conditions.ClientsCanCashInViaBankCards ?? true;
 
             var result = 
                 conditionLayerCashInViaBankCardEnabled && 
