@@ -24,9 +24,13 @@ namespace Lykke.Service.Assets.Services.Tests
         [TestInitialize]
         public void TestInitialized()
         {
-            _service = new AssetGroupService(_clientAssetGroupLinkRepositoryMock.Object, _assetGroupClientLinkRepositoryMock.Object,
-                _assetGroupAssetLinkRepositoryMock.Object, _assetGroupRepositoryMock.Object, _assetConditionServiceMock.Object,
-                _cacheManagerMock.Object);
+            _service = new AssetGroupService(
+                _clientAssetGroupLinkRepositoryMock.Object, 
+                _assetGroupClientLinkRepositoryMock.Object,
+                _assetGroupAssetLinkRepositoryMock.Object,
+                _cacheManagerMock.Object,
+                _assetGroupRepositoryMock.Object, 
+                _assetConditionServiceMock.Object);
         }
 
         [TestMethod]
@@ -38,8 +42,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
 
-            var resAdr = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsTrue(resAdr);
             Assert.IsTrue(resIos);
@@ -54,8 +58,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: false);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: false);
 
-            var resAdr = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsTrue(resAdr);
             Assert.IsTrue(resIos);
@@ -71,8 +75,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: false, swiftDepositEnabled: true);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
 
-            var resAdr = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsFalse(resAdr);
             Assert.IsFalse(resIos);
@@ -87,8 +91,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: false, swiftDepositEnabled: true);
 
-            var resAdr = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.CashInViaBankCardEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.CashInViaBankCardEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsFalse(resAdr);
             Assert.IsFalse(resIos);
@@ -105,8 +109,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
 
-            var resAdr = await _service.SwiftDepositEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.SwiftDepositEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsTrue(resAdr);
             Assert.IsTrue(resIos);
@@ -121,8 +125,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: false, swiftDepositEnabled: true);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: false, swiftDepositEnabled: true);
 
-            var resAdr = await _service.SwiftDepositEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.SwiftDepositEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsTrue(resAdr);
             Assert.IsTrue(resIos);
@@ -138,8 +142,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: false);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
 
-            var resAdr = await _service.SwiftDepositEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.SwiftDepositEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsFalse(resAdr);
             Assert.IsFalse(resIos);
@@ -154,8 +158,8 @@ namespace Lykke.Service.Assets.Services.Tests
             AddGroups(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: true);
             SetAssetConditionLayerSettings(clientId, clientsCanCashInViaBankCards: true, swiftDepositEnabled: false);
 
-            var resAdr = await _service.SwiftDepositEnabledAsync("123", isIosDevice: false);
-            var resIos = await _service.SwiftDepositEnabledAsync("123", isIosDevice: true);
+            var resAdr = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: false);
+            var resIos = await _service.SwiftDepositEnabledAsync(clientId, isIosDevice: true);
 
             Assert.IsFalse(resAdr);
             Assert.IsFalse(resIos);
