@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Lykke.Service.Assets.Repositories.DTOs;
@@ -17,6 +18,7 @@ namespace Lykke.Service.Assets.Services.Tests
         private Mock<IAssetConditionLayerRepository> _assetConditionLayerRepositoryMock;
         private Mock<IAssetConditionLayerLinkClientRepository> _assetConditionLayerLinkClientRepositoryMock;
         private Mock<IAssetConditionDefaultLayerRepository> _assetConditionDefaultLayerRepositoryMock;
+        private Mock<IAssetsForClientCacheManager> _cacheMock;
 
         [TestInitialize]
         public void TestInitialized()
@@ -25,12 +27,14 @@ namespace Lykke.Service.Assets.Services.Tests
             _assetConditionLayerRepositoryMock = new Mock<IAssetConditionLayerRepository>();
             _assetConditionLayerLinkClientRepositoryMock = new Mock<IAssetConditionLayerLinkClientRepository>();
             _assetConditionDefaultLayerRepositoryMock = new Mock<IAssetConditionDefaultLayerRepository>();
+            _cacheMock = new Mock<IAssetsForClientCacheManager>();
 
             _service = new AssetConditionService(
                 _assetRepositoryMock.Object,
                 _assetConditionLayerRepositoryMock.Object,
                 _assetConditionLayerLinkClientRepositoryMock.Object,
-                _assetConditionDefaultLayerRepositoryMock.Object);
+                _assetConditionDefaultLayerRepositoryMock.Object,
+                _cacheMock.Object);
         }
 
         [TestMethod]

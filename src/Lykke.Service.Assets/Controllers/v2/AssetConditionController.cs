@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses;
@@ -17,24 +16,18 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/asset-conditions")]
     public class AssetConditionsController : Controller
     {
-        private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
-        private readonly IAssetRepository _assetRepository;
-        private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
+        private readonly IAssetService _assetService;
+        private readonly IAssetConditionService _assetConditionService;
         private readonly IAssetConditionDefaultLayerService _assetConditionDefaultLayerService;
-        private readonly IAssetsForClientCacheManager _cacheManager;
 
         public AssetConditionsController(
-            IAssetConditionLayerRepository assetConditionLayerRepository,
-            IAssetRepository assetRepository,
-            IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository,
-            IAssetConditionDefaultLayerService assetConditionDefaultLayerService,
-            IAssetsForClientCacheManager cacheManager)
+            IAssetService assetService,
+            IAssetConditionService assetConditionService,
+            IAssetConditionDefaultLayerService assetConditionDefaultLayerService)
         {
-            _assetConditionLayerRepository = assetConditionLayerRepository;
-            _assetRepository = assetRepository;
-            _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
+            _assetService = assetService;
+            _assetConditionService = assetConditionService;
             _assetConditionDefaultLayerService = assetConditionDefaultLayerService;
-            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -46,7 +39,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(List<AssetConditionLayerDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetLayersAsync()
         {
-            IReadOnlyList<IAssetConditionLayer> layers = await _assetConditionLayerRepository.GetLayerListAsync();
+            IReadOnlyList<IAssetConditionLayer> layers = await _assetConditionService.GetLayersAsync();
 
             List<AssetConditionLayerDto> result = layers
                 .Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled, e.AssetConditions))
@@ -67,8 +60,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetLayerByIdAsync(string layerId)
         {
-            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { layerId }))
-                .FirstOrDefault();
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
 
             if (layer == null)
             {
@@ -105,24 +97,22 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Asset required"));
             }
 
-            IAsset asset = await _assetRepository.GetAsync(assetCondition.Asset);
+            IAsset asset = await _assetService.GetAsync(assetCondition.Asset);
 
             if (asset == null)
             {
                 return NotFound(ErrorResponse.Create($"asset '{assetCondition.Asset} not found"));
             }
 
-            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { layerId })).FirstOrDefault();
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
 
             if (layer == null)
             {
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
             }
 
-            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayerAsync(layer.Id, assetCondition);
-
-            await _cacheManager.ClearCache("AddAssetConditionToLayerAsync");
-
+            await _assetConditionService.AddAssetConditionAsync(layer.Id, assetCondition);
+            
             return NoContent();
         }
 
@@ -151,23 +141,21 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Asset required"));
             }
 
-            IAsset asset = await _assetRepository.GetAsync(assetCondition.Asset);
+            IAsset asset = await _assetService.GetAsync(assetCondition.Asset);
 
             if (asset == null)
             {
                 return NotFound(ErrorResponse.Create($"asset '{assetCondition.Asset} not found"));
             }
 
-            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { layerId })).FirstOrDefault();
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
 
             if (layer == null)
             {
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
             }
 
-            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayerAsync(layer.Id, assetCondition);
-
-            await _cacheManager.ClearCache("UpdateAssetConditionAsync");
+            await _assetConditionService.AddAssetConditionAsync(layer.Id, assetCondition);
 
             return NoContent();
         }
@@ -183,9 +171,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAssetConditionAsync(string layerId, string asset)
         {
-            await _assetConditionLayerRepository.DeleteAssetConditionsAsync(layerId, asset);
-
-            await _cacheManager.ClearCache("DeleteAssetConditionAsync");
+            await _assetConditionService.DeleteAssetConditionAsync(layerId, asset);
 
             return NoContent();
         }
@@ -221,14 +207,14 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {assetConditionLayer.Id}"));
             }
 
-            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { assetConditionLayer.Id })).FirstOrDefault();
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(assetConditionLayer.Id);
 
             if (layer != null)
             {
                 return BadRequest(ErrorResponse.Create($"Layer with id='{assetConditionLayer.Id}' already exists"));
             }
 
-            await _assetConditionLayerRepository.InsetLayerAsync(assetConditionLayer);
+            await _assetConditionService.AddLayerAsync(assetConditionLayer);
 
             return NoContent();
         }
@@ -257,16 +243,14 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Asset condition layer id required"));
             }
 
-            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { assetConditionLayer.Id })).FirstOrDefault();
-
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(assetConditionLayer.Id);
+            
             if (layer == null)
             {
                 return NotFound(ErrorResponse.Create($"Layer with id='{assetConditionLayer.Id}' not found"));
             }
 
-            await _assetConditionLayerRepository.UpdateLayerAsync(assetConditionLayer);
-
-            await _cacheManager.ClearCache("UpdateLayerAsync");
+            await _assetConditionService.UpdateLayerAsync(assetConditionLayer);
 
             return NoContent();
         }
@@ -288,11 +272,7 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Layer id required"));
             }
 
-            await _assetConditionLayerLinkClientRepository.RemoveLayerFromClientsAsync(layerId);
-
-            await _assetConditionLayerRepository.DeleteLayerAsync(layerId);
-
-            await _cacheManager.ClearCache("DeleteLayerAsync");
+            await _assetConditionService.DeleteLayerAsync(layerId);
 
             return NoContent();
         }
@@ -322,17 +302,14 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {layerId}"));
             }
 
-            IAssetConditionLayer layer = (await _assetConditionLayerRepository.GetByIdsAsync(new[] { layerId }))
-                .FirstOrDefault();
-
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
+            
             if (layer == null)
             {
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
             }
 
-            await _assetConditionLayerLinkClientRepository.AddAsync(clientId, layer.Id);
-
-            await _cacheManager.RemoveClientFromChache(clientId);
+            await _assetConditionService.AddClientLayerAsync(clientId, layer.Id);
 
             return NoContent();
         }
@@ -360,9 +337,7 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Layer id required"));
             }
 
-            await _assetConditionLayerLinkClientRepository.RemoveAsync(clientId, layerId);
-
-            await _cacheManager.RemoveClientFromChache(clientId);
+            await _assetConditionService.RemoveClientLayerAsync(clientId, layerId);
 
             return NoContent();
         }
@@ -384,9 +359,7 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Client id required"));
             }
 
-            IReadOnlyList<string> layerIds = await _assetConditionLayerLinkClientRepository.GetAllLayersByClientAsync(clientId);
-
-            IReadOnlyList<IAssetConditionLayer> layers = await _assetConditionLayerRepository.GetByIdsAsync(layerIds);
+            IReadOnlyList<IAssetConditionLayer> layers = await _assetConditionService.GetClientLayers(clientId);
 
             IEnumerable<AssetConditionLayerDto> result = layers
                 .Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled, e.AssetConditions))

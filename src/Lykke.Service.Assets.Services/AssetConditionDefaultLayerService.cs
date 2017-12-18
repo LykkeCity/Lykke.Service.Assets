@@ -25,7 +25,7 @@ namespace Lykke.Service.Assets.Services
 
         public async Task InsertOrUpdateAsync(IAssetConditionDefaultLayer settings)
         {
-            await _cacheManager.ClearCache("Default layer changed");
+            await _cacheManager.ClearCacheAsync("Default layer changed");
             await _assetConditionDefaultLayerRepository.InsertOrUpdate(settings);
         }
     }

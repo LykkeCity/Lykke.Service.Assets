@@ -5,24 +5,29 @@ using System.Threading.Tasks;
 using Common;
 using Common.Log;
 using Lykke.Service.Assets.Core;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services.Domain;
 using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 
 namespace Lykke.Service.Assets.Cache
 {
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
+        private const string PatternClient = ":Assets:Client:";
+
         private readonly IDistributedCache _cache;
         private readonly IAssetsForClientCacheManagerSettings _settings;
-        private readonly StackExchange.Redis.IServer _redisServer;
-        private readonly StackExchange.Redis.IDatabase _redisDatabase;
+        private readonly IServer _redisServer;
+        private readonly IDatabase _redisDatabase;
         private readonly ILog _log;
 
         public AssetsForClientCacheManager(
             IDistributedCache cache, 
             IAssetsForClientCacheManagerSettings settings,
-            StackExchange.Redis.IServer redisServer, 
-            StackExchange.Redis.IDatabase redisDatabase,
+            IServer redisServer, 
+            IDatabase redisDatabase,
             ILog log)
         {
             _cache = cache;
@@ -32,144 +37,109 @@ namespace Lykke.Service.Assets.Cache
             _log = log;
         }
 
-        public async Task ClearCache(string reason)
+        public async Task ClearCacheAsync(string reason)
         {
-            var count = 0;
-            while(true)
-            {
-                var keys = _redisServer.Keys(pattern: _settings.InstanceName + ":Assets:Client:*", pageSize: 1000).ToArray();
-                count += keys.Length;
-                if (!keys.Any()) break;
-                await _redisDatabase.KeyDeleteAsync(keys);
-            }
+            RedisKey[] keys = _redisServer.Keys(pattern: $"{_settings.InstanceName}{PatternClient}*", pageSize: 1000).ToArray();
 
-            await _log.WriteInfoAsync(nameof(AssetsForClientCacheManager), nameof(ClearCache), $"Clear assets cache, count of record: {count}, reason: {reason}");
+            await _redisDatabase.KeyDeleteAsync(keys);
+            
+            await _log.WriteInfoAsync(nameof(AssetsForClientCacheManager), nameof(ClearCacheAsync), $"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
         }
 
-        public async Task RemoveClientFromChache(string clientId)
+        public async Task RemoveClientFromCacheAsync(string clientId)
         {
             try
             {
-                await _cache.RemoveAsync(GetKeyAvailableAssets(clientId, true));
-                await _cache.RemoveAsync(GetKeyAvailableAssets(clientId, false));
-                await _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, true));
-                await _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, false));
-                await _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, true));
-                await _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, false));
+                await Task.WhenAll(
+                    _cache.RemoveAsync(GetKeyAvailableAssets(clientId, true)),
+                    _cache.RemoveAsync(GetKeyAvailableAssets(clientId, false)),
+                    _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, true)),
+                    _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, false)),
+                    _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, true)),
+                    _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, false)),
+                    _cache.RemoveAsync(GetKeyAssetConditions(clientId)));
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(RemoveClientFromChache), clientId, ex);
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(RemoveClientFromCacheAsync), clientId, exception);
             }
         }
 
-        public async Task SaveAssetForClient(string clientId, bool isIosDevice, IEnumerable<string> clientAssetIds)
+        public async Task SaveAssetForClientAsync(string clientId, bool isIosDevice, IEnumerable<string> clientAssetIds)
+            => await SetAsync(GetKeyAvailableAssets(clientId, isIosDevice), clientId, clientAssetIds.ToList());
+
+        public async Task SaveCashInViaBankCardEnabledForClientAsync(string clientId, bool isIosDevice, bool enabled)
+            => await SetAsync(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), clientId, enabled);
+
+        public async Task SaveSwiftDepositEnabledForClientAsync(string clientId, bool isIosDevice, bool enabled)
+            => await SetAsync(GetKeySwiftDepositEnabled(clientId, isIosDevice), clientId, enabled);
+
+        public async Task SaveAssetConditionsForClientAsync(string clientId, IList<IAssetCondition> conditions)
+            => await SetAsync(GetKeyAssetConditions(clientId), clientId, conditions);
+
+        public async Task<IReadOnlyList<string>> TryGetAssetForClientAsync(string clientId, bool isIosDevice)
+            => await TryGetAsync<List<string>>(GetKeyAvailableAssets(clientId, isIosDevice), clientId);
+
+        public async Task<bool?> TryGetCashInViaBankCardEnabledForClientAsync(string clientId, bool isIosDevice)
+            => await TryGetAsync<bool?>(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), clientId);
+
+        public async Task<bool?> TryGetSwiftDepositEnabledForClientAsync(string clientId, bool isIosDevice)
+            => await TryGetAsync<bool?>(GetKeySwiftDepositEnabled(clientId, isIosDevice), clientId);
+
+        public async Task<IList<IAssetCondition>> TryGetAssetConditionsForClientAsync(string clientId)
+        {
+            var conditons = await TryGetAsync<List<AssetCondition>>(GetKeyAssetConditions(clientId), clientId);
+            return conditons?.Cast<IAssetCondition>().ToList();
+        }
+
+        public async Task SetAsync<T>(string key, string context, T value)
         {
             try
             {
-                var key = GetKeyAvailableAssets(clientId, isIosDevice);
-                var text = clientAssetIds.ToList().ToJson();
-                await _cache.SetStringAsync(key, text, new DistributedCacheEntryOptions()
+                await _cache.SetStringAsync(key, value.ToJson(),
+                    new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = _settings.AssetsForClientCacheTimeSpan
+                    });
+            }
+            catch (Exception exception)
+            {
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SetAsync), context, exception);
+            }
+        }
+
+        private async Task<T> TryGetAsync<T>(string key, string context)
+        {
+            try
+            {
+                string value = await _cache.GetStringAsync(key);
+
+                if (!string.IsNullOrEmpty(value))
                 {
-                    AbsoluteExpirationRelativeToNow = _settings.AssetsForClientCacheTimeSpan
-                });
-            }
-            catch (Exception ex)
-            {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveAssetForClient), clientId, ex);
-            }
-        }
-
-        public async Task SaveCashInViaBankCardEnabledForClient(string clientId, bool isIosDevice, bool cashInViaBankCardEnabled)
-        {
-            try
-            {
-                await _cache.SetStringAsync(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), cashInViaBankCardEnabled.ToJson(),
-                    new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = _settings.AssetsForClientCacheTimeSpan });
-            }
-            catch (Exception ex)
-            {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveCashInViaBankCardEnabledForClient), clientId, ex);
-            }
-        }
-
-        public async Task SaveSwiftDepositEnabledForClient(string clientId, bool isIosDevice, bool swiftDepositEnabled)
-        {
-            try
-            {
-                await _cache.SetStringAsync(GetKeySwiftDepositEnabled(clientId, isIosDevice), swiftDepositEnabled.ToJson(),
-                    new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = _settings.AssetsForClientCacheTimeSpan });
-            }
-            catch (Exception ex)
-            {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SaveSwiftDepositEnabledForClient), clientId, ex);
-            }
-        }
-
-        public async Task<IReadOnlyList<string>> TryGetAssetForClient(string clientId, bool isIosDevice)
-        {
-            try
-            {
-                var json = await _cache.GetStringAsync(GetKeyAvailableAssets(clientId, isIosDevice));
-                if (!string.IsNullOrEmpty(json))
-                {
-                    return json.DeserializeJson<List<string>>();
+                    return value.DeserializeJson<T>();
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetAssetForClient), clientId, ex);
+                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetAsync), context, exception);
             }
-            return null;
+            
+            return default(T);
         }
 
-        public async Task<bool?> TryGetSaveCashInViaBankCardEnabledForClient(string clientId, bool isIosDevice)
-        {
-            try
-            {
-                var json = await _cache.GetStringAsync(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice));
-                if (!string.IsNullOrEmpty(json))
-                {
-                    return json.DeserializeJson<bool>();
-                }
-            }
-            catch (Exception ex)
-            {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetSaveCashInViaBankCardEnabledForClient), clientId, ex);
-            }
-            return null;
-        }
+        private static string GetKeyAssetConditions(string clientId)
+            => $"{PatternClient}AssetConditions:{clientId}";
 
-        public async Task<bool?> TryGetSaveSwiftDepositEnabledForClient(string clientId, bool isIosDevice)
-        {
-            try
-            {
-                var json = await _cache.GetStringAsync(GetKeySwiftDepositEnabled(clientId, isIosDevice));
-                if (!string.IsNullOrEmpty(json))
-                {
-                    return json.DeserializeJson<bool>();
-                }
-            }
-            catch (Exception ex)
-            {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetSaveSwiftDepositEnabledForClient), clientId, ex);
-            }
-            return null;
-        }
+        private static string GetKeyAvailableAssets(string clientId, bool isIosDevice)
+            => GetKey("AvailableAssets", clientId, isIosDevice);
 
-        private string GetKeyAvailableAssets(string clientId, bool isIosDevice)
-        {
-            return string.Format(":Assets:Client:Available_Assets:{0}_{1}", clientId, isIosDevice ? "ios_device" : "");
-        }
+        private static string GetKeyCashInViaBankCardEnabled(string clientId, bool isIosDevice)
+            => GetKey("CashInViaBankCard", clientId, isIosDevice);
 
-        private string GetKeyCashInViaBankCardEnabled(string clientId, bool isIosDevice)
-        {
-            return string.Format(":Assets:Client:CashInViaBankCard:{0}_{1}", clientId, isIosDevice ? "ios_device" : "");
-        }
+        private static string GetKeySwiftDepositEnabled(string clientId, bool isIosDevice)
+            => GetKey("SwiftDeposit", clientId, isIosDevice);
 
-        private string GetKeySwiftDepositEnabled(string clientId, bool isIosDevice)
-        {
-            return string.Format(":Assets:Client:SwiftDeposit:{0}_{1}", clientId, isIosDevice ? "ios_device" : "");
-        }
+        private static string GetKey(string key, string clientId, bool isIosDevice)
+            => $"{PatternClient}{key}:{clientId}" + (isIosDevice ? "_ios_device" : string.Empty);
     }
 }

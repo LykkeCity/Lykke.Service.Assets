@@ -9,6 +9,28 @@ namespace Lykke.Service.Assets.Core.Services
     /// </summary>
     public interface IAssetConditionService
     {
+        Task<IReadOnlyList<IAssetConditionLayer>> GetLayersAsync();
+
+        Task<IAssetConditionLayer> GetLayerAsync(string layerId);
+
+        Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition);
+
+        Task UpdateAssetConditionAsync(string layerId, IAssetCondition assetCondition);
+
+        Task DeleteAssetConditionAsync(string layerId, string assetId);
+
+        Task AddLayerAsync(IAssetConditionLayer layer);
+
+        Task UpdateLayerAsync(IAssetConditionLayer layer);
+
+        Task DeleteLayerAsync(string layerId);
+
+        Task<IReadOnlyList<IAssetConditionLayer>> GetClientLayers(string clientId);
+
+        Task AddClientLayerAsync(string clientId, string layerId);
+
+        Task RemoveClientLayerAsync(string clientId, string layerId);
+
         /// <summary>
         /// Get actual asset conditions for client.
         /// Service aggregate all assign layer for clienе and return final state of settings
