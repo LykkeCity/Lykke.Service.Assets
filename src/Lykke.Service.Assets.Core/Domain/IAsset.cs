@@ -8,6 +8,8 @@
 
         bool BankCardsDepositEnabled { get; }
 
+        bool OtherDepositOptionsEnabled { get; }
+
         Blockchain Blockchain { get; }
 
         string BlockChainAssetId { get; }
