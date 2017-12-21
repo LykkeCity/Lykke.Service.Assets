@@ -53,6 +53,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpPost("{groupName}/clients/{clientId}")]
         [SwaggerOperation("AssetGroupAddClient")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> AddClient(string clientId, string groupName)
         {
             var group = await _assetGroupService.GetGroupAsync(groupName);
