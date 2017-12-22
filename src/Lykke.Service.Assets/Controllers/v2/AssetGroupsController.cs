@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Log;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +15,15 @@ namespace Lykke.Service.Assets.Controllers.V2
     public class AssetGroupsController : Controller
     {
         private readonly IAssetGroupService _assetGroupService;
+        private readonly ILog _log;
 
 
         public AssetGroupsController(
-            IAssetGroupService assetGroupService)
+            IAssetGroupService assetGroupService,
+            ILog log)
         {
             _assetGroupService = assetGroupService;
+            _log = log;
         }
 
         [HttpPost]
@@ -49,9 +53,17 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpPost("{groupName}/clients/{clientId}")]
         [SwaggerOperation("AssetGroupAddClient")]
         [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> AddClient(string clientId, string groupName)
         {
-            await _assetGroupService.AddClientToGroupAsync(clientId, groupName);
+            var group = await _assetGroupService.GetGroupAsync(groupName);
+            if (group == null)
+            {
+                await _log.WriteWarningAsync(nameof(AssetGroupsController), nameof(AddClient), clientId, $"Cannot add client to group '{groupName}', group not found");
+                return NotFound();
+            }
+
+            await _assetGroupService.AddClientToGroupAsync(clientId, group);
         
             return NoContent();
         }
@@ -59,9 +71,17 @@ namespace Lykke.Service.Assets.Controllers.V2
         [HttpPost("{groupName}/clients/{clientId}/add-or-replace")]
         [SwaggerOperation("AssetGroupAddOrReplaceClient")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> AddOrReplaceClient(string clientId, string groupName)
         {
-            await _assetGroupService.AddClientToGroupOrReplaceAsync(clientId, groupName);
+            var group = await _assetGroupService.GetGroupAsync(groupName);
+            if (group == null)
+            {
+                await _log.WriteWarningAsync(nameof(AssetGroupsController), nameof(AddOrReplaceClient), clientId, $"Cannot add client to group '{groupName}', group not found");
+                return NotFound();
+            }
+
+            await _assetGroupService.AddClientToGroupOrReplaceAsync(clientId, group);
 
             return NoContent();
         }

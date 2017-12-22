@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.Service.Assets.Controllers.V2;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -66,17 +68,47 @@ namespace Lykke.Service.Assets.Tests.v2
         {
             var serviceMock = CreateServiceMock();
 
+            var groupName = "test group";
+            var clientId = "123";
+            IAssetGroup group = new AssetGroupDto(){ Name = groupName };
+
             serviceMock
-                .Setup(x => x.AddClientToGroupAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.AddClientToGroupAsync(groupName, group))
                 .Returns(Task.FromResult(false));
 
+            serviceMock
+                .Setup(x => x.GetGroupAsync(groupName))
+                .Returns(Task.FromResult(group));
+
             var controller   = CreateController(serviceMock);
-            var actionResult = await controller.AddClient("", "");
+            var actionResult = await controller.AddClient(clientId, groupName);
 
             Assert.IsInstanceOfType(actionResult, typeof(NoContentResult));
 
             serviceMock
-                .Verify(x => x.AddClientToGroupAsync(It.IsAny<string>(), It.IsAny<string>()));
+                .Verify(x => x.AddClientToGroupAsync(It.IsAny<string>(), It.IsAny<IAssetGroup>()));
+        }
+
+        [TestMethod]
+        public async Task AddClient__NotFoundResult_Returned()
+        {
+            var serviceMock = CreateServiceMock();
+
+            var groupName = "test group";
+            var clientId = "123";
+
+            serviceMock
+                .Setup(x => x.AddClientToGroupAsync(It.IsAny<string>(), It.IsAny<IAssetGroup>()))
+                .Throws(new Exception("Not exist group"));
+
+            serviceMock
+                .Setup(x => x.GetGroupAsync(groupName))
+                .Returns(Task.FromResult<IAssetGroup>(null));
+
+            var controller = CreateController(serviceMock);
+            var actionResult = await controller.AddClient(clientId, groupName);
+
+            Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));            
         }
 
         [TestMethod]
@@ -295,7 +327,8 @@ namespace Lykke.Service.Assets.Tests.v2
 
         private static AssetGroupsController CreateController(IMock<IAssetGroupService> serviceMock)
         {
-            return new AssetGroupsController(serviceMock.Object);
+            var log = new Mock<ILog>();
+            return new AssetGroupsController(serviceMock.Object, log.Object);
         }
 
         private static Mock<IAssetGroupService> CreateServiceMock()

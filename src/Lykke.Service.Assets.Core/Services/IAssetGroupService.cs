@@ -8,9 +8,9 @@ namespace Lykke.Service.Assets.Core.Services
     {
         Task AddAssetToGroupAsync(string assetId, string groupName);
 
-        Task AddClientToGroupAsync(string clientId, string groupName);
+        Task AddClientToGroupAsync(string clientId, IAssetGroup assetGroup);
 
-        Task AddClientToGroupOrReplaceAsync(string clientId, string groupName);
+        Task AddClientToGroupOrReplaceAsync(string clientId, IAssetGroup assetGroup);
 
         Task<IAssetGroup> AddGroupAsync(IAssetGroup group);
 

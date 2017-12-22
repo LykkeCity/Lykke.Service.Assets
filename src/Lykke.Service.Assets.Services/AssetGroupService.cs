@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -55,14 +57,14 @@ namespace Lykke.Service.Assets.Services
         }
 
         // TODO: Obsolete
-        public async Task AddClientToGroupAsync(string clientId, string groupName)
+        public async Task AddClientToGroupAsync(string clientId, IAssetGroup assetGroup)
         {
-            await AddClientToGroupAsync(clientId, groupName, false);
+            await AddClientToGroupAsync(clientId, assetGroup, false);
         }
 
-        public async Task AddClientToGroupOrReplaceAsync(string clientId, string groupName)
+        public async Task AddClientToGroupOrReplaceAsync(string clientId, IAssetGroup assetGroup)
         {
-            await AddClientToGroupAsync(clientId, groupName, true);
+            await AddClientToGroupAsync(clientId, assetGroup, true);
         }
 
         public async Task<IAssetGroup> AddGroupAsync(IAssetGroup group)
@@ -223,10 +225,8 @@ namespace Lykke.Service.Assets.Services
             await _cacheManager.ClearCache($"UpdateGroupAsync {group.Name}");
         }
 
-        private async Task AddClientToGroupAsync(string clientId, string groupName, bool replace)
+        private async Task AddClientToGroupAsync(string clientId, IAssetGroup assetGroup, bool replace)
         {
-            var assetGroup = await _assetGroupRepository.GetAsync(groupName);
-
             var assetClientGroupLink = new ClientAssetGroupLink
             {
                 ClientId = clientId,
