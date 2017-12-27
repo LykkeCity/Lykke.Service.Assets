@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -10,86 +11,108 @@ namespace Lykke.Service.Assets.Services
 {
     public class AssetConditionService : IAssetConditionService
     {
-        private readonly IAssetRepository _assetRepository;
+        private readonly IAssetConditionRepository _assetConditionRepository;
         private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
+        private readonly IAssetConditionSettingsRepository _assetConditionSettingsRepository;
+        private readonly IAssetConditionLayerSettingsRepository _assetConditionLayerSettingsRepository;
         private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
-        private readonly IAssetConditionDefaultLayerRepository _assetConditionDefaultLayerRepository;
         private readonly IAssetsForClientCacheManager _cacheManager;
 
         public AssetConditionService(
-            IAssetRepository assetRepository,
+            IAssetConditionRepository assetConditionRepository, 
             IAssetConditionLayerRepository assetConditionLayerRepository,
+            IAssetConditionSettingsRepository assetConditionSettingsRepository,
+            IAssetConditionLayerSettingsRepository assetConditionLayerSettingsRepository,
             IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository,
-            IAssetConditionDefaultLayerRepository assetConditionDefaultLayerRepository,
             IAssetsForClientCacheManager cacheManager)
         {
-            _assetRepository = assetRepository;
+            _assetConditionRepository = assetConditionRepository;
             _assetConditionLayerRepository = assetConditionLayerRepository;
+            _assetConditionSettingsRepository = assetConditionSettingsRepository;
+            _assetConditionLayerSettingsRepository = assetConditionLayerSettingsRepository;
             _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
-            _assetConditionDefaultLayerRepository = assetConditionDefaultLayerRepository;
             _cacheManager = cacheManager;
         }
 
-        public async Task<IReadOnlyList<IAssetConditionLayer>> GetLayersAsync()
+        public async Task<IEnumerable<IAssetConditionLayer>> GetLayersAsync()
         {
-            return await _assetConditionLayerRepository.GetLayerListAsync();
+            return await _assetConditionLayerRepository.GetAsync();
         }
 
         public async Task<IAssetConditionLayer> GetLayerAsync(string layerId)
         {
-            IReadOnlyList<IAssetConditionLayer> layers =
-                await _assetConditionLayerRepository.GetByIdsAsync(new[] {layerId});
+            IAssetConditionLayer layer = await _assetConditionLayerRepository.GetAsync(layerId);
 
-            return layers.FirstOrDefault();
+            if (layer == null)
+                return null;
+
+            IEnumerable<IAssetCondition> conditions = await _assetConditionRepository.GetAsync(layer.Id);
+
+            var model = Mapper.Map<AssetConditionLayer>(layer);
+
+            model.AssetConditions = conditions.ToList();
+
+            return layer;
         }
 
         public async Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition)
         {
-            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayerAsync(layerId, assetCondition);
+            await _assetConditionRepository.InsertOrUpdateAsync(layerId, assetCondition);
 
             await _cacheManager.ClearCacheAsync("Added asset condition");
         }
 
         public async Task UpdateAssetConditionAsync(string layerId, IAssetCondition assetCondition)
         {
-            await _assetConditionLayerRepository.InsertOrUpdateAssetConditionsToLayerAsync(layerId, assetCondition);
+            await _assetConditionRepository.InsertOrUpdateAsync(layerId, assetCondition);
 
             await _cacheManager.ClearCacheAsync("Updated asset condition");
         }
 
         public async Task DeleteAssetConditionAsync(string layerId, string assetId)
         {
-            await _assetConditionLayerRepository.DeleteAssetConditionsAsync(layerId, assetId);
+            await _assetConditionRepository.DeleteAsync(layerId, assetId);
 
             await _cacheManager.ClearCacheAsync("Deleted asset condition");
         }
 
         public async Task AddLayerAsync(IAssetConditionLayer layer)
         {
-            await _assetConditionLayerRepository.InsetLayerAsync(layer);
+            await _assetConditionLayerRepository.InsertOrUpdateAsync(layer);
         }
 
         public async Task UpdateLayerAsync(IAssetConditionLayer layer)
         {
-            await _assetConditionLayerRepository.UpdateLayerAsync(layer);
+            await _assetConditionLayerRepository.InsertOrUpdateAsync(layer);
 
             await _cacheManager.ClearCacheAsync("Updated condition layer");
         }
 
         public async Task DeleteLayerAsync(string layerId)
         {
-            await _assetConditionLayerLinkClientRepository.RemoveLayerFromClientsAsync(layerId);
-
-            await _assetConditionLayerRepository.DeleteLayerAsync(layerId);
+            await Task.WhenAll(
+                _assetConditionLayerLinkClientRepository.RemoveLayerFromClientsAsync(layerId),
+                _assetConditionRepository.DeleteAsync(layerId),
+                _assetConditionLayerRepository.DeleteAsync(layerId));
 
             await _cacheManager.ClearCacheAsync("Deleted condition layer");
         }
 
-        public async Task<IReadOnlyList<IAssetConditionLayer>> GetClientLayers(string clientId)
+        public async Task<IEnumerable<IAssetConditionLayer>> GetClientLayers(string clientId)
         {
             IReadOnlyList<string> layerIds = await _assetConditionLayerLinkClientRepository.GetAllLayersByClientAsync(clientId);
 
-            return await _assetConditionLayerRepository.GetByIdsAsync(layerIds);
+            IEnumerable<IAssetConditionLayer> layers = await _assetConditionLayerRepository.GetAsync(layerIds);
+
+            var model = Mapper.Map<List<AssetConditionLayer>>(layers);
+
+            foreach (AssetConditionLayer layer in model)
+            {
+                IEnumerable<IAssetCondition> conditions = await _assetConditionRepository.GetAsync(layer.Id);
+                layer.AssetConditions = conditions.ToList();
+            }
+
+            return model;
         }
 
         public async Task AddClientLayerAsync(string clientId, string layerId)
@@ -106,74 +129,53 @@ namespace Lykke.Service.Assets.Services
             await _cacheManager.RemoveClientFromCacheAsync(clientId);
         }
 
-        public async Task<IReadOnlyDictionary<string, IAssetCondition>> GetAssetConditionsByClient(string clientId)
+        public async Task<IEnumerable<IAssetCondition>> GetAssetConditionsByClient(string clientId)
         {
             IList<IAssetCondition> assetConditions = await _cacheManager.TryGetAssetConditionsForClientAsync(clientId);
 
             if (assetConditions != null)
-                return assetConditions.ToDictionary(o => o.Asset, o => o);
+                return assetConditions;
 
-            IReadOnlyList<IAssetConditionLayer> layers = await GetClientLayers(clientId);
-            IEnumerable<IAsset> assets = await _assetRepository.GetAllAsync(true);
-            IAssetConditionDefaultLayer defaultLayer = await _assetConditionDefaultLayerRepository.GetAsync();
+            IEnumerable<IAssetConditionLayer> layers = await GetClientLayers(clientId);
+            IAssetConditionSettings defaultAssetCondition = await _assetConditionSettingsRepository.GetAsync();
 
-            // Create conditions for all assets using default settings
-            Dictionary<string, AssetCondition> result = assets
-                .Select(o => new AssetCondition(o.Id)
-                {
-                    Asset = o.Id,
-                    Regulation = defaultLayer?.Regulation,
-                    AvailableToClient = defaultLayer?.AvailableToClient
-                })
-                .ToDictionary(o => o.Asset, o => o);
+            var map = new Dictionary<string, AssetCondition>();
 
             foreach (IAssetConditionLayer layer in layers.OrderBy(e => e.Priority))
             {
-                foreach (KeyValuePair<string, IAssetCondition> condition in layer.AssetConditions)
+                foreach (IAssetCondition condition in layer.AssetConditions)
                 {
-                    if (!result.TryGetValue(condition.Key, out var value))
+                    if (!map.TryGetValue(condition.Asset, out var value))
                     {
-                        value = new AssetCondition(condition.Key);
-                        result[condition.Key] = value;
+                        value = Mapper.Map<AssetCondition>(defaultAssetCondition);
+                        value.Asset = condition.Asset;
+                        map[condition.Asset] = value;
                     }
-                    value.Apply(condition.Value);
+
+                    value.Apply(condition);
                 }
             }
 
-            await _cacheManager.SaveAssetConditionsForClientAsync(clientId,
-                result.Values.Cast<IAssetCondition>().ToList());
+            assetConditions = map.Values.Cast<IAssetCondition>().ToList();
 
-            return result.ToDictionary(e => e.Key, e => e.Value as IAssetCondition);
+            await _cacheManager.SaveAssetConditionsForClientAsync(clientId, assetConditions);
+
+            return assetConditions;
         }
 
         public async Task<IAssetConditionLayerSettings> GetAssetConditionsLayerSettingsByClient(string clientId)
         {
-            IReadOnlyList<IAssetConditionLayer> layers = await GetClientLayers(clientId);
-            IAssetConditionDefaultLayer defaultLayer = await _assetConditionDefaultLayerRepository.GetAsync();
+            IEnumerable<IAssetConditionLayer> layers = await GetClientLayers(clientId);
+            IAssetConditionLayerSettings defaultLayer = await _assetConditionLayerSettingsRepository.GetAsync();
 
-            var assetConditionLayerSettings = new AssetConditionLayerSettings
+            var settings = Mapper.Map<AssetConditionLayerSettings>(defaultLayer);
+
+            foreach (IAssetConditionLayer layer in layers.OrderBy(o => o.Priority))
             {
-                ClientsCanCashInViaBankCards = defaultLayer?.ClientsCanCashInViaBankCards,
-                SwiftDepositEnabled = defaultLayer?.SwiftDepositEnabled
-            };
+                settings.Apply(layer);
+            }
 
-            IAssetConditionLayer layerSwiftDepositEnabled = layers
-                .Where(e => e.SwiftDepositEnabled.HasValue)
-                .OrderByDescending(e => e.Priority)
-                .FirstOrDefault();
-
-            if (layerSwiftDepositEnabled != null)
-                assetConditionLayerSettings.SwiftDepositEnabled = layerSwiftDepositEnabled.SwiftDepositEnabled;
-
-            IAssetConditionLayer layerClientsCanCashInViaBankCards = layers
-                .Where(e => e.ClientsCanCashInViaBankCards.HasValue)
-                .OrderByDescending(e => e.Priority)
-                .FirstOrDefault();
-
-            if (layerClientsCanCashInViaBankCards != null)
-                assetConditionLayerSettings.ClientsCanCashInViaBankCards = layerClientsCanCashInViaBankCards.ClientsCanCashInViaBankCards;
-
-            return assetConditionLayerSettings;
+            return settings;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Lykke.Service.Assets.Tests
+namespace Lykke.Service.Assets.Repositories.Tests
 {
     [TestClass]
     public class TestAssembly
@@ -9,12 +9,7 @@ namespace Lykke.Service.Assets.Tests
         [AssemblyInitialize]
         public static void Initialize(TestContext testContext)
         {
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile<AutoMapperProfile>();
-                cfg.AddProfile<Services.AutoMapperProfile>();
-                cfg.AddProfile<Repositories.AutoMapperProfile>();
-            });
+            Mapper.Initialize(cfg => cfg.AddProfile<AutoMapperProfile>());
             Mapper.AssertConfigurationIsValid();
         }
     }

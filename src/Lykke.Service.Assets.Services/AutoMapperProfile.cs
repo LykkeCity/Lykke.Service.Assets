@@ -10,6 +10,11 @@ namespace Lykke.Service.Assets.Services
         {
             CreateMap<IAsset,      Asset>();
             CreateMap<IErc20Token, Erc20Token>();
+            CreateMap<IAssetCondition, AssetCondition>(MemberList.Source);
+            CreateMap<IAssetConditionSettings, AssetCondition>(MemberList.Source);
+            CreateMap<IAssetConditionLayer, AssetConditionLayer>(MemberList.Source);
+            CreateMap<IAssetConditionSettings, AssetConditionSettings>(MemberList.Source);
+            CreateMap<IAssetConditionLayerSettings, AssetConditionLayerSettings>(MemberList.Source);
         }
     }
 }

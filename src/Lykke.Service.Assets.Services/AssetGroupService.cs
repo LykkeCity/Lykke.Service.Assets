@@ -126,7 +126,9 @@ namespace Lykke.Service.Assets.Services
 
             var conditions = await _assetConditionService.GetAssetConditionsByClient(clientId);
 
-            clientAssetIds = clientAssetIds.Where(e => !conditions.ContainsKey(e) || (conditions[e].AvailableToClient ?? true)).ToList();
+            var map = conditions.ToDictionary(o => o.Asset, o => o);
+
+            clientAssetIds = clientAssetIds.Where(e => !map.ContainsKey(e) || (map[e].AvailableToClient ?? true)).ToList();
 
             await _cacheManager.SaveAssetForClientAsync(clientId, isIosDevice, clientAssetIds);
 

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v2;
-using Lykke.Service.Assets.Responses.V2;
+using Lykke.Service.Assets.Services.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 
@@ -18,16 +17,16 @@ namespace Lykke.Service.Assets.Controllers.V2
     {
         private readonly IAssetService _assetService;
         private readonly IAssetConditionService _assetConditionService;
-        private readonly IAssetConditionDefaultLayerService _assetConditionDefaultLayerService;
+        private readonly IAssetConditionSettingsService _assetConditionSettingsService;
 
         public AssetConditionsController(
             IAssetService assetService,
             IAssetConditionService assetConditionService,
-            IAssetConditionDefaultLayerService assetConditionDefaultLayerService)
+            IAssetConditionSettingsService assetConditionSettingsService)
         {
             _assetService = assetService;
             _assetConditionService = assetConditionService;
-            _assetConditionDefaultLayerService = assetConditionDefaultLayerService;
+            _assetConditionSettingsService = assetConditionSettingsService;
         }
 
         /// <summary>
@@ -39,13 +38,11 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(List<AssetConditionLayerDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetLayersAsync()
         {
-            IReadOnlyList<IAssetConditionLayer> layers = await _assetConditionService.GetLayersAsync();
+            IEnumerable<IAssetConditionLayer> layers = await _assetConditionService.GetLayersAsync();
 
-            List<AssetConditionLayerDto> result = layers
-                .Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled, e.AssetConditions))
-                .ToList();
+            var model = Mapper.Map<List<AssetConditionLayerDto>>(layers);
 
-            return Ok(result);
+            return Ok(model);
         }
 
         /// <summary>
@@ -63,20 +60,18 @@ namespace Lykke.Service.Assets.Controllers.V2
             IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
 
             if (layer == null)
-            {
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
-            }
 
-            var result = new AssetConditionLayerDto(layer.Id, layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards, layer.SwiftDepositEnabled, layer.AssetConditions);
+            var model = Mapper.Map<AssetConditionLayerDto>(layer);
 
-            return Ok(result);
+            return Ok(model);
         }
 
         /// <summary>
         /// Adds asset condition to layer.
         /// </summary>
         /// <param name="layerId">The layer id.</param>
-        /// <param name="assetCondition">The model what describes asset condition.</param>
+        /// <param name="model">The model what describes asset condition.</param>
         /// <response code="204">Asset condition successfully added to layer.</response>
         /// <response code="400">Invalid model.</response>
         /// <response code="404">Layer or asset not found.</response>
@@ -85,34 +80,28 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddAssetConditionToLayerAsync(string layerId, [FromBody] AssetConditionDto assetCondition)
+        public async Task<IActionResult> AddAssetConditionLayerAsync(string layerId, [FromBody] AssetConditionDto model)
         {
-            if (assetCondition == null)
-            {
+            if (model == null)
                 return BadRequest(ErrorResponse.Create("Asset condition required"));
-            }
 
-            if (string.IsNullOrEmpty(assetCondition.Asset))
-            {
+            if (string.IsNullOrEmpty(model.Asset))
                 return BadRequest(ErrorResponse.Create("Asset required"));
-            }
 
-            IAsset asset = await _assetService.GetAsync(assetCondition.Asset);
+            IAsset asset = await _assetService.GetAsync(model.Asset);
 
             if (asset == null)
-            {
-                return NotFound(ErrorResponse.Create($"asset '{assetCondition.Asset} not found"));
-            }
+                return NotFound(ErrorResponse.Create($"asset '{model.Asset} not found"));
 
             IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
 
             if (layer == null)
-            {
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
-            }
 
-            await _assetConditionService.AddAssetConditionAsync(layer.Id, assetCondition);
-            
+            var condition = Mapper.Map<AssetCondition>(model);
+
+            await _assetConditionService.AddAssetConditionAsync(layer.Id, condition);
+
             return NoContent();
         }
 
@@ -120,7 +109,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         /// Updates asset condition.
         /// </summary>
         /// <param name="layerId">The layer id.</param>
-        /// <param name="assetCondition">The model that describes asset condition.</param>
+        /// <param name="model">The model that describes asset condition.</param>
         /// <response code="204">Asset condition successfully updated.</response>
         /// <response code="400">Invalid model.</response>
         /// <response code="404">Layer or asset not found.</response>
@@ -129,33 +118,27 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateAssetConditionAsync(string layerId, [FromBody] AssetConditionDto assetCondition)
+        public async Task<IActionResult> UpdateAssetConditionAsync(string layerId, [FromBody] AssetConditionDto model)
         {
-            if (assetCondition == null)
-            {
+            if (model == null)
                 return BadRequest(ErrorResponse.Create("Asset condition required"));
-            }
 
-            if (string.IsNullOrEmpty(assetCondition.Asset))
-            {
+            if (string.IsNullOrEmpty(model.Asset))
                 return BadRequest(ErrorResponse.Create("Asset required"));
-            }
 
-            IAsset asset = await _assetService.GetAsync(assetCondition.Asset);
+            IAsset asset = await _assetService.GetAsync(model.Asset);
 
             if (asset == null)
-            {
-                return NotFound(ErrorResponse.Create($"asset '{assetCondition.Asset} not found"));
-            }
+                return NotFound(ErrorResponse.Create($"asset '{model.Asset} not found"));
 
             IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(layerId);
 
             if (layer == null)
-            {
                 return NotFound(ErrorResponse.Create($"Layer with id='{layerId}' not found"));
-            }
 
-            await _assetConditionService.AddAssetConditionAsync(layer.Id, assetCondition);
+            var condition = Mapper.Map<AssetCondition>(model);
+
+            await _assetConditionService.UpdateAssetConditionAsync(layer.Id, condition);
 
             return NoContent();
         }
@@ -183,38 +166,40 @@ namespace Lykke.Service.Assets.Controllers.V2
         /// Creates only layer without asset conditon list.
         /// After create need fill layers use method PutAssetConditionToLayers.
         /// </remarks>
-        /// <param name="assetConditionLayer">The model what describes layer.</param>
+        /// <param name="model">The model what describes layer.</param>
         /// <response code="204">Layer successfully added.</response>
         /// <response code="400">Invalid model.</response>
         [HttpPost("layer")]
         [SwaggerOperation("AssetConditionAddLayer")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddLayerAsync([FromBody] AssetConditionLayerRequestDto assetConditionLayer)
+        public async Task<IActionResult> AddLayerAsync([FromBody] AssetConditionLayerDto model)
         {
-            if (assetConditionLayer == null)
+            if (model == null)
             {
                 return BadRequest(ErrorResponse.Create("Asset condition layer required"));
             }
 
-            if (string.IsNullOrEmpty(assetConditionLayer.Id))
+            if (string.IsNullOrEmpty(model.Id))
             {
                 return BadRequest(ErrorResponse.Create("Asset condition layer id required"));
             }
 
-            if (!this.ValidateKey(assetConditionLayer.Id))
+            if (!this.ValidateKey(model.Id))
             {
-                return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {assetConditionLayer.Id}"));
+                return BadRequest(ErrorResponse.Create($"Incorect layers name(id): {model.Id}"));
             }
 
-            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(assetConditionLayer.Id);
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(model.Id);
 
             if (layer != null)
             {
-                return BadRequest(ErrorResponse.Create($"Layer with id='{assetConditionLayer.Id}' already exists"));
+                return BadRequest(ErrorResponse.Create($"Layer with id='{model.Id}' already exists"));
             }
 
-            await _assetConditionService.AddLayerAsync(assetConditionLayer);
+            layer = Mapper.Map<AssetConditionLayer>(model);
+
+            await _assetConditionService.AddLayerAsync(layer);
 
             return NoContent();
         }
@@ -222,7 +207,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         /// <summary>
         /// Updates layer without assets.
         /// </summary>
-        /// <param name="assetConditionLayer">The model what describes layer.</param>
+        /// <param name="model">The model what describes layer.</param>
         /// <response code="204">Layer successfully updated.</response>
         /// <response code="400">Invalid model.</response>
         /// <response code="404">Layer not found.</response>
@@ -231,26 +216,28 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateLayerAsync([FromBody] AssetConditionLayerRequestDto assetConditionLayer)
+        public async Task<IActionResult> UpdateLayerAsync([FromBody] AssetConditionLayerDto model)
         {
-            if (assetConditionLayer == null)
+            if (model == null)
             {
                 return BadRequest(ErrorResponse.Create("Asset condition layer required"));
             }
 
-            if (string.IsNullOrEmpty(assetConditionLayer.Id))
+            if (string.IsNullOrEmpty(model.Id))
             {
                 return BadRequest(ErrorResponse.Create("Asset condition layer id required"));
             }
 
-            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(assetConditionLayer.Id);
+            IAssetConditionLayer layer = await _assetConditionService.GetLayerAsync(model.Id);
             
             if (layer == null)
             {
-                return NotFound(ErrorResponse.Create($"Layer with id='{assetConditionLayer.Id}' not found"));
+                return NotFound(ErrorResponse.Create($"Layer with id='{model.Id}' not found"));
             }
 
-            await _assetConditionService.UpdateLayerAsync(assetConditionLayer);
+            layer = Mapper.Map<AssetConditionLayer>(model);
+
+            await _assetConditionService.UpdateLayerAsync(layer);
 
             return NoContent();
         }
@@ -359,35 +346,35 @@ namespace Lykke.Service.Assets.Controllers.V2
                 return BadRequest(ErrorResponse.Create("Client id required"));
             }
 
-            IReadOnlyList<IAssetConditionLayer> layers = await _assetConditionService.GetClientLayers(clientId);
+            IEnumerable<IAssetConditionLayer> layers = await _assetConditionService.GetClientLayers(clientId);
 
-            IEnumerable<AssetConditionLayerDto> result = layers
-                .Select(e => new AssetConditionLayerDto(e.Id, e.Priority, e.Description, e.ClientsCanCashInViaBankCards, e.SwiftDepositEnabled, e.AssetConditions))
-                .ToList();
+            var model = Mapper.Map<List<AssetConditionLayerDto>>(layers);
 
-            return Ok(result);
+            return Ok(model);
         }
 
         /// <summary>
         /// Returns default asset conditions layer.
         /// </summary>
-        /// <remarks>
-        /// </remarks>
         /// <response code="200">The model that describes default layer.</response>
         /// <response code="400">Invalid model.</response>
         [HttpGet("layer/default")]
         [SwaggerOperation("AssetConditionGetDefaultLayer")]
-        [ProducesResponseType(typeof(AssetConditionDefaultLayerDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Responses.v2.AssetConditionLayerSettings), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetDefaultLayerAsync()
         {
-            IAssetConditionDefaultLayer defaultLayer = await _assetConditionDefaultLayerService.GetAsync();
+            Task<IAssetConditionSettings> assetSettingsTask =
+                _assetConditionSettingsService.GetConditionSettingsAsync();
 
-            var model = new AssetConditionDefaultLayerDto
+            Task<IAssetConditionLayerSettings> layerSettingsTask =
+                _assetConditionSettingsService.GetConditionLayerSettingsAsync();
+
+            await Task.WhenAll(assetSettingsTask, layerSettingsTask);
+
+            var model = new AssetConditionDefaultSettings
             {
-                SwiftDepositEnabled = defaultLayer?.SwiftDepositEnabled,
-                ClientsCanCashInViaBankCards = defaultLayer?.ClientsCanCashInViaBankCards,
-                Regulation = defaultLayer?.Regulation,
-                AvailableToClient = defaultLayer?.AvailableToClient
+                AssetSettings = Mapper.Map<Responses.v2.AssetConditionSettings>(assetSettingsTask.Result),
+                LayerSettings = Mapper.Map<Responses.v2.AssetConditionLayerSettings>(layerSettingsTask.Result)
             };
 
             return Ok(model);
@@ -396,8 +383,6 @@ namespace Lykke.Service.Assets.Controllers.V2
         /// <summary>
         /// Updates default asset conditions layer.
         /// </summary>
-        /// <remarks>
-        /// </remarks>
         /// <param name="model">The model that describes default layer.</param>
         /// <response code="204">Default layer successfully updated.</response>
         /// <response code="400">Invalid model.</response>
@@ -405,14 +390,17 @@ namespace Lykke.Service.Assets.Controllers.V2
         [SwaggerOperation("AssetConditionUpdateDefaultLayer")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateDefaultLayerAsync([FromBody] AssetConditionDefaultLayerDto model)
+        public async Task<IActionResult> UpdateDefaultLayerAsync([FromBody] AssetConditionDefaultSettings model)
         {
             if (model == null)
             {
                 return BadRequest(ErrorResponse.Create("Asset condition layer required"));
             }
 
-            await _assetConditionDefaultLayerService.InsertOrUpdateAsync(model);
+            var assetSettings = Mapper.Map<Services.Domain.AssetConditionSettings>(model.AssetSettings);
+            var layerSettings = Mapper.Map<Services.Domain.AssetConditionLayerSettings>(model.LayerSettings);
+
+            await _assetConditionSettingsService.UpdateAsync(layerSettings, assetSettings);
 
             return NoContent();
         }

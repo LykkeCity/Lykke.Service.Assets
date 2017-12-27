@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AzureStorage;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
@@ -11,148 +12,84 @@ namespace Lykke.Service.Assets.Repositories
 {
     public class AssetConditionLayerRepository : IAssetConditionLayerRepository
     {
-        private readonly INoSQLTableStorage<AssetConditionEntity> _assetConditionTable;
-        private readonly INoSQLTableStorage<AssetConditionLayerEntity> _assetConditionLayerTable;
+        private readonly INoSQLTableStorage<AssetConditionLayerEntity> _storage;
 
-        public AssetConditionLayerRepository(
-            INoSQLTableStorage<AssetConditionEntity> assetConditionTable,
-            INoSQLTableStorage<AssetConditionLayerEntity> assetConditionLayerTable)
+        public AssetConditionLayerRepository(INoSQLTableStorage<AssetConditionLayerEntity> storage)
         {
-            _assetConditionTable = assetConditionTable;
-            _assetConditionLayerTable = assetConditionLayerTable;
+            _storage = storage;
         }
 
-        public async Task<IReadOnlyList<IAssetConditionLayer>> GetByIdsAsync(IEnumerable<string> layerIds)
+        /// <summary>
+        /// Returns all asset conditions layers.
+        /// </summary>
+        /// <returns>A collection of conditions layers</returns>
+        public async Task<IEnumerable<IAssetConditionLayer>> GetAsync()
         {
-            List<string> layerIdsList = layerIds.ToList();
-
             IEnumerable<AssetConditionLayerEntity> layers =
-                await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey(),
-                    layerIdsList.Select(GetAssetConditionLayerRowKey));
+                await _storage.GetDataAsync(GetPartitionKey());
 
-            IList<AssetConditionEntity> assetConditions =
-                (await _assetConditionTable.GetDataAsync(layerIdsList.Select(GetAssetConditionPartitionKey)))
-                .ToList();
-
-            var result = new List<AssetConditionLayerDto>();
-
-            foreach (AssetConditionLayerEntity layer in layers)
-            {
-                var dto = new AssetConditionLayerDto
-                {
-                    Id = layer.Id,
-                    Description = layer.Description,
-                    Priority = (decimal)layer.Priority,
-                    SwiftDepositEnabled = layer.SwiftDepositEnabled,
-                    ClientsCanCashInViaBankCards = layer.ClientsCanCashInViaBankCards,
-                    AssetConditions = assetConditions.Where(e => e.Layer == layer.Id)
-                        .ToDictionary(e => e.Asset, e => e as IAssetCondition)
-                };
-
-                result.Add(dto);
-            }
+            var result = Mapper.Map<List<AssetConditionLayerDto>>(layers);
 
             return result;
         }
 
-        public async Task<IReadOnlyList<IAssetConditionLayer>> GetLayerListAsync()
+        /// <summary>
+        /// Returns asset conditions layer.
+        /// </summary>
+        /// <param name="layerId">The asset conditions layer id.</param>
+        /// <returns>An asset conditions layer</returns>
+        public async Task<IAssetConditionLayer> GetAsync(string layerId)
         {
-            IEnumerable<AssetConditionLayerEntity> layers =
-                await _assetConditionLayerTable.GetDataAsync(GetAssetConditionLayerPartitionKey());
+            AssetConditionLayerEntity layer = await _storage.GetDataAsync(GetPartitionKey(), GetRowKey(layerId));
 
-            var result = new List<AssetConditionLayerDto>();
-
-            foreach (AssetConditionLayerEntity layer in layers)
-            {
-                var dto = new AssetConditionLayerDto
-                {
-                    Id = layer.Id,
-                    Description = layer.Description,
-                    Priority = (decimal) layer.Priority,
-                    SwiftDepositEnabled = layer.SwiftDepositEnabled,
-                    ClientsCanCashInViaBankCards = layer.ClientsCanCashInViaBankCards
-                };
-
-                result.Add(dto);
-            }
+            var result = Mapper.Map<AssetConditionLayerDto>(layer);
 
             return result;
         }
 
-        public async Task InsertOrUpdateAssetConditionsToLayerAsync(string layerId, IAssetCondition assetCondition)
+        /// <summary>
+        /// Returns asset conditions layers.
+        /// </summary>
+        /// <param name="layerIds">The collection of layers id.</param>
+        /// <returns>A collection of asset conditions layers</returns>
+        public async Task<IEnumerable<IAssetConditionLayer>> GetAsync(IEnumerable<string> layerIds)
         {
-            var entity = new AssetConditionEntity(
-                GetAssetConditionPartitionKey(layerId),
-                GetAssetConditionRowKey(assetCondition.Asset),
-                layerId,
-                assetCondition.Asset,
-                assetCondition.AvailableToClient,
-                assetCondition.Regulation);
+            IEnumerable<AssetConditionLayerEntity> layers =
+                await _storage.GetDataAsync(GetPartitionKey(), layerIds.Select(GetRowKey));
 
-            await _assetConditionTable.InsertOrReplaceAsync(entity);
+            var result = Mapper.Map<List<AssetConditionLayerDto>>(layers);
+
+            return result;
         }
 
-        public async Task DeleteAssetConditionsAsync(string layerId, string asset)
+        /// <summary>
+        /// Inserts a new entity if it does not exist, otherwise updates existing entity.
+        /// </summary>
+        /// <param name="layer">The asset conditon layer.</param>
+        /// <returns></returns>
+        public async Task InsertOrUpdateAsync(IAssetConditionLayer layer)
         {
-            await _assetConditionTable.DeleteAsync(GetAssetConditionPartitionKey(layerId), GetAssetConditionRowKey(asset));
+            var entity = new AssetConditionLayerEntity(GetPartitionKey(), GetRowKey(layer.Id));
+
+            Mapper.Map(entity, layer);
+
+            await _storage.InsertOrReplaceAsync(entity);
         }
 
-        public async Task InsetLayerAsync(IAssetConditionLayer layer)
+        /// <summary>
+        /// Deletes an asset conditon layer.
+        /// </summary>
+        /// <param name="layerId">The layer id.</param>
+        /// <returns></returns>
+        public async Task DeleteAsync(string layerId)
         {
-            var entity = new AssetConditionLayerEntity(
-                GetAssetConditionLayerPartitionKey(),
-                GetAssetConditionLayerRowKey(layer.Id.Trim().ToLower()),
-                layer.Priority,
-                layer.Description,
-                layer.ClientsCanCashInViaBankCards,
-                layer.SwiftDepositEnabled);
-
-            await _assetConditionLayerTable.InsertAsync(entity);
-
-            if (layer.AssetConditions != null)
-            {
-                foreach (var assetCondition in layer.AssetConditions.Values)
-                {
-                    await InsertOrUpdateAssetConditionsToLayerAsync(layer.Id, assetCondition);
-                }
-            }
+            await _storage.DeleteAsync(GetPartitionKey(), GetRowKey(layerId));
         }
 
-        public async Task UpdateLayerAsync(IAssetConditionLayer layer)
-        {
-            await _assetConditionLayerTable.ReplaceAsync(GetAssetConditionLayerPartitionKey(),
-                GetAssetConditionLayerRowKey(layer.Id),
-                current => current.Apply(layer.Priority, layer.Description, layer.ClientsCanCashInViaBankCards,
-                    layer.SwiftDepositEnabled));
-        }
+        private static string GetPartitionKey()
+            => "ConditionLayer";
 
-        public async Task DeleteLayerAsync(string layerId)
-        {
-            var assetConditions = await _assetConditionTable.GetDataAsync(GetAssetConditionPartitionKey(layerId));
-            await _assetConditionTable.DeleteAsync(assetConditions);
-
-            await _assetConditionLayerTable.DeleteAsync(GetAssetConditionLayerPartitionKey(),
-                GetAssetConditionLayerRowKey(layerId));
-        }
-        
-        private static string GetAssetConditionLayerPartitionKey()
-        {
-            return "ConditionLayer";
-        }
-
-        private static string GetAssetConditionLayerRowKey(string layerId)
-        {
-            return layerId;
-        }
-
-        private static string GetAssetConditionPartitionKey(string layerId)
-        {
-            return $"Condition_{layerId}";
-        }
-
-        private static string GetAssetConditionRowKey(string asset)
-        {
-            return asset;
-        }
+        private static string GetRowKey(string layerId)
+            => layerId.Trim().ToLower();
     }
 }

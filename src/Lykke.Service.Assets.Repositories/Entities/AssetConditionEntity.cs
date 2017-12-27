@@ -9,19 +9,10 @@ namespace Lykke.Service.Assets.Repositories.Entities
         {
         }
 
-        public AssetConditionEntity(
-            string partitionKey,
-            string rowKey,
-            string layer,
-            string asset,
-            bool? availableToClient,
-            string regulation)
+        public AssetConditionEntity(string partitionKey, string rowKey, string layerId)
             : base(partitionKey, rowKey)
         {
-            Layer = layer;
-            Asset = asset;
-            AvailableToClient = availableToClient;
-            Regulation = regulation;
+            Layer = layerId;
         }
 
         public string Layer { get; set; }

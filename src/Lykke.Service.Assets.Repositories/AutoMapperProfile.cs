@@ -53,7 +53,16 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<IMarginAsset,       MarginAssetEntity>();
             CreateMap<IMarginAssetPair,   MarginAssetPairEntity>();
             CreateMap<IMarginIssuer,      MarginIssuerEntity>();
-            CreateMap<IAssetConditionDefaultLayer, AssetConditionDefaultLayerEntity>();
+
+            CreateMap<IAssetCondition, AssetConditionEntity>(MemberList.Source)
+                .ForMember(o => o.Layer, o => o.Ignore());
+            CreateMap<IAssetConditionLayer, AssetConditionLayerEntity>(MemberList.Source)
+                .ForSourceMember(o => o.AssetConditions, o => o.Ignore())
+                .ForSourceMember(o => o.Id, o => o.Ignore())
+                .ForMember(o => o.Priority, o => o.MapFrom(src => (double) src.Priority));
+
+            CreateMap<IAssetConditionSettings, AssetConditionSettingsEntity>(MemberList.Source);
+            CreateMap<IAssetConditionLayerSettings, AssetConditionLayerSettingsEntity>(MemberList.Source);
 
             ForAllMaps((map, cfg) =>
             {
@@ -89,6 +98,13 @@ namespace Lykke.Service.Assets.Repositories
                 .ForMember(dest => dest.AssetIds, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.AssetIds) ? src.AssetIds.Split(",", StringSplitOptions.RemoveEmptyEntries) : new string[0]));
 
             CreateMap<AssetGroupEntity, AssetGroupDto>();
+
+            CreateMap<AssetConditionLayerEntity, AssetConditionLayerDto>(MemberList.Destination)
+                .ForMember(o => o.AssetConditions, o => o.Ignore())
+                .ForMember(o => o.Priority, o => o.MapFrom(src => (decimal) src.Priority));
+
+            CreateMap<AssetConditionSettingsEntity, AssetConditionSettingsDto>(MemberList.Destination);
+            CreateMap<AssetConditionLayerSettingsEntity, AssetConditionLayerSettingsDto>(MemberList.Destination);
         }
     }
 }

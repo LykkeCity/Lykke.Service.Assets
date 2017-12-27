@@ -4,6 +4,10 @@ namespace Lykke.Service.Assets.Services.Domain
 {
     public class AssetCondition : IAssetCondition
     {
+        public AssetCondition()
+        {
+        }
+
         public AssetCondition(string asset)
         {
             Asset = asset;

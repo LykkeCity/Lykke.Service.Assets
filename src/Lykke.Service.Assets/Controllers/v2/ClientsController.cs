@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses.V2;
+using Lykke.Service.Assets.Responses.v2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 
@@ -58,10 +59,12 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(IEnumerable<AssetConditionDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAssetConditions(string clientId)
         {
-            IReadOnlyDictionary<string, IAssetCondition> result =
+            IEnumerable<IAssetCondition> conditions =
                 await _assetConditionService.GetAssetConditionsByClient(clientId);
 
-            return Ok(result.Values);
+            var model = Mapper.Map<List<AssetConditionDto>>(conditions);
+
+            return Ok(model);
         }
     }
 }
