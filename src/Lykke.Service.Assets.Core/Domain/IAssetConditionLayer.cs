@@ -15,9 +15,14 @@ namespace Lykke.Service.Assets.Core.Domain
         string Id { get; }
 
         /// <summary>
-        /// Asset condition
+        /// Asset condition.
         /// </summary>
         IList<IAssetCondition> AssetConditions { get; }
+
+        /// <summary>
+        /// Asset default condition.
+        /// </summary>
+        IAssetDefaultCondition AssetDefaultCondition { get; }
 
         /// <summary>
         /// Prioryty of layer.

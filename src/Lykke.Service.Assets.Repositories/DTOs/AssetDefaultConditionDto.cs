@@ -2,7 +2,7 @@
 
 namespace Lykke.Service.Assets.Repositories.DTOs
 {
-    public class AssetConditionSettingsDto : IAssetConditionSettings
+    public class AssetDefaultConditionDto : IAssetDefaultCondition
     {
         public bool? AvailableToClient { get; set; }
         public string Regulation { get; set; }

@@ -16,14 +16,20 @@ namespace Lykke.Service.Assets.Services.Tests
     {
         private readonly List<IAssetConditionLayer> _layers = new List<IAssetConditionLayer>();
 
+        private readonly AssetDefaultConditionLayer _defaultConditionLayer = new AssetDefaultConditionLayer
+        {
+            Id = "DefaultLayer",
+            AssetConditions = new List<IAssetCondition>()
+        };
+
         private readonly Mock<IAssetConditionRepository> _assetConditionRepositoryMock =
             new Mock<IAssetConditionRepository>();
 
-        private readonly Mock<IAssetConditionSettingsRepository> _assetConditionSettingsRepositoryMock =
-            new Mock<IAssetConditionSettingsRepository>();
+        private readonly Mock<IAssetDefaultConditionRepository> _assetDefaultConditionRepositoryMock =
+            new Mock<IAssetDefaultConditionRepository>();
 
-        private readonly Mock<IAssetConditionLayerSettingsRepository> _assetConditionLayerSettingsRepositoryMock =
-            new Mock<IAssetConditionLayerSettingsRepository>();
+        private readonly Mock<IAssetDefaultConditionLayerRepository> _assetDefaultConditionLayerRepositoryMock =
+            new Mock<IAssetDefaultConditionLayerRepository>();
 
         private readonly Mock<IAssetConditionLayerRepository> _assetConditionLayerRepositoryMock =
             new Mock<IAssetConditionLayerRepository>();
@@ -42,36 +48,168 @@ namespace Lykke.Service.Assets.Services.Tests
             _service = new AssetConditionService(
                 _assetConditionRepositoryMock.Object,
                 _assetConditionLayerRepositoryMock.Object,
-                _assetConditionSettingsRepositoryMock.Object,
-                _assetConditionLayerSettingsRepositoryMock.Object,
+                _assetDefaultConditionRepositoryMock.Object,
+                _assetDefaultConditionLayerRepositoryMock.Object,
                 _assetConditionLayerLinkClientRepositoryMock.Object,
                 _cacheMock.Object);
 
-            _assetConditionLayerLinkClientRepositoryMock.Setup(o => o.GetAllLayersByClientAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult((IReadOnlyList<string>) new List<string>()));
+            _assetConditionLayerLinkClientRepositoryMock.Setup(o => o.GetLayersAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult((IEnumerable<string>) new List<string>()));
+
+            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult((IEnumerable<IAssetCondition>) new List<IAssetCondition>()));
+
+            _assetDefaultConditionRepositoryMock.Setup(o => o.GetAsync(It.IsAny<string>()))
+                .Returns((string layerId) =>
+                    Task.FromResult(_layers.FirstOrDefault(o => o.Id == layerId)?.AssetDefaultCondition));
+
+            _assetDefaultConditionLayerRepositoryMock.Setup(o => o.GetAsync())
+                .Returns(Task.FromResult((IAssetDefaultConditionLayer)_defaultConditionLayer));
 
             _assetConditionLayerRepositoryMock.Setup(o => o.GetAsync(It.IsAny<IEnumerable<string>>()))
                 .Returns(Task.FromResult((IEnumerable<IAssetConditionLayer>) _layers));
 
-            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.IsAny<string>()))
-                .Returns((string layerId) =>Task.FromResult((IEnumerable<IAssetCondition>) _layers.First(o => o.Id == layerId).AssetConditions));
-
-            _assetConditionLayerSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionLayerSettings) new AssetConditionLayerSettings()));
-
-            _assetConditionSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionSettings) new AssetConditionSettings()));
+            _assetConditionRepositoryMock.Setup(o =>
+                    o.GetAsync(It.Is<string>(p => p == _defaultConditionLayer.Id || _layers.Any(l => l.Id == p))))
+                .Returns((string layerId) =>
+                    Task.FromResult((IEnumerable<IAssetCondition>) (layerId == _defaultConditionLayer.Id
+                        ? _defaultConditionLayer.AssetConditions
+                        : _layers.First(o => o.Id == layerId).AssetConditions)));
         }
 
         [TestMethod]
-        public async Task GetAssetConditionsByClient_Valid_Count()
+        public async Task GetLayerAsync_Return_Layer_With_Conditions()
         {
             // arrange
-            const string clientId = "c1";
-            const string asset1 = "a1";
-            const string asset2 = "a2";
-            const string regulation1 = "r1";
-            const string regulation2 = "r2";
+            var layer = new AssetConditionLayerDto
+            {
+                Id = "layer_1"
+            };
+
+            var conditions = new List<IAssetCondition>
+            {
+                new AssetCondition("asset_1"),
+                new AssetCondition("asset_2")
+            };
+
+            var defaultConditions = new AssetDefaultCondition();
+
+            _assetConditionLayerRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
+                .Returns(Task.FromResult((IAssetConditionLayer) layer));
+
+            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
+                .Returns(Task.FromResult((IEnumerable<IAssetCondition>) conditions));
+
+            _assetDefaultConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
+                .Returns(Task.FromResult((IAssetDefaultCondition) defaultConditions));
+
+            // act
+            IAssetConditionLayer result = await _service.GetLayerAsync(layer.Id);
+
+            // assert
+            Assert.IsTrue(result?.AssetConditions.Count == conditions.Count && result.AssetDefaultCondition != null);
+        }
+
+        [TestMethod]
+        public async Task GetDefaultLayerAsync_Return_Layer_With_Conditions()
+        {
+            // arrange
+            var layer = new AssetDefaultConditionLayer
+            {
+                Id = "DefaultLayer"
+            };
+
+            var conditions = new List<IAssetCondition>
+            {
+                new AssetCondition("asset_1"),
+                new AssetCondition("asset_2")
+            };
+
+            _assetDefaultConditionLayerRepositoryMock.Setup(o => o.GetAsync())
+                .Returns(Task.FromResult((IAssetDefaultConditionLayer) layer));
+
+            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
+                .Returns(Task.FromResult((IEnumerable<IAssetCondition>)conditions));
+
+            // act
+            IAssetDefaultConditionLayer result = await _service.GetDefaultLayerAsync();
+
+            // assert
+            Assert.AreEqual(conditions.Count, result?.AssetConditions.Count);
+        }
+
+        [TestMethod]
+        public async Task DeleteLayerAsync_All_Related_Entities_Deleted()
+        {
+            // arrange
+            string layerId = "layer_1";
+
+            // act
+            await _service.DeleteLayerAsync(layerId);
+
+            // assert
+            _assetConditionRepositoryMock.Verify(o => o.DeleteAsync(It.Is<string>(p => p == layerId)));
+            _assetConditionLayerRepositoryMock.Verify(o => o.DeleteAsync(It.Is<string>(p => p == layerId)));
+            _assetDefaultConditionRepositoryMock.Verify(o => o.DeleteAsync(It.Is<string>(p => p == layerId)));
+            _assetConditionLayerLinkClientRepositoryMock.Verify(o => o.RemoveLayerFromClientsAsync(It.Is<string>(p => p == layerId)));
+        }
+
+        [TestMethod]
+        public async Task GetClientLayers_Return_Layers_With_Conditions()
+        {
+            // arrange
+            string clientId = "client_1";
+
+            var layer = new AssetConditionLayerDto
+            {
+                Id = "layer_1"
+            };
+
+            var conditions = new List<IAssetCondition>
+            {
+                new AssetCondition("asset_1"),
+                new AssetCondition("asset_2")
+            };
+
+            var defaultConditions = new AssetDefaultCondition();
+
+            _assetConditionLayerLinkClientRepositoryMock.Setup(o => o.GetLayersAsync(It.Is<string>(p => p == clientId)))
+                .Returns(Task.FromResult((IEnumerable<string>) new List<string>
+                {
+                    layer.Id
+                }));
+
+            _assetConditionLayerRepositoryMock.Setup(o =>
+                    o.GetAsync(It.Is<IEnumerable<string>>(p => p.First() == layer.Id)))
+                .Returns(Task.FromResult((IEnumerable<IAssetConditionLayer>) new List<IAssetConditionLayer>
+                {
+                    layer
+                }));
+
+            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
+                .Returns(Task.FromResult((IEnumerable<IAssetCondition>)conditions));
+
+            _assetDefaultConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
+                .Returns(Task.FromResult((IAssetDefaultCondition)defaultConditions));
+
+            // act
+            IEnumerable<IAssetConditionLayer> result = await _service.GetClientLayers(clientId);
+
+            // assert
+            IAssetConditionLayer firstConditionLayer = result.First();
+            Assert.IsTrue(firstConditionLayer.AssetConditions.Count == conditions.Count && firstConditionLayer.AssetDefaultCondition != null);
+        }
+
+        [TestMethod]
+        public async Task GetAssetConditionsByClient_Valid_Merge_With_Default_Conditions()
+        {
+            // arrange
+            const string clientId = "client_1";
+            const string asset1 = "asset_1";
+            const string asset2 = "asset_2";
+            const string asset3 = "asset_3";
+            const string regulation1 = "regulation_1";
+            const string regulation2 = "regulation_2";
 
             _layers.AddRange(new[]
             {
@@ -89,28 +227,32 @@ namespace Lykke.Service.Assets.Services.Tests
                     CreateAssetCondition(asset1, null, regulation2)
                 })
             });
+
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
             
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
 
             // assert
-            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual(3, result.Count());
         }
 
         [TestMethod]
-        public async Task GetAssetConditionsByClient_Valid_Merge()
+        public async Task GetAssetConditionsByClient_No_Default_Layer_Conditions()
         {
             // arrange
-            const string clientId = "c1";
-            const string asset1 = "a1";
-            const string regulation1 = "r1";
-            const string regulation2 = "r2";
+            const string clientId = "client_1";
+            const string asset1 = "asset_1";
+            const string asset2 = "asset_2";
+            const string regulation1 = "regulation_1";
+            const string regulation2 = "regulation_2";
 
             _layers.AddRange(new[]
             {
                 CreateAssetConditionLayer("1", 1, true, true, new List<IAssetCondition>
                 {
-                    CreateAssetCondition(asset1, false, regulation1)
+                    CreateAssetCondition(asset1, false, regulation1),
+                    CreateAssetCondition(asset2, false, regulation2)
                 }),
                 CreateAssetConditionLayer("3", 3, true, true, new List<IAssetCondition>
                 {
@@ -125,120 +267,150 @@ namespace Lykke.Service.Assets.Services.Tests
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
 
-            IAssetCondition condition = result.First();
-
             // assert
-            Assert.IsTrue(condition.Regulation == regulation2 && condition.AvailableToClient == true);
+            Assert.AreEqual(2, result.Count());
         }
 
         [TestMethod]
-        public async Task GetAssetConditionsByClient_Use_Default_Settings_If_Conditions_Undefined()
+        public async Task GetAssetConditionsByClient_No_Client_Layers_Use_Default_Layer_Conditions()
         {
             // arrange
-            const string clientId = "client1";
-            const string assetId = "asset1";
-            const string regulation = "r1";
+            const string clientId = "client_1";
+            const string asset1 = "asset_1";
+            const string asset2 = "asset_2";
+            const string asset3 = "asset_3";
+            const string regulation1 = "regulation_1";
+            const string regulation2 = "regulation_2";
 
-            var defaultLayerSettings = new AssetConditionLayerSettings
-            {
-                SwiftDepositEnabled = true,
-                ClientsCanCashInViaBankCards = true
-            };
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset1, true, regulation2));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset2, true, regulation2));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation1));
 
-            var defaultAssetSettings = new AssetConditionSettings
-            {
-                Regulation = regulation,
-                AvailableToClient = true
-            };
+            // act
+            IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
+
+            // assert
+            Assert.AreEqual(3, result.Count());
+        }
+
+        [TestMethod]
+        public async Task GetAssetConditionsByClient_Top_Layer_Default_Condition_Overrides_Underlying_Conditions()
+        {
+            // arrange
+            const string clientId = "client_1";
+            const string asset1 = "asset_1";
+            const string asset2 = "asset_2";
+            const string asset3 = "asset_3";
+            const string regulation1 = "regulation_1";
+            const string regulation2 = "regulation_2";
 
             _layers.AddRange(new[]
             {
                 CreateAssetConditionLayer("1", 1, true, true, new List<IAssetCondition>
                 {
-                    CreateAssetCondition(assetId, null, null)
+                    CreateAssetCondition(asset1, true, regulation2),
+                    CreateAssetCondition(asset2, true, regulation2)
                 }),
+                CreateAssetConditionLayer("3", 3, true, true, new List<IAssetCondition>
+                    {
+                        CreateAssetCondition(asset1, true, regulation1)
+                    },
+                    new AssetDefaultCondition
+                    {
+                        Regulation = regulation1,
+                        AvailableToClient = false
+                    })
             });
 
-            _assetConditionLayerSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionLayerSettings)defaultLayerSettings));
-
-            _assetConditionSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionSettings) defaultAssetSettings));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
 
             // act
-            IEnumerable<IAssetCondition> conditions = await _service.GetAssetConditionsByClient(clientId);
-
-            IAssetCondition condition = conditions.First();
+            IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
 
             // assert
-            Assert.IsTrue(condition.Regulation == regulation && condition.AvailableToClient == true);
+            Assert.IsTrue(result.First(o => o.AvailableToClient == true).Asset == asset1);
         }
 
+
         [TestMethod]
-        public async Task GetAssetConditionsByClient_Override_Default_Settings()
+        public async Task GetAssetConditionsByClient_Override_Default_Layer_Conditions()
         {
             // arrange
-            const string clientId = "client1";
-            const string assetId = "asset1";
-            const string regulation1 = "r1";
-            const string regulation2 = "r2";
-
-            var defaultLayerSettings = new AssetConditionLayerSettings
-            {
-                SwiftDepositEnabled = true,
-                ClientsCanCashInViaBankCards = true
-            };
-
-            var defaultAssetSettings = new AssetConditionSettings
-            {
-                Regulation = regulation1,
-                AvailableToClient = true
-            };
+            const string clientId = "client_1";
+            const string asset1 = "asset_1";
+            const string asset2 = "asset_2";
+            const string asset3 = "asset_3";
+            const string regulation1 = "regulation_1";
+            const string regulation2 = "regulation_2";
 
             _layers.AddRange(new[]
             {
                 CreateAssetConditionLayer("1", 1, true, true, new List<IAssetCondition>
                 {
-                    CreateAssetCondition(assetId, false, regulation2)
-                }),
+                    CreateAssetCondition(asset1, false, regulation1),
+                    CreateAssetCondition(asset2, false, regulation1),
+                    CreateAssetCondition(asset3, false, regulation1)
+                })
             });
 
-            _assetConditionLayerSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionLayerSettings)defaultLayerSettings));
-
-            _assetConditionSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionSettings)defaultAssetSettings));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset1, true, regulation2));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset2, true, regulation2));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
 
             // act
-            IEnumerable<IAssetCondition> conditions = await _service.GetAssetConditionsByClient(clientId);
-
-            IAssetCondition condition = conditions.First();
+            IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
 
             // assert
-            Assert.IsTrue(condition.Regulation == regulation2 && condition.AvailableToClient == false);
+            Assert.AreEqual(0, result.Count(o => o.AvailableToClient == true || o.Regulation == regulation2));
         }
 
+        [TestMethod]
+        public async Task GetAssetConditionsByClient_Override_Default_Layer_Conditions_Using_Default_Conditions()
+        {
+            // arrange
+            const string clientId = "client_1";
+            const string asset1 = "asset_1";
+            const string asset2 = "asset_2";
+            const string asset3 = "asset_3";
+            const string regulation1 = "regulation_1";
+            const string regulation2 = "regulation_2";
+
+            _layers.AddRange(new[]
+            {
+                CreateAssetConditionLayer("1", 1, true, true, new List<IAssetCondition>(),
+                new AssetDefaultCondition
+                {
+                    Regulation = regulation1,
+                    AvailableToClient = false
+                })
+            });
+
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset1, true, regulation2));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset2, true, regulation2));
+            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
+
+            // act
+            IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
+
+            // assert
+            Assert.AreEqual(0, result.Count(o => o.AvailableToClient == true || o.Regulation == regulation2));
+        }
+        
         [TestMethod]
         public async Task GetAssetConditionsLayerSettingsByClient_Use_Default_Settings_If_No_Conditions()
         {
             // arrange
             const string clientId = "client1";
 
-            var defaultLayerSettings = new AssetConditionLayerSettings
-            {
-                SwiftDepositEnabled = true,
-                ClientsCanCashInViaBankCards = true
-            };
-
-            _assetConditionLayerSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionLayerSettings)defaultLayerSettings));
+            _defaultConditionLayer.SwiftDepositEnabled = true;
+            _defaultConditionLayer.ClientsCanCashInViaBankCards = true;
 
             // act
             IAssetConditionLayerSettings settings = await _service.GetAssetConditionsLayerSettingsByClient(clientId);
 
             // assert
-            Assert.AreEqual(defaultLayerSettings.ClientsCanCashInViaBankCards, settings.ClientsCanCashInViaBankCards);
-            Assert.AreEqual(defaultLayerSettings.SwiftDepositEnabled, settings.SwiftDepositEnabled);
+            Assert.AreEqual(_defaultConditionLayer.ClientsCanCashInViaBankCards, settings.ClientsCanCashInViaBankCards);
+            Assert.AreEqual(_defaultConditionLayer.SwiftDepositEnabled, settings.SwiftDepositEnabled);
         }
 
         [TestMethod]
@@ -247,26 +419,20 @@ namespace Lykke.Service.Assets.Services.Tests
             // arrange
             const string clientId = "client1";
 
-            var defaultLayerSettings = new AssetConditionLayerSettings
-            {
-                SwiftDepositEnabled = true,
-                ClientsCanCashInViaBankCards = true
-            };
+            _defaultConditionLayer.SwiftDepositEnabled = true;
+            _defaultConditionLayer.ClientsCanCashInViaBankCards = true;
 
             _layers.AddRange(new[]
             {
                 CreateAssetConditionLayer("1", 1, null, null, new List<IAssetCondition>())
             });
 
-            _assetConditionLayerSettingsRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetConditionLayerSettings)defaultLayerSettings));
-
             // act
             IAssetConditionLayerSettings settings = await _service.GetAssetConditionsLayerSettingsByClient(clientId);
 
             // assert
-            Assert.AreEqual(defaultLayerSettings.ClientsCanCashInViaBankCards, settings.ClientsCanCashInViaBankCards);
-            Assert.AreEqual(defaultLayerSettings.SwiftDepositEnabled, settings.SwiftDepositEnabled);
+            Assert.AreEqual(_defaultConditionLayer.ClientsCanCashInViaBankCards, settings.ClientsCanCashInViaBankCards);
+            Assert.AreEqual(_defaultConditionLayer.SwiftDepositEnabled, settings.SwiftDepositEnabled);
         }
 
         [TestMethod]
@@ -287,8 +453,8 @@ namespace Lykke.Service.Assets.Services.Tests
             Assert.AreEqual(false, settings.ClientsCanCashInViaBankCards);
             Assert.AreEqual(true, settings.SwiftDepositEnabled);
         }
-
-        private static AssetConditionLayerDto CreateAssetConditionLayer(string id, double priority, bool? swift, bool? cashIn, List<IAssetCondition> conditions)
+        
+        private static AssetConditionLayerDto CreateAssetConditionLayer(string id, double priority, bool? swift, bool? cashIn, List<IAssetCondition> conditions, IAssetDefaultCondition defaultCondition = null)
         {
             return new AssetConditionLayerDto
             {
@@ -297,7 +463,8 @@ namespace Lykke.Service.Assets.Services.Tests
                 Priority = (decimal)priority,
                 SwiftDepositEnabled = swift,
                 ClientsCanCashInViaBankCards = cashIn,
-                AssetConditions = conditions
+                AssetConditions = conditions,
+                AssetDefaultCondition = defaultCondition,
             };
         }
 

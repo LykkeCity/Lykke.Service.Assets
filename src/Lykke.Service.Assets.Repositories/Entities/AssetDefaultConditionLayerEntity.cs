@@ -2,13 +2,13 @@
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {
-    public class AssetConditionLayerSettingsEntity : TableEntity
+    public class AssetDefaultConditionLayerEntity : TableEntity
     {
-        public AssetConditionLayerSettingsEntity()
+        public AssetDefaultConditionLayerEntity()
         {
         }
 
-        public AssetConditionLayerSettingsEntity(string partitionKey, string rowKey)
+        public AssetDefaultConditionLayerEntity(string partitionKey, string rowKey)
             : base(partitionKey, rowKey)
         {
         }

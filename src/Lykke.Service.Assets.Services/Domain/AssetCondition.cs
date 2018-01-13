@@ -17,11 +17,8 @@ namespace Lykke.Service.Assets.Services.Domain
         public bool? AvailableToClient { get; set; }
         public string Regulation { get; set; }
 
-        public void Apply(IAssetCondition assetCondition)
+        public void Apply(IAssetConditionSettings assetCondition)
         {
-            if (assetCondition.Asset != Asset)
-                return;
-
             if (assetCondition.AvailableToClient.HasValue)
                 AvailableToClient = assetCondition.AvailableToClient;
 

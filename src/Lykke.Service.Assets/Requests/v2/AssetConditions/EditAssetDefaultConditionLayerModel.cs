@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Lykke.Service.Assets.Responses.v2
+namespace Lykke.Service.Assets.Requests.v2.AssetConditions
 {
-    public class AssetConditionLayerSettings
+    public class EditAssetDefaultConditionLayerModel
     {
         [Required]
         public bool ClientsCanCashInViaBankCards { get; set; }

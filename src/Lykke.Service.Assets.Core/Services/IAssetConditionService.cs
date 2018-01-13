@@ -13,17 +13,27 @@ namespace Lykke.Service.Assets.Core.Services
 
         Task<IAssetConditionLayer> GetLayerAsync(string layerId);
 
+        Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync();
+
         Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition);
 
         Task UpdateAssetConditionAsync(string layerId, IAssetCondition assetCondition);
 
         Task DeleteAssetConditionAsync(string layerId, string assetId);
 
+        Task AddDefaultAssetConditionAsync(string layerId, IAssetDefaultCondition assetDefaultCondition);
+
+        Task UpdateDefaultAssetConditionAsync(string layerId, IAssetDefaultCondition assetDefaultCondition);
+
+        Task DeleteDefaultAssetConditionAsync(string layerId);
+
         Task AddLayerAsync(IAssetConditionLayer layer);
 
         Task UpdateLayerAsync(IAssetConditionLayer layer);
 
         Task DeleteLayerAsync(string layerId);
+
+        Task UpdateDefaultLayerAsync(IAssetConditionLayerSettings settings);
 
         Task<IEnumerable<IAssetConditionLayer>> GetClientLayers(string clientId);
 

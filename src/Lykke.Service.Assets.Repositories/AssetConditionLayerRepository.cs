@@ -71,7 +71,7 @@ namespace Lykke.Service.Assets.Repositories
         {
             var entity = new AssetConditionLayerEntity(GetPartitionKey(), GetRowKey(layer.Id));
 
-            Mapper.Map(entity, layer);
+            Mapper.Map(layer, entity);
 
             await _storage.InsertOrReplaceAsync(entity);
         }

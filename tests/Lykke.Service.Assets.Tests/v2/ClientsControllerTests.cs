@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Lykke.Service.Assets.Controllers.V2;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses.v2;
+using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Lykke.Service.Assets.Services.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -62,13 +62,13 @@ namespace Lykke.Service.Assets.Tests.v2
             // act
             IActionResult actionResult = await _controller.GetAssetConditions(clientId);
 
-            var value = ((OkObjectResult)actionResult).Value as IEnumerable<AssetConditionDto>;
+            var value = ((OkObjectResult)actionResult).Value as IEnumerable<AssetConditionModel>;
 
             // assert
             Assert.IsTrue(AreEqual(value?.FirstOrDefault(), condition));
         }
 
-        private bool AreEqual(AssetConditionDto a, IAssetCondition b)
+        private bool AreEqual(AssetConditionModel a, IAssetCondition b)
         {
             if (a == null && b == null)
                 return true;

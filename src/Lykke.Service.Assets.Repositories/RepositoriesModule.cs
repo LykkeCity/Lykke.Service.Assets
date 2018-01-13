@@ -54,8 +54,8 @@ namespace Lykke.Service.Assets.Repositories
 
             var assetConditionTable = CreateTable<AssetConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName);
             var assetConditionLayerTable = CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName);
-            var assetDefaultConditionTable = CreateTable<AssetConditionSettingsEntity>(DictionariesConnectionString, assetConditionLayerTableName);
-            var assetDefaultConditionLayerTable = CreateTable<AssetConditionLayerSettingsEntity>(DictionariesConnectionString, assetConditionLayerTableName);
+            var assetDefaultConditionTable = CreateTable<AssetDefaultConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName);
+            var assetDefaultConditionLayerTable = CreateTable<AssetDefaultConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName);
             var assetConditionLayerLinkClientTable = CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, assetConditionTableName);
             
             builder.RegisterInstance<IAssetAttributeRepository>
@@ -115,11 +115,11 @@ namespace Lykke.Service.Assets.Repositories
             builder.RegisterInstance<IAssetConditionLayerRepository>(
                 new AssetConditionLayerRepository(assetConditionLayerTable));
 
-            builder.RegisterInstance<IAssetConditionSettingsRepository>(
-                new AssetConditionSettingsRepository(assetDefaultConditionTable));
+            builder.RegisterInstance<IAssetDefaultConditionRepository>(
+                new AssetDefaultConditionRepository(assetDefaultConditionTable));
 
-            builder.RegisterInstance<IAssetConditionLayerSettingsRepository>(
-                new AssetConditionLayerSettingsRepository(assetDefaultConditionLayerTable));
+            builder.RegisterInstance<IAssetDefaultConditionLayerRepository>(
+                new AssetDefaultConditionLayerRepository(assetDefaultConditionLayerTable));
 
             builder.RegisterInstance<IAssetConditionLayerLinkClientRepository>(
                 new AssetConditionLayerLinkClientRepository(assetConditionLayerLinkClientTable));

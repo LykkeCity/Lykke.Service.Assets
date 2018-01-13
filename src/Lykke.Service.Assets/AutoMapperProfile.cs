@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.Responses.v2;
+using Lykke.Service.Assets.Requests.v2.AssetConditions;
+using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Lykke.Service.Assets.Responses.V2;
 
 namespace Lykke.Service.Assets
@@ -9,43 +10,40 @@ namespace Lykke.Service.Assets
     {
         public AutoMapperProfile()
         {
-            CreateMap<IAsset,             Asset>();
-            CreateMap<IAssetAttributes,   AssetAttributes>();
-            CreateMap<IAssetAttribute,    AssetAttribute>();
-            CreateMap<IAssetCategory,     AssetCategory>();
-            CreateMap<IAssetDescription,  AssetDescription>();
+            CreateMap<IAsset, Asset>();
+            CreateMap<IAssetAttributes, AssetAttributes>();
+            CreateMap<IAssetAttribute, AssetAttribute>();
+            CreateMap<IAssetCategory, AssetCategory>();
+            CreateMap<IAssetDescription, AssetDescription>();
             CreateMap<IAssetExtendedInfo, AssetExtendedInfo>();
-            CreateMap<IAssetGroup,        AssetGroup>();
-            CreateMap<IAssetPair,         AssetPair>();
-            CreateMap<IAssetSettings,     AssetSettings>();
-            CreateMap<IErc20Token,        Erc20Token>();
-            CreateMap<IIssuer,            Issuer>();
-            CreateMap<IMarginAsset,       MarginAsset>();
-            CreateMap<IMarginAssetPair,   MarginAssetPair>();
-            CreateMap<IMarginIssuer,      MarginIssuer>();
-            CreateMap<IWatchList,         WatchList>();
+            CreateMap<IAssetGroup, AssetGroup>();
+            CreateMap<IAssetPair, AssetPair>();
+            CreateMap<IAssetSettings, AssetSettings>();
+            CreateMap<IErc20Token, Erc20Token>();
+            CreateMap<IIssuer, Issuer>();
+            CreateMap<IMarginAsset, MarginAsset>();
+            CreateMap<IMarginAssetPair, MarginAssetPair>();
+            CreateMap<IMarginIssuer, MarginIssuer>();
+            CreateMap<IWatchList, WatchList>();
 
-            CreateMap<IAssetCondition, AssetConditionDto>(MemberList.Source)
-                .ReverseMap();
+            CreateMap<IAssetCondition, AssetConditionModel>(MemberList.Source);
+            CreateMap<IAssetConditionLayer, AssetConditionLayerModel>(MemberList.Source)
+                .ForMember(dest => dest.AssetConditions, opt => opt.MapFrom(src => src.AssetConditions))
+                .ForMember(dest => dest.DefaultCondition, opt => opt.MapFrom(src => src.AssetDefaultCondition));
 
-            CreateMap<IAssetConditionLayer, AssetConditionLayerDto>(MemberList.Source)
+            CreateMap<IAssetDefaultCondition, AssetDefaultConditionModel>(MemberList.Source);
+            CreateMap<IAssetDefaultConditionLayer, AssetDefaultConditionLayerModel>(MemberList.Source)
                 .ForMember(dest => dest.AssetConditions, opt => opt.MapFrom(src => src.AssetConditions));
 
-            CreateMap<AssetConditionDto, Services.Domain.AssetCondition>(MemberList.Destination);
-            CreateMap<AssetConditionLayerDto, Services.Domain.AssetConditionLayer>(MemberList.Destination)
-                .ForMember(dest => dest.AssetConditions, opt => opt.MapFrom(src => src.AssetConditions));
+            CreateMap<EditAssetConditionModel, Services.Domain.AssetCondition>(MemberList.Destination);
+            CreateMap<EditAssetConditionLayerModel, Services.Domain.AssetConditionLayer>(MemberList.Destination)
+                .ForMember(dest => dest.AssetConditions, opt => opt.Ignore())
+                .ForMember(dest => dest.AssetDefaultCondition, opt => opt.Ignore());
 
-            CreateMap<AssetConditionSettings, Services.Domain.AssetCondition>(MemberList.Destination)
-                .ForMember(dest => dest.Asset, opt => opt.Ignore());
-
-            CreateMap<IAssetCondition, AssetConditionSettings> (MemberList.Source)
-                .ForSourceMember(dest => dest.Asset, opt => opt.Ignore());
-
-            CreateMap<IAssetConditionSettings, AssetConditionSettings>(MemberList.Source);
-            CreateMap<AssetConditionSettings, Services.Domain.AssetConditionSettings>(MemberList.Destination);
-
-            CreateMap<IAssetConditionLayerSettings, AssetConditionLayerSettings>(MemberList.Source);
-            CreateMap<AssetConditionLayerSettings, Services.Domain.AssetConditionLayerSettings>(MemberList.Destination);
+            CreateMap<EditAssetDefaultConditionModel, Services.Domain.AssetDefaultCondition>(MemberList.Destination);
+            CreateMap<EditAssetDefaultConditionLayerModel, Services.Domain.AssetDefaultConditionLayer>(MemberList.Destination)
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.AssetConditions, opt => opt.Ignore());
         }
     }
 }

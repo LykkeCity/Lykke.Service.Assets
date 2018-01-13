@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses.v2;
+using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.SwaggerGen.Annotations;
 
@@ -39,7 +39,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> IsAllowedMakeSwiftDeposit(string clientId, [FromQuery] bool isIosDevice)
         {
-            var result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
+            bool result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }
@@ -49,20 +49,20 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> IsAllowedToCashInViaBankCard(string clientId, [FromQuery] bool isIosDevice)
         {
-            var result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
+            bool result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }
 
         [HttpGet("{clientId}/asset-conditions")]
         [SwaggerOperation("ClientGetAssetConditions")]
-        [ProducesResponseType(typeof(IEnumerable<AssetConditionDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<AssetConditionModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAssetConditions(string clientId)
         {
             IEnumerable<IAssetCondition> conditions =
                 await _assetConditionService.GetAssetConditionsByClient(clientId);
 
-            var model = Mapper.Map<List<AssetConditionDto>>(conditions);
+            var model = Mapper.Map<List<AssetConditionModel>>(conditions);
 
             return Ok(model);
         }

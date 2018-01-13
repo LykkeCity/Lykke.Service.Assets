@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Lykke.Service.Assets.Controllers.V2;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Responses.v2;
+using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Lykke.Service.Assets.Services.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +17,6 @@ namespace Lykke.Service.Assets.Tests.v2
     {
         private readonly Mock<IAssetService> _assetServiceMock = new Mock<IAssetService>();
         private readonly Mock<IAssetConditionService> _assetConditionServiceMock = new Mock<IAssetConditionService>();
-        private readonly Mock<IAssetConditionSettingsService> _assetConditionSettingsServiceMock = new Mock<IAssetConditionSettingsService>();
 
         private AssetConditionsController _controller;
 
@@ -26,8 +25,7 @@ namespace Lykke.Service.Assets.Tests.v2
         {
             _controller = new AssetConditionsController(
                 _assetServiceMock.Object,
-                _assetConditionServiceMock.Object,
-                _assetConditionSettingsServiceMock.Object);
+                _assetConditionServiceMock.Object);
         }
 
         [TestMethod]
@@ -52,7 +50,7 @@ namespace Lykke.Service.Assets.Tests.v2
             // act
             IActionResult actionResult = await _controller.GetLayersAsync();
 
-            var result = ((IEnumerable<AssetConditionLayerDto>) ((OkObjectResult) actionResult).Value).First();
+            var result = ((IEnumerable<AssetConditionLayerModel>) ((OkObjectResult) actionResult).Value).First();
 
             // assert
             Assert.IsTrue(AreEqual(result, layer));
@@ -79,6 +77,11 @@ namespace Lykke.Service.Assets.Tests.v2
                         Regulation = "regulation",
                         AvailableToClient = true
                     }
+                },
+                AssetDefaultCondition = new AssetDefaultCondition
+                {
+                    Regulation = "regulation",
+                    AvailableToClient = true
                 }
             };
 
@@ -88,13 +91,13 @@ namespace Lykke.Service.Assets.Tests.v2
             // act
             IActionResult actionResult = await _controller.GetLayerByIdAsync(layerId);
 
-            var result = (AssetConditionLayerDto) ((OkObjectResult) actionResult).Value;
+            var result = (AssetConditionLayerModel) ((OkObjectResult) actionResult).Value;
 
             // assert
             Assert.IsTrue(AreEqual(result, layer));
         }
 
-        private bool AreEqual(AssetConditionLayerDto a, IAssetConditionLayer b)
+        private bool AreEqual(AssetConditionLayerModel a, IAssetConditionLayer b)
         {
             if (a == null && b == null)
                 return true;
@@ -117,7 +120,7 @@ namespace Lykke.Service.Assets.Tests.v2
                    a.AssetConditions.All(o => b.AssetConditions.Any(p => AreEqual(o, p)));
         }
 
-        private bool AreEqual(AssetConditionDto a, IAssetCondition b)
+        private bool AreEqual(AssetConditionModel a, IAssetCondition b)
         {
             if (a == null && b == null)
                 return true;

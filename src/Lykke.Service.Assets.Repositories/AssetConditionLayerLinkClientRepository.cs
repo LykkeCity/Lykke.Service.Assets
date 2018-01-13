@@ -16,17 +16,7 @@ namespace Lykke.Service.Assets.Repositories
             _table = table;
         }
 
-        public static string GetPartitionKey(string clientId)
-        {
-            return clientId;
-        }
-
-        public static string GetRowKey(string layerId)
-        {
-            return layerId;
-        }
-
-        public async Task<IReadOnlyList<string>> GetAllLayersByClientAsync(string clientId)
+        public async Task<IEnumerable<string>> GetLayersAsync(string clientId)
         {
             var links = await _table.GetDataAsync(GetPartitionKey(clientId));
             return links.Select(e => e.LayerId).ToList();
@@ -47,5 +37,11 @@ namespace Lykke.Service.Assets.Repositories
             var clients = await _table.GetDataRowKeysOnlyAsync(new[] {GetRowKey(layerId)});
             await _table.DeleteAsync(clients);
         }
+
+        public static string GetPartitionKey(string clientId)
+            => clientId;
+
+        public static string GetRowKey(string layerId)
+            => layerId;
     }
 }

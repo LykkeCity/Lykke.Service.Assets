@@ -98,10 +98,6 @@ namespace Lykke.Service.Assets.Services
                 .RegisterType<WatchListService>()
                 .As<IWatchListService>()
                 .SingleInstance();
-            
-            builder.RegisterType<AssetConditionSettingsService>()
-                .As<IAssetConditionSettingsService>()
-                .SingleInstance();
         }
     }
 }
