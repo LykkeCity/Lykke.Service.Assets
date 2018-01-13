@@ -10,7 +10,7 @@ using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Lykke.Service.Assets.Services.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {

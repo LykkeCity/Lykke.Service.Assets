@@ -7,7 +7,7 @@ using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
