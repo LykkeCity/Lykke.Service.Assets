@@ -22,8 +22,12 @@ namespace Lykke.Service.Assets.Services.Domain
 
         public bool BlockchainWithdrawal { get; set; }
 
-        public bool BuyScreen { get; set; }
+        public string BlockchainIntegrationLayerId { get; set; }
 
+        public string BlockchainIntegrationLayerAssetId { get; set; }
+
+        public bool BuyScreen { get; set; }
+        
         public string CategoryId { get; set; }
 
         public bool CrosschainWithdrawal { get; set; }
