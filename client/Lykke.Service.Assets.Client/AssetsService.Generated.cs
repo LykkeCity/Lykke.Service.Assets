@@ -116,7 +116,7 @@ namespace Lykke.Service.Assets.Client
         /// </summary>
         private void Initialize()
         {
-            BaseUri = new System.Uri("http://localhost/");
+            BaseUri = new System.Uri("http://localhost");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -1687,7 +1687,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 404 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 400 && (int)_statusCode != 404)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1714,7 +1714,7 @@ namespace Lykke.Service.Assets.Client
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 404)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1732,7 +1732,7 @@ namespace Lykke.Service.Assets.Client
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 404)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -2141,7 +2141,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 404 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 400 && (int)_statusCode != 404)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2168,7 +2168,7 @@ namespace Lykke.Service.Assets.Client
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 404)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -2186,7 +2186,7 @@ namespace Lykke.Service.Assets.Client
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 404)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -2438,7 +2438,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 404 && (int)_statusCode != 400)
+            if ((int)_statusCode != 204 && (int)_statusCode != 400 && (int)_statusCode != 404)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -2465,7 +2465,7 @@ namespace Lykke.Service.Assets.Client
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 404)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -2483,7 +2483,7 @@ namespace Lykke.Service.Assets.Client
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 404)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -20410,11 +20410,12 @@ namespace Lykke.Service.Assets.Client.Models
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
         /// <param name="type">Possible values include: 'Erc20Token'</param>
-        public Asset(int accuracy, bool bankCardsDepositEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
+        public Asset(int accuracy, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
         {
             Accuracy = accuracy;
             AssetAddress = assetAddress;
             BankCardsDepositEnabled = bankCardsDepositEnabled;
+            OtherDepositOptionsEnabled = otherDepositOptionsEnabled;
             Blockchain = blockchain;
             BlockChainAssetId = blockChainAssetId;
             BlockchainDepositEnabled = blockchainDepositEnabled;
@@ -20476,6 +20477,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
         public bool BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "OtherDepositOptionsEnabled")]
+        public bool OtherDepositOptionsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'None', 'Bitcoin', 'Ethereum'
@@ -20766,59 +20772,6 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class ListOfAsset
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfAsset class.
-        /// </summary>
-        public ListOfAsset()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfAsset class.
-        /// </summary>
-        public ListOfAsset(IList<Asset> items = default(IList<Asset>))
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<Asset> Items { get; set; }
-
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public partial class AssetResponseModel
     {
         /// <summary>
@@ -20834,7 +20787,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
-        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, int multiplierPower, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, double dustLimit, Blockchain blockchain, bool notLykkeAsset, bool issueAllowed, bool bankCardsDepositEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, bool buyScreen, bool sellScreen, bool blockchainWithdrawal, bool swiftWithdrawal, bool forwardWithdrawal, bool crosschainWithdrawal, int forwardFrozenDays, bool isTrusted, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string), string definitionUrl = default(string), IList<string> partnerIds = default(IList<string>), double? lowVolumeAmount = default(double?), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string))
+        public AssetResponseModel(bool isBase, bool hideIfZero, int accuracy, int multiplierPower, bool isDisabled, bool hideWithdraw, bool hideDeposit, int defaultOrder, bool kycNeeded, double dustLimit, Blockchain blockchain, bool notLykkeAsset, bool issueAllowed, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, bool swiftDepositEnabled, bool blockchainDepositEnabled, bool buyScreen, bool sellScreen, bool blockchainWithdrawal, bool swiftWithdrawal, bool forwardWithdrawal, bool crosschainWithdrawal, int forwardFrozenDays, bool isTrusted, string id = default(string), string blockChainId = default(string), string blockChainAssetId = default(string), string name = default(string), string symbol = default(string), string idIssuer = default(string), string assetAddress = default(string), string categoryId = default(string), string definitionUrl = default(string), IList<string> partnerIds = default(IList<string>), double? lowVolumeAmount = default(double?), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string))
         {
             Id = id;
             BlockChainId = blockChainId;
@@ -20863,6 +20816,7 @@ namespace Lykke.Service.Assets.Client.Models
             DisplayAccuracy = displayAccuracy;
             DisplayId = displayId;
             BankCardsDepositEnabled = bankCardsDepositEnabled;
+            OtherDepositOptionsEnabled = otherDepositOptionsEnabled;
             SwiftDepositEnabled = swiftDepositEnabled;
             BlockchainDepositEnabled = blockchainDepositEnabled;
             BuyScreen = buyScreen;
@@ -21019,6 +20973,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
         public bool BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "OtherDepositOptionsEnabled")]
+        public bool OtherDepositOptionsEnabled { get; set; }
 
         /// <summary>
         /// </summary>
@@ -21247,59 +21206,6 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class ListOfAssetSettings
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfAssetSettings class.
-        /// </summary>
-        public ListOfAssetSettings()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfAssetSettings class.
-        /// </summary>
-        public ListOfAssetSettings(IList<AssetSettings> items = default(IList<AssetSettings>))
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<AssetSettings> Items { get; set; }
-
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public partial class Erc20Token
     {
         /// <summary>
@@ -21393,59 +21299,6 @@ namespace Lykke.Service.Assets.Client.Models
         {
             //Nothing to validate
         }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class ListOfErc20Token
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfErc20Token class.
-        /// </summary>
-        public ListOfErc20Token()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfErc20Token class.
-        /// </summary>
-        public ListOfErc20Token(IList<Erc20Token> items = default(IList<Erc20Token>))
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<Erc20Token> Items { get; set; }
-
     }
 }
 // <auto-generated>
@@ -21990,59 +21843,6 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class ListOfMarginIssuer
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfMarginIssuer class.
-        /// </summary>
-        public ListOfMarginIssuer()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfMarginIssuer class.
-        /// </summary>
-        public ListOfMarginIssuer(IList<MarginIssuer> items = default(IList<MarginIssuer>))
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<MarginIssuer> Items { get; set; }
-
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public partial class WatchList
     {
         /// <summary>
@@ -22105,6 +21905,218 @@ namespace Lykke.Service.Assets.Client.Models
         public virtual void Validate()
         {
         }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfAsset
+    {
+        /// <summary>
+        /// Initializes a new instance of the ListOfAsset class.
+        /// </summary>
+        public ListOfAsset()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfAsset class.
+        /// </summary>
+        public ListOfAsset(IList<Asset> items = default(IList<Asset>))
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<Asset> Items { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfAssetSettings
+    {
+        /// <summary>
+        /// Initializes a new instance of the ListOfAssetSettings class.
+        /// </summary>
+        public ListOfAssetSettings()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfAssetSettings class.
+        /// </summary>
+        public ListOfAssetSettings(IList<AssetSettings> items = default(IList<AssetSettings>))
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<AssetSettings> Items { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfErc20Token
+    {
+        /// <summary>
+        /// Initializes a new instance of the ListOfErc20Token class.
+        /// </summary>
+        public ListOfErc20Token()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfErc20Token class.
+        /// </summary>
+        public ListOfErc20Token(IList<Erc20Token> items = default(IList<Erc20Token>))
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<Erc20Token> Items { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfMarginIssuer
+    {
+        /// <summary>
+        /// Initializes a new instance of the ListOfMarginIssuer class.
+        /// </summary>
+        public ListOfMarginIssuer()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfMarginIssuer class.
+        /// </summary>
+        public ListOfMarginIssuer(IList<MarginIssuer> items = default(IList<MarginIssuer>))
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<MarginIssuer> Items { get; set; }
+
     }
 }
 // <auto-generated>

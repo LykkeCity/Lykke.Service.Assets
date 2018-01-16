@@ -10,6 +10,8 @@ namespace Lykke.Service.Assets.Repositories.Entities
 
         public bool BankCardsDepositEnabled { get; set; }
 
+        public bool OtherDepositOptionsEnabled { get; set; }
+
         public string Blockchain { get; set; }
 
         public string BlockChainAssetId { get; set; }

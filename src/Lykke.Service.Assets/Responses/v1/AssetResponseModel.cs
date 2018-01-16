@@ -59,6 +59,8 @@ namespace Lykke.Service.Assets.Responses.v1
         public string DisplayId { get; set; }
         
         public bool BankCardsDepositEnabled { get; set; }
+
+        public bool OtherDepositOptionsEnabled { get; set; }
         
         public bool SwiftDepositEnabled { get; set; }
         
@@ -110,6 +112,7 @@ namespace Lykke.Service.Assets.Responses.v1
                 DefaultOrder = src.DefaultOrder,
                 KycNeeded = src.KycNeeded,
                 BankCardsDepositEnabled = src.BankCardsDepositEnabled,
+                OtherDepositOptionsEnabled = src.OtherDepositOptionsEnabled,
                 SwiftDepositEnabled = src.SwiftDepositEnabled,
                 BlockchainDepositEnabled = src.BlockchainDepositEnabled,
                 CategoryId = src.CategoryId,
