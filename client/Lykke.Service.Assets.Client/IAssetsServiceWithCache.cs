@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client.Models;
@@ -9,10 +10,13 @@ namespace Lykke.Service.Assets.Client
     {
         Task<IReadOnlyCollection<AssetPair>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken());
 
+        [Obsolete]
         Task<IReadOnlyCollection<Asset>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
 
+        Task<IReadOnlyCollection<Asset>> GetAllAssetsAsync(bool includeNonTradable, CancellationToken cancellationToken = new CancellationToken());
+        
         Task<Asset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken());
-
+        
         Task<AssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken());
 
         /// <summary>
