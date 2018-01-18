@@ -21,12 +21,12 @@ namespace Lykke.Service.Assets.Core.Repositories
         Task<IEnumerable<IAssetCondition>> GetAsync(IEnumerable<string> layers);
 
         /// <summary>
-        /// Inserts a new entity if it does not exist, otherwise updates existing entity.
+        /// Adds or entirely replaces an asset condition.
         /// </summary>
         /// <param name="layerId">The id of the layer that contains asset condition.</param>
         /// <param name="assetCondition">The asset conditons.</param>
         /// <returns></returns>
-        Task InsertOrUpdateAsync(string layerId, IAssetCondition assetCondition);
+        Task InsertOrReplaceAsync(string layerId, IAssetCondition assetCondition);
 
         /// <summary>
         /// Deletes all asset conditons associated with layer.

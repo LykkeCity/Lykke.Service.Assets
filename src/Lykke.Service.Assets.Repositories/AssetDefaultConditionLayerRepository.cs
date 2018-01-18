@@ -34,11 +34,10 @@ namespace Lykke.Service.Assets.Repositories
         }
 
         /// <summary>
-        /// Updates default asset conditions layer.
+        /// Adds or entirely replaces a default asset conditions layer.
         /// </summary>
         /// <param name="settings">The asset conditions layer settings.</param>
-        /// <returns></returns>
-        public async Task UpdateAsync(IAssetConditionLayerSettings settings)
+        public async Task InsertOrReplaceAsync(IAssetConditionLayerSettings settings)
         {
             var entity = new AssetDefaultConditionLayerEntity(GetPartitionKey(), GetRowKey());
 

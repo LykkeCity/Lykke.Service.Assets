@@ -55,8 +55,7 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<IMarginIssuer,      MarginIssuerEntity>();
 
             CreateMap<IAssetCondition, AssetConditionEntity>(MemberList.Source)
-                .ForMember(o => o.Layer, o => o.Ignore())
-                .ForMember(o => o.Regulation, o => o.MapFrom(src => src.Regulation == null ? string.Empty : src.Regulation));
+                .ForMember(o => o.Layer, o => o.Ignore());
             CreateMap<IAssetConditionLayer, AssetConditionLayerEntity>(MemberList.Source)
                 .ForSourceMember(o => o.AssetConditions, o => o.Ignore())
                 .ForSourceMember(o => o.AssetDefaultCondition, o => o.Ignore())
@@ -64,8 +63,7 @@ namespace Lykke.Service.Assets.Repositories
                 .ForMember(o => o.Priority, o => o.MapFrom(src => (double) src.Priority));
 
             CreateMap<IAssetDefaultCondition, AssetDefaultConditionEntity>(MemberList.Source)
-                .ForMember(o => o.Layer, o => o.Ignore())
-                .ForMember(o => o.Regulation, o => o.MapFrom(src => src.Regulation == null ? string.Empty : src.Regulation));
+                .ForMember(o => o.Layer, o => o.Ignore());
             CreateMap<IAssetDefaultConditionLayer, AssetDefaultConditionLayerEntity>(MemberList.Source)
                 .ForSourceMember(o => o.AssetConditions, o => o.Ignore())
                 .ForSourceMember(o => o.Id, o => o.Ignore());

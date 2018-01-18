@@ -72,14 +72,14 @@ namespace Lykke.Service.Assets.Services
 
         public async Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition)
         {
-            await _assetConditionRepository.InsertOrUpdateAsync(layerId, assetCondition);
+            await _assetConditionRepository.InsertOrReplaceAsync(layerId, assetCondition);
 
             await _cacheManager.ClearCacheAsync("Added asset condition");
         }
 
         public async Task UpdateAssetConditionAsync(string layerId, IAssetCondition assetCondition)
         {
-            await _assetConditionRepository.InsertOrUpdateAsync(layerId, assetCondition);
+            await _assetConditionRepository.InsertOrReplaceAsync(layerId, assetCondition);
 
             await _cacheManager.ClearCacheAsync("Updated asset condition");
         }
@@ -93,14 +93,14 @@ namespace Lykke.Service.Assets.Services
 
         public async Task AddDefaultAssetConditionAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
         {
-            await _assetDefaultConditionRepository.InsertAsync(layerId, assetDefaultCondition);
+            await _assetDefaultConditionRepository.InsertOrReplaceAsync(layerId, assetDefaultCondition);
 
             await _cacheManager.ClearCacheAsync("Added default asset condition");
         }
 
         public async Task UpdateDefaultAssetConditionAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
         {
-            await _assetDefaultConditionRepository.UpdateAsync(layerId, assetDefaultCondition);
+            await _assetDefaultConditionRepository.InsertOrReplaceAsync(layerId, assetDefaultCondition);
 
             await _cacheManager.ClearCacheAsync("Updated default asset condition");
         }
@@ -114,12 +114,12 @@ namespace Lykke.Service.Assets.Services
 
         public async Task AddLayerAsync(IAssetConditionLayer layer)
         {
-            await _assetConditionLayerRepository.InsertOrUpdateAsync(layer);
+            await _assetConditionLayerRepository.InsertOrReplaceAsync(layer);
         }
 
         public async Task UpdateLayerAsync(IAssetConditionLayer layer)
         {
-            await _assetConditionLayerRepository.InsertOrUpdateAsync(layer);
+            await _assetConditionLayerRepository.InsertOrReplaceAsync(layer);
 
             await _cacheManager.ClearCacheAsync("Updated condition layer");
         }
@@ -137,7 +137,7 @@ namespace Lykke.Service.Assets.Services
 
         public async Task UpdateDefaultLayerAsync(IAssetConditionLayerSettings settings)
         {
-            await _assetDefaultConditionLayerRepository.UpdateAsync(settings);
+            await _assetDefaultConditionLayerRepository.InsertOrReplaceAsync(settings);
 
             await _cacheManager.ClearCacheAsync("Default asset condition layer changed");
         }

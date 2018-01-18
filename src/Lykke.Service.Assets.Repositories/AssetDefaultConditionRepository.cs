@@ -29,31 +29,17 @@ namespace Lykke.Service.Assets.Repositories
         }
 
         /// <summary>
-        /// Inserts a default asset conditions.
+        /// Adds or entirely replaces a default asset conditions.
         /// </summary>
         /// <param name="layerId">The layer id.</param>
         /// <param name="assetDefaultCondition">The default asset conditons.</param>
-        public async Task InsertAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
+        public async Task InsertOrReplaceAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
         {
             var entity = new AssetDefaultConditionEntity(GetPartitionKey(), GetRowKey(layerId), layerId);
 
             Mapper.Map(assetDefaultCondition, entity);
 
-            await _storage.InsertAsync(entity);
-        }
-
-        /// <summary>
-        /// Updates default asset conditions.
-        /// </summary>
-        /// <param name="layerId">The layer id.</param>
-        /// <param name="assetDefaultCondition">The default asset conditions.</param>
-        public async Task UpdateAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
-        {
-            await _storage.MergeAsync(GetPartitionKey(), GetRowKey(layerId), entity =>
-            {
-                Mapper.Map(assetDefaultCondition, entity);
-                return entity;
-            });
+            await _storage.InsertOrReplaceAsync(entity);
         }
 
         /// <summary>

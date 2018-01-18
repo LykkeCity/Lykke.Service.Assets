@@ -63,11 +63,11 @@ namespace Lykke.Service.Assets.Repositories
         }
 
         /// <summary>
-        /// Inserts a new entity if it does not exist, otherwise updates existing entity.
+        /// Adds or entirely replaces an asset conditions layer.
         /// </summary>
         /// <param name="layer">The asset conditon layer.</param>
         /// <returns></returns>
-        public async Task InsertOrUpdateAsync(IAssetConditionLayer layer)
+        public async Task InsertOrReplaceAsync(IAssetConditionLayer layer)
         {
             var entity = new AssetConditionLayerEntity(GetPartitionKey(), GetRowKey(layer.Id));
 

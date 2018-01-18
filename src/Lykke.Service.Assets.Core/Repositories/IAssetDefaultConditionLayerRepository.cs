@@ -15,6 +15,6 @@ namespace Lykke.Service.Assets.Core.Repositories
         /// Updates default asset conditions layer.
         /// </summary>
         /// <param name="settings">The asset conditions layer settings.</param>
-        Task UpdateAsync(IAssetConditionLayerSettings settings);
+        Task InsertOrReplaceAsync(IAssetConditionLayerSettings settings);
     }
 }
