@@ -1,4 +1,5 @@
 ﻿# Lykke.Service.Assets API Client Generation
+> see https://aka.ms/autorest
 
 1) Launch Lykke.Service.Assets on port 5000
 2) Run ```autorest readme.md``` or execute ```update.ps1```
