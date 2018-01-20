@@ -23,5 +23,9 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string Source { get; set; }
 
         public string Source2 { get; set; }
+
+        public double MinVolume { get; set; }
+
+        public double MinInvertedVolume { get; set;}
     }
 }

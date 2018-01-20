@@ -19,5 +19,9 @@
         string Source { get; }
 
         string Source2 { get; }
+
+        double MinVolume { get; }
+
+        double MinInvertedVolume { get; }
     }
 }
