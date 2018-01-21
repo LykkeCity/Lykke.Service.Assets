@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
@@ -33,6 +34,11 @@ namespace Lykke.Service.Assets.Services
                 throw new InvalidOperationException($"Asset for the token with specified address [{tokenAddress}] already exists.");
             }
 
+            if (!string.IsNullOrEmpty(erc20Token.TokenTotalSupply) && !BigInteger.TryParse(erc20Token.TokenTotalSupply, out var _))
+            {
+                throw new InvalidOperationException($"Specified token supply [{erc20Token.TokenTotalSupply}] is not valid BigInteger.");
+            }
+            
             // Creating asset
             var asset                   = Mapper.Map<Asset>(_assetService.CreateDefault());
             var blockchainAndDisplayIds = await GetBlockchainAndDisplayIdsAsync(erc20Token);
@@ -58,7 +64,7 @@ namespace Lykke.Service.Assets.Services
             var assetExtendedInfo = Mapper.Map<AssetExtendedInfo>(_assetExtendedInfoService.CreateDefault());
 
             assetExtendedInfo.Id            = asset.Id;
-            assetExtendedInfo.NumberOfCoins = erc20Token.TokenTotalSupply;
+            assetExtendedInfo.NumberOfCoins = GetNumberOfCoins(erc20Token);
             
 
             await _assetExtendedInfoService.AddAsync(assetExtendedInfo);
@@ -108,6 +114,30 @@ namespace Lykke.Service.Assets.Services
             }
 
             return (GetUniqueId(blockchainIds), GetUniqueId(displayIds));
+        }
+
+        /// <summary>
+        ///    Converts total supply from ethereum format to Lykke's number of coins
+        /// </summary>
+        /// <param name="token">
+        ///    Instance of Erc20Token.
+        /// </param>
+        /// <returns>
+        ///    String instance, that repesents total supply in Lykke's format.
+        /// </returns>
+        private static string GetNumberOfCoins(Erc20Token token)
+        {
+            if (string.IsNullOrEmpty(token.TokenTotalSupply))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                var tokenTotalSupply = BigInteger.Parse(token.TokenTotalSupply);
+                var divider          = BigInteger.Pow(10, token.TokenDecimals ?? 0); ;
+                
+                return (tokenTotalSupply / divider).ToString();
+            }
         }
     }
 }
