@@ -12,6 +12,8 @@ namespace Lykke.Service.Assets.Tests
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile<AutoMapperProfile>();
+                cfg.AddProfile<Services.AutoMapperProfile>();
+                cfg.AddProfile<Repositories.AutoMapperProfile>();
             });
         }
     }

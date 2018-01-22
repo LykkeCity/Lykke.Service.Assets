@@ -32,14 +32,6 @@ namespace Lykke.Service.Assets.Tests.Service
             string tokenTotalSupply,
             string expectedNumberOfTokens)
         {
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile<AutoMapperProfile>();
-                cfg.AddProfile<Services.AutoMapperProfile>();
-                cfg.AddProfile<Repositories.AutoMapperProfile>();
-            });
-
-
             var assetServiceMock             = new Mock<IAssetService>();
             var assetExtendedInfoServiceMock = new Mock<IAssetExtendedInfoService>();
             var erc20TokenServiceMock        = new Mock<IErc20TokenService>();
