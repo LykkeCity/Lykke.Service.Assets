@@ -20,9 +20,13 @@ namespace Lykke.Service.Assets.Tests.Service
         [DataTestMethod]
         [DataRow(0, "", "")]
         [DataRow(0, null, "")]
-        [DataRow(0, "42", "42")]
+        [DataRow(0, "42000", "42000")]
+        [DataRow(1, "42000", "4200")]
+        [DataRow(2, "42000", "420")]
         [DataRow(3, "42000", "42")]
-        [DataRow(4, "42000", "4")] // TODO: Ensure, that it is a valid conversion. probably, we should convert to "4.2"
+        [DataRow(4, "42000", "4.2")]
+        [DataRow(5, "42000", "0.42")]
+        [DataRow(6, "42000", "0.042")]
         public async Task CreateAssetForErc20TokenAsync__TokenTotalSupply_Converted_To_NumberOfTokens(
             int? tokenDecimals,
             string tokenTotalSupply,

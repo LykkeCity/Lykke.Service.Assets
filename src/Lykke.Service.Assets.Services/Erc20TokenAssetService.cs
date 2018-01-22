@@ -133,10 +133,28 @@ namespace Lykke.Service.Assets.Services
             }
             else
             {
-                var tokenTotalSupply = BigInteger.Parse(token.TokenTotalSupply);
-                var divider          = BigInteger.Pow(10, token.TokenDecimals ?? 0); ;
-                
-                return (tokenTotalSupply / divider).ToString();
+                var tokenDecimals = token.TokenDecimals ?? 0;
+
+                if (tokenDecimals == 0)
+                {
+                    return token.TokenTotalSupply;
+                }
+
+                string numberOfCoins;
+
+                if (tokenDecimals >= token.TokenTotalSupply.Length)
+                {
+                    numberOfCoins = token.TokenTotalSupply.PadLeft(tokenDecimals + 1, '0');
+                    numberOfCoins = numberOfCoins.Insert(numberOfCoins.Length - tokenDecimals, ".");
+                }
+                else
+                {
+                    numberOfCoins = token.TokenTotalSupply.Insert(token.TokenTotalSupply.Length - tokenDecimals, ".");
+                }
+
+                numberOfCoins = numberOfCoins.TrimEnd('0').TrimEnd('.');
+
+                return numberOfCoins;
             }
         }
     }
