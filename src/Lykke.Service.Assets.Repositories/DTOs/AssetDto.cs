@@ -93,5 +93,7 @@ namespace Lykke.Service.Assets.Repositories.DTOs
         public AssetType? Type { get; set; }
 
         public bool IsTrusted { get; set; }
+
+        public double CashinMinimalAmount { get; set; }
     }
 }

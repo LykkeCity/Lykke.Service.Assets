@@ -93,5 +93,7 @@ namespace Lykke.Service.Assets.Responses.V2
         public AssetType? Type { get; set; }
 
         public bool IsTrusted { get; set; }
+
+        public double CashinMinimalAmount { get; set; }
     }
 }

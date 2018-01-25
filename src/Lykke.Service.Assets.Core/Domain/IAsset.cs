@@ -101,5 +101,7 @@
         AssetType? Type { get; }
 
         bool IsTrusted { get; }
+
+        double CashinMinimalAmount { get; }
     }
 }
