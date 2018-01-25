@@ -103,5 +103,7 @@
         bool IsTrusted { get; }
 
         double CashinMinimalAmount { get; }
+
+        double CashoutMinimalAmount { get; }
     }
 }

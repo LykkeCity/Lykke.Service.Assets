@@ -95,5 +95,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public bool IsTrusted { get; set; }
 
         public double CashinMinimalAmount { get; set; }
+
+        public double CashoutMinimalAmount { get; set; }
     }
 }
