@@ -20,8 +20,14 @@
 
         string Source2 { get; }
 
+        /// <summary>
+        /// Minimum volume of Limit or Market orders
+        /// </summary>
         double MinVolume { get; }
 
+        /// <summary>
+        /// Minimum volume of Limit or Market orders for inverted pair
+        /// </summary>
         double MinInvertedVolume { get; }
     }
 }
