@@ -20,6 +20,10 @@
 
         bool BlockchainWithdrawal { get; }
 
+        string BlockchainIntegrationLayerId { get; set; }
+
+        string BlockchainIntegrationLayerAssetId { get; set; }
+
         bool BuyScreen { get; }
 
         string CategoryId { get; }
