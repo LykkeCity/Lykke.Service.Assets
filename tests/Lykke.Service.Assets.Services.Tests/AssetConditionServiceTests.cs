@@ -228,7 +228,7 @@ namespace Lykke.Service.Assets.Services.Tests
                 })
             });
 
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset3, true, regulation2));
             
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
@@ -282,9 +282,9 @@ namespace Lykke.Service.Assets.Services.Tests
             const string regulation1 = "regulation_1";
             const string regulation2 = "regulation_2";
 
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset1, true, regulation2));
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset2, true, regulation2));
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation1));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset1, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset2, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset3, true, regulation1));
 
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
@@ -322,7 +322,7 @@ namespace Lykke.Service.Assets.Services.Tests
                     })
             });
 
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset3, true, regulation2));
 
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
@@ -353,9 +353,9 @@ namespace Lykke.Service.Assets.Services.Tests
                 })
             });
 
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset1, true, regulation2));
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset2, true, regulation2));
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset1, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset2, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset3, true, regulation2));
 
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
@@ -385,9 +385,9 @@ namespace Lykke.Service.Assets.Services.Tests
                 })
             });
 
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset1, true, regulation2));
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset2, true, regulation2));
-            _defaultConditionLayer.AssetConditions.Add(CreateAssetCondition(asset3, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset1, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset2, true, regulation2));
+            ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset3, true, regulation2));
 
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);

@@ -54,6 +54,13 @@ namespace Lykke.Service.Assets.Controllers.V2
             return Ok(result);
         }
 
+        /// <summary>
+        /// Returns a collection of the client asset conditions.
+        /// This collection contains merged asset conditions for all layers associated with client
+        /// and default layer for initial asset conditions.  
+        /// </summary>
+        /// <param name="clientId">The client id.</param>
+        /// <returns>A collection of the client asset conditions.</returns>
         [HttpGet("{clientId}/asset-conditions")]
         [SwaggerOperation("ClientGetAssetConditions")]
         [ProducesResponseType(typeof(IEnumerable<AssetConditionModel>), (int)HttpStatusCode.OK)]

@@ -6,6 +6,6 @@ namespace Lykke.Service.Assets.Core.Domain
     {
         string Id { get; }
 
-        IList<IAssetCondition> AssetConditions { get; }
+        IReadOnlyList<IAssetCondition> AssetConditions { get; }
     }
 }

@@ -11,7 +11,7 @@ namespace Lykke.Service.Assets.Repositories.DTOs
         }
 
         public string Id { get; set; }
-        public IList<IAssetCondition> AssetConditions { get; set; }
+        public IReadOnlyList<IAssetCondition> AssetConditions { get; set; }
         public bool? ClientsCanCashInViaBankCards { get; set; }
         public bool? SwiftDepositEnabled { get; set; }
     }

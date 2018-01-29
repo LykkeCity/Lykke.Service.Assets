@@ -17,7 +17,7 @@ namespace Lykke.Service.Assets.Core.Domain
         /// <summary>
         /// Asset condition.
         /// </summary>
-        IList<IAssetCondition> AssetConditions { get; }
+        IReadOnlyList<IAssetCondition> AssetConditions { get; }
 
         /// <summary>
         /// Asset default condition.
