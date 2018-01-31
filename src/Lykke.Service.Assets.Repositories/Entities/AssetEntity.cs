@@ -99,5 +99,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public double CashinMinimalAmount { get; set; }
 
         public double CashoutMinimalAmount { get; set; }
+        
+        public string LykkeEntityId { get; set; }
     }
 }
