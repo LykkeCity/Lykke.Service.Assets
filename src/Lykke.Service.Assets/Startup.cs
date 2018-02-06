@@ -6,6 +6,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using AzureStorage.Tables;
 using Common.Log;
+using JetBrains.Annotations;
 using Lykke.AzureQueueIntegration;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
@@ -25,6 +26,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Lykke.Service.Assets
 {
+    [UsedImplicitly]
     public class Startup
     {
         private readonly IConfigurationRoot  _configuration;
@@ -148,7 +150,10 @@ namespace Lykke.Service.Assets
                 });
 
                 app.UseMvc();
-                app.UseSwagger();
+                app.UseSwagger(c =>
+                {
+                    c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
+                });
                 app.UseSwaggerUI(x =>
                 {
                     x.RoutePrefix = "swagger/ui";

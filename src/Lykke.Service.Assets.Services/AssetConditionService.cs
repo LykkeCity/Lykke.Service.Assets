@@ -239,8 +239,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IAssetConditionLayerSettings> GetAssetConditionsLayerSettingsByClient(string clientId)
         {
-            IEnumerable<IAssetConditionLayer> layers = await GetClientLayers(clientId);
-            IAssetConditionLayerSettings defaultLayer = await _assetDefaultConditionLayerRepository.GetAsync();
+            var layers = await GetClientLayers(clientId);
+            var defaultLayer = await _assetDefaultConditionLayerRepository.GetAsync();
 
             var settings = Mapper.Map<AssetConditionLayerSettings>(defaultLayer);
 

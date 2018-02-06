@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Lykke.Service.Assets
 {
+    [UsedImplicitly]
     internal class Program
     {
         private static void Main(string[] args)
