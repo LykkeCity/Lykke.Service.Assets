@@ -29,6 +29,8 @@ namespace Lykke.Service.Assets.Repositories
             const string dictionaryTableName  = "Dictionaries";
             const string erc20TokenTableName  = "Erc20Tokens";
             const string watchListTableName   = "WatchLists";
+            const string assetConditionTableName = "AssetCondition";
+            const string assetConditionLayerTableName = "AssetConditionLayer";
 
             string ClientPersonalInfoConnectionString(ApplicationSettings x) => x.AssetsService.Db.ClientPersonalInfoConnString;
             string DictionariesConnectionString(ApplicationSettings x)       => x.AssetsService.Dictionaries.DbConnectionString;
@@ -50,12 +52,12 @@ namespace Lykke.Service.Assets.Repositories
             var marginIssuerTable        = CreateTable<MarginIssuerEntity>(DictionariesConnectionString, assetIssuerTableName);
             var predefinedWatchListTable = CreateTable<PredefinedWatchListEntity>(DictionariesConnectionString, watchListTableName);
 
-            var assetConditionTable      = CreateTable<AssetConditionEntity>(DictionariesConnectionString, "AssetConditionLayer");
-            var assetConditionLayerTable = CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, "AssetConditionLayer");
-            var assetConditionLayerLinkClientTable = 
-                CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, "AssetCondition");
+            var assetConditionTable = CreateTable<AssetConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName);
+            var assetConditionLayerTable = CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName);
+            var assetDefaultConditionTable = CreateTable<AssetDefaultConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName);
+            var assetDefaultConditionLayerTable = CreateTable<AssetDefaultConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName);
+            var assetConditionLayerLinkClientTable = CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, assetConditionTableName);
             
-
             builder.RegisterInstance<IAssetAttributeRepository>
                 (new AssetAttributeRepository(assetAttributeTable));
 
@@ -107,8 +109,17 @@ namespace Lykke.Service.Assets.Repositories
             builder.RegisterInstance<IPredefinedWatchListRepository>
                 (new PredefinedWatchListRepository(predefinedWatchListTable));
 
+            builder.RegisterInstance<IAssetConditionRepository>(
+                new AssetConditionRepository(assetConditionTable));
+
             builder.RegisterInstance<IAssetConditionLayerRepository>(
-                new AssetConditionLayerRepository(assetConditionTable, assetConditionLayerTable));
+                new AssetConditionLayerRepository(assetConditionLayerTable));
+
+            builder.RegisterInstance<IAssetDefaultConditionRepository>(
+                new AssetDefaultConditionRepository(assetDefaultConditionTable));
+
+            builder.RegisterInstance<IAssetDefaultConditionLayerRepository>(
+                new AssetDefaultConditionLayerRepository(assetDefaultConditionLayerTable));
 
             builder.RegisterInstance<IAssetConditionLayerLinkClientRepository>(
                 new AssetConditionLayerLinkClientRepository(assetConditionLayerLinkClientTable));

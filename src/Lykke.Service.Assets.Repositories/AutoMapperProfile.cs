@@ -53,7 +53,21 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<IMarginAsset,       MarginAssetEntity>();
             CreateMap<IMarginAssetPair,   MarginAssetPairEntity>();
             CreateMap<IMarginIssuer,      MarginIssuerEntity>();
-            
+
+            CreateMap<IAssetCondition, AssetConditionEntity>(MemberList.Source)
+                .ForMember(o => o.Layer, o => o.Ignore());
+            CreateMap<IAssetConditionLayer, AssetConditionLayerEntity>(MemberList.Source)
+                .ForSourceMember(o => o.AssetConditions, o => o.Ignore())
+                .ForSourceMember(o => o.AssetDefaultCondition, o => o.Ignore())
+                .ForSourceMember(o => o.Id, o => o.Ignore())
+                .ForMember(o => o.Priority, o => o.MapFrom(src => (double) src.Priority));
+
+            CreateMap<IAssetDefaultCondition, AssetDefaultConditionEntity>(MemberList.Source)
+                .ForMember(o => o.Layer, o => o.Ignore());
+            CreateMap<IAssetDefaultConditionLayer, AssetDefaultConditionLayerEntity>(MemberList.Source)
+                .ForSourceMember(o => o.AssetConditions, o => o.Ignore())
+                .ForSourceMember(o => o.Id, o => o.Ignore());
+            CreateMap<IAssetConditionLayerSettings, AssetDefaultConditionLayerEntity>(MemberList.Source);
 
             ForAllMaps((map, cfg) =>
             {
@@ -89,6 +103,16 @@ namespace Lykke.Service.Assets.Repositories
                 .ForMember(dest => dest.AssetIds, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.AssetIds) ? src.AssetIds.Split(",", StringSplitOptions.RemoveEmptyEntries) : new string[0]));
 
             CreateMap<AssetGroupEntity, AssetGroupDto>();
+
+            CreateMap<AssetConditionLayerEntity, AssetConditionLayerDto>(MemberList.Destination)
+                .ForMember(o => o.AssetConditions, o => o.Ignore())
+                .ForMember(o => o.AssetDefaultCondition, o => o.Ignore())
+                .ForMember(o => o.Priority, o => o.MapFrom(src => (decimal) src.Priority));
+
+            CreateMap<AssetDefaultConditionEntity, AssetDefaultConditionDto>(MemberList.Destination);
+            CreateMap<AssetDefaultConditionLayerEntity, AssetDefaultConditionLayerDto>(MemberList.Destination)
+                .ForMember(dest => dest.AssetConditions, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RowKey));
         }
     }
 }

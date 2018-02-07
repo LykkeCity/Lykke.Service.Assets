@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets", "src\Lykke.Service.Assets\Lykke.Service.Assets.csproj", "{80BA53B9-CA23-49E0-B9FE-DBA581E82B47}"
 EndProject
@@ -22,6 +22,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Client", "4. Client", "{3420C66E-488B-49E5-95D4-992D9E1F7540}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets.Client", "client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj", "{747B8280-19C3-44F9-8B27-BB24CD1420A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets.Services.Tests", "tests\Lykke.Service.Assets.Services.Tests\Lykke.Service.Assets.Services.Tests.csproj", "{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.Repositories.Tests", "tests\Lykke.Service.Assets.Repositories.Tests\Lykke.Service.Assets.Repositories.Tests.csproj", "{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,14 @@ Global
 		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{747B8280-19C3-44F9-8B27-BB24CD1420A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +75,8 @@ Global
 		{65E68E61-BBDC-48BC-BDF5-74A538666435} = {0C32A041-EA3F-4888-A58E-2B50F0AE0E58}
 		{20BDF5E2-CBB0-4A8F-B7A1-5F47B1418FD8} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
 		{747B8280-19C3-44F9-8B27-BB24CD1420A1} = {3420C66E-488B-49E5-95D4-992D9E1F7540}
+		{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
+		{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA175073-FA32-46DA-85F7-6B5D3ED37EA0}

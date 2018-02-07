@@ -9,7 +9,6 @@ namespace Lykke.Service.Assets
     [UsedImplicitly]
     internal class Program
     {
-        [UsedImplicitly]
         private static void Main(string[] args)
         {
             Console.WriteLine($"Assets service version {Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion}");

@@ -150,8 +150,15 @@ namespace Lykke.Service.Assets
                 });
 
                 app.UseMvc();
-                app.UseSwagger();
-                app.UseSwaggerUi();
+                app.UseSwagger(c =>
+                {
+                    c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
+                });
+                app.UseSwaggerUI(x =>
+                {
+                    x.RoutePrefix = "swagger/ui";
+                    x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                });
                 app.UseStaticFiles();
                 
                 appLifetime.ApplicationStarted.Register(()  => StartApplication().Wait());

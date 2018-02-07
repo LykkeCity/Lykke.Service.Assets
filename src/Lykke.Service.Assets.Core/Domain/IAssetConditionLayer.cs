@@ -15,11 +15,14 @@ namespace Lykke.Service.Assets.Core.Domain
         string Id { get; }
 
         /// <summary>
-        /// Dictionary with asset condition
-        /// Key - asset
-        /// Valuet - asset conditions
+        /// Asset condition.
         /// </summary>
-        IReadOnlyDictionary<string, IAssetCondition> AssetConditions { get; }
+        IReadOnlyList<IAssetCondition> AssetConditions { get; }
+
+        /// <summary>
+        /// Asset default condition.
+        /// </summary>
+        IAssetDefaultCondition AssetDefaultCondition { get; }
 
         /// <summary>
         /// Prioryty of layer.
@@ -33,7 +36,5 @@ namespace Lykke.Service.Assets.Core.Domain
         /// Can be use with BackOffice
         /// </summary>
         string Description { get; }
-
-        
     }
 }

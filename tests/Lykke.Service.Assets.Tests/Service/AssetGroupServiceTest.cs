@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Services.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Lykke.Service.Assets.Services.Tests
+namespace Lykke.Service.Assets.Tests.Service
 {
     [TestClass]
     public class AssetGroupServiceTest
@@ -172,7 +173,7 @@ namespace Lykke.Service.Assets.Services.Tests
 
         private void SetWithiotCache()
         {
-            _cacheManagerMock.Setup(e => e.TryGetSaveCashInViaBankCardEnabledForClient(It.IsAny<string>(), It.IsAny<bool>()))
+            _cacheManagerMock.Setup(e => e.TryGetCashInViaBankCardEnabledForClientAsync(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(Task.FromResult((bool?) null));
         }
 

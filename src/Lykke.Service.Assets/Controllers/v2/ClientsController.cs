@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
@@ -12,12 +14,15 @@ namespace Lykke.Service.Assets.Controllers.V2
     public class ClientsController : Controller
     {
         private readonly IAssetGroupService _assetGroupService;
+        private readonly IAssetConditionService _assetConditionService;
 
 
         public ClientsController(
-            IAssetGroupService assetGroupService)
+            IAssetGroupService assetGroupService,
+            IAssetConditionService assetConditionService)
         {
             _assetGroupService = assetGroupService;
+            _assetConditionService = assetConditionService;
         }
 
         [HttpGet("{clientId}/asset-ids")]
@@ -34,7 +39,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> IsAllowedMakeSwiftDeposit(string clientId, [FromQuery] bool isIosDevice)
         {
-            var result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
+            bool result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }
@@ -44,9 +49,29 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> IsAllowedToCashInViaBankCard(string clientId, [FromQuery] bool isIosDevice)
         {
-            var result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
+            bool result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns a collection of the client asset conditions.
+        /// This collection contains merged asset conditions for all layers associated with client
+        /// and default layer for initial asset conditions.  
+        /// </summary>
+        /// <param name="clientId">The client id.</param>
+        /// <returns>A collection of the client asset conditions.</returns>
+        [HttpGet("{clientId}/asset-conditions")]
+        [SwaggerOperation("ClientGetAssetConditions")]
+        [ProducesResponseType(typeof(IEnumerable<AssetConditionModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAssetConditions(string clientId)
+        {
+            IEnumerable<IAssetCondition> conditions =
+                await _assetConditionService.GetAssetConditionsByClient(clientId);
+
+            var model = Mapper.Map<List<AssetConditionModel>>(conditions);
+
+            return Ok(model);
         }
     }
 }

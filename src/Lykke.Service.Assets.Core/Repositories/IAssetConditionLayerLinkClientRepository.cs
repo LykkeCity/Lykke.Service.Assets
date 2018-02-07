@@ -5,7 +5,7 @@ namespace Lykke.Service.Assets.Core.Repositories
 {
     public interface IAssetConditionLayerLinkClientRepository
     {
-        Task<IReadOnlyList<string>> GetAllLayersByClientAsync(string clientId);
+        Task<IEnumerable<string>> GetLayersAsync(string clientId);
 
         Task AddAsync(string clientId, string layerId);
 

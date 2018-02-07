@@ -1,4 +1,7 @@
-﻿using Lykke.Service.Assets.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Services.Domain
 {
@@ -6,5 +9,14 @@ namespace Lykke.Service.Assets.Services.Domain
     {
         public bool? ClientsCanCashInViaBankCards { get; set; }
         public bool? SwiftDepositEnabled { get; set; }
+
+        public void Apply(IAssetConditionLayerSettings settings)
+        {
+            if (settings.ClientsCanCashInViaBankCards.HasValue)
+                ClientsCanCashInViaBankCards = settings.ClientsCanCashInViaBankCards;
+
+            if (settings.SwiftDepositEnabled.HasValue)
+                SwiftDepositEnabled = settings.SwiftDepositEnabled;
+        }
     }
 }
