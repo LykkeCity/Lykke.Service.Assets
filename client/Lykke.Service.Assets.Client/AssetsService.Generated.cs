@@ -21978,7 +21978,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetPair class.
         /// </summary>
-        public AssetPair(int accuracy, int invertedAccuracy, bool isDisabled, string baseAssetId = default(string), string id = default(string), string name = default(string), string quotingAssetId = default(string), string source = default(string), string source2 = default(string))
+        /// <param name="minVolume">Minimum volume of Limit or Market
+        /// orders</param>
+        /// <param name="minInvertedVolume">Minimum volume of Limit or Market
+        /// orders for inverted pair</param>
+        public AssetPair(int accuracy, int invertedAccuracy, bool isDisabled, double minVolume, double minInvertedVolume, string baseAssetId = default(string), string id = default(string), string name = default(string), string quotingAssetId = default(string), string source = default(string), string source2 = default(string))
         {
             Accuracy = accuracy;
             BaseAssetId = baseAssetId;
@@ -21989,6 +21993,8 @@ namespace Lykke.Service.Assets.Client.Models
             QuotingAssetId = quotingAssetId;
             Source = source;
             Source2 = source2;
+            MinVolume = minVolume;
+            MinInvertedVolume = minInvertedVolume;
             CustomInit();
         }
 
@@ -22041,6 +22047,19 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "Source2")]
         public string Source2 { get; set; }
+
+        /// <summary>
+        /// Gets or sets minimum volume of Limit or Market orders
+        /// </summary>
+        [JsonProperty(PropertyName = "MinVolume")]
+        public double MinVolume { get; set; }
+
+        /// <summary>
+        /// Gets or sets minimum volume of Limit or Market orders for inverted
+        /// pair
+        /// </summary>
+        [JsonProperty(PropertyName = "MinInvertedVolume")]
+        public double MinInvertedVolume { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -22203,7 +22222,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
         /// <param name="type">Possible values include: 'Erc20Token'</param>
-        public Asset(int accuracy, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string blockchainIntegrationLayerId = default(string), string blockchainIntegrationLayerAssetId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?))
+        public Asset(int accuracy, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, bool privateWalletsEnabled, double cashinMinimalAmount, double cashoutMinimalAmount, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string blockchainIntegrationLayerId = default(string), string blockchainIntegrationLayerAssetId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?), string lykkeEntityId = default(string))
         {
             Accuracy = accuracy;
             AssetAddress = assetAddress;
@@ -22250,6 +22269,10 @@ namespace Lykke.Service.Assets.Client.Models
             Symbol = symbol;
             Type = type;
             IsTrusted = isTrusted;
+            PrivateWalletsEnabled = privateWalletsEnabled;
+            CashinMinimalAmount = cashinMinimalAmount;
+            CashoutMinimalAmount = cashoutMinimalAmount;
+            LykkeEntityId = lykkeEntityId;
             CustomInit();
         }
 
@@ -22484,6 +22507,26 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "IsTrusted")]
         public bool IsTrusted { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "PrivateWalletsEnabled")]
+        public bool PrivateWalletsEnabled { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "CashinMinimalAmount")]
+        public double CashinMinimalAmount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "CashoutMinimalAmount")]
+        public double CashoutMinimalAmount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "LykkeEntityId")]
+        public string LykkeEntityId { get; set; }
 
         /// <summary>
         /// Validate the object.

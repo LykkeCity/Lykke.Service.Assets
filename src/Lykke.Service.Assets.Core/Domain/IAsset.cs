@@ -107,5 +107,10 @@
         double CashinMinimalAmount { get; }
 
         double CashoutMinimalAmount { get; }
+
+        /// <summary>
+        /// The Lykke entity id, which provides trade venue for this asset.
+        /// </summary>
+        string LykkeEntityId { get; }
     }
 }
