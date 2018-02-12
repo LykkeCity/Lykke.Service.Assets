@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services.Domain;
-
 
 namespace Lykke.Service.Assets.Services
 {
@@ -105,12 +102,6 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IEnumerable<string>> GetAssetIdsForClient(string clientId, bool isIosDevice)
         {
-            var cache = await _cacheManager.TryGetAssetForClientAsync(clientId, isIosDevice);
-            if (cache != null)
-            {
-                return cache; 
-            }
-
             var clientAssetIds = new List<string>();
             var clientAssetGroups =
                 (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).Where(x =>
@@ -123,14 +114,6 @@ namespace Lykke.Service.Assets.Services
 
                 clientAssetIds.AddRange(groupAssetIds);
             }
-
-            var conditions = await _assetConditionService.GetAssetConditionsByClient(clientId);
-
-            var map = conditions.ToDictionary(o => o.Asset, o => o);
-
-            clientAssetIds = clientAssetIds.Where(e => !map.ContainsKey(e) || (map[e].AvailableToClient ?? true)).ToList();
-
-            await _cacheManager.SaveAssetForClientAsync(clientId, isIosDevice, clientAssetIds);
 
             return clientAssetIds;
         }
