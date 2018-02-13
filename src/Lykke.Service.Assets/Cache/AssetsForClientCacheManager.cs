@@ -65,26 +65,20 @@ namespace Lykke.Service.Assets.Cache
             }
         }
 
-        public async Task SaveAssetForClientAsync(string clientId, bool isIosDevice, IEnumerable<string> clientAssetIds)
-            => await SetAsync(GetKeyAvailableAssets(clientId, isIosDevice), clientId, clientAssetIds.ToList());
+        public Task SaveCashInViaBankCardEnabledForClientAsync(string clientId, bool isIosDevice, bool enabled)
+            => SetAsync(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), clientId, enabled);
 
-        public async Task SaveCashInViaBankCardEnabledForClientAsync(string clientId, bool isIosDevice, bool enabled)
-            => await SetAsync(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), clientId, enabled);
+        public Task SaveSwiftDepositEnabledForClientAsync(string clientId, bool isIosDevice, bool enabled)
+            => SetAsync(GetKeySwiftDepositEnabled(clientId, isIosDevice), clientId, enabled);
 
-        public async Task SaveSwiftDepositEnabledForClientAsync(string clientId, bool isIosDevice, bool enabled)
-            => await SetAsync(GetKeySwiftDepositEnabled(clientId, isIosDevice), clientId, enabled);
+        public Task SaveAssetConditionsForClientAsync(string clientId, IList<IAssetCondition> conditions)
+            => SetAsync(GetKeyAssetConditions(clientId), clientId, conditions);
 
-        public async Task SaveAssetConditionsForClientAsync(string clientId, IList<IAssetCondition> conditions)
-            => await SetAsync(GetKeyAssetConditions(clientId), clientId, conditions);
+        public Task<bool?> TryGetCashInViaBankCardEnabledForClientAsync(string clientId, bool isIosDevice)
+            => TryGetAsync<bool?>(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), clientId);
 
-        public async Task<IReadOnlyList<string>> TryGetAssetForClientAsync(string clientId, bool isIosDevice)
-            => await TryGetAsync<List<string>>(GetKeyAvailableAssets(clientId, isIosDevice), clientId);
-
-        public async Task<bool?> TryGetCashInViaBankCardEnabledForClientAsync(string clientId, bool isIosDevice)
-            => await TryGetAsync<bool?>(GetKeyCashInViaBankCardEnabled(clientId, isIosDevice), clientId);
-
-        public async Task<bool?> TryGetSwiftDepositEnabledForClientAsync(string clientId, bool isIosDevice)
-            => await TryGetAsync<bool?>(GetKeySwiftDepositEnabled(clientId, isIosDevice), clientId);
+        public Task<bool?> TryGetSwiftDepositEnabledForClientAsync(string clientId, bool isIosDevice)
+            => TryGetAsync<bool?>(GetKeySwiftDepositEnabled(clientId, isIosDevice), clientId);
 
         public async Task<IList<IAssetCondition>> TryGetAssetConditionsForClientAsync(string clientId)
         {
@@ -92,7 +86,7 @@ namespace Lykke.Service.Assets.Cache
             return conditons?.Cast<IAssetCondition>().ToList();
         }
 
-        public async Task SetAsync<T>(string key, string context, T value)
+        private async Task SetAsync<T>(string key, string context, T value)
         {
             try
             {
