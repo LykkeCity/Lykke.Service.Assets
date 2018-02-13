@@ -32,7 +32,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetAssetIds(string clientId, [FromQuery] bool isIosDevice)
         {
             var assetIds = await _assetConditionService.GetAssetConditionsByClient(clientId);
-            return Ok(assetIds.Select(o => o.Asset));
+            return Ok(assetIds.Where(o => o.AvailableToClient == true).Select(o => o.Asset));
         }
 
         [HttpGet("{clientId}/swift-deposit-enabled")]
