@@ -27,13 +27,13 @@ namespace Lykke.Service.Assets.Services
         }
 
 
-        public async Task<IAssetPair> AddAsync(IAssetPair assetPair)
+        public Task<IAssetPair> AddAsync(IAssetPair assetPair)
         {
             _cqrsEngine.SendCommand(
                 new CreateAssetPairCommand { AssetPair = Mapper.Map<AssetPair>(assetPair) },
                 "assets", "assets");
 
-            return assetPair;
+            return Task.FromResult(assetPair);
         }
 
         public IAssetPair CreateDefault()
@@ -60,9 +60,13 @@ namespace Lykke.Service.Assets.Services
             await _assetPairRepository.RemoveAsync(id);
         }
 
-        public async Task UpdateAsync(IAssetPair assetPair)
+        public Task UpdateAsync(IAssetPair assetPair)
         {
-            await _assetPairRepository.UpsertAsync(assetPair);
+            _cqrsEngine.SendCommand(
+                new UpdateAssetPairCommand { AssetPair = Mapper.Map<AssetPair>(assetPair) },
+                "assets", "assets");
+
+            return Task.CompletedTask;
         }
     }
 }

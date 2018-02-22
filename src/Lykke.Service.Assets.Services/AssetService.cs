@@ -94,7 +94,9 @@ namespace Lykke.Service.Assets.Services
         {
             await ValidateAsset(asset);
 
-            await _assetRepository.UpdateAsync(asset);
+            _cqrsEngine.SendCommand(
+                new UpdateAssetCommand { Asset = Mapper.Map<Asset>(asset) },
+                "assets", "assets");
         }
 
         private async Task ValidateAsset(IAsset asset)

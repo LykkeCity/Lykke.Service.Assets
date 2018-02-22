@@ -77,14 +77,26 @@ namespace Lykke.Service.Assets.Modules
 
                 Register.BoundedContext("assets")
                     .FailedCommandRetryDelay(defaultRetryDelay)
-                    .ListeningCommands(typeof(CreateAssetCommand), typeof(CreateAssetPairCommand))
+                    .ListeningCommands(
+                            typeof(CreateAssetCommand),
+                            typeof(UpdateAssetCommand),
+                            typeof(CreateAssetPairCommand),
+                            typeof(UpdateAssetPairCommand))
                         .On(defaultRoute)
-                    .PublishingEvents(typeof(AssetCreatedEvent), typeof(AssetPairCreatedEvent))
+                    .PublishingEvents(
+                            typeof(AssetCreatedEvent),
+                            typeof(AssetUpdatedEvent),
+                            typeof(AssetPairCreatedEvent),
+                            typeof(AssetPairUpdatedEvent))
                         .With(defaultPipeline)
                     .WithCommandsHandler<AssetsHandler>(),
 
                 Register.DefaultRouting
-                    .PublishingCommands(typeof(CreateAssetCommand), typeof(CreateAssetPairCommand))
+                    .PublishingCommands(
+                            typeof(CreateAssetCommand),
+                            typeof(UpdateAssetCommand),
+                            typeof(CreateAssetPairCommand),
+                            typeof(UpdateAssetPairCommand))
                         .To("assets").With(defaultPipeline)
                 );
             })
