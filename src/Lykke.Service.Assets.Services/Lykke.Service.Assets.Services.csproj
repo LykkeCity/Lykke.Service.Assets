@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="Lykke.Cqrs" Version="4.1.0" />
     <PackageReference Include="Lykke.Logs" Version="3.6.0" />
   </ItemGroup>
 

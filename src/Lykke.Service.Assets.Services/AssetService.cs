@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using JetBrains.Annotations;
+using Lykke.Cqrs;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.Services
@@ -13,12 +17,15 @@ namespace Lykke.Service.Assets.Services
     public class AssetService : IAssetService
     {
         private readonly IAssetRepository _assetRepository;
+        private readonly ICqrsEngine _cqrsEngine;
 
 
         public AssetService(
-            IAssetRepository assetRepository)
+            [NotNull] IAssetRepository assetRepository,
+            [NotNull] ICqrsEngine cqrsEngine)
         {
-            _assetRepository = assetRepository;
+            _assetRepository = assetRepository ?? throw new ArgumentNullException(nameof(assetRepository));
+            _cqrsEngine = cqrsEngine ?? throw new ArgumentNullException(nameof(cqrsEngine));
         }
 
 
@@ -26,7 +33,9 @@ namespace Lykke.Service.Assets.Services
         {
             await ValidateAsset(asset);
 
-            await _assetRepository.AddAsync(asset);
+            _cqrsEngine.SendCommand(
+                new CreateAssetCommand { Asset = Mapper.Map<Asset>(asset) },
+                "assets", "assets");
 
             return asset;
         }
@@ -102,7 +111,7 @@ namespace Lykke.Service.Assets.Services
                 throw new ValidationException($"Asset accuracy [{asset.Accuracy}] should be less or equal to multiplier power [{asset.MultiplierPower}].");
             }
         }
-        
+
         private async Task ValidateBlockchainAssetId(IAsset asset)
         {
             if (!string.IsNullOrEmpty(asset.BlockChainAssetId))

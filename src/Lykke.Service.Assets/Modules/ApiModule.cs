@@ -9,19 +9,19 @@ using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
 
-namespace Lykke.Service.Assets
+namespace Lykke.Service.Assets.Modules
 {
     public class ApiModule : Module
     {
         private readonly IReloadingManager<ApplicationSettings> _settings;
-        private readonly ILog                                   _log;
+        private readonly ILog _log;
 
         public ApiModule(
             IReloadingManager<ApplicationSettings> settings,
             ILog log)
         {
             _settings = settings;
-            _log      = log;
+            _log = log;
         }
 
         protected override void Load(ContainerBuilder builder)

@@ -10,9 +10,11 @@ using JetBrains.Annotations;
 using Lykke.AzureQueueIntegration;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
+using Lykke.Cqrs;
 using Lykke.Logs;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Modules;
 using Lykke.Service.Assets.Repositories;
 using Lykke.Service.Assets.Responses.V2;
 using Lykke.Service.Assets.Services;
@@ -101,6 +103,7 @@ namespace Lykke.Service.Assets
                 var builder = new ContainerBuilder();
                 
                 builder.RegisterModule(new ApiModule(settings, _log));
+                builder.RegisterModule(new CqrsModule(settings, _log));
                 builder.RegisterModule(new RepositoriesModule(settings, _log));
                 builder.RegisterModule(new ServicesModule());
 
@@ -177,7 +180,9 @@ namespace Lykke.Service.Assets
         {
             try
             {
-                // NOTE: Service not yet recieve and process requests here
+                // NOTE: Service not yet receive and process requests here
+
+                var cqrs = _applicationContainer.Resolve<ICqrsEngine>(); // bootstrap
 
                 await _applicationContainer.Resolve<IStartupManager>().StartAsync();
 
@@ -194,7 +199,7 @@ namespace Lykke.Service.Assets
         {
             try
             {
-                // NOTE: Service still can recieve and process requests here, so take care about it if you add logic here.
+                // NOTE: Service still can receive and process requests here, so take care about it if you add logic here.
 
                 await _applicationContainer.Resolve<IShutdownManager>().StopAsync();
             }
@@ -212,7 +217,7 @@ namespace Lykke.Service.Assets
         {
             try
             {
-                // NOTE: Service can't recieve and process requests here, so you can destroy all resources
+                // NOTE: Service can't receive and process requests here, so you can destroy all resources
 
                 if (_log != null)
                 {
@@ -250,7 +255,7 @@ namespace Lykke.Service.Assets
             var dbLogConnectionStringManager = settings.Nested(x => x.AssetsService.Logs.DbConnectionString);
             var dbLogConnectionString        = dbLogConnectionStringManager.CurrentValue;
 
-            // Creating azure storage logger, which logs own messages to concole log
+            // Creating azure storage logger, which logs own messages to console log
             if (!string.IsNullOrEmpty(dbLogConnectionString) && !(dbLogConnectionString.StartsWith("${") && dbLogConnectionString.EndsWith("}")))
             {
                 const string appName = "Lykke.Service.Assets";

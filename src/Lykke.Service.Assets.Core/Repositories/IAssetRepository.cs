@@ -6,6 +6,8 @@ namespace Lykke.Service.Assets.Core.Repositories
 {
     public interface IAssetRepository
     {
+        Task InsertOrReplaceAsync(IAsset asset);
+
         Task AddAsync(IAsset asset);
 
         Task<IEnumerable<IAsset>> GetAllAsync(bool includeNonTradable);
