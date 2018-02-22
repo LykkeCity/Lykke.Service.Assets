@@ -18,7 +18,7 @@ namespace Lykke.Service.Assets.Core
             public RabbitSettings Rabbit { get; set; }
             public RadisSettings RadisSettings { get; set; }
             public string QueuePostfix { get; set; }
-            public long RetryDelayInMilliseconds { get; set; }
+            public TimeSpan RetryDelay { get; set; }
             public string SagasRabbitMqConnStr { get; set; }
             [Optional]
             public ChaosSettings ChaosKitty { get; set; }

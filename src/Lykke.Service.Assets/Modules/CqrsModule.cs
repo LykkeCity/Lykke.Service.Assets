@@ -55,7 +55,7 @@ namespace Lykke.Service.Assets.Modules
                 new RabbitMqTransportFactory());
 #endif
 
-            var defaultRetryDelay = _settings.AssetsService.RetryDelayInMilliseconds;
+            var defaultRetryDelay = (long)_settings.AssetsService.RetryDelay.TotalMilliseconds;
 
             builder.RegisterType<AssetsHandler>();
 
