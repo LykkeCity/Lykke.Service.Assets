@@ -116,7 +116,7 @@ namespace Lykke.Service.Assets.Client
         /// </summary>
         private void Initialize()
         {
-            BaseUri = new System.Uri("http://localhost");
+            BaseUri = new System.Uri("http://localhost:5000");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -3648,10 +3648,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(EditAssetDefaultConditionLayerModel model = default(EditAssetDefaultConditionLayerModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (model != null)
-            {
-                model.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -5399,7 +5395,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 404)
+            if ((int)_statusCode != 204)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -5758,7 +5754,7 @@ namespace Lykke.Service.Assets.Client
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 404)
+            if ((int)_statusCode != 204)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -10244,7 +10240,14 @@ namespace Lykke.Service.Assets.Client
             return _result;
         }
 
+        /// <summary>
+        /// Returns a collection of the client asset conditions.
+        /// This collection contains merged asset conditions for all layers associated
+        /// with client
+        /// and default layer for initial asset conditions.
+        /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -17039,7 +17042,14 @@ namespace Lykke.Service.Assets.Client
         /// </param>
         Task<HttpOperationResponse<bool?>> ClientIsAllowedToCashInViaBankCardWithHttpMessagesAsync(string clientId, bool isIosDevice, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <summary>
+        /// Returns a collection of the client asset conditions.
+        /// This collection contains merged asset conditions for all layers
+        /// associated with client
+        /// and default layer for initial asset conditions.
+        /// </summary>
         /// <param name='clientId'>
+        /// The client id.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -19736,20 +19746,34 @@ namespace Lykke.Service.Assets.Client
                 }
             }
 
+            /// <summary>
+            /// Returns a collection of the client asset conditions.
+            /// This collection contains merged asset conditions for all layers associated
+            /// with client
+            /// and default layer for initial asset conditions.
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             public static IList<AssetConditionModel> ClientGetAssetConditions(this IAssetsService operations, string clientId)
             {
                 return operations.ClientGetAssetConditionsAsync(clientId).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Returns a collection of the client asset conditions.
+            /// This collection contains merged asset conditions for all layers associated
+            /// with client
+            /// and default layer for initial asset conditions.
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// The client id.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -21145,6 +21169,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an asset condition.
+    /// </summary>
     public partial class AssetConditionModel
     {
         /// <summary>
@@ -21158,10 +21185,23 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetConditionModel class.
         /// </summary>
-        public AssetConditionModel(string asset = default(string), bool? availableToClient = default(bool?), string regulation = default(string))
+        /// <param name="asset">The asset id.</param>
+        /// <param name="availableToClient">Indicated that specified asset
+        /// available to client.</param>
+        /// <param name="isTradable">Indicates that assets is tradable.</param>
+        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
+        /// deposit enabled for asset.</param>
+        /// <param name="swiftDepositEnabled">Indicates that swift deposit
+        /// enabled for asset.</param>
+        /// <param name="regulation">The regulation for specified
+        /// asset.</param>
+        public AssetConditionModel(string asset = default(string), bool? availableToClient = default(bool?), bool? isTradable = default(bool?), bool? bankCardsDepositEnabled = default(bool?), bool? swiftDepositEnabled = default(bool?), string regulation = default(string))
         {
             Asset = asset;
             AvailableToClient = availableToClient;
+            IsTradable = isTradable;
+            BankCardsDepositEnabled = bankCardsDepositEnabled;
+            SwiftDepositEnabled = swiftDepositEnabled;
             Regulation = regulation;
             CustomInit();
         }
@@ -21172,16 +21212,37 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets the asset id.
         /// </summary>
         [JsonProperty(PropertyName = "Asset")]
         public string Asset { get; set; }
 
         /// <summary>
+        /// Gets or sets indicated that specified asset available to client.
         /// </summary>
         [JsonProperty(PropertyName = "AvailableToClient")]
         public bool? AvailableToClient { get; set; }
 
         /// <summary>
+        /// Gets or sets indicates that assets is tradable.
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool? IsTradable { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that bank cards deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
+        public bool? BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that swift deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool? SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regulation for specified asset.
         /// </summary>
         [JsonProperty(PropertyName = "Regulation")]
         public string Regulation { get; set; }
@@ -21210,6 +21271,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents a default (wildcard) asset condition.
+    /// </summary>
     public partial class AssetDefaultConditionModel
     {
         /// <summary>
@@ -21223,9 +21287,21 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetDefaultConditionModel class.
         /// </summary>
-        public AssetDefaultConditionModel(bool? availableToClient = default(bool?), string regulation = default(string))
+        /// <param name="availableToClient">Indicated that specified asset
+        /// available to client.</param>
+        /// <param name="isTradable">Indicates that assets is tradable.</param>
+        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
+        /// deposit enabled for asset.</param>
+        /// <param name="swiftDepositEnabled">Indicates that swift deposit
+        /// enabled for asset.</param>
+        /// <param name="regulation">The regulation for specified
+        /// asset.</param>
+        public AssetDefaultConditionModel(bool? availableToClient = default(bool?), bool? isTradable = default(bool?), bool? bankCardsDepositEnabled = default(bool?), bool? swiftDepositEnabled = default(bool?), string regulation = default(string))
         {
             AvailableToClient = availableToClient;
+            IsTradable = isTradable;
+            BankCardsDepositEnabled = bankCardsDepositEnabled;
+            SwiftDepositEnabled = swiftDepositEnabled;
             Regulation = regulation;
             CustomInit();
         }
@@ -21236,11 +21312,31 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets indicated that specified asset available to client.
         /// </summary>
         [JsonProperty(PropertyName = "AvailableToClient")]
         public bool? AvailableToClient { get; set; }
 
         /// <summary>
+        /// Gets or sets indicates that assets is tradable.
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool? IsTradable { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that bank cards deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
+        public bool? BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that swift deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool? SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regulation for specified asset.
         /// </summary>
         [JsonProperty(PropertyName = "Regulation")]
         public string Regulation { get; set; }
@@ -21269,6 +21365,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an asset conditon layer.
+    /// </summary>
     public partial class AssetConditionLayerModel
     {
         /// <summary>
@@ -21282,6 +21381,19 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the AssetConditionLayerModel class.
         /// </summary>
+        /// <param name="priority">The asset condition layer priority.</param>
+        /// <param name="id">The asset condition layer id.</param>
+        /// <param name="description">The asset condition layer
+        /// description.</param>
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
+        /// <param name="assetConditions">The collection of asset conditions
+        /// for layer.</param>
+        /// <param name="defaultCondition">The wildcard asset condition. It
+        /// applies to all asset not included in
+        /// Lykke.Service.Assets.Responses.v2.AssetConditions.AssetConditionLayerModel.AssetConditions.</param>
         public AssetConditionLayerModel(double priority, string id = default(string), string description = default(string), bool? clientsCanCashInViaBankCards = default(bool?), bool? swiftDepositEnabled = default(bool?), IList<AssetConditionModel> assetConditions = default(IList<AssetConditionModel>), AssetDefaultConditionModel defaultCondition = default(AssetDefaultConditionModel))
         {
             Id = id;
@@ -21300,36 +21412,45 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets the asset condition layer id.
         /// </summary>
         [JsonProperty(PropertyName = "Id")]
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the asset condition layer priority.
         /// </summary>
         [JsonProperty(PropertyName = "Priority")]
         public double Priority { get; set; }
 
         /// <summary>
+        /// Gets or sets the asset condition layer description.
         /// </summary>
         [JsonProperty(PropertyName = "Description")]
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
         /// </summary>
         [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
         public bool? ClientsCanCashInViaBankCards { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to swift deposit.
         /// </summary>
         [JsonProperty(PropertyName = "SwiftDepositEnabled")]
         public bool? SwiftDepositEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the collection of asset conditions for layer.
         /// </summary>
         [JsonProperty(PropertyName = "AssetConditions")]
         public IList<AssetConditionModel> AssetConditions { get; set; }
 
         /// <summary>
+        /// Gets or sets the wildcard asset condition. It applies to all asset
+        /// not included in
+        /// Lykke.Service.Assets.Responses.v2.AssetConditions.AssetConditionLayerModel.AssetConditions.
         /// </summary>
         [JsonProperty(PropertyName = "DefaultCondition")]
         public AssetDefaultConditionModel DefaultCondition { get; set; }
@@ -21367,6 +21488,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an edited properties of asset default condition layer.
+    /// </summary>
     public partial class EditAssetConditionLayerModel
     {
         /// <summary>
@@ -21382,6 +21506,14 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the EditAssetConditionLayerModel
         /// class.
         /// </summary>
+        /// <param name="priority">The asset condition layer priority.</param>
+        /// <param name="id">The layer id.</param>
+        /// <param name="description">The asset condition layer
+        /// description.</param>
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
         public EditAssetConditionLayerModel(double priority, string id = default(string), string description = default(string), bool? clientsCanCashInViaBankCards = default(bool?), bool? swiftDepositEnabled = default(bool?))
         {
             Id = id;
@@ -21398,26 +21530,31 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets the layer id.
         /// </summary>
         [JsonProperty(PropertyName = "Id")]
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the asset condition layer priority.
         /// </summary>
         [JsonProperty(PropertyName = "Priority")]
         public double Priority { get; set; }
 
         /// <summary>
+        /// Gets or sets the asset condition layer description.
         /// </summary>
         [JsonProperty(PropertyName = "Description")]
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
         /// </summary>
         [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
         public bool? ClientsCanCashInViaBankCards { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to swift deposit.
         /// </summary>
         [JsonProperty(PropertyName = "SwiftDepositEnabled")]
         public bool? SwiftDepositEnabled { get; set; }
@@ -21509,6 +21646,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an edited properties of asset condition.
+    /// </summary>
     public partial class EditAssetConditionModel
     {
         /// <summary>
@@ -21522,10 +21662,23 @@ namespace Lykke.Service.Assets.Client.Models
         /// <summary>
         /// Initializes a new instance of the EditAssetConditionModel class.
         /// </summary>
-        public EditAssetConditionModel(string asset = default(string), bool? availableToClient = default(bool?), string regulation = default(string))
+        /// <param name="asset">The asset id.</param>
+        /// <param name="availableToClient">Indicated that specified asset
+        /// available to client.</param>
+        /// <param name="isTradable">Indicates that assets is tradable.</param>
+        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
+        /// deposit enabled for asset.</param>
+        /// <param name="swiftDepositEnabled">Indicates that swift deposit
+        /// enabled for asset.</param>
+        /// <param name="regulation">The regulation for specified
+        /// asset.</param>
+        public EditAssetConditionModel(string asset = default(string), bool? availableToClient = default(bool?), bool? isTradable = default(bool?), bool? bankCardsDepositEnabled = default(bool?), bool? swiftDepositEnabled = default(bool?), string regulation = default(string))
         {
             Asset = asset;
             AvailableToClient = availableToClient;
+            IsTradable = isTradable;
+            BankCardsDepositEnabled = bankCardsDepositEnabled;
+            SwiftDepositEnabled = swiftDepositEnabled;
             Regulation = regulation;
             CustomInit();
         }
@@ -21536,16 +21689,37 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets the asset id.
         /// </summary>
         [JsonProperty(PropertyName = "Asset")]
         public string Asset { get; set; }
 
         /// <summary>
+        /// Gets or sets indicated that specified asset available to client.
         /// </summary>
         [JsonProperty(PropertyName = "AvailableToClient")]
         public bool? AvailableToClient { get; set; }
 
         /// <summary>
+        /// Gets or sets indicates that assets is tradable.
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool? IsTradable { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that bank cards deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
+        public bool? BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that swift deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool? SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regulation for specified asset.
         /// </summary>
         [JsonProperty(PropertyName = "Regulation")]
         public string Regulation { get; set; }
@@ -21574,6 +21748,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an edited properties of default (wildcard) asset condition.
+    /// </summary>
     public partial class EditAssetDefaultConditionModel
     {
         /// <summary>
@@ -21589,9 +21766,21 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the EditAssetDefaultConditionModel
         /// class.
         /// </summary>
-        public EditAssetDefaultConditionModel(bool? availableToClient = default(bool?), string regulation = default(string))
+        /// <param name="availableToClient">Indicated that specified asset
+        /// available to client.</param>
+        /// <param name="isTradable">Indicates that assets is tradable.</param>
+        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
+        /// deposit enabled for asset.</param>
+        /// <param name="swiftDepositEnabled">Indicates that swift deposit
+        /// enabled for asset.</param>
+        /// <param name="regulation">The regulation for specified
+        /// asset.</param>
+        public EditAssetDefaultConditionModel(bool? availableToClient = default(bool?), bool? isTradable = default(bool?), bool? bankCardsDepositEnabled = default(bool?), bool? swiftDepositEnabled = default(bool?), string regulation = default(string))
         {
             AvailableToClient = availableToClient;
+            IsTradable = isTradable;
+            BankCardsDepositEnabled = bankCardsDepositEnabled;
+            SwiftDepositEnabled = swiftDepositEnabled;
             Regulation = regulation;
             CustomInit();
         }
@@ -21602,11 +21791,31 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets indicated that specified asset available to client.
         /// </summary>
         [JsonProperty(PropertyName = "AvailableToClient")]
         public bool? AvailableToClient { get; set; }
 
         /// <summary>
+        /// Gets or sets indicates that assets is tradable.
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool? IsTradable { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that bank cards deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
+        public bool? BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that swift deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool? SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regulation for specified asset.
         /// </summary>
         [JsonProperty(PropertyName = "Regulation")]
         public string Regulation { get; set; }
@@ -21635,6 +21844,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an asset default condition layer.
+    /// </summary>
     public partial class AssetDefaultConditionLayerModel
     {
         /// <summary>
@@ -21650,6 +21862,13 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the AssetDefaultConditionLayerModel
         /// class.
         /// </summary>
+        /// <param name="id">The layer id.</param>
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
+        /// <param name="assetConditions">The collection of asset conditions
+        /// for layer.</param>
         public AssetDefaultConditionLayerModel(string id = default(string), bool? clientsCanCashInViaBankCards = default(bool?), bool? swiftDepositEnabled = default(bool?), IList<AssetConditionModel> assetConditions = default(IList<AssetConditionModel>))
         {
             Id = id;
@@ -21665,21 +21884,25 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets the layer id.
         /// </summary>
         [JsonProperty(PropertyName = "Id")]
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
         /// </summary>
         [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
         public bool? ClientsCanCashInViaBankCards { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to swift deposit.
         /// </summary>
         [JsonProperty(PropertyName = "SwiftDepositEnabled")]
         public bool? SwiftDepositEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the collection of asset conditions for layer.
         /// </summary>
         [JsonProperty(PropertyName = "AssetConditions")]
         public IList<AssetConditionModel> AssetConditions { get; set; }
@@ -21708,6 +21931,9 @@ namespace Lykke.Service.Assets.Client.Models
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents an edited properties of asset default condition layer.
+    /// </summary>
     public partial class EditAssetDefaultConditionLayerModel
     {
         /// <summary>
@@ -21723,7 +21949,11 @@ namespace Lykke.Service.Assets.Client.Models
         /// Initializes a new instance of the
         /// EditAssetDefaultConditionLayerModel class.
         /// </summary>
-        public EditAssetDefaultConditionLayerModel(bool clientsCanCashInViaBankCards, bool swiftDepositEnabled)
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
+        public EditAssetDefaultConditionLayerModel(bool? clientsCanCashInViaBankCards = default(bool?), bool? swiftDepositEnabled = default(bool?))
         {
             ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
             SwiftDepositEnabled = swiftDepositEnabled;
@@ -21736,25 +21966,17 @@ namespace Lykke.Service.Assets.Client.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
         /// </summary>
         [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
-        public bool ClientsCanCashInViaBankCards { get; set; }
+        public bool? ClientsCanCashInViaBankCards { get; set; }
 
         /// <summary>
+        /// Gets or sets the client ability to swift deposit.
         /// </summary>
         [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool SwiftDepositEnabled { get; set; }
+        public bool? SwiftDepositEnabled { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            //Nothing to validate
-        }
     }
 }
 // <auto-generated>
