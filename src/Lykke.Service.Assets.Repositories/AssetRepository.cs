@@ -21,6 +21,16 @@ namespace Lykke.Service.Assets.Repositories
             _assetTable = assetTable;
         }
 
+        public async Task InsertOrReplaceAsync(IAsset asset)
+        {
+            var entity = Mapper.Map<AssetEntity>(asset);
+
+            entity.PartitionKey = GetPartitionKey();
+            entity.RowKey = GetRowKey(asset.Id);
+
+            await _assetTable.InsertOrReplaceAsync(entity);
+        }
+
         public async Task AddAsync(IAsset asset)
         {
             var entity = Mapper.Map<AssetEntity>(asset);

@@ -1,11 +1,13 @@
 ﻿using System;
+using Lykke.SettingsReader.Attributes;
+using Lykke.Common.Chaos;
 
 namespace Lykke.Service.Assets.Core
 {
     public class ApplicationSettings
     {
         public AssetsSettings AssetsService { get; set; }
-        
+
         public SlackNotificationsSettings SlackNotifications { get; set; }
 
         public class AssetsSettings
@@ -15,6 +17,11 @@ namespace Lykke.Service.Assets.Core
             public DbSettings Db { get; set; }
             public RabbitSettings Rabbit { get; set; }
             public RadisSettings RadisSettings { get; set; }
+            public string QueuePostfix { get; set; }
+            public TimeSpan RetryDelay { get; set; }
+            public string SagasRabbitMqConnStr { get; set; }
+            [Optional]
+            public ChaosSettings ChaosKitty { get; set; }
         }
 
         public class RabbitSettings

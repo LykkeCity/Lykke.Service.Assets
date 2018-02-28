@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using JetBrains.Annotations;
+using Lykke.Cqrs;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.Services
@@ -10,27 +15,32 @@ namespace Lykke.Service.Assets.Services
     public class AssetPairService : IAssetPairService
     {
         private readonly IAssetPairRepository _assetPairRepository;
+        private readonly ICqrsEngine _cqrsEngine;
 
 
         public AssetPairService(
-            IAssetPairRepository assetPairRepository)
+            [NotNull] IAssetPairRepository assetPairRepository,
+            [NotNull] ICqrsEngine cqrsEngine)
         {
-            _assetPairRepository = assetPairRepository;
+            _assetPairRepository = assetPairRepository ?? throw new ArgumentNullException(nameof(assetPairRepository));
+            _cqrsEngine = cqrsEngine ?? throw new ArgumentNullException(nameof(cqrsEngine));
         }
 
 
-        public async Task<IAssetPair> AddAsync(IAssetPair assetPair)
+        public Task<IAssetPair> AddAsync(IAssetPair assetPair)
         {
-            await _assetPairRepository.UpsertAsync(assetPair);
+            _cqrsEngine.SendCommand(
+                new CreateAssetPairCommand { AssetPair = Mapper.Map<AssetPair>(assetPair) },
+                "assets", "assets");
 
-            return assetPair;
+            return Task.FromResult(assetPair);
         }
 
         public IAssetPair CreateDefault()
         {
             return new AssetPair
             {
-                Accuracy   = 5,
+                Accuracy = 5,
                 IsDisabled = false
             };
         }
@@ -50,9 +60,13 @@ namespace Lykke.Service.Assets.Services
             await _assetPairRepository.RemoveAsync(id);
         }
 
-        public async Task UpdateAsync(IAssetPair assetPair)
+        public Task UpdateAsync(IAssetPair assetPair)
         {
-            await _assetPairRepository.UpsertAsync(assetPair);
+            _cqrsEngine.SendCommand(
+                new UpdateAssetPairCommand { AssetPair = Mapper.Map<AssetPair>(assetPair) },
+                "assets", "assets");
+
+            return Task.CompletedTask;
         }
     }
 }
