@@ -1,4 +1,6 @@
-﻿namespace Lykke.Service.Assets.Core.Domain
+﻿using System;
+
+namespace Lykke.Service.Assets.Core.Domain
 {
     public interface IAsset
     {
@@ -111,6 +113,7 @@
         /// <summary>
         /// The Lykke entity id, which provides trade venue for this asset.
         /// </summary>
+        [Obsolete("No need reference to legal entity.")]
         string LykkeEntityId { get; }
     }
 }
