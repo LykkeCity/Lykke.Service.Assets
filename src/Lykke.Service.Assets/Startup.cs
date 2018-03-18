@@ -103,7 +103,7 @@ namespace Lykke.Service.Assets
                 var builder = new ContainerBuilder();
                 
                 builder.RegisterModule(new ApiModule(settings, _log));
-                builder.RegisterModule(new CqrsModule(settings, _log));
+                builder.RegisterModule(new CqrsModule(settings.Nested(x => x.AssetsService), _log));
                 builder.RegisterModule(new RepositoriesModule(settings, _log));
                 builder.RegisterModule(new ServicesModule());
 

@@ -16,10 +16,10 @@ namespace Lykke.Service.Assets.Modules
 {
     public class CqrsModule : Module
     {
-        private readonly ApplicationSettings _settings;
+        private readonly ApplicationSettings.AssetsSettings _settings;
         private readonly ILog _log;
 
-        public CqrsModule(IReloadingManager<ApplicationSettings> settingsManager, ILog log)
+        public CqrsModule(IReloadingManager<ApplicationSettings.AssetsSettings> settingsManager, ILog log)
         {
             _settings = settingsManager.CurrentValue;
             _log = log;
@@ -27,17 +27,27 @@ namespace Lykke.Service.Assets.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder
-                .RegisterType<ChaosKitty>()
-                .WithParameter(TypedParameter.From(_settings.AssetsService.ChaosKitty.StateOfChaos))
-                .As<IChaosKitty>()
-                .SingleInstance();
+            if (_settings.ChaosKitty != null)
+            {
+                builder
+                    .RegisterType<ChaosKitty>()
+                    .WithParameter(TypedParameter.From(_settings.ChaosKitty.StateOfChaos))
+                    .As<IChaosKitty>()
+                    .SingleInstance();
+            }
+            else
+            {
+                builder
+                    .RegisterType<SilentChaosKitty>()
+                    .As<IChaosKitty>()
+                    .SingleInstance();
+            }
 
             Messaging.Serialization.MessagePackSerializerFactory.Defaults.FormatterResolver = MessagePack.Resolvers.ContractlessStandardResolver.Instance;
 
             builder.Register(context => new AutofacDependencyResolver(context)).As<IDependencyResolver>().SingleInstance();
 
-            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.AssetsService.SagasRabbitMqConnStr };
+            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
 #if DEBUG
             var virtualHost = "/debug";
             var messagingEngine = new MessagingEngine(_log,
@@ -55,7 +65,7 @@ namespace Lykke.Service.Assets.Modules
                 new RabbitMqTransportFactory());
 #endif
 
-            var defaultRetryDelay = (long)_settings.AssetsService.RetryDelay.TotalMilliseconds;
+            var defaultRetryDelay = (long)_settings.RetryDelay.TotalMilliseconds;
 
             builder.RegisterType<AssetsHandler>();
 
@@ -73,7 +83,7 @@ namespace Lykke.Service.Assets.Modules
                         "RabbitMq",
                         "messagepack",
                         environment: "lykke",
-                        exclusiveQueuePostfix: _settings.AssetsService.QueuePostfix)),
+                        exclusiveQueuePostfix: _settings.QueuePostfix)),
 
                 Register.BoundedContext("assets")
                     .FailedCommandRetryDelay(defaultRetryDelay)
