@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using Lykke.Service.Assets.Managers;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +17,15 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/erc20-tokens")]
     public class Erc20TokensController : Controller
     {
-        private readonly IErc20TokenAssetManager _erc20TokenAssetManager;
-        private readonly IErc20TokenManager _erc20TokenService;
+        private readonly ICachedErc20TokenAssetService _erc20TokenAssetService;
+        private readonly ICachedErc20TokenService _erc20TokenService;
 
 
         public Erc20TokensController(
-            IErc20TokenAssetManager erc20TokenAssetManager,
-            IErc20TokenManager erc20TokenService)
+            ICachedErc20TokenAssetService erc20TokenAssetService,
+            ICachedErc20TokenService erc20TokenService)
         {
-            _erc20TokenAssetManager = erc20TokenAssetManager;
+            _erc20TokenAssetService = erc20TokenAssetService;
             _erc20TokenService      = erc20TokenService;
         }
 
@@ -44,7 +44,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.Created)]
         public async Task<IActionResult> CreateAsset(string address)
         {
-            var asset = Mapper.Map<Asset>(await _erc20TokenAssetManager.CreateAssetForErc20TokenAsync(address));
+            var asset = Mapper.Map<Asset>(await _erc20TokenAssetService.CreateAssetForErc20TokenAsync(address));
 
             return Created
             (

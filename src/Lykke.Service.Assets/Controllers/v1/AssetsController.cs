@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Managers;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v1;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +17,12 @@ namespace Lykke.Service.Assets.Controllers.V1
     [Route("api/[controller]")]
     public class AssetsController : Controller
     {
-        private readonly IAssetManager _assetManager;
+        private readonly ICachedAssetService _assetService;
 
         public AssetsController(
-            IAssetManager assetManager)
+            ICachedAssetService assetService)
         {
-            _assetManager = assetManager;
+            _assetService = assetService;
         }
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace Lykke.Service.Assets.Controllers.V1
         /// <returns></returns>
         [HttpPost("updateCache"), Obsolete]
         [SwaggerOperation("UpdateAssetsCache")]
-        public async Task UpdateCache()
+        public Task UpdateCache()
         {
-            await _assetManager.InvalidateCache();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string assetId)
         {
-            var asset = await _assetManager.GetAsync(assetId);
+            var asset = await _assetService.GetAsync(assetId);
 
             if (asset == null)
             {
@@ -64,8 +64,8 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("GetAssets")]
         public async Task<IActionResult> GetAll()
         {
-            var assets = await _assetManager.GetAllAsync(false);
-            
+            var assets = await _assetService.GetAllAsync(false);
+
             return Ok(assets.Select(AssetResponseModel.Create));
         }
     }
