@@ -27,9 +27,6 @@ namespace Lykke.Service.Assets.RabbitSubscribers
 
         public void Start()
         {
-            // NOTE: Read https://github.com/LykkeCity/Lykke.RabbitMqDotNetBroker/blob/master/README.md to learn
-            // about RabbitMq subscriber configuration
-
             var settings = RabbitMqSubscriptionSettings
                 .CreateForSubscriber(_connectionString, "ethereum.indexer.erccontracts", "service.assets")
                 .MakeDurable();
@@ -50,7 +47,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
         {
             // TODO: Orchestrate execution flow here and delegate actual business logic implementation to services layer
             // Do not implement actual business logic here
-            Erc20Token message = new Erc20Token()
+            var token = new Erc20Token
             {
                 Address = arg.Address,
                 AssetId = null,
@@ -64,7 +61,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 TransactionHash = arg.TransactionHash
             };
 
-            await _ercContractProcessor.ProcessErc20ContractAsync(message);
+            await _ercContractProcessor.ProcessErc20ContractAsync(token);
         }
 
         public void Dispose()
