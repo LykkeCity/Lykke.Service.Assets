@@ -38,7 +38,7 @@ namespace Lykke.Service.Assets.Cache
             var result = await factory() as T;
             if (result != null)
             {
-                _cache.Set(GetCacheKey(key), CacheSerializer.Serialize(result), _cacheOptions);
+                await _cache.SetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _cacheOptions);
             }
             return result;
         }
@@ -52,7 +52,7 @@ namespace Lykke.Service.Assets.Cache
             }
 
             var result = (await factory()).Cast<T>().ToArray();
-            _cache.Set(GetCacheKey(key), CacheSerializer.Serialize(result), _cacheOptions);
+            await _cache.SetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _cacheOptions);
             return result;
         }
 
