@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Managers;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Responses;
 using Lykke.Service.Assets.Responses.v1;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +18,13 @@ namespace Lykke.Service.Assets.Controllers.V1
     [Route("api/[controller]")]
     public class AssetPairsController : Controller
     {
-        private readonly IAssetPairManager  _assetPairManager;
+        private readonly ICachedAssetPairService _assetPairService;
 
 
         public AssetPairsController(
-            IAssetPairManager assetPairManager)
+            ICachedAssetPairService assetPairService)
         {
-            _assetPairManager = assetPairManager;
+            _assetPairService = assetPairService;
         }
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace Lykke.Service.Assets.Controllers.V1
         /// <returns></returns>
         [HttpPost("updateCache"), Obsolete]
         [SwaggerOperation("UpdateAssetPairsCache")]
-        public async Task UpdateCache()
+        public Task UpdateCache()
         {
-            await _assetPairManager.InvalidateCache();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string assetPairId)
         {
-            var assetPair = await _assetPairManager.GetAsync(assetPairId);
+            var assetPair = await _assetPairService.GetAsync(assetPairId);
 
             if (assetPair == null)
             {
@@ -66,7 +66,7 @@ namespace Lykke.Service.Assets.Controllers.V1
         [SwaggerOperation("GetAssetPairs")]
         public async Task<IActionResult> GetAll()
         {
-            var assetPairs = await _assetPairManager.GetAllAsync();
+            var assetPairs = await _assetPairService.GetAllAsync();
 
             return Ok(assetPairs.Select(AssetPairResponseModel.Create));
         }

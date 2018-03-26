@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using Lykke.Service.Assets.Managers;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -13,25 +13,25 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/asset-pairs")]
     public class AssetPairsController : Controller
     {
-        private readonly IAssetPairManager  _assetPairManager;
+        private readonly ICachedAssetPairService _assetPairService;
 
 
         public AssetPairsController(
-            IAssetPairManager assetPairManager)
+            ICachedAssetPairService assetPairService)
         {
-            _assetPairManager = assetPairManager;
+            _assetPairService = assetPairService;
         }
 
         [HttpPost]
         [SwaggerOperation("AssetPairAdd")]
-        [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(AssetPair), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Add([FromBody] AssetPair assetPair)
         {
-            assetPair = Mapper.Map<AssetPair>(await _assetPairManager.AddAsync(assetPair));
+            assetPair = Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
 
             return Created
             (
-                uri:   $"api/v2/asset-pairs/{assetPair.Id}",
+                uri: $"api/v2/asset-pairs/{assetPair.Id}",
                 value: assetPair
             );
         }
@@ -42,19 +42,19 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Exists(string id)
         {
-            var assetPairExists = await _assetPairManager.GetAsync(id);
-            
+            var assetPairExists = await _assetPairService.GetAsync(id);
+
             return Ok(assetPairExists != null);
         }
 
         [HttpGet("{id}")]
         [SwaggerOperation("AssetPairGet")]
-        [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(AssetPair), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var assetPair = await _assetPairManager.GetAsync(id);
-            
+            var assetPair = await _assetPairService.GetAsync(id);
+
             if (assetPair != null)
             {
                 return Ok(Mapper.Map<AssetPair>(assetPair));
@@ -67,10 +67,10 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet]
         [SwaggerOperation("AssetPairGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            var assetPairs = (await _assetPairManager.GetAllAsync())
+            var assetPairs = (await _assetPairService.GetAllAsync())
                 .Select(Mapper.Map<AssetPair>);
 
             return Ok(assetPairs);
@@ -78,10 +78,10 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet("__default")]
         [SwaggerOperation("AssetPairGetDefault")]
-        [ProducesResponseType(typeof(AssetPair), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AssetPair), (int)HttpStatusCode.OK)]
         public IActionResult GetDefault()
         {
-            var assetPair = _assetPairManager.CreateDefault();
+            var assetPair = _assetPairService.CreateDefault();
 
             return Ok(Mapper.Map<AssetPair>(assetPair));
         }
@@ -89,10 +89,10 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpDelete("{id}")]
         [SwaggerOperation("AssetPairRemove")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Remove(string id)
         {
-            await _assetPairManager.RemoveAsync(id);
+            await _assetPairService.RemoveAsync(id);
 
             return NoContent();
         }
@@ -102,7 +102,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Update([FromBody] AssetPair assetPair)
         {
-            await _assetPairManager.UpdateAsync(assetPair);
+            await _assetPairService.UpdateAsync(assetPair);
 
             return NoContent();
         }

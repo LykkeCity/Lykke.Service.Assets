@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using Lykke.Service.Assets.Managers;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -14,48 +14,48 @@ namespace Lykke.Service.Assets.Controllers.V2
     [Route("api/v2/assets")]
     public class AssetsController : Controller
     {
-        private readonly IAssetManager         _assetManager;
-        private readonly IAssetCategoryManager _assetCategoryManager;
+        private readonly ICachedAssetService _assetService;
+        private readonly ICachedAssetCategoryService _assetCategoryService;
 
         public AssetsController(
-            IAssetManager assetManager,
-            IAssetCategoryManager assetCategoryManager)
+            ICachedAssetService assetService,
+            ICachedAssetCategoryService assetCategoryService)
         {
-            _assetManager         = assetManager;
-            _assetCategoryManager = assetCategoryManager;
+            _assetService = assetService;
+            _assetCategoryService = assetCategoryService;
         }
 
         [HttpPost]
         [SwaggerOperation("AssetAdd")]
-        [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Asset), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Add([FromBody] Asset asset)
         {
-            asset = Mapper.Map<Asset>(await _assetManager.AddAsync(asset));
-            
+            asset = Mapper.Map<Asset>(await _assetService.AddAsync(asset));
+
             return Created
             (
-                uri:   $"api/v2/assets/{asset.Id}",
+                uri: $"api/v2/assets/{asset.Id}",
                 value: asset
             );
         }
 
         [HttpPost("{id}/disable")]
         [SwaggerOperation("AssetDisable")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Disable(string id)
         {
-            await _assetManager.DisableAsync(id);
-            
+            await _assetService.DisableAsync(id);
+
             return NoContent();
         }
 
         [HttpPost("{id}/enable")]
         [SwaggerOperation("AssetEnable")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Enable(string id)
         {
-            await _assetManager.EnableAsync(id);
-            
+            await _assetService.EnableAsync(id);
+
             return NoContent();
         }
 
@@ -64,18 +64,18 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Exists(string id)
         {
-            var asset = await _assetManager.GetAsync(id);
+            var asset = await _assetService.GetAsync(id);
 
             return Ok(asset != null);
         }
 
         [HttpGet("{id}")]
         [SwaggerOperation("AssetGet")]
-        [ProducesResponseType(typeof(Asset), (int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(Asset), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var asset = await _assetManager.GetAsync(id);
+            var asset = await _assetService.GetAsync(id);
 
             if (asset != null)
             {
@@ -89,10 +89,10 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet]
         [SwaggerOperation("AssetGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<Asset>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<Asset>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll([FromQuery] bool includeNonTradable = false)
         {
-            var assets = (await _assetManager.GetAllAsync(includeNonTradable))
+            var assets = (await _assetService.GetAllAsync(includeNonTradable))
                 .Select(Mapper.Map<Asset>);
 
             return Ok(assets);
@@ -103,9 +103,9 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(ListOf<Asset>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetBySpecification([FromBody] AssetSpecification specification)
         {
-            var ids          = specification?.Ids?.ToArray() ?? new string[0];
-            var isTradable   = specification?.IsTradable;
-            var allTokens    = await _assetManager.GetAsync(ids.ToArray(), isTradable);
+            var ids = specification?.Ids?.ToArray() ?? new string[0];
+            var isTradable = specification?.IsTradable;
+            var allTokens = await _assetService.GetAsync(ids.ToArray(), isTradable);
             var responseList = allTokens?.Select(Mapper.Map<Asset>);
 
             return Ok(new ListOf<Asset>
@@ -120,14 +120,14 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetCategory(string id)
         {
-            var asset = await _assetManager.GetAsync(id);
+            var asset = await _assetService.GetAsync(id);
 
             if (asset == null)
             {
                 return NotFound("Asset not found");
             }
 
-            var assetCategory = await _assetCategoryManager.GetAsync(asset.CategoryId ?? "");
+            var assetCategory = await _assetCategoryService.GetAsync(asset.CategoryId ?? "");
 
             if (assetCategory == null)
             {
@@ -142,7 +142,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(Asset), (int)HttpStatusCode.OK)]
         public IActionResult GetDefault()
         {
-            var asset = _assetManager.CreateDefault();
+            var asset = _assetService.CreateDefault();
 
             return Ok(Mapper.Map<Asset>(asset));
         }
@@ -150,21 +150,21 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpDelete("{id}")]
         [SwaggerOperation("AssetRemove")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Remove(string id)
         {
-            await _assetManager.RemoveAsync(id);
-            
+            await _assetService.RemoveAsync(id);
+
             return NoContent();
         }
 
         [HttpPut]
         [SwaggerOperation("AssetUpdate")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Update([FromBody] Asset asset)
         {
-            await _assetManager.UpdateAsync(asset);
-            
+            await _assetService.UpdateAsync(asset);
+
             return NoContent();
         }
     }

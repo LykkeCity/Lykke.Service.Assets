@@ -4,8 +4,9 @@ using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Managers;
 using Lykke.Service.Assets.RabbitSubscribers;
+using Lykke.Service.Assets.Repositories.Entities;
+using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
 
@@ -31,10 +32,10 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterInstance(_settings).SingleInstance();
             builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
 
-            RegisterCache<IAsset>(builder, "Assets");
-            RegisterCache<IAssetCategory>(builder, "AssetCategories");
-            RegisterCache<IAssetPair>(builder, "AssetPairs");
-            RegisterCache<IErc20Token>(builder, "Erc20Tokens");
+            RegisterCache<IAsset, AssetDto>(builder, "Assets");
+            RegisterCache<IAssetCategory, AssetCategoryEntity>(builder, "AssetCategories");
+            RegisterCache<IAssetPair, AssetPairEntity>(builder, "AssetPairs");
+            RegisterCache<IErc20Token, Erc20TokenEntity>(builder, "Erc20Tokens");
 
             RegisterRedis(builder);
 
@@ -43,28 +44,28 @@ namespace Lykke.Service.Assets.Modules
                 .SingleInstance();
 
             builder
-               .RegisterType<Erc20TokenManager>()
-               .As<IErc20TokenManager>()
+               .RegisterType<CachedErc20TokenService>()
+               .As<ICachedErc20TokenService>()
                .SingleInstance();
 
             builder
-                .RegisterType<AssetManager>()
-                .As<IAssetManager>()
+                .RegisterType<CachedAssetService>()
+                .As<ICachedAssetService>()
                 .SingleInstance();
 
             builder
-                .RegisterType<AssetCategoryManager>()
-                .As<IAssetCategoryManager>()
+                .RegisterType<CachedAssetCategoryService>()
+                .As<ICachedAssetCategoryService>()
                 .SingleInstance();
 
             builder
-                .RegisterType<AssetPairManager>()
-                .As<IAssetPairManager>()
+                .RegisterType<CachedAssetPairService>()
+                .As<ICachedAssetPairService>()
                 .SingleInstance();
 
             builder
-                .RegisterType<Erc20TokenAssetManager>()
-                .As<IErc20TokenAssetManager>()
+                .RegisterType<CachedErc20TokenAssetService>()
+                .As<ICachedErc20TokenAssetService>()
                 .SingleInstance();
 
             RegisterRabbitMqSubscribers(builder);
@@ -105,10 +106,9 @@ namespace Lykke.Service.Assets.Modules
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Rabbit.ConnectionString));
         }
 
-        private void RegisterCache<T>(ContainerBuilder builder, string partitionKey)
+        private void RegisterCache<I, T>(ContainerBuilder builder, string partitionKey) where T : class, I
         {
-            builder.RegisterType<Cache<T>>()
-                .As<ICache<T>>()
+            builder.RegisterType<DistributedCache<I, T>>()
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Dictionaries.CacheExpirationPeriod))
                 .WithParameter(TypedParameter.From(partitionKey));
