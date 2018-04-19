@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client.Cache;
@@ -28,13 +30,19 @@ namespace Lykke.Service.Assets.Client
             return _assetPairsCache.GetAll();
         }
 
+        [Obsolete]
         public async Task<IReadOnlyCollection<Asset>> GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken())
+            => await GetAllAssetsAsync(false, cancellationToken);
+
+        public async Task<IReadOnlyCollection<Asset>> GetAllAssetsAsync(bool includeNonTradable, CancellationToken cancellationToken = new CancellationToken())
         {
             await _assetsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetsAsync(cancellationToken));
 
-            return _assetsCache.GetAll();
+            return _assetsCache.GetAll()
+                .Where(x => x.IsTradable || includeNonTradable)
+                .ToList();
         }
-
+        
         public async Task<Asset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken())
         {
             await _assetsCache.EnsureCacheIsUpdatedAsync(() => GetUncachedAssetsAsync(cancellationToken));
@@ -59,10 +67,10 @@ namespace Lykke.Service.Assets.Client
             _assetsCache.Update(await GetUncachedAssetsAsync(cancellationToken));
         }
 
-        private async Task<IEnumerable<Asset>> GetUncachedAssetsAsync(CancellationToken cancellationToken)
-        {
-            return await _assetsService.AssetGetAllAsync(false, cancellationToken);
-        }
+       private async Task<IEnumerable<Asset>> GetUncachedAssetsAsync(CancellationToken cancellationToken)
+       {
+           return await _assetsService.AssetGetAllAsync(true, cancellationToken);
+       }
 
         private async Task<IEnumerable<AssetPair>> GetUncachedAssetPairsAsync(CancellationToken cancellationToken)
         {
