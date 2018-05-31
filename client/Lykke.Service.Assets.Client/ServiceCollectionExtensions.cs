@@ -1,4 +1,5 @@
-﻿using Common.Log;
+﻿using System.Net.Http;
+using Common.Log;
 using Lykke.Service.Assets.Client.Cache;
 using Lykke.Service.Assets.Client.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,7 @@ namespace Lykke.Service.Assets.Client
             ILog log)
         {
             services
-                .AddSingleton<IAssetsService>(x => new AssetsService(settings.BaseUri, settings.Handlers));
+                .AddSingleton<IAssetsService>(x => new AssetsService(settings.BaseUri, new HttpClient()));
 
             services
                 .AddSingleton<IDictionaryCache<Asset>>(x =>
