@@ -8,7 +8,7 @@ using Lykke.Service.Assets.Client.Models;
 namespace Lykke.Service.Assets.Client
 {
     ///<inheritdoc/>
-    public class AssetsServiceWithCache : IAssetsServiceWithCache
+    internal class AssetsServiceWithCache : IAssetsServiceWithCache
     {
         private readonly IDictionaryCache<Asset> _assetsCache;
         private readonly IDictionaryCache<AssetPair> _assetPairsCache;
@@ -21,11 +21,11 @@ namespace Lykke.Service.Assets.Client
         }
 
         ///<inheritdoc/>
-        public async Task<IReadOnlyCollection<AssetPair>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken()) 
-            => await _assetPairsCache.GetAll(cancellationToken);
+        public Task<IReadOnlyCollection<AssetPair>> GetAllAssetPairsAsync(CancellationToken cancellationToken = new CancellationToken())
+            => _assetPairsCache.GetAll(cancellationToken);
 
-        async Task<IReadOnlyCollection<Asset>> IAssetsServiceWithCache.GetAllAssetsAsync(CancellationToken cancellationToken)
-            => await GetAllAssetsAsync(false, cancellationToken);
+        Task<IReadOnlyCollection<Asset>> IAssetsServiceWithCache.GetAllAssetsAsync(CancellationToken cancellationToken = new CancellationToken())
+            => GetAllAssetsAsync(false, cancellationToken);
 
         ///<inheritdoc/>
         public async Task<IReadOnlyCollection<Asset>> GetAllAssetsAsync(bool includeNonTradable, CancellationToken cancellationToken = new CancellationToken())
@@ -38,19 +38,19 @@ namespace Lykke.Service.Assets.Client
         }
 
         ///<inheritdoc/>
-        public async Task<Asset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken()) 
-            => await _assetsCache.TryGet(assetId, cancellationToken);
+        public Task<Asset> TryGetAssetAsync(string assetId, CancellationToken cancellationToken = new CancellationToken())
+            => _assetsCache.TryGet(assetId, cancellationToken);
 
         ///<inheritdoc/>
-        public async Task<AssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken()) 
-            => await _assetPairsCache.TryGet(assetPairId, cancellationToken);
+        public Task<AssetPair> TryGetAssetPairAsync(string assetPairId, CancellationToken cancellationToken = new CancellationToken())
+            => _assetPairsCache.TryGet(assetPairId, cancellationToken);
 
         ///<inheritdoc/>
-        public async Task UpdateAssetPairsCacheAsync(CancellationToken cancellationToken = new CancellationToken()) 
-            => await _assetPairsCache.Reset(cancellationToken);
+        public Task UpdateAssetPairsCacheAsync(CancellationToken cancellationToken = new CancellationToken())
+            => _assetPairsCache.Reset(cancellationToken);
 
         ///<inheritdoc/>
-        public async Task UpdateAssetsCacheAsync(CancellationToken cancellationToken = new CancellationToken()) 
-            => await _assetsCache.Reset(cancellationToken);
+        public Task UpdateAssetsCacheAsync(CancellationToken cancellationToken = new CancellationToken())
+            => _assetsCache.Reset(cancellationToken);
     }
 }
