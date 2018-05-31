@@ -8,29 +8,35 @@ using Lykke.Service.Assets.Client.Updaters;
 
 namespace Lykke.Service.Assets.Client.Cache
 {
-    public class DictionaryCache<T> : IDictionaryCache<T>
+    /// <summary>
+    /// Base class for a dictionary cache.
+    /// </summary>
+    internal class DictionaryCache<T> : IDictionaryCache<T>
         where T : ICacheItem
     {
-        protected const string AllItems = @"AllItems";
-
+        private const string AllItems = @"AllItems";
+        private readonly OnDemandDataCache<Dictionary<string, T>> _innerCache;
         private readonly IUpdater<T> _updater;
         private readonly TimeSpan _expirationTime;
 
+        /// <summary>
+        /// Create new dictionary cache.
+        /// </summary>
         protected DictionaryCache(IUpdater<T> updater, TimeSpan expirationTime)
         {
-            InnerCache = new OnDemandDataCache<Dictionary<string, T>>();
+            _innerCache = new OnDemandDataCache<Dictionary<string, T>>();
             _updater = updater;
             _expirationTime = expirationTime;
         }
 
-        protected OnDemandDataCache<Dictionary<string, T>> InnerCache { get; }
-
+        /// <inheritdoc />
         public async Task Reset(CancellationToken token)
         {
-            InnerCache.Remove(AllItems);
+            _innerCache.Remove(AllItems);
             await GetItems(token);
         }
 
+        /// <inheritdoc />
         public async Task<T> TryGet(string id, CancellationToken token)
         {
             var items = await GetItems(token);
@@ -38,6 +44,7 @@ namespace Lykke.Service.Assets.Client.Cache
             return item;
         }
 
+        /// <inheritdoc />
         public async Task<IReadOnlyCollection<T>> GetAll(CancellationToken token)
         {
             var items = await GetItems(token);
@@ -46,15 +53,13 @@ namespace Lykke.Service.Assets.Client.Cache
 
         private async Task<Dictionary<string, T>> GetItems(CancellationToken token)
         {
-            return await InnerCache.GetOrAddAsync(AllItems,
-                async _ => await RetrieveFromUpdater(token)
-                , _expirationTime);
-        }
+            async Task<Dictionary<string, T>> Refresh()
+            {
+                var items = await _updater.GetItemsAsync(token);
+                return items.ToDictionary(x => x.Id);
+            }
 
-        protected async Task<Dictionary<string, T>> RetrieveFromUpdater(CancellationToken token)
-        {
-            var items = await _updater.GetItemsAsync(token);
-            return items.ToDictionary(x => x.Id);
+            return await _innerCache.GetOrAddAsync(AllItems, _ => Refresh(), _expirationTime);
         }
     }
 }

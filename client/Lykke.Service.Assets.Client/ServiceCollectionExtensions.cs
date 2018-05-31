@@ -20,7 +20,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name="settings">the asset settings</param>
         /// <param name="log">the lykke log</param>
         /// <param name="autoRefresh">use expiring caches or use a self refreshing cache for the assets and asset-pairs</param>
-        public static void RegisterAssetsClient(this IServiceCollection services, AssetServiceSettings settings, ILog log, bool autoRefresh = false)
+        public static void RegisterAssetsClient(this IServiceCollection services, AssetServiceSettings settings, ILog log, bool autoRefresh = true)
         {
             services
                 .AddSingleton<IAssetsService>(x => new AssetsService(settings.BaseUri, new HttpClient()));
@@ -31,8 +31,7 @@ namespace Lykke.Service.Assets.Client
             services.AddTransient<IUpdater<AssetPair>>(x => new AssetPairsUpdater(x.GetService<IAssetsService>()));
             services.AddTransient(x => CreateDictionaryCache<AssetPair>(x, settings.AssetPairsCacheExpirationPeriod, log, autoRefresh));
 
-            services
-                .AddSingleton<IAssetsServiceWithCache>(x => new AssetsServiceWithCache(
+            services.AddSingleton<IAssetsServiceWithCache>(x => new AssetsServiceWithCache(
                     x.GetService<IDictionaryCache<Asset>>(),
                     x.GetService<IDictionaryCache<AssetPair>>()
                     ));

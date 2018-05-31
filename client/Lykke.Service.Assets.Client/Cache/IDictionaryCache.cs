@@ -7,7 +7,7 @@ namespace Lykke.Service.Assets.Client.Cache
     /// <summary>
     /// Simple in-memory client side cache.
     /// </summary>
-    public interface IDictionaryCache<T>
+    internal interface IDictionaryCache<T>
         where T : ICacheItem
     {
         /// <summary>

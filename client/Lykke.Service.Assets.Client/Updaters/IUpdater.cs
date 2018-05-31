@@ -9,7 +9,7 @@ namespace Lykke.Service.Assets.Client.Updaters
     /// Updater of <typeparamref name="T"/> for retrieving the contents of a dictionary cache.
     /// </summary>
     /// <typeparam name="T">the type of cache entry to retrieve</typeparam>
-    public interface IUpdater<T>
+    internal interface IUpdater<T>
         where T : ICacheItem
     {
         /// <summary>
