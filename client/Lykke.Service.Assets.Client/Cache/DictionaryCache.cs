@@ -1,98 +1,60 @@
-﻿using Common;
-using Common.Log;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
+using Lykke.Common.Cache;
+using Lykke.Service.Assets.Client.Updaters;
 
 namespace Lykke.Service.Assets.Client.Cache
 {
-    /// <inheritdoc />
     public class DictionaryCache<T> : IDictionaryCache<T>
         where T : ICacheItem
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly TimeSpan _cacheExpirationPeriod;
+        protected const string AllItems = @"AllItems";
 
-        private Dictionary<string, T> _items;
-        private DateTime _cacheExpirationMoment;
-        private bool _inAutoUpdate;
+        private readonly IUpdater<T> _updater;
+        private readonly TimeSpan _expirationTime;
 
-        /// <inheritdoc />
-        public DictionaryCache(IDateTimeProvider dateTimeProvider, TimeSpan cacheExpirationPeriod)
+        protected DictionaryCache(IUpdater<T> updater, TimeSpan expirationTime)
         {
-            _items = new Dictionary<string, T>();
-            _cacheExpirationMoment = DateTime.MinValue;
-            _dateTimeProvider = dateTimeProvider;
-            _cacheExpirationPeriod = cacheExpirationPeriod;
+            InnerCache = new OnDemandDataCache<Dictionary<string, T>>();
+            _updater = updater;
+            _expirationTime = expirationTime;
         }
 
-        /// <inheritdoc />
-        public IDisposable StartAutoUpdate(string componentName, ILog log, Func<Task<IEnumerable<T>>> getAllAsync)
+        protected OnDemandDataCache<Dictionary<string, T>> InnerCache { get; }
+
+        public async Task Reset(CancellationToken token)
         {
-            if (_inAutoUpdate)
-            {
-                throw new InvalidOperationException("Dictionary is already in auto update mode.");
-            }
-
-            _inAutoUpdate = true;
-            async Task UpdateCache(ITimerTrigger trigger, TimerTriggeredHandlerArgs args, CancellationToken token)
-            {
-                await Update(getAllAsync);
-            }
-
-            var timer = new TimerTrigger(componentName, _cacheExpirationPeriod, log, UpdateCache);
-            timer.Start();
-
-            return Disposable.Create(() =>
-            {
-                _inAutoUpdate = false;
-                timer.Dispose();
-            });
+            InnerCache.Remove(AllItems);
+            await GetItems(token);
         }
 
-        /// <inheritdoc />
-        public async Task EnsureCacheIsUpdatedAsync(Func<Task<IEnumerable<T>>> getAllItemsAsync)
+        public async Task<T> TryGet(string id, CancellationToken token)
         {
-            if (_inAutoUpdate)
-            {
-                return;
-            }
-
-            if (_cacheExpirationMoment < _dateTimeProvider.UtcNow)
-            {
-                await Update(getAllItemsAsync);
-            }
+            var items = await GetItems(token);
+            items.TryGetValue(id, out var item);
+            return item;
         }
 
-        private async Task Update(Func<Task<IEnumerable<T>>> getAllItemsAsync)
+        public async Task<IReadOnlyCollection<T>> GetAll(CancellationToken token)
         {
-            var items = await getAllItemsAsync();
-            Update(items);
+            var items = await GetItems(token);
+            return items.Values;
         }
 
-        /// <inheritdoc />
-        public void Update(IEnumerable<T> items)
+        private async Task<Dictionary<string, T>> GetItems(CancellationToken token)
         {
-            _items = items.ToDictionary(p => p.Id, p => p);
-
-            _cacheExpirationMoment = _dateTimeProvider.UtcNow + _cacheExpirationPeriod;
+            return await InnerCache.GetOrAddAsync(AllItems,
+                async _ => await RetrieveFromUpdater(token)
+                , _expirationTime);
         }
 
-        /// <inheritdoc />
-        public T TryGet(string id)
+        protected async Task<Dictionary<string, T>> RetrieveFromUpdater(CancellationToken token)
         {
-            _items.TryGetValue(id, out var pair);
-
-            return pair;
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyCollection<T> GetAll()
-        {
-            return _items.Values;
+            var items = await _updater.GetItemsAsync(token);
+            return items.ToDictionary(x => x.Id);
         }
     }
 }
