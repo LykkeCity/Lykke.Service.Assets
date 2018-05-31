@@ -1,4 +1,5 @@
-﻿using Lykke.Service.Assets.Client.Cache;
+﻿using System.Net.Http;
+using Lykke.Service.Assets.Client.Cache;
 using Lykke.Service.Assets.Client.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,7 @@ namespace Lykke.Service.Assets.Client
         public static void RegisterAssetsClient(this IServiceCollection services, AssetServiceSettings settings)
         {
             services
-                .AddSingleton<IAssetsService>(x => new AssetsService(settings.BaseUri, settings.Handlers));
+                .AddSingleton<IAssetsService>(x => new AssetsService(settings.BaseUri, new HttpClient()));
 
             services
                 .AddTransient<IAssetsServiceWithCache, AssetsServiceWithCache>();
