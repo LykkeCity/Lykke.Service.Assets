@@ -1,18 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Client.Cache
 {
-    public interface IDictionaryCache<T>
+    /// <summary>
+    /// Simple in-memory client side cache.
+    /// </summary>
+    internal interface IDictionaryCache<T>
         where T : ICacheItem
     {
-        Task EnsureCacheIsUpdatedAsync(Func<Task<IEnumerable<T>>> getAllAsync);
+        /// <summary>
+        /// Resets the cache.
+        /// </summary>
+        Task Reset(CancellationToken token);
 
-        void Update(IEnumerable<T> items);
+        /// <summary>
+        /// Try to get cached item with given id.
+        /// </summary>
+        Task<T> TryGet(string id, CancellationToken token);
 
-        T TryGet(string id);
-
-        IReadOnlyCollection<T> GetAll();
+        /// <summary>
+        /// Get all cached items.
+        /// </summary>
+        Task<IReadOnlyCollection<T>> GetAll(CancellationToken token);
     }
 }

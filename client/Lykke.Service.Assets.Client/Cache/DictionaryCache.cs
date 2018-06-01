@@ -1,55 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Lykke.Common.Cache;
+using Lykke.Service.Assets.Client.Updaters;
 
 namespace Lykke.Service.Assets.Client.Cache
 {
-    public class DictionaryCache<T> : IDictionaryCache<T>
+    /// <summary>
+    /// Base class for a dictionary cache.
+    /// </summary>
+    internal class DictionaryCache<T> : IDictionaryCache<T>
         where T : ICacheItem
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly TimeSpan          _cacheExpirationPeriod;
+        private const string AllItems = @"AllItems";
+        private readonly OnDemandDataCache<Dictionary<string, T>> _innerCache;
+        private readonly IUpdater<T> _updater;
+        private readonly TimeSpan _expirationTime;
 
-        private Dictionary<string, T> _items;
-        private DateTime              _cacheExpirationMoment;
-
-
-        public DictionaryCache(IDateTimeProvider dateTimeProvider, TimeSpan cacheExpirationPeriod)
+        /// <summary>
+        /// Create new dictionary cache.
+        /// </summary>
+        protected DictionaryCache(IUpdater<T> updater, TimeSpan expirationTime)
         {
-            _items                 = new Dictionary<string, T>();
-            _cacheExpirationMoment = DateTime.MinValue;
-            _dateTimeProvider      = dateTimeProvider;
-            _cacheExpirationPeriod = cacheExpirationPeriod;
+            _innerCache = new OnDemandDataCache<Dictionary<string, T>>();
+            _updater = updater;
+            _expirationTime = expirationTime;
         }
 
-        public async Task EnsureCacheIsUpdatedAsync(Func<Task<IEnumerable<T>>> getAllItemsAsync)
+        /// <inheritdoc />
+        public async Task Reset(CancellationToken token)
         {
-            if (_cacheExpirationMoment < _dateTimeProvider.UtcNow)
+            _innerCache.Remove(AllItems);
+            await GetItems(token);
+        }
+
+        /// <inheritdoc />
+        public async Task<T> TryGet(string id, CancellationToken token)
+        {
+            var items = await GetItems(token);
+            items.TryGetValue(id, out var item);
+            return item;
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyCollection<T>> GetAll(CancellationToken token)
+        {
+            var items = await GetItems(token);
+            return items.Values;
+        }
+
+        private async Task<Dictionary<string, T>> GetItems(CancellationToken token)
+        {
+            async Task<Dictionary<string, T>> Refresh()
             {
-                var items = await getAllItemsAsync();
-
-                Update(items);
+                var items = await _updater.GetItemsAsync(token);
+                return items.ToDictionary(x => x.Id);
             }
-        }
 
-        public void Update(IEnumerable<T> items)
-        {
-            _items = items.ToDictionary(p => p.Id, p => p);
-
-            _cacheExpirationMoment = _dateTimeProvider.UtcNow + _cacheExpirationPeriod;
-        }
-
-        public T TryGet(string id)
-        {
-            _items.TryGetValue(id, out var pair);
-
-            return pair;
-        }
-
-        public IReadOnlyCollection<T> GetAll()
-        {
-            return _items.Values;
+            return await _innerCache.GetOrAddAsync(AllItems, _ => Refresh(), _expirationTime);
         }
     }
 }
