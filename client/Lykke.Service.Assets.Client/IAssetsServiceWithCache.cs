@@ -46,5 +46,11 @@ namespace Lykke.Service.Assets.Client
         ///    Forcibly updates client-side assets cache
         /// </summary>
         Task UpdateAssetsCacheAsync(CancellationToken cancellationToken = new CancellationToken());
+
+        /// <summary>
+        /// Starts an automatic update process that will keep the caches updated the background.
+        /// </summary>
+        /// <returns>the update process, when disposed the auto update will stop</returns>
+        IDisposable StartAutoCacheUpdate();
     }
 }
