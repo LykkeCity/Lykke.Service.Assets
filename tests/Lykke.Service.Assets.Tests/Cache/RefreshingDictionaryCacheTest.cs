@@ -2,14 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Service.Assets.Client.Updaters;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 
 namespace Lykke.Service.Assets.Tests.Cache
 {
@@ -24,10 +21,10 @@ namespace Lykke.Service.Assets.Tests.Cache
             var updater = new Mock<IUpdater<CacheItem>>();
             updater.Setup(x => x.GetItemsAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(items));
 
-            var sot = new RefreshingDictionaryCache<CacheItem>(TimeSpan.FromMilliseconds(100), updater.Object, Mock.Of<ILog>());
+            var sot = new RefreshingDictionaryCache<CacheItem>(TimeSpan.FromMilliseconds(200), updater.Object, Mock.Of<ILog>());
 
             // Give system some time to update in background
-            await Task.Delay(10);
+            await Task.Delay(50);
 
             updater.Verify(x => x.GetItemsAsync(It.IsAny<CancellationToken>()), Times.Once, @"Cache should auto initialize");
 
@@ -40,7 +37,7 @@ namespace Lykke.Service.Assets.Tests.Cache
 
             updater.Verify(x => x.GetItemsAsync(It.IsAny<CancellationToken>()), Times.Once, @"Cache should not update on GetItems");
 
-            await Task.Delay(125);
+            await Task.Delay(250);
 
             updater.Verify(x => x.GetItemsAsync(It.IsAny<CancellationToken>()), Times.Exactly(2), @"Cache should update in background");
 
