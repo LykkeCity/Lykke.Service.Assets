@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
-    <PackageReference Include="Lykke.Cqrs" Version="4.4.0" />
-    <PackageReference Include="Lykke.Logs" Version="3.6.0" />
+    <PackageReference Include="Lykke.Cqrs" Version="4.6.0" />
+    <PackageReference Include="Lykke.Logs" Version="4.3.4" />
   </ItemGroup>
 
   <ItemGroup>
