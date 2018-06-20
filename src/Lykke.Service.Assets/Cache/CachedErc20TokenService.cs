@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Repositories.Entities;
-using Lykke.Service.Assets.Tools;
 
 namespace Lykke.Service.Assets.Cache
 {
