@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories.Entities
 {

@@ -31,8 +31,6 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.CreateAssetCommand command, IEventPublisher eventPublisher)
         {
-            _log.WriteInfo(nameof(Commands.CreateAssetCommand), command, "");
-
             await _assetRepository.InsertOrReplaceAsync(command.Asset);
 
             _chaosKitty.Meow("repository unavailable");
@@ -44,8 +42,6 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.UpdateAssetCommand command, IEventPublisher eventPublisher)
         {
-            _log.WriteInfo(nameof(Commands.UpdateAssetCommand), command, "");
-
             await _assetRepository.UpdateAsync(command.Asset);
 
             _chaosKitty.Meow("repository unavailable");
@@ -57,8 +53,6 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.CreateAssetPairCommand command, IEventPublisher eventPublisher)
         {
-            _log.WriteInfo(nameof(Commands.CreateAssetPairCommand), command, "");
-
             await _assetPairRepository.UpsertAsync(command.AssetPair);
 
             _chaosKitty.Meow("repository unavailable");
@@ -70,8 +64,6 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.UpdateAssetPairCommand command, IEventPublisher eventPublisher)
         {
-            _log.WriteInfo(nameof(Commands.UpdateAssetPairCommand), command, "");
-
             await _assetPairRepository.UpsertAsync(command.AssetPair);
 
             _chaosKitty.Meow("repository unavailable");
