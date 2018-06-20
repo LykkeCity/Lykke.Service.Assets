@@ -81,7 +81,11 @@ namespace Lykke.Service.Assets.Modules
 
         private void RegisterRedis(ContainerBuilder builder)
         {
-            var redis = ConnectionMultiplexer.Connect(_settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration);
+            System.Threading.ThreadPool.SetMinThreads(100, 100);
+            var options = ConfigurationOptions.Parse(_settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration);
+            options.ReconnectRetryPolicy = new ExponentialRetry(3000, 15000);
+
+            var redis = ConnectionMultiplexer.Connect(options);
 
             builder.RegisterInstance(redis).SingleInstance();
             builder.Register(
@@ -111,7 +115,7 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterType<DistributedCache<I, T>>()
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Dictionaries.CacheExpirationPeriod))
-                .WithParameter(TypedParameter.From(partitionKey));
+                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RadisSettings.InstanceName}:v2:{partitionKey}"));
         }
     }
 }

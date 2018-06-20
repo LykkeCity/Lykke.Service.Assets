@@ -8,29 +8,25 @@ using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services.Domain;
-using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 
 namespace Lykke.Service.Assets.Cache
 {
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
-        private const string PatternClient = ":Assets:Client:";
+        private const string PatternClient = ":v2:Assets:Client:";
 
-        private readonly IDistributedCache _cache;
         private readonly IAssetsForClientCacheManagerSettings _settings;
         private readonly IServer _redisServer;
         private readonly IDatabase _redisDatabase;
         private readonly ILog _log;
 
         public AssetsForClientCacheManager(
-            IDistributedCache cache, 
             IAssetsForClientCacheManagerSettings settings,
-            IServer redisServer, 
+            IServer redisServer,
             IDatabase redisDatabase,
             ILog log)
         {
-            _cache = cache;
             _settings = settings;
             _redisServer = redisServer;
             _redisDatabase = redisDatabase;
@@ -42,7 +38,7 @@ namespace Lykke.Service.Assets.Cache
             RedisKey[] keys = _redisServer.Keys(pattern: $"{_settings.InstanceName}{PatternClient}*", pageSize: 1000).ToArray();
 
             await _redisDatabase.KeyDeleteAsync(keys);
-            
+
             await _log.WriteInfoAsync(nameof(AssetsForClientCacheManager), nameof(ClearCacheAsync), $"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
         }
 
@@ -51,13 +47,13 @@ namespace Lykke.Service.Assets.Cache
             try
             {
                 await Task.WhenAll(
-                    _cache.RemoveAsync(GetKeyAvailableAssets(clientId, true)),
-                    _cache.RemoveAsync(GetKeyAvailableAssets(clientId, false)),
-                    _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, true)),
-                    _cache.RemoveAsync(GetKeyCashInViaBankCardEnabled(clientId, false)),
-                    _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, true)),
-                    _cache.RemoveAsync(GetKeySwiftDepositEnabled(clientId, false)),
-                    _cache.RemoveAsync(GetKeyAssetConditions(clientId)));
+                    _redisDatabase.KeyDeleteAsync(GetKeyAvailableAssets(clientId, true)),
+                    _redisDatabase.KeyDeleteAsync(GetKeyAvailableAssets(clientId, false)),
+                    _redisDatabase.KeyDeleteAsync(GetKeyCashInViaBankCardEnabled(clientId, true)),
+                    _redisDatabase.KeyDeleteAsync(GetKeyCashInViaBankCardEnabled(clientId, false)),
+                    _redisDatabase.KeyDeleteAsync(GetKeySwiftDepositEnabled(clientId, true)),
+                    _redisDatabase.KeyDeleteAsync(GetKeySwiftDepositEnabled(clientId, false)),
+                    _redisDatabase.KeyDeleteAsync(GetKeyAssetConditions(clientId)));
             }
             catch (Exception exception)
             {
@@ -90,11 +86,7 @@ namespace Lykke.Service.Assets.Cache
         {
             try
             {
-                await _cache.SetStringAsync(key, value.ToJson(),
-                    new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = _settings.AssetsForClientCacheTimeSpan
-                    });
+                await _redisDatabase.StringSetAsync(key, value.ToJson(), _settings.AssetsForClientCacheTimeSpan);
             }
             catch (Exception exception)
             {
@@ -106,7 +98,7 @@ namespace Lykke.Service.Assets.Cache
         {
             try
             {
-                string value = await _cache.GetStringAsync(key);
+                string value = await _redisDatabase.StringGetAsync(key);
 
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -117,23 +109,23 @@ namespace Lykke.Service.Assets.Cache
             {
                 await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetAsync), context, exception);
             }
-            
+
             return default(T);
         }
 
-        private static string GetKeyAssetConditions(string clientId)
-            => $"{PatternClient}AssetConditions:{clientId}";
+        private string GetKeyAssetConditions(string clientId)
+            => $"{_settings.InstanceName}{PatternClient}AssetConditions:{clientId}";
 
-        private static string GetKeyAvailableAssets(string clientId, bool isIosDevice)
+        private string GetKeyAvailableAssets(string clientId, bool isIosDevice)
             => GetKey("AvailableAssets", clientId, isIosDevice);
 
-        private static string GetKeyCashInViaBankCardEnabled(string clientId, bool isIosDevice)
+        private string GetKeyCashInViaBankCardEnabled(string clientId, bool isIosDevice)
             => GetKey("CashInViaBankCard", clientId, isIosDevice);
 
-        private static string GetKeySwiftDepositEnabled(string clientId, bool isIosDevice)
+        private string GetKeySwiftDepositEnabled(string clientId, bool isIosDevice)
             => GetKey("SwiftDeposit", clientId, isIosDevice);
 
-        private static string GetKey(string key, string clientId, bool isIosDevice)
-            => $"{PatternClient}{key}:{clientId}" + (isIosDevice ? "_ios_device" : string.Empty);
+        private string GetKey(string key, string clientId, bool isIosDevice)
+            => $"{_settings.InstanceName}{PatternClient}{key}:{clientId}" + (isIosDevice ? "_ios_device" : string.Empty);
     }
 }
