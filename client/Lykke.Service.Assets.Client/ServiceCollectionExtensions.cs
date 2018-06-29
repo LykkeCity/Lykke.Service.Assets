@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Common.Log;
 using System.Net.Http;
 using Lykke.Service.Assets.Client.Cache;
@@ -20,6 +20,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name="settings">the asset settings</param>
         /// <param name="log">the lykke log</param>
         /// <param name="autoRefresh">use expiring caches or use a self refreshing cache for the assets and asset-pairs</param>
+        [Obsolete("Please, use the ContainerBuilderExtenions.RegisterAssetsClient method.")]
         public static void RegisterAssetsClient(this IServiceCollection services, AssetServiceSettings settings, ILog log, bool autoRefresh = true)
         {
             services
