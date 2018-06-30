@@ -66,8 +66,7 @@ namespace Lykke.Service.Assets.Client
                 return new RefreshingDictionaryCache<T>(
                     period,
                     context.Resolve<IUpdater<T>>(),
-                    logFactory.CreateLog(nameof(RefreshingDictionaryCache<T>))
-                );
+                    logFactory);
             }
 
             return new ExpiringDictionaryCache<T>(
