@@ -4,27 +4,31 @@ using AzureStorage;
 using AzureStorage.Tables;
 using AzureStorage.Tables.Templates.Index;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.SettingsReader;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Assets.Repositories
 {
     public class RepositoriesModule : Module
     {
-        private readonly ILog                                   _log;
         private readonly IReloadingManager<ApplicationSettings> _settings;
 
-        public RepositoriesModule(IReloadingManager<ApplicationSettings> settings, ILog log)
+        public RepositoriesModule(IReloadingManager<ApplicationSettings> settings)
         {
-            _log      = log;
             _settings = settings;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
+            const string assetAttributesTableName = "AssetAttributes";
+            const string assetCategoriesTableName = "AssetCategories";
+            const string assetGroupsTableName = "AssetGroups";
+            const string assetSettingsTableName = "AssetSettings";
             const string assetIssuerTableName = "AssetIssuers";
             const string dictionaryTableName  = "Dictionaries";
             const string erc20TokenTableName  = "Erc20Tokens";
@@ -35,100 +39,78 @@ namespace Lykke.Service.Assets.Repositories
             string ClientPersonalInfoConnectionString(ApplicationSettings x) => x.AssetsService.Db.ClientPersonalInfoConnString;
             string DictionariesConnectionString(ApplicationSettings x)       => x.AssetsService.Dictionaries.DbConnectionString;
             
+            builder.Register<IAssetAttributeRepository>(x => new AssetAttributeRepository(
+                CreateTable<AssetAttributeEntity>(DictionariesConnectionString, assetAttributesTableName, x.Resolve<ILogFactory>())));
 
-            var assetAttributeTable      = CreateTable<AssetAttributeEntity>(DictionariesConnectionString, "AssetAttributes");
-            var assetCategoryTable       = CreateTable<AssetCategoryEntity>(DictionariesConnectionString, "AssetCategories");
-            var assetExtendedInfoTable   = CreateTable<AssetExtendedInfoEntity>(DictionariesConnectionString, dictionaryTableName);
-            var assetGroupTable          = CreateTable<AssetGroupEntity>(ClientPersonalInfoConnectionString, "AssetGroups");
-            var assetPairTable           = CreateTable<AssetPairEntity>(DictionariesConnectionString, dictionaryTableName);
-            var assetSettingsTable       = CreateTable<AssetSettingsEntity>(DictionariesConnectionString, "AssetSettings");
-            var assetTable               = CreateTable<AssetEntity>(DictionariesConnectionString, dictionaryTableName);
-            var customWatchListTable     = CreateTable<CustomWatchListEntity>(DictionariesConnectionString, watchListTableName);
-            var erc20TokenTable          = CreateTable<Erc20TokenEntity>(DictionariesConnectionString, erc20TokenTableName);
-            var erc20IndexTable          = CreateTable<AzureIndex>(DictionariesConnectionString, erc20TokenTableName);
-            var issuerTable              = CreateTable<IssuerEntity>(DictionariesConnectionString, assetIssuerTableName);
-            var marginAssetPairTable     = CreateTable<MarginAssetPairEntity>(DictionariesConnectionString, dictionaryTableName);
-            var marginAssetTable         = CreateTable<MarginAssetEntity>(DictionariesConnectionString, dictionaryTableName);
-            var marginIssuerTable        = CreateTable<MarginIssuerEntity>(DictionariesConnectionString, assetIssuerTableName);
-            var predefinedWatchListTable = CreateTable<PredefinedWatchListEntity>(DictionariesConnectionString, watchListTableName);
+            builder.Register<IAssetCategoryRepository>(x => new AssetCategoryRepository(
+                CreateTable<AssetCategoryEntity>(DictionariesConnectionString, assetCategoriesTableName, x.Resolve<ILogFactory>())));
 
-            var assetConditionTable = CreateTable<AssetConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName);
-            var assetConditionLayerTable = CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName);
-            var assetDefaultConditionTable = CreateTable<AssetDefaultConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName);
-            var assetDefaultConditionLayerTable = CreateTable<AssetDefaultConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName);
-            var assetConditionLayerLinkClientTable = CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, assetConditionTableName);
-            
-            builder.RegisterInstance<IAssetAttributeRepository>
-                (new AssetAttributeRepository(assetAttributeTable));
+            builder.Register<IAssetExtendedInfoRepository>(x => new AssetExtendedInfoRepository(
+                CreateTable<AssetExtendedInfoEntity>(DictionariesConnectionString, dictionaryTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetCategoryRepository>
-                (new AssetCategoryRepository(assetCategoryTable));
+            builder.Register<IAssetGroupAssetLinkRepository>(x => new AssetGroupAssetLinkRepository(
+                CreateTable<AssetGroupEntity>(ClientPersonalInfoConnectionString, assetGroupsTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetExtendedInfoRepository>
-                (new AssetExtendedInfoRepository(assetExtendedInfoTable));
+            builder.Register<IAssetGroupClientLinkRepository>(x => new AssetGroupClientLinkRepository(
+                CreateTable<AssetGroupEntity>(ClientPersonalInfoConnectionString, assetGroupsTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetGroupAssetLinkRepository>
-                (new AssetGroupAssetLinkRepository(assetGroupTable));
+            builder.Register<IAssetGroupRepository>(x => new AssetGroupRepository(
+                CreateTable<AssetGroupEntity>(ClientPersonalInfoConnectionString, assetGroupsTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetGroupClientLinkRepository>
-                (new AssetGroupClientLinkRepository(assetGroupTable));
+            builder.Register<IAssetPairRepository>(x => new AssetPairRepository(
+                CreateTable<AssetPairEntity>(DictionariesConnectionString, dictionaryTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetGroupRepository>
-                (new AssetGroupRepository(assetGroupTable));
+            builder.Register<IAssetRepository>(x => new AssetRepository(
+                CreateTable<AssetEntity>(DictionariesConnectionString, dictionaryTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetPairRepository>
-                (new AssetPairRepository(assetPairTable));
+            builder.Register<IAssetSettingsRepository>(x => new AssetSettingsRepository(
+                CreateTable<AssetSettingsEntity>(DictionariesConnectionString, assetSettingsTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetRepository>
-                (new AssetRepository(assetTable));
+            builder.Register<IClientAssetGroupLinkRepository>(x => new ClientAssetGroupLinkRepository(
+                CreateTable<AssetGroupEntity>(ClientPersonalInfoConnectionString, assetGroupsTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetSettingsRepository>
-                (new AssetSettingsRepository(assetSettingsTable));
+            builder.Register<ICustomWatchListRepository>(x => new CustomWatchListRepository(
+                CreateTable<CustomWatchListEntity>(DictionariesConnectionString, watchListTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IClientAssetGroupLinkRepository>
-                (new ClientAssetGroupLinkRepository(assetGroupTable));
+            builder.Register<IErc20TokenRepository>(x => new Erc20TokenRepository(
+                CreateTable<Erc20TokenEntity>(DictionariesConnectionString, erc20TokenTableName, x.Resolve<ILogFactory>()),
+                CreateTable<AzureIndex>(DictionariesConnectionString, erc20TokenTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<ICustomWatchListRepository>
-                (new CustomWatchListRepository(customWatchListTable));
+            builder.Register<IIssuerRepository>(x => new IssuerRepository(
+                CreateTable<IssuerEntity>(DictionariesConnectionString, assetIssuerTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IErc20TokenRepository>
-                (new Erc20TokenRepository(erc20TokenTable, erc20IndexTable));
+            builder.Register<IMarginAssetPairRepository>(x => new MarginAssetPairRepository(
+                CreateTable<MarginAssetPairEntity>(DictionariesConnectionString, dictionaryTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IIssuerRepository>
-                (new IssuerRepository(issuerTable));
+            builder.Register<IMarginAssetRepository>(x => new MarginAssetRepository(
+                CreateTable<MarginAssetEntity>(DictionariesConnectionString, dictionaryTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IMarginAssetPairRepository>
-                (new MarginAssetPairRepository(marginAssetPairTable));
+            builder.Register<IMarginIssuerRepository>(x => new MarginIssuerRepository(
+                CreateTable<MarginIssuerEntity>(DictionariesConnectionString, assetIssuerTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IMarginAssetRepository>
-                (new MarginAssetRepository(marginAssetTable));
+            builder.Register<IPredefinedWatchListRepository>(x => new PredefinedWatchListRepository(
+                CreateTable<PredefinedWatchListEntity>(DictionariesConnectionString, watchListTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IMarginIssuerRepository>
-                (new MarginIssuerRepository(marginIssuerTable));
+            builder.Register<IAssetConditionRepository>(x => new AssetConditionRepository(
+                CreateTable<AssetConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IPredefinedWatchListRepository>
-                (new PredefinedWatchListRepository(predefinedWatchListTable));
+            builder.Register<IAssetConditionLayerRepository>(x => new AssetConditionLayerRepository(
+                CreateTable<AssetConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetConditionRepository>(
-                new AssetConditionRepository(assetConditionTable));
+            builder.Register<IAssetDefaultConditionRepository>(x => new AssetDefaultConditionRepository(
+                CreateTable<AssetDefaultConditionEntity>(DictionariesConnectionString, assetConditionLayerTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetConditionLayerRepository>(
-                new AssetConditionLayerRepository(assetConditionLayerTable));
+            builder.Register<IAssetDefaultConditionLayerRepository>(x => new AssetDefaultConditionLayerRepository(
+                CreateTable<AssetDefaultConditionLayerEntity>(DictionariesConnectionString, assetConditionLayerTableName, x.Resolve<ILogFactory>())));
 
-            builder.RegisterInstance<IAssetDefaultConditionRepository>(
-                new AssetDefaultConditionRepository(assetDefaultConditionTable));
-
-            builder.RegisterInstance<IAssetDefaultConditionLayerRepository>(
-                new AssetDefaultConditionLayerRepository(assetDefaultConditionLayerTable));
-
-            builder.RegisterInstance<IAssetConditionLayerLinkClientRepository>(
-                new AssetConditionLayerLinkClientRepository(assetConditionLayerLinkClientTable));
+            builder.Register<IAssetConditionLayerLinkClientRepository>(x => new AssetConditionLayerLinkClientRepository(
+                CreateTable<AssetConditionLayerLinkClientEntity>(ClientPersonalInfoConnectionString, assetConditionTableName, x.Resolve<ILogFactory>())));
         }
 
-        private INoSQLTableStorage<T> CreateTable<T>(Func<ApplicationSettings, string> connectionString, string name)
+        private INoSQLTableStorage<T> CreateTable<T>(Func<ApplicationSettings, string> connectionString, string name, ILogFactory logFactory)
             where T : TableEntity, new()
         {
-            return AzureTableStorage<T>.Create(_settings.ConnectionString(connectionString), name, _log);
+            return AzureTableStorage<T>.Create(_settings.ConnectionString(connectionString), name, logFactory);
         }
     }
 }
