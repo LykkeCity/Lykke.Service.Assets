@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Common.Log;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
@@ -15,20 +14,15 @@ namespace Lykke.Service.Assets.Modules
     public class ApiModule : Module
     {
         private readonly IReloadingManager<ApplicationSettings> _settings;
-        private readonly ILog _log;
 
         public ApiModule(
-            IReloadingManager<ApplicationSettings> settings,
-            ILog log)
+            IReloadingManager<ApplicationSettings> settings)
         {
             _settings = settings;
-            _log = log;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(_log).SingleInstance();
-
             builder.RegisterInstance(_settings).SingleInstance();
             builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
 
@@ -38,10 +32,6 @@ namespace Lykke.Service.Assets.Modules
             RegisterCache<IErc20Token, Erc20TokenEntity>(builder, "Erc20Tokens");
 
             RegisterRedis(builder);
-
-            builder.RegisterInstance(_log)
-                .As<ILog>()
-                .SingleInstance();
 
             builder
                .RegisterType<CachedErc20TokenService>()

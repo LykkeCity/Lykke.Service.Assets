@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Controllers.V2;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
@@ -327,8 +328,11 @@ namespace Lykke.Service.Assets.Tests.v2
 
         private static AssetGroupsController CreateController(IMock<IAssetGroupService> serviceMock)
         {
-            var log = new Mock<ILog>();
-            return new AssetGroupsController(serviceMock.Object, log.Object);
+            var logFactory = new Mock<ILogFactory>();
+            logFactory
+                .Setup(x => x.CreateLog(It.IsAny<AssetGroupsController>()))
+                .Returns(new Mock<ILog>().Object);
+            return new AssetGroupsController(serviceMock.Object, logFactory.Object);
         }
 
         private static Mock<IAssetGroupService> CreateServiceMock()

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Autofac;
 using Common;
 using Common.Log;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.Assets.Core.Services;
@@ -11,6 +13,7 @@ using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.RabbitSubscribers
 {
+    [UsedImplicitly]
     public class ErcContractSubscriber : IStartable, IStopable
     {
         private readonly ILog _log;
@@ -18,9 +21,9 @@ namespace Lykke.Service.Assets.RabbitSubscribers
         private readonly IErcContractProcessor _ercContractProcessor;
         private RabbitMqSubscriber<Erc20ContractCreatedMessage> _subscriber;
 
-        public ErcContractSubscriber(ILog log, IErcContractProcessor ercContractProcessor, string connectionString)
+        public ErcContractSubscriber(ILogFactory logFactory, IErcContractProcessor ercContractProcessor, string connectionString)
         {
-            _log = log;
+            _log = logFactory.CreateLog(this);
             _connectionString = connectionString;
             _ercContractProcessor = ercContractProcessor;
         }

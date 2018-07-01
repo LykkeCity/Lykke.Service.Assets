@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Common.Log;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
@@ -12,6 +14,7 @@ using StackExchange.Redis;
 
 namespace Lykke.Service.Assets.Cache
 {
+    [UsedImplicitly]
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
         private const string PatternClient = ":v2:Assets:Client:";
@@ -25,12 +28,12 @@ namespace Lykke.Service.Assets.Cache
             IAssetsForClientCacheManagerSettings settings,
             IServer redisServer,
             IDatabase redisDatabase,
-            ILog log)
+            ILogFactory logFactory)
         {
             _settings = settings;
             _redisServer = redisServer;
             _redisDatabase = redisDatabase;
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task ClearCacheAsync(string reason)
@@ -38,8 +41,8 @@ namespace Lykke.Service.Assets.Cache
             RedisKey[] keys = _redisServer.Keys(pattern: $"{_settings.InstanceName}{PatternClient}*", pageSize: 1000).ToArray();
 
             await _redisDatabase.KeyDeleteAsync(keys);
-
-            await _log.WriteInfoAsync(nameof(AssetsForClientCacheManager), nameof(ClearCacheAsync), $"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
+            
+            _log.Info($"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
         }
 
         public async Task RemoveClientFromCacheAsync(string clientId)
@@ -57,7 +60,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception exception)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(RemoveClientFromCacheAsync), clientId, exception);
+                _log.Error(exception);
             }
         }
 
@@ -90,7 +93,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception exception)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(SetAsync), context, exception);
+                _log.Error(exception);
             }
         }
 
@@ -107,7 +110,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception exception)
             {
-                await _log.WriteErrorAsync(nameof(AssetsForClientCacheManager), nameof(TryGetAsync), context, exception);
+                _log.Error(exception);
             }
 
             return default(T);
