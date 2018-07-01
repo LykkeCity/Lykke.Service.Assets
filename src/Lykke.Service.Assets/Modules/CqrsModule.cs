@@ -73,7 +73,7 @@ namespace Lykke.Service.Assets.Modules
                         {
                             {"RabbitMq", new TransportInfo(rabbitMqSettings.Endpoint.ToString(), rabbitMqSettings.UserName, rabbitMqSettings.Password, "None", "RabbitMq")}
                         }),
-                        new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>()))
+                        new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())),
 #endif
                     new DefaultEndpointProvider(),
                     true,
