@@ -35,7 +35,7 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.CreateAssetCommand command, IEventPublisher eventPublisher)
         {
-            _log.Info(nameof(Commands.CreateAssetCommand), string.Empty, command);
+            _log.Info(nameof(Commands.CreateAssetCommand), "Creating asset", command);
 
             await _assetRepository.InsertOrReplaceAsync(command.Asset);
 
@@ -48,7 +48,7 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.UpdateAssetCommand command, IEventPublisher eventPublisher)
         {
-            _log.Info(nameof(Commands.UpdateAssetCommand), string.Empty, command);
+            _log.Info(nameof(Commands.UpdateAssetCommand), "Updating asset", command);
 
             await _assetRepository.UpdateAsync(command.Asset);
 
@@ -61,7 +61,7 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.CreateAssetPairCommand command, IEventPublisher eventPublisher)
         {
-            _log.Info(nameof(Commands.CreateAssetPairCommand), string.Empty, command);
+            _log.Info(nameof(Commands.CreateAssetPairCommand), "Creating asset pair", command);
 
             await _assetPairRepository.UpsertAsync(command.AssetPair);
 
@@ -74,7 +74,7 @@ namespace Lykke.Service.Assets.Services.Handlers
 
         public async Task<CommandHandlingResult> Handle(Commands.UpdateAssetPairCommand command, IEventPublisher eventPublisher)
         {
-            _log.Info(nameof(Commands.UpdateAssetPairCommand), string.Empty, command);
+            _log.Info(nameof(Commands.UpdateAssetPairCommand), "Updating asset pair", command);
 
             await _assetPairRepository.UpsertAsync(command.AssetPair);
 

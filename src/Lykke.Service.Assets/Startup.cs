@@ -6,7 +6,6 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Common.Log;
 using JetBrains.Annotations;
-using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Common.Log;
@@ -23,6 +22,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Converters;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Lykke.Service.Assets
 {
@@ -117,7 +117,7 @@ namespace Lykke.Service.Assets
 
                         logging.ConfigureEssentialSlackChannels = options =>
                         {
-                            options.SpamGuard.DisableGuarding();
+                            options.SpamGuard.SetMutePeriod(LogLevel.Error, TimeSpan.FromMinutes(5));
                         };
                     });
 
