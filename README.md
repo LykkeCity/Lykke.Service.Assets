@@ -47,7 +47,9 @@ where parameters are the same, plus:
 * `log` - an instance of any type implementing `ILog`. Is usually passed as an input parameter to the module constructor.
 
 
-_After that you can use (resolve) the followings:_
+## Using the client
+
+Not depending on the way you register Asset Service client, you can use (resolve) the followings:
 
 * `IAssetsservice` - Autorest generated HTTP client for service API;
 * `IAssetsServiceWithCache` - cached client for service API, which caches assets and asset pairs with specified expiration period.
