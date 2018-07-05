@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +21,10 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         public AssetGroupsController(
             IAssetGroupService assetGroupService,
-            ILog log)
+            ILogFactory logFactory)
         {
             _assetGroupService = assetGroupService;
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         [HttpPost]
@@ -59,7 +60,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             var group = await _assetGroupService.GetGroupAsync(groupName);
             if (group == null)
             {
-                await _log.WriteWarningAsync(nameof(AssetGroupsController), nameof(AddClient), clientId, $"Cannot add client to group '{groupName}', group not found");
+                _log.Warning(context: clientId, message: $"Cannot add client to group '{groupName}', group not found");
                 return NotFound();
             }
 
@@ -77,7 +78,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             var group = await _assetGroupService.GetGroupAsync(groupName);
             if (group == null)
             {
-                await _log.WriteWarningAsync(nameof(AssetGroupsController), nameof(AddOrReplaceClient), clientId, $"Cannot add client to group '{groupName}', group not found");
+                _log.Warning(context: clientId, message: $"Cannot add client to group '{groupName}', group not found");
                 return NotFound();
             }
 
