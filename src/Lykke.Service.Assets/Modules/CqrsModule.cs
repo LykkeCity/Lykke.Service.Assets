@@ -47,7 +47,9 @@ namespace Lykke.Service.Assets.Modules
 
             var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
 
+#if DEBUG
             const string virtualHost = "/debug";
+#endif
 
             var defaultRetryDelay = (long)_settings.RetryDelay.TotalMilliseconds;
 
