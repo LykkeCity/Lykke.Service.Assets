@@ -326,14 +326,14 @@ namespace RegisterErc20Tokens
             {
                 if (!File.Exists(args[2]))
                 {
-                    throw new Exception();
+                    throw new ArgumentException("Third argument should be a valid path to file.");
                 }
 
                 processedArgs.SpecificationPath = args[2];
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Third argument should be a valid path to file.");
+                Console.WriteLine(e.Message);
 
                 return false;
             }
