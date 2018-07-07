@@ -16,7 +16,7 @@ namespace Lykke.Service.Assets.Client.Updaters
 
         public async Task<IEnumerable<Asset>> GetItemsAsync(CancellationToken token)
         {
-            return await _service.AssetGetAllAsync(false, token);
+            return await _service.AssetGetAllAsync(true, token);
         }
     }
 }
