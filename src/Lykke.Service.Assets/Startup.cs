@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Common.Log;
+using Lykke.Cqrs;
 using Lykke.Logs;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Services;
@@ -205,6 +206,10 @@ namespace Lykke.Service.Assets
             try
             {
                 // NOTE: Service not yet receive and process requests here
+
+                // Explicit activation of ICqrsEngine service:
+                // ReSharper disable once UnusedVariable
+                var cqrs = ApplicationContainer.Resolve<ICqrsEngine>(); // bootstrap
 
                 await ApplicationContainer.Resolve<IStartupManager>().StartAsync();
 
