@@ -18,6 +18,7 @@ namespace Lykke.Service.Assets.Client.Cache
         private readonly OnDemandDataCache<Dictionary<string, T>> _innerCache;
         private readonly IUpdater<T> _updater;
         private readonly TimeSpan _expirationTime;
+        private readonly SemaphoreSlim _updateSync = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Create new dictionary cache.
@@ -34,6 +35,22 @@ namespace Lykke.Service.Assets.Client.Cache
         {
             _innerCache.Remove(AllItems);
             await GetItems(token);
+        }
+
+        public async Task Update(string id, T item, CancellationToken token)
+        {
+            await _updateSync.WaitAsync(token);
+
+            try
+            {
+                var items = await GetItems(token);
+
+                items[id] = item;
+            }
+            finally
+            {
+                _updateSync.Release();
+            }
         }
 
         /// <inheritdoc />
