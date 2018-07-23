@@ -248,6 +248,7 @@ namespace RegisterErc20Tokens
                             erc20Token = erc20Token ?? _assetsService.Erc20TokenGetByAddress(tokenAddress);
                             erc20Token.AssetId = assetId;
                             asset.Blockchain = Blockchain.Ethereum;
+                            asset.Type = AssetType.Erc20Token;
                             _assetsService.AssetUpdate(asset);
                             _assetsService.Erc20TokenUpdate(erc20Token);
                         }
