@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\contract\Lykke.Service.Assets.Contract\Lykke.Service.Assets.Contract.csproj" />    
     <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />

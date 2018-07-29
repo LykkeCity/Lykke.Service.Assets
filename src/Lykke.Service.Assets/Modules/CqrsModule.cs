@@ -6,10 +6,11 @@ using Lykke.Cqrs;
 using Lykke.Cqrs.Configuration;
 using Lykke.Messaging;
 using Lykke.Messaging.RabbitMq;
+using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core;
+using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Events;
-using Lykke.Service.Assets.Services.Handlers;
 using Lykke.SettingsReader;
 
 namespace Lykke.Service.Assets.Modules

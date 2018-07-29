@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Common.Log;
+using AutoMapper;
 using JetBrains.Annotations;
 using Lykke.Common.Chaos;
-using Lykke.Common.Log;
 using Lykke.Cqrs;
+using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Services.Events;
 
-namespace Lykke.Service.Assets.Services.Handlers
+namespace Lykke.Service.Assets.Services
 {
     // todo: split into 'assets' + 'asset-pairs' handles
     [UsedImplicitly]
@@ -34,7 +34,7 @@ namespace Lykke.Service.Assets.Services.Handlers
 
             _chaosKitty.Meow("repository unavailable");
 
-            eventPublisher.PublishEvent(new AssetCreatedEvent { Asset = command.Asset });
+            eventPublisher.PublishEvent(Mapper.Map<AssetCreatedEvent>(command.Asset));
 
             return CommandHandlingResult.Ok();
         }
@@ -45,7 +45,7 @@ namespace Lykke.Service.Assets.Services.Handlers
 
             _chaosKitty.Meow("repository unavailable");
 
-            eventPublisher.PublishEvent(new AssetUpdatedEvent { Asset = command.Asset });
+            eventPublisher.PublishEvent(Mapper.Map<AssetUpdatedEvent>(command.Asset));
 
             return CommandHandlingResult.Ok();
         }
