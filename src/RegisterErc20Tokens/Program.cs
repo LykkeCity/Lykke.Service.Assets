@@ -198,7 +198,7 @@ namespace RegisterErc20Tokens
 
                     if (operationSucceeded)
                     {
-                        var assetId = erc20Token.AssetId ?? contract.AssetId;
+                        var assetId = contract.AssetId;
                         Asset asset = null;
                         bool updateAsset = !string.IsNullOrEmpty(contract.AssetId);
 
