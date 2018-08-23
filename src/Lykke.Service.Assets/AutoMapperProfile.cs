@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Requests.v2.AssetConditions;
 using Lykke.Service.Assets.Responses.v2.AssetConditions;
@@ -44,6 +45,9 @@ namespace Lykke.Service.Assets
             CreateMap<EditAssetDefaultConditionLayerModel, Services.Domain.AssetDefaultConditionLayer>(MemberList.Destination)
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.AssetConditions, opt => opt.Ignore());
+
+            CreateMap<Services.Domain.Asset, AssetCreatedEvent>();
+            CreateMap<Services.Domain.Asset, AssetUpdatedEvent>();
         }
     }
 }
