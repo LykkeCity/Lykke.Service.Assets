@@ -81,7 +81,7 @@ namespace Lykke.Service.Assets.Modules
                     true,
                     Register.DefaultEndpointResolver(new RabbitMqConventionEndpointResolver(
                         "RabbitMq",
-                        SerializationFormat.ProtoBuf,
+                        SerializationFormat.MessagePack,
                         environment: "lykke",
                         exclusiveQueuePostfix: _settings.QueuePostfix)),
 
