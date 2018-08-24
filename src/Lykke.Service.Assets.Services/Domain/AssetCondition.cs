@@ -1,5 +1,4 @@
-﻿using System;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Services.Domain
 {

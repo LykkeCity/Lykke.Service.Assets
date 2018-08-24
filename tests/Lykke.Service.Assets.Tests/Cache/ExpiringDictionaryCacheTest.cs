@@ -4,8 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client.Cache;
 using Lykke.Service.Assets.Client.Updaters;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

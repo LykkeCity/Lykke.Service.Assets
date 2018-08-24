@@ -90,12 +90,6 @@ namespace Lykke.Service.Assets
                 var settings = Configuration.LoadSettings<ApplicationSettings>();
                 var assetServiceSettings = settings.Nested(x => x.AssetsService);
 
-                services.AddDistributedRedisCache(options =>
-                {
-                    options.Configuration = settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration;
-                    options.InstanceName = settings.CurrentValue.AssetsService.RadisSettings.InstanceName;
-                });
-
                 services.AddLykkeLogging(
                     assetServiceSettings.ConnectionString(x => x.Logs.DbConnectionString),
                     "AssetsServiceLog",
@@ -188,8 +182,8 @@ namespace Lykke.Service.Assets
                     x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
                 app.UseStaticFiles();
-                
-                appLifetime.ApplicationStarted.Register(()  => StartApplication().Wait());
+
+                appLifetime.ApplicationStarted.Register(() => StartApplication().Wait());
                 appLifetime.ApplicationStopping.Register(() => StopApplication().Wait());
                 appLifetime.ApplicationStopped.Register(CleanUp);
             }

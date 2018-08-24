@@ -16,7 +16,7 @@ namespace Lykke.Service.Assets.Tools
         public static string GetMD5(this string @string)
         {
             var stringBytes = Encoding.ASCII.GetBytes(@string);
-            var stringHash  = MD5Calculator.ComputeHash(stringBytes);
+            var stringHash = MD5Calculator.ComputeHash(stringBytes);
 
             var sb = new StringBuilder();
 
@@ -26,13 +26,6 @@ namespace Lykke.Service.Assets.Tools
             }
 
             return sb.ToString();
-        }
-
-        public static string GetMD5(this IEnumerable<string> strings)
-        {
-            var @string = string.Join(',', strings);
-
-            return @string.GetMD5();
         }
     }
 }
