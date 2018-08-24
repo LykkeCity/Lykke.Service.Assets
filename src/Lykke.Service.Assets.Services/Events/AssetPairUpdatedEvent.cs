@@ -3,6 +3,7 @@ using MessagePack;
 
 namespace Lykke.Service.Assets.Services.Events
 {
+    //TODO: move to contracts
     [MessagePackObject(keyAsPropertyName: true)]
     public class AssetPairUpdatedEvent
     {

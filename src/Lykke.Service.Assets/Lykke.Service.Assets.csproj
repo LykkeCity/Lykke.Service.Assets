@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Lykke.Common.ApiLibrary" Version="1.9.0" />
-    <PackageReference Include="Lykke.Cqrs" Version="4.8.0" />
+    <PackageReference Include="Lykke.Cqrs" Version="5.0.1" />
     <PackageReference Include="Lykke.Logs" Version="5.1.0" />
     <PackageReference Include="Lykke.Messaging.RabbitMq" Version="2.1.0" />
     <PackageReference Include="Lykke.RabbitMqBroker" Version="7.1.0" />
@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\contract\Lykke.Service.Assets.Contract\Lykke.Service.Assets.Contract.csproj" />    
     <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />

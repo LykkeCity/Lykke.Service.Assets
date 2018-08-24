@@ -6,10 +6,12 @@ using Lykke.Cqrs;
 using Lykke.Cqrs.Configuration;
 using Lykke.Messaging;
 using Lykke.Messaging.RabbitMq;
+using Lykke.Messaging.Serialization;
+using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core;
+using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Events;
-using Lykke.Service.Assets.Services.Handlers;
 using Lykke.SettingsReader;
 
 namespace Lykke.Service.Assets.Modules
@@ -41,8 +43,6 @@ namespace Lykke.Service.Assets.Modules
                     .SingleInstance();
             }
             
-            Messaging.Serialization.MessagePackSerializerFactory.Defaults.FormatterResolver = MessagePack.Resolvers.ContractlessStandardResolver.Instance;
-
             builder.Register(context => new AutofacDependencyResolver(context)).As<IDependencyResolver>().SingleInstance();
 
             var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
@@ -81,7 +81,7 @@ namespace Lykke.Service.Assets.Modules
                     true,
                     Register.DefaultEndpointResolver(new RabbitMqConventionEndpointResolver(
                         "RabbitMq",
-                        "messagepack",
+                        SerializationFormat.MessagePack,
                         environment: "lykke",
                         exclusiveQueuePostfix: _settings.QueuePostfix)),
 
