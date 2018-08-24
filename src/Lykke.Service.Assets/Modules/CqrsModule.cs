@@ -42,7 +42,9 @@ namespace Lykke.Service.Assets.Modules
                     .As<IChaosKitty>()
                     .SingleInstance();
             }
-            
+
+            MessagePackSerializerFactory.Defaults.FormatterResolver = MessagePack.Resolvers.ContractlessStandardResolver.Instance;
+
             builder.Register(context => new AutofacDependencyResolver(context)).As<IDependencyResolver>().SingleInstance();
 
             var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
