@@ -1,11 +1,7 @@
-﻿using System;
-using System.Net.Http;
-using Autofac;
+﻿using Autofac;
 using JetBrains.Annotations;
-using Lykke.Common.Log;
-using Lykke.Service.Assets.Client.Cache;
-using Lykke.Service.Assets.Client.Models;
-using Lykke.Service.Assets.Client.Updaters;
+using System;
+using System.Net.Http;
 
 namespace Lykke.Service.Assets.Client
 {
@@ -19,60 +15,18 @@ namespace Lykke.Service.Assets.Client
         /// Register the asset services.
         /// </summary>
         /// <param name="builder">The container builder for adding the services to.</param>
-        /// <param name="settings">The asset settings.</param>
-        /// <param name="autoRefresh">The marker of an expiring caches or a self refreshing cache for the assets and asset-pairs usage.</param>
+        /// <param name="serviceUrl">Service endpoint URL.</param>
         [UsedImplicitly]
-        public static void RegisterAssetsClient(this ContainerBuilder builder, AssetServiceSettings settings,
-            bool autoRefresh = true)
+        public static void RegisterAssetsClient(this ContainerBuilder builder, string serviceUrl)
         {
-            builder.Register(x => new AssetsService(settings.BaseUri, new HttpClient()))
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+            if (string.IsNullOrWhiteSpace(serviceUrl))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(serviceUrl));
+
+            builder.Register(x => new AssetsService(new Uri(serviceUrl), new HttpClient()))
                 .As<IAssetsService>()
                 .SingleInstance();
-
-            // ---
-            builder.Register(x => new AssetsUpdater(x.Resolve<IAssetsService>()))
-                .As<IUpdater<Asset>>()
-                .InstancePerDependency(); // These calls are optional, just for clarification purpose.
-            builder.Register(x =>
-                    CreateDictionaryCache<Asset>(x, settings.AssetsCacheExpirationPeriod, x.Resolve<ILogFactory>(),
-                        autoRefresh)
-                )
-                .InstancePerDependency();
-
-            // ---
-            builder.Register(x => new AssetPairsUpdater(x.Resolve<IAssetsService>()))
-                .As<IUpdater<AssetPair>>()
-                .InstancePerDependency();
-            builder.Register(x => 
-                    CreateDictionaryCache<AssetPair>(x, settings.AssetPairsCacheExpirationPeriod,
-                        x.Resolve<ILogFactory>(), autoRefresh)
-                )
-                .InstancePerDependency();
-
-            // ---
-            builder.Register(x => new AssetsServiceWithCache(
-                    x.Resolve<IDictionaryCache<Asset>>(),
-                    x.Resolve<IDictionaryCache<AssetPair>>())
-                )
-                .As<IAssetsServiceWithCache>()
-                .SingleInstance();
-        }
-
-        private static IDictionaryCache<T> CreateDictionaryCache<T>(IComponentContext context, TimeSpan period, ILogFactory logFactory, bool refreshing)
-            where T : ICacheItem
-        {
-            if (refreshing)
-            {
-                return new RefreshingDictionaryCache<T>(
-                    period,
-                    context.Resolve<IUpdater<T>>(),
-                    logFactory);
-            }
-
-            return new ExpiringDictionaryCache<T>(
-                period,
-                context.Resolve<IUpdater<T>>()
-            );
         }
     }
 }
