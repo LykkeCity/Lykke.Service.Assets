@@ -37,5 +37,7 @@ namespace Lykke.Service.Assets.Contract.Events
         public bool IsBase { get; set; }       
 
         public string IconUrl { get; set; }
+
+        public bool IsDisabled { get; set; }
     }
 }
