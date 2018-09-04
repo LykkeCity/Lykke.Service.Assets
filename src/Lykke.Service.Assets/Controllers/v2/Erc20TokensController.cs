@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using AutoMapper;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
@@ -59,11 +59,10 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetAll()
         {
             var allTokens = await _erc20TokenService.GetAllAsync();
-            var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
-            return Ok(new ListOf<Erc20Token>()
+            return Ok(new ListOf<Erc20Token>
             {
-                Items = responseList
+                Items = allTokens
             });
         }
 
@@ -73,11 +72,10 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> Erc20TokenGetAllWithAssets()
         {
             var allTokens    = await _erc20TokenService.GetAllWithAssetsAsync();
-            var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
             return Ok(new ListOf<Erc20Token>
             {
-                Items = responseList
+                Items = allTokens
             });
         }
 
@@ -91,9 +89,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             if (token != null)
             {
-                var response = Mapper.Map<Erc20Token>(token);
-
-                return Ok(response);
+                return Ok(token);
             }
             else
             {
@@ -108,11 +104,10 @@ namespace Lykke.Service.Assets.Controllers.V2
         {
             var ids          = specification.Ids;
             var allTokens    = await _erc20TokenService.GetByAssetIdsAsync(ids?.ToArray());
-            var responseList = allTokens?.Select(Mapper.Map<Erc20Token>);
 
             return Ok(new ListOf<Erc20Token>
             {
-                Items = responseList
+                Items = allTokens
             });
         }
 

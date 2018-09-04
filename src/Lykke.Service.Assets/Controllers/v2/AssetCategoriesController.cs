@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +25,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(AssetCategory), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Add([FromBody] AssetCategory assetCategory)
         {
-            assetCategory = Mapper.Map<AssetCategory>(await _assetCategoryService.AddAsync(assetCategory));
+            assetCategory = await _assetCategoryService.AddAsync(assetCategory);
 
             return Created
             (
@@ -46,7 +44,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             if (assetCategory != null)
             {
-                return Ok(Mapper.Map<AssetCategory>(assetCategory));
+                return Ok(assetCategory);
             }
             else
             {
@@ -59,8 +57,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(IEnumerable<AssetCategory>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            var assetCategories = (await _assetCategoryService.GetAllAsync())
-                .Select(Mapper.Map<AssetCategory>);
+            var assetCategories = await _assetCategoryService.GetAllAsync();
 
             return Ok(assetCategories);
         }

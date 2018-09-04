@@ -1,45 +1,47 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Repositories.Entities;
+using Lykke.Service.Assets.Responses.V2;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Cache
 {
     public class CachedAssetPairService : ICachedAssetPairService
     {
         private readonly IAssetPairService _assetPairService;
-        private readonly DistributedCache<IAssetPair, AssetPairEntity> _cache;
+        private readonly DistributedCache<IAssetPair, AssetPair> _cache;
         private const string AllEntitiesKey = "All";
 
         public CachedAssetPairService(
             IAssetPairService assetPairService,
-            DistributedCache<IAssetPair, AssetPairEntity> cache)
+            DistributedCache<IAssetPair, AssetPair> cache)
         {
             _assetPairService = assetPairService;
             _cache = cache;
         }
 
-        public async Task<IAssetPair> AddAsync(IAssetPair assetPair)
+        public async Task<AssetPair> AddAsync(IAssetPair assetPair)
         {
             await InvalidateCache();
 
-            return await _assetPairService.AddAsync(assetPair);
+            return AutoMapper.Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
         }
 
-        public IAssetPair CreateDefault()
+        public AssetPair CreateDefault()
         {
-            return _assetPairService.CreateDefault();
+            return AutoMapper.Mapper.Map<AssetPair>(_assetPairService.CreateDefault());
         }
 
-        public async Task<IEnumerable<IAssetPair>> GetAllAsync()
+        public async Task<IEnumerable<AssetPair>> GetAllAsync()
         {
-            return await _cache.GetListAsync(AllEntitiesKey, _assetPairService.GetAllAsync);
+            return await _cache.GetListAsync(AllEntitiesKey, 
+                async () => AutoMapper.Mapper.Map<List<AssetPair>>(await _assetPairService.GetAllAsync()));
         }
 
-        public async Task<IAssetPair> GetAsync(string id)
+        public async Task<AssetPair> GetAsync(string id)
         {
-            return await _cache.GetAsync(id, () => _assetPairService.GetAsync(id));
+            return await _cache.GetAsync(id, 
+                async  () => AutoMapper.Mapper.Map<AssetPair>(await _assetPairService.GetAsync(id)));
         }
 
         public async Task RemoveAsync(string id)

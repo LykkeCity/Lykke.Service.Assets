@@ -17,7 +17,7 @@ namespace Lykke.Service.Assets.Cache
     [UsedImplicitly]
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
-        private const string PatternClient = ":v2:Assets:Client:";
+        private const string PatternClient = ":v3:Assets:Client:";
 
         private readonly IAssetsForClientCacheManagerSettings _settings;
         private readonly IServer _redisServer;

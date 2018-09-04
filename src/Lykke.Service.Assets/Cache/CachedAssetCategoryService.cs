@@ -2,39 +2,41 @@
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Repositories.Entities;
+using Lykke.Service.Assets.Responses.V2;
 
 namespace Lykke.Service.Assets.Cache
 {
     public class CachedAssetCategoryService : ICachedAssetCategoryService
     {
         private readonly IAssetCategoryService _assetCategoryService;
-        private readonly DistributedCache<IAssetCategory, AssetCategoryEntity> _cache;
+        private readonly DistributedCache<IAssetCategory, AssetCategory> _cache;
         private const string AllEntitiesKey = "All";
 
         public CachedAssetCategoryService(
             IAssetCategoryService assetCategoryService,
-            DistributedCache<IAssetCategory, AssetCategoryEntity> cache)
+            DistributedCache<IAssetCategory, AssetCategory> cache)
         {
             _assetCategoryService = assetCategoryService;
             _cache = cache;
         }
 
-        public async Task<IAssetCategory> AddAsync(IAssetCategory assetCategory)
+        public async Task<AssetCategory> AddAsync(IAssetCategory assetCategory)
         {
             await InvalidateCache();
 
-            return await _assetCategoryService.AddAsync(assetCategory);
+            return AutoMapper.Mapper.Map<AssetCategory>(await _assetCategoryService.AddAsync(assetCategory));
         }
 
-        public async Task<IAssetCategory> GetAsync(string id)
+        public async Task<AssetCategory> GetAsync(string id)
         {
-            return await _cache.GetAsync(id, () => _assetCategoryService.GetAsync(id));
+            return await _cache.GetAsync(id, 
+                async () => AutoMapper.Mapper.Map<AssetCategory>(await _assetCategoryService.GetAsync(id)));
         }
 
-        public async Task<IEnumerable<IAssetCategory>> GetAllAsync()
+        public async Task<IEnumerable<AssetCategory>> GetAllAsync()
         {
-            return await _cache.GetListAsync(AllEntitiesKey, () => _assetCategoryService.GetAllAsync());
+            return await _cache.GetListAsync(AllEntitiesKey,
+                async () => AutoMapper.Mapper.Map<List<AssetCategory>>(await _assetCategoryService.GetAllAsync()));
         }
 
         public async Task RemoveAsync(string id)

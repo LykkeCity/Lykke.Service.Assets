@@ -6,6 +6,7 @@ using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.Service.Assets.Repositories.DTOs;
+using Lykke.Service.Assets.Responses.V2;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
 
@@ -27,9 +28,9 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
 
             RegisterCache<IAsset, AssetDto>(builder, "Assets");
-            RegisterCache<IAssetCategory, AssetCategoryEntity>(builder, "AssetCategories");
-            RegisterCache<IAssetPair, AssetPairEntity>(builder, "AssetPairs");
-            RegisterCache<IErc20Token, Erc20TokenEntity>(builder, "Erc20Tokens");
+            RegisterCache<IAssetCategory, AssetCategory>(builder, "AssetCategories");
+            RegisterCache<IAssetPair, AssetPair>(builder, "AssetPairs");
+            RegisterCache<IErc20Token, Erc20Token>(builder, "Erc20Tokens");
 
             RegisterRedis(builder);
 
@@ -105,7 +106,7 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterType<DistributedCache<I, T>>()
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Dictionaries.CacheExpirationPeriod))
-                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RadisSettings.InstanceName}:v2:{partitionKey}"));
+                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RadisSettings.InstanceName}:v3:{partitionKey}"));
         }
     }
 }
