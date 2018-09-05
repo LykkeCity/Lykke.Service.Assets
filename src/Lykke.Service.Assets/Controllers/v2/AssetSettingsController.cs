@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
@@ -32,7 +32,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return Created
             (
-                uri:   $"api/v2/asset-settings/{settings.Asset}",
+                uri: $"api/v2/asset-settings/{settings.Asset}",
                 value: settings
             );
         }
@@ -54,16 +54,12 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> Get(string assetId)
         {
             var settings = await _assetSettingsService.GetAsync(assetId);
-
-            if (settings != null)
+            if (settings == null)
             {
-                return Ok(Mapper.Map<AssetSettings>(settings));
-            }
-            else
-            {
-
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<AssetSettings>(settings));
         }
 
         [HttpGet]
@@ -86,7 +82,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         public IActionResult GetDefault()
         {
             var assetSettings = _assetSettingsService.CreateDefault();
-            var response      = Mapper.Map<AssetSettings>(assetSettings);
+            var response = Mapper.Map<AssetSettings>(assetSettings);
 
             return Ok(response);
         }

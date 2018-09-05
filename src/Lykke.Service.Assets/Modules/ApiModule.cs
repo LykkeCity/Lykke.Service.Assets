@@ -12,19 +12,15 @@ namespace Lykke.Service.Assets.Modules
 {
     public class ApiModule : Module
     {
-        private readonly IReloadingManager<ApplicationSettings> _settings;
+        private readonly ApplicationSettings.AssetsSettings _settings;
 
-        public ApiModule(
-            IReloadingManager<ApplicationSettings> settings)
+        public ApiModule(IReloadingManager<ApplicationSettings> settings)
         {
-            _settings = settings;
+            _settings = settings.CurrentValue.AssetsService;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(_settings).SingleInstance();
-            builder.RegisterInstance(_settings.CurrentValue.AssetsService).SingleInstance();
-
             RegisterCache<IAsset, AssetDto>(builder, "Assets");
             RegisterCache<IAssetCategory, AssetCategory>(builder, "AssetCategories");
             RegisterCache<IAssetPair, AssetPair>(builder, "AssetPairs");
@@ -60,14 +56,14 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterType<AssetsForClientCacheManager>()
                 .As<IAssetsForClientCacheManager>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.RedisSettings.AssetsForClientCacheTimeSpan))
-                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RedisSettings.Instance}:v3:Assets:Client"));
+                .WithParameter(TypedParameter.From(_settings.RedisSettings.AssetsForClientCacheTimeSpan))
+                .WithParameter(TypedParameter.From($"{_settings.RedisSettings.Instance}:v3:Assets:Client"));
         }
 
         private void RegisterRedis(ContainerBuilder builder)
         {
             System.Threading.ThreadPool.SetMinThreads(100, 100);
-            var options = ConfigurationOptions.Parse(_settings.CurrentValue.AssetsService.RedisSettings.Configuration);
+            var options = ConfigurationOptions.Parse(_settings.RedisSettings.Configuration);
             options.ReconnectRetryPolicy = new ExponentialRetry(3000, 15000);
 
             var redis = ConnectionMultiplexer.Connect(options);
@@ -88,8 +84,8 @@ namespace Lykke.Service.Assets.Modules
         {
             builder.RegisterType<DistributedCache<I, T>>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.RedisSettings.Expiration))
-                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RedisSettings.Instance}:v3:{partitionKey}"));
+                .WithParameter(TypedParameter.From(_settings.RedisSettings.Expiration))
+                .WithParameter(TypedParameter.From($"{_settings.RedisSettings.Instance}:v3:{partitionKey}"));
         }
     }
 }

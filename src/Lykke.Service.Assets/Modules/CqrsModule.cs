@@ -76,15 +76,11 @@ namespace Lykke.Service.Assets.Modules
                 Register.BoundedContext("assets")
                     .ListeningCommands(
                             typeof(CreateAssetCommand),
-                            typeof(UpdateAssetCommand),
-                            typeof(CreateAssetPairCommand),
-                            typeof(UpdateAssetPairCommand))
+                            typeof(UpdateAssetCommand))
                         .On(defaultRoute)
                     .PublishingEvents(
                             typeof(AssetCreatedEvent),
-                            typeof(AssetUpdatedEvent),
-                            typeof(AssetPairCreatedEvent),
-                            typeof(AssetPairUpdatedEvent))
+                            typeof(AssetUpdatedEvent))
                         .With(defaultPipeline)
                     .WithCommandsHandler<AssetsHandler>()
                     .ListeningCommands(

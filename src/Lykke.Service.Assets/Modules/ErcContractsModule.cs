@@ -7,12 +7,12 @@ namespace Lykke.Service.Assets.Modules
 {
     public class ErcContractsModule : Module
     {
-        private readonly IReloadingManager<ApplicationSettings> _settings;
+        private readonly ApplicationSettings.AssetsSettings _settings;
 
         public ErcContractsModule(
             IReloadingManager<ApplicationSettings> settings)
         {
-            _settings = settings;
+            _settings = settings.CurrentValue.AssetsService;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -26,7 +26,7 @@ namespace Lykke.Service.Assets.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Rabbit.ConnectionString));
+                .WithParameter(TypedParameter.From(_settings.Rabbit.ConnectionString));
         }
     }
 }

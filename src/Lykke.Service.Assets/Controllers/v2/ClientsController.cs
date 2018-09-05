@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
-using Lykke.Service.Assets.Core.Domain;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.v2.AssetConditions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
@@ -28,7 +27,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet("{clientId}/asset-ids")]
         [SwaggerOperation("ClientGetAssetIds")]
-        [ProducesResponseType(typeof(IEnumerable<string>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAssetIds(string clientId, [FromQuery] bool isIosDevice)
         {
             var assetIds = await _assetConditionService.GetAssetConditionsByClient(clientId);
@@ -37,20 +36,20 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet("{clientId}/swift-deposit-enabled")]
         [SwaggerOperation("ClientIsAllowedMakeSwiftDeposit")]
-        [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> IsAllowedMakeSwiftDeposit(string clientId, [FromQuery] bool isIosDevice)
         {
-            bool result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
+            var result = await _assetGroupService.SwiftDepositEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }
 
         [HttpGet("{clientId}/cash-in-via-bank-card-enabled")]
         [SwaggerOperation("ClientIsAllowedToCashInViaBankCard")]
-        [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> IsAllowedToCashInViaBankCard(string clientId, [FromQuery] bool isIosDevice)
         {
-            bool result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
+            var result = await _assetGroupService.CashInViaBankCardEnabledAsync(clientId, isIosDevice);
 
             return Ok(result);
         }
@@ -67,8 +66,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(IEnumerable<AssetConditionModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAssetConditions(string clientId)
         {
-            IEnumerable<IAssetCondition> conditions =
-                await _assetConditionService.GetAssetConditionsByClient(clientId);
+            var conditions = await _assetConditionService.GetAssetConditionsByClient(clientId);
 
             var model = Mapper.Map<List<AssetConditionModel>>(conditions);
 

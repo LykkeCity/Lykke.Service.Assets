@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Requests.V2;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
@@ -76,15 +76,12 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> Get(string id)
         {
             var asset = await _assetService.GetAsync(id);
-
-            if (asset != null)
-            {
-                return Ok(Mapper.Map<Asset>(asset));
-            }
-            else
+            if (asset == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<Asset>(asset));
         }
 
         [HttpGet]
@@ -121,14 +118,12 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetCategory(string id)
         {
             var asset = await _assetService.GetAsync(id);
-
             if (asset == null)
             {
                 return NotFound("Asset not found");
             }
 
             var assetCategory = await _assetCategoryService.GetAsync(asset.CategoryId ?? "");
-
             if (assetCategory == null)
             {
                 return NotFound("Asset category not found");
