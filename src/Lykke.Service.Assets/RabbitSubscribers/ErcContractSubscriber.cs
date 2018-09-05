@@ -48,6 +48,8 @@ namespace Lykke.Service.Assets.RabbitSubscribers
 
         private async Task ProcessMessageAsync(Erc20ContractCreatedMessage arg)
         {
+            _log.Info($"Got Erc20ContractCreatedMessage: {arg.Address} ");
+
             // TODO: Orchestrate execution flow here and delegate actual business logic implementation to services layer
             // Do not implement actual business logic here
             var token = new Erc20Token

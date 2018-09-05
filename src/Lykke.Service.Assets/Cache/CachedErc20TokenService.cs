@@ -57,8 +57,8 @@ namespace Lykke.Service.Assets.Cache
 
         public async Task<Erc20Token> GetByTokenAddressAsync(string tokenAddress)
         {
-            var token = await _tokenService.GetByTokenAddressAsync(tokenAddress);
-            return token != null ? AutoMapper.Mapper.Map<Erc20Token>(token) : null;
+            return await _cache.GetAsync(tokenAddress,
+                async () => AutoMapper.Mapper.Map<Erc20Token>(await _tokenService.GetByTokenAddressAsync(tokenAddress)));
         }
 
         public async Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync()
