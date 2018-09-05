@@ -1,14 +1,15 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Cache;
 
 namespace Lykke.Service.Assets.Services
 {
     public class ErcContractProcessor : IErcContractProcessor
     {
-        private readonly IErc20TokenService _erc20TokenService;
+        private readonly ICachedErc20TokenService _erc20TokenService;
 
-        public ErcContractProcessor(IErc20TokenService erc20TokenService)
+        public ErcContractProcessor(ICachedErc20TokenService erc20TokenService)
         {
             _erc20TokenService = erc20TokenService;
         }

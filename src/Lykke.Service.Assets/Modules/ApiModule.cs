@@ -7,6 +7,7 @@ using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Responses.V2;
+using Lykke.Service.Assets.Services;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
 
@@ -68,6 +69,9 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterType<AssetsForClientCacheManager>()
                 .As<IAssetsForClientCacheManager>()
                 .SingleInstance();
+
+            builder.RegisterType<ErcContractProcessor>().
+                As<IErcContractProcessor>().SingleInstance();
         }
 
         private void RegisterRedis(ContainerBuilder builder)
