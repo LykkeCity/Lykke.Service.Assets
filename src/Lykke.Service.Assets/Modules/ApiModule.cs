@@ -1,13 +1,11 @@
 ﻿using Autofac;
 using Lykke.Service.Assets.Cache;
-using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.RabbitSubscribers;
-using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Responses.V2;
-using Lykke.Service.Assets.Services;
+using Lykke.Service.Assets.Settings;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
 
@@ -62,13 +60,11 @@ namespace Lykke.Service.Assets.Modules
 
             RegisterRabbitMqSubscribers(builder);
 
-            builder.RegisterInstance(_settings.CurrentValue.AssetsService.RadisSettings)
-                .As<IAssetsForClientCacheManagerSettings>()
-                .SingleInstance();
-
             builder.RegisterType<AssetsForClientCacheManager>()
                 .As<IAssetsForClientCacheManager>()
-                .SingleInstance();
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.RedisSettings.AssetsForClientCacheTimeSpan))
+                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RedisSettings.Instance}:v3:Assets:Client"));
 
             builder.RegisterType<ErcContractProcessor>().
                 As<IErcContractProcessor>().SingleInstance();
@@ -77,7 +73,7 @@ namespace Lykke.Service.Assets.Modules
         private void RegisterRedis(ContainerBuilder builder)
         {
             System.Threading.ThreadPool.SetMinThreads(100, 100);
-            var options = ConfigurationOptions.Parse(_settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration);
+            var options = ConfigurationOptions.Parse(_settings.CurrentValue.AssetsService.RedisSettings.Configuration);
             options.ReconnectRetryPolicy = new ExponentialRetry(3000, 15000);
 
             var redis = ConnectionMultiplexer.Connect(options);
@@ -109,8 +105,8 @@ namespace Lykke.Service.Assets.Modules
         {
             builder.RegisterType<DistributedCache<I, T>>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Dictionaries.CacheExpirationPeriod))
-                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RadisSettings.InstanceName}:v3:{partitionKey}"));
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.RedisSettings.Expiration))
+                .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RedisSettings.Instance}:v3:{partitionKey}"));
         }
     }
 }

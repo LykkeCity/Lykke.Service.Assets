@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using JetBrains.Annotations;
 using Lykke.Sdk;
-using Lykke.Service.Assets.Core;
+using Lykke.Service.Assets.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -28,7 +28,7 @@ namespace Lykke.Service.Assets
                 options.Logs = logs =>
                 {
                     logs.AzureTableName = "AssetsServiceLog";
-                    logs.AzureTableConnectionStringResolver = settings => settings.AssetsService.Logs.DbConnectionString;
+                    logs.AzureTableConnectionStringResolver = settings => settings.AssetsService.Db.LogsConnString;
                 };
             });
         }

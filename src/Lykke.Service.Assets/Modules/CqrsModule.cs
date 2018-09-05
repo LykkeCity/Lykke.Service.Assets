@@ -7,9 +7,9 @@ using Lykke.Messaging;
 using Lykke.Messaging.RabbitMq;
 using Lykke.Messaging.Serialization;
 using Lykke.Service.Assets.Contract.Events;
-using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Events;
+using Lykke.Service.Assets.Settings;
 using Lykke.Service.Assets.Workflow.Handlers;
 using Lykke.SettingsReader;
 using System.Collections.Generic;
@@ -18,11 +18,11 @@ namespace Lykke.Service.Assets.Modules
 {
     public class CqrsModule : Module
     {
-        private readonly ApplicationSettings.AssetsSettings _settings;
+        private readonly CqrsSettings _settings;
 
         public CqrsModule(IReloadingManager<ApplicationSettings> settingsManager)
         {
-            _settings = settingsManager.CurrentValue.AssetsService;
+            _settings = settingsManager.CurrentValue.AssetsService.Cqrs;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -47,7 +47,7 @@ namespace Lykke.Service.Assets.Modules
 
             builder.Register(context => new AutofacDependencyResolver(context)).As<IDependencyResolver>().SingleInstance();
 
-            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
+            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.RabbitConnectionString };
 
             var defaultRetryDelay = (long)_settings.RetryDelay.TotalMilliseconds;
 

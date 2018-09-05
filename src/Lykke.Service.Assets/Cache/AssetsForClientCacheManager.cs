@@ -1,47 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Common;
+﻿using Common;
 using Common.Log;
 using JetBrains.Annotations;
 using Lykke.Common.Log;
-using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services.Domain;
 using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Cache
 {
     [UsedImplicitly]
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
-        private const string PatternClient = ":v3:Assets:Client:";
-
-        private readonly IAssetsForClientCacheManagerSettings _settings;
         private readonly IServer _redisServer;
         private readonly IDatabase _redisDatabase;
         private readonly ILog _log;
+        private readonly string _partitionKey;
+        private readonly TimeSpan _expiration;
 
         public AssetsForClientCacheManager(
-            IAssetsForClientCacheManagerSettings settings,
             IServer redisServer,
             IDatabase redisDatabase,
-            ILogFactory logFactory)
+            ILogFactory logFactory,
+            string partitionKey, TimeSpan expiration)
         {
-            _settings = settings;
             _redisServer = redisServer;
             _redisDatabase = redisDatabase;
+            _expiration = expiration;
             _log = logFactory.CreateLog(this);
+            _partitionKey = partitionKey;
         }
 
         public async Task ClearCacheAsync(string reason)
         {
-            RedisKey[] keys = _redisServer.Keys(pattern: $"{_settings.InstanceName}{PatternClient}*", pageSize: 1000).ToArray();
+            RedisKey[] keys = _redisServer.Keys(pattern: $"{_partitionKey}*", pageSize: 1000).ToArray();
 
             await _redisDatabase.KeyDeleteAsync(keys);
-            
+
             _log.Info($"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
         }
 
@@ -89,7 +88,7 @@ namespace Lykke.Service.Assets.Cache
         {
             try
             {
-                await _redisDatabase.StringSetAsync(key, value.ToJson(), _settings.AssetsForClientCacheTimeSpan);
+                await _redisDatabase.StringSetAsync(key, value.ToJson(), _expiration);
             }
             catch (Exception exception)
             {
@@ -117,7 +116,7 @@ namespace Lykke.Service.Assets.Cache
         }
 
         private string GetKeyAssetConditions(string clientId)
-            => $"{_settings.InstanceName}{PatternClient}AssetConditions:{clientId}";
+            => $"{_partitionKey}:AssetConditions:{clientId}";
 
         private string GetKeyAvailableAssets(string clientId, bool isIosDevice)
             => GetKey("AvailableAssets", clientId, isIosDevice);
@@ -129,6 +128,6 @@ namespace Lykke.Service.Assets.Cache
             => GetKey("SwiftDeposit", clientId, isIosDevice);
 
         private string GetKey(string key, string clientId, bool isIosDevice)
-            => $"{_settings.InstanceName}{PatternClient}{key}:{clientId}" + (isIosDevice ? "_ios_device" : string.Empty);
+            => $"{_partitionKey}:{key}:{clientId}" + (isIosDevice ? "_ios_device" : string.Empty);
     }
 }
