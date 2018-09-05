@@ -1,7 +1,8 @@
 ﻿using Autofac;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services;
 
-namespace Lykke.Service.Assets.Services
+namespace Lykke.Service.Assets.Modules
 {
     public class ServicesModule : Module
     {
@@ -54,11 +55,6 @@ namespace Lykke.Service.Assets.Services
             builder
                 .RegisterType<AssetSettingsService>()
                 .As<IAssetSettingsService>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<HealthService>()
-                .As<IHealthService>()
                 .SingleInstance();
 
             builder

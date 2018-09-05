@@ -1,15 +1,14 @@
 ﻿using System;
 using Lykke.SettingsReader.Attributes;
 using Lykke.Common.Chaos;
+using Lykke.Sdk.Settings;
 
 namespace Lykke.Service.Assets.Core
 {
-    public class ApplicationSettings
+    public class ApplicationSettings : BaseAppSettings
     {
         public AssetsSettings AssetsService { get; set; }
-
-        public SlackNotificationsSettings SlackNotifications { get; set; }
-
+        
         public class AssetsSettings
         {
             public DictionariesSettings Dictionaries { get; set; }

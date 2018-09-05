@@ -20,9 +20,9 @@ namespace Lykke.Service.Assets.Modules
     {
         private readonly ApplicationSettings.AssetsSettings _settings;
 
-        public CqrsModule(IReloadingManager<ApplicationSettings.AssetsSettings> settingsManager)
+        public CqrsModule(IReloadingManager<ApplicationSettings> settingsManager)
         {
-            _settings = settingsManager.CurrentValue;
+            _settings = settingsManager.CurrentValue.AssetsService;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -109,7 +109,7 @@ namespace Lykke.Service.Assets.Modules
                         .To("assets").With(defaultPipeline)
                 );
             })
-            .As<ICqrsEngine>().SingleInstance();
+            .As<ICqrsEngine>().SingleInstance().AutoActivate();
         }
     }
 }

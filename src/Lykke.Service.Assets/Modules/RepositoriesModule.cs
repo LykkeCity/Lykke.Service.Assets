@@ -3,16 +3,15 @@ using Autofac;
 using AzureStorage;
 using AzureStorage.Tables;
 using AzureStorage.Tables.Templates.Index;
-using Common.Log;
 using Lykke.Common.Log;
 using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
 using Lykke.SettingsReader;
-using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace Lykke.Service.Assets.Repositories
+namespace Lykke.Service.Assets.Modules
 {
     public class RepositoriesModule : Module
     {
