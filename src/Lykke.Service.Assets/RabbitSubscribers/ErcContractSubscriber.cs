@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using Lykke.Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
-using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.RabbitSubscribers
@@ -16,6 +15,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
     public class ErcContractSubscriber : IStartable, IStopable
     {
         private readonly ILog _log;
+        private readonly ILogFactory _logFactory;
         private readonly string _connectionString;
         private readonly IErcContractProcessor _ercContractProcessor;
         private RabbitMqSubscriber<Erc20ContractCreatedMessage> _subscriber;
@@ -23,6 +23,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
         public ErcContractSubscriber(ILogFactory logFactory, IErcContractProcessor ercContractProcessor, string connectionString)
         {
             _log = logFactory.CreateLog(this);
+            _logFactory = logFactory;
             _connectionString = connectionString;
             _ercContractProcessor = ercContractProcessor;
         }
@@ -33,15 +34,16 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 .CreateForSubscriber(_connectionString, "ethereum.indexer.erccontracts", "service.assets")
                 .MakeDurable();
 
-            _subscriber = new RabbitMqSubscriber<Erc20ContractCreatedMessage>(settings,
-                    new ResilientErrorHandlingStrategy(_log, settings,
+            _subscriber = new RabbitMqSubscriber<Erc20ContractCreatedMessage>(
+                    _logFactory, 
+                    settings,
+                    new ResilientErrorHandlingStrategy(_logFactory, settings,
                         retryTimeout: TimeSpan.FromSeconds(10),
-                        next: new DeadQueueErrorHandlingStrategy(_log, settings)))
+                        next: new DeadQueueErrorHandlingStrategy(_logFactory, settings)))
                 .SetMessageDeserializer(new JsonMessageDeserializer<Erc20ContractCreatedMessage>())
                 .SetMessageReadStrategy(new MessageReadQueueStrategy())
                 .Subscribe(ProcessMessageAsync)
                 .CreateDefaultBinding()
-                .SetLogger(_log)
                 .Start();
         }
 
