@@ -77,14 +77,7 @@ namespace Lykke.Service.Assets.Services
         {
             return await _assetRepository.GetAsync(id);
         }
-
-        public async Task<IEnumerable<IAsset>> GetForCategoryAsync(string categoryId)
-        {
-            var assets = await _assetRepository.GetAllAsync(true);
-
-            return assets.Where(x => x.CategoryId == categoryId);
-        }
-
+        
         public async Task RemoveAsync(string id)
         {
             await _assetRepository.RemoveAsync(id);
