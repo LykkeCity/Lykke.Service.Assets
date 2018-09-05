@@ -1,6 +1,5 @@
 ﻿namespace Lykke.Service.Assets.RabbitSubscribers
 {
-    // NOTE: This is incoming message example
     public class Erc20ContractCreatedMessage
     {
         public string Address { get; set; }

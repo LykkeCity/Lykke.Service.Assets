@@ -2,7 +2,6 @@
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Responses.V2;
 using Lykke.Service.Assets.Settings;
@@ -58,16 +57,11 @@ namespace Lykke.Service.Assets.Modules
                 .As<ICachedErc20TokenAssetService>()
                 .SingleInstance();
 
-            RegisterRabbitMqSubscribers(builder);
-
             builder.RegisterType<AssetsForClientCacheManager>()
                 .As<IAssetsForClientCacheManager>()
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.RedisSettings.AssetsForClientCacheTimeSpan))
                 .WithParameter(TypedParameter.From($"{_settings.CurrentValue.AssetsService.RedisSettings.Instance}:v3:Assets:Client"));
-
-            builder.RegisterType<ErcContractProcessor>().
-                As<IErcContractProcessor>().SingleInstance();
         }
 
         private void RegisterRedis(ContainerBuilder builder)
@@ -88,17 +82,6 @@ namespace Lykke.Service.Assets.Modules
                 c =>
                     c.Resolve<ConnectionMultiplexer>()
                         .GetDatabase());
-        }
-
-        private void RegisterRabbitMqSubscribers(ContainerBuilder builder)
-        {
-            // TODO: You should register each subscriber in DI container as IStartable singleton and autoactivate it
-
-            builder.RegisterType<ErcContractSubscriber>()
-                .As<IStartable>()
-                .AutoActivate()
-                .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Rabbit.ConnectionString));
         }
 
         private void RegisterCache<I, T>(ContainerBuilder builder, string partitionKey) where T : class, I

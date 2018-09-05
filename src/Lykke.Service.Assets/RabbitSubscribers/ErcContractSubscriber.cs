@@ -1,13 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Common;
 using Common.Log;
 using JetBrains.Annotations;
 using Lykke.Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Services.Domain;
+using System;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.RabbitSubscribers
 {
@@ -17,15 +18,17 @@ namespace Lykke.Service.Assets.RabbitSubscribers
         private readonly ILog _log;
         private readonly ILogFactory _logFactory;
         private readonly string _connectionString;
-        private readonly IErcContractProcessor _ercContractProcessor;
         private RabbitMqSubscriber<Erc20ContractCreatedMessage> _subscriber;
+        private readonly ICachedErc20TokenService _erc20TokenService;
 
-        public ErcContractSubscriber(ILogFactory logFactory, IErcContractProcessor ercContractProcessor, string connectionString)
+        public ErcContractSubscriber(ILogFactory logFactory,
+            string connectionString,
+            ICachedErc20TokenService erc20TokenService)
         {
             _log = logFactory.CreateLog(this);
             _logFactory = logFactory;
             _connectionString = connectionString;
-            _ercContractProcessor = ercContractProcessor;
+            _erc20TokenService = erc20TokenService;
         }
 
         public void Start()
@@ -35,7 +38,7 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 .MakeDurable();
 
             _subscriber = new RabbitMqSubscriber<Erc20ContractCreatedMessage>(
-                    _logFactory, 
+                    _logFactory,
                     settings,
                     new ResilientErrorHandlingStrategy(_logFactory, settings,
                         retryTimeout: TimeSpan.FromSeconds(10),
@@ -51,8 +54,6 @@ namespace Lykke.Service.Assets.RabbitSubscribers
         {
             _log.Info($"Got Erc20ContractCreatedMessage: {arg.Address} ");
 
-            // TODO: Orchestrate execution flow here and delegate actual business logic implementation to services layer
-            // Do not implement actual business logic here
             var token = new Erc20Token
             {
                 Address = arg.Address,
@@ -67,7 +68,12 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 TransactionHash = arg.TransactionHash
             };
 
-            await _ercContractProcessor.ProcessErc20ContractAsync(token);
+            // todo: refactor into event generation + projection logic
+            var existingContract = await _erc20TokenService.GetByTokenAddressAsync(token.Address);
+            if (existingContract == null)
+            {
+                await _erc20TokenService.AddAsync(token);
+            }
         }
 
         public void Dispose()
