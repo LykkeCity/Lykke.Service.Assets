@@ -7,10 +7,11 @@ using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Services.Domain;
+using Lykke.Service.Assets.Workflow.Events;
 using System;
 using System.Threading.Tasks;
 
-namespace Lykke.Service.Assets.RabbitSubscribers
+namespace Lykke.Service.Assets.Workflow.Handlers
 {
     [UsedImplicitly]
     public class ErcContractSubscriber : IStartable, IStopable

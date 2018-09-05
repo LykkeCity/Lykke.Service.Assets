@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using Lykke.Service.Assets.RabbitSubscribers;
 using Lykke.Service.Assets.Settings;
+using Lykke.Service.Assets.Workflow.Handlers;
 using Lykke.SettingsReader;
 
 namespace Lykke.Service.Assets.Modules

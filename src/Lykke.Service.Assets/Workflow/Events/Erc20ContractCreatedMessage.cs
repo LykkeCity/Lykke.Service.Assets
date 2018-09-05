@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.Assets.RabbitSubscribers
+﻿namespace Lykke.Service.Assets.Workflow.Events
 {
     public class Erc20ContractCreatedMessage
     {

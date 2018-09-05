@@ -49,8 +49,6 @@ namespace Lykke.Service.Assets.Modules
 
             var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.RabbitConnectionString };
 
-            var defaultRetryDelay = (long)_settings.RetryDelay.TotalMilliseconds;
-
             builder.RegisterType<AssetsHandler>();
             builder.RegisterType<AssetPairHandler>();
 
@@ -73,10 +71,9 @@ namespace Lykke.Service.Assets.Modules
                         "RabbitMq",
                         SerializationFormat.MessagePack,
                         environment: "lykke",
-                        exclusiveQueuePostfix: _settings.QueuePostfix)),
+                        exclusiveQueuePostfix: "k8s")),
 
                 Register.BoundedContext("assets")
-                    .FailedCommandRetryDelay(defaultRetryDelay)
                     .ListeningCommands(
                             typeof(CreateAssetCommand),
                             typeof(UpdateAssetCommand),
