@@ -1,7 +1,7 @@
-﻿using Lykke.Service.Assets.Core.Domain;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 
-namespace Lykke.Service.Assets.Core.Services
+namespace Lykke.Service.Assets.RabbitSubscribers
 {
     public interface IErcContractProcessor
     {

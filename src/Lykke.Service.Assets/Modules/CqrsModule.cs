@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Autofac;
+﻿using Autofac;
 using Lykke.Common.Chaos;
 using Lykke.Common.Log;
 using Lykke.Cqrs;
@@ -9,10 +8,11 @@ using Lykke.Messaging.RabbitMq;
 using Lykke.Messaging.Serialization;
 using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core;
-using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Events;
+using Lykke.Service.Assets.Workflow.Handlers;
 using Lykke.SettingsReader;
+using System.Collections.Generic;
 
 namespace Lykke.Service.Assets.Modules
 {
@@ -49,13 +49,10 @@ namespace Lykke.Service.Assets.Modules
 
             var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
 
-#if DEBUG
-            const string virtualHost = "/debug";
-#endif
-
             var defaultRetryDelay = (long)_settings.RetryDelay.TotalMilliseconds;
 
             builder.RegisterType<AssetsHandler>();
+            builder.RegisterType<AssetPairHandler>();
 
             builder.Register(ctx =>
             {
@@ -64,21 +61,12 @@ namespace Lykke.Service.Assets.Modules
 
                 return new CqrsEngine(ctx.Resolve<ILogFactory>(),
                     ctx.Resolve<IDependencyResolver>(),
-#if DEBUG
-                    new MessagingEngine(ctx.Resolve<ILogFactory>(),
-                        new TransportResolver(new Dictionary<string, TransportInfo>
-                        {
-                            {"RabbitMq", new TransportInfo(rabbitMqSettings.Endpoint + virtualHost, rabbitMqSettings.UserName, rabbitMqSettings.Password, "None", "RabbitMq")}
-                        }),
-                        new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())),
-#else
                     new MessagingEngine(ctx.Resolve<ILogFactory>(),
                         new TransportResolver(new Dictionary<string, TransportInfo>
                         {
                             {"RabbitMq", new TransportInfo(rabbitMqSettings.Endpoint.ToString(), rabbitMqSettings.UserName, rabbitMqSettings.Password, "None", "RabbitMq")}
                         }),
                         new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())),
-#endif
                     new DefaultEndpointProvider(),
                     true,
                     Register.DefaultEndpointResolver(new RabbitMqConventionEndpointResolver(
@@ -101,7 +89,16 @@ namespace Lykke.Service.Assets.Modules
                             typeof(AssetPairCreatedEvent),
                             typeof(AssetPairUpdatedEvent))
                         .With(defaultPipeline)
-                    .WithCommandsHandler<AssetsHandler>(),
+                    .WithCommandsHandler<AssetsHandler>()
+                    .ListeningCommands(
+                            typeof(CreateAssetPairCommand),
+                            typeof(UpdateAssetPairCommand))
+                        .On(defaultRoute)
+                    .PublishingEvents(
+                            typeof(AssetPairCreatedEvent),
+                            typeof(AssetPairUpdatedEvent))
+                        .With(defaultPipeline)
+                    .WithCommandsHandler<AssetPairHandler>(),
 
                 Register.DefaultRouting
                     .PublishingCommands(

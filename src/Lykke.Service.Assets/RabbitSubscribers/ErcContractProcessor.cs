@@ -1,9 +1,8 @@
-﻿using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.Core.Services;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Lykke.Service.Assets.Cache;
+using Lykke.Service.Assets.Core.Domain;
 
-namespace Lykke.Service.Assets.Services
+namespace Lykke.Service.Assets.RabbitSubscribers
 {
     public class ErcContractProcessor : IErcContractProcessor
     {

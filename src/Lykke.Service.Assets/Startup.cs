@@ -204,8 +204,7 @@ namespace Lykke.Service.Assets
                 // Explicit activation of ICqrsEngine service:
                 // ReSharper disable once UnusedVariable
                 var cqrs = ApplicationContainer.Resolve<ICqrsEngine>(); // bootstrap
-
-                await ApplicationContainer.Resolve<IStartupManager>().StartAsync();
+                
 
                 HealthNotifier.Notify("Started");
             }
@@ -221,8 +220,7 @@ namespace Lykke.Service.Assets
             try
             {
                 // NOTE: Service still can receive and process requests here, so take care about it if you add logic here.
-
-                await ApplicationContainer.Resolve<IShutdownManager>().StopAsync();
+                
             }
             catch (Exception ex)
             {
