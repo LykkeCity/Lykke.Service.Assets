@@ -62,7 +62,7 @@ namespace Lykke.Service.Assets.Modules
 
         private void RegisterRedis(ContainerBuilder builder)
         {
-            System.Threading.ThreadPool.SetMinThreads(100, 100);
+            System.Threading.ThreadPool.SetMinThreads(300, 300);
             var options = ConfigurationOptions.Parse(_settings.RedisSettings.Configuration);
             options.ReconnectRetryPolicy = new ExponentialRetry(3000, 15000);
 

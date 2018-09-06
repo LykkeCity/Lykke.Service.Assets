@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Cache
 {
@@ -31,21 +31,37 @@ namespace Lykke.Service.Assets.Cache
             return AutoMapper.Mapper.Map<Erc20Token>(token);
         }
 
-        public async Task<IEnumerable<Erc20Token>> GetAllAsync()
+        public Task<IEnumerable<Erc20Token>> GetAllAsync()
         {
-            return await _cache.GetListAsync(AllEntitiesKey,
+            return _cache.GetListAsync(AllEntitiesKey,
                 async () => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllAsync()));
         }
 
         public async Task<IEnumerable<Erc20Token>> GetByAssetIdsAsync(string[] assetIds)
         {
+            if (assetIds == null || assetIds.Length == 0)
+                return new Erc20Token[0];
+
+            if (assetIds.Length == 1)
+            {
+                var token = await GetByAssetIdAsync(assetIds[0]);
+                if (token == null)
+                {
+                    return new Erc20Token[0];
+                }
+                else
+                {
+                    return new[] { token };
+                }
+            }
+
             var tokens = await GetAllWithAssetsAsync();
             return tokens.Where(x => assetIds.Contains(x.AssetId));
         }
 
-        public async Task<Erc20Token> GetByAssetIdAsync(string assetId)
+        public Task<Erc20Token> GetByAssetIdAsync(string assetId)
         {
-            return await _cache.GetAsync(assetId,
+            return _cache.GetAsync(assetId,
                 async () => AutoMapper.Mapper.Map<Erc20Token>(await _tokenService.GetByAssetIdAsync(assetId)));
         }
 
@@ -55,15 +71,15 @@ namespace Lykke.Service.Assets.Cache
             await _tokenService.UpdateAsync(token);
         }
 
-        public async Task<Erc20Token> GetByTokenAddressAsync(string tokenAddress)
+        public Task<Erc20Token> GetByTokenAddressAsync(string tokenAddress)
         {
-            return await _cache.GetAsync(tokenAddress,
+            return _cache.GetAsync(tokenAddress,
                 async () => AutoMapper.Mapper.Map<Erc20Token>(await _tokenService.GetByTokenAddressAsync(tokenAddress)));
         }
 
         public async Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync()
         {
-            return await _cache.GetListAsync(WithAssetsKey, 
+            return await _cache.GetListAsync(WithAssetsKey,
                 async () => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllWithAssetsAsync()));
         }
 
