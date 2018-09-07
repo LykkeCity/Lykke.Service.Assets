@@ -9,7 +9,6 @@ namespace Lykke.Service.Assets.Settings
             public string Configuration { get; set; }
             public string Instance { get; set; }
             public TimeSpan Expiration { get; set; }
-            public TimeSpan AssetsForClientCacheTimeSpan { get; set; }
         }
     }
 }

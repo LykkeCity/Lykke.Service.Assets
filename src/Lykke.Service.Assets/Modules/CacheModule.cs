@@ -10,24 +10,17 @@ using StackExchange.Redis;
 
 namespace Lykke.Service.Assets.Modules
 {
-    public class ApiModule : Module
+    public class CacheModule : Module
     {
         private readonly ApplicationSettings.AssetsSettings _settings;
 
-        public ApiModule(IReloadingManager<ApplicationSettings> settings)
+        public CacheModule(IReloadingManager<ApplicationSettings> settings)
         {
             _settings = settings.CurrentValue.AssetsService;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            RegisterCache<IAsset, AssetDto>(builder, "Assets");
-            RegisterCache<IAssetCategory, AssetCategory>(builder, "AssetCategories");
-            RegisterCache<IAssetPair, AssetPair>(builder, "AssetPairs");
-            RegisterCache<IErc20Token, Erc20Token>(builder, "Erc20Tokens");
-
-            RegisterRedis(builder);
-
             builder
                .RegisterType<CachedErc20TokenService>()
                .As<ICachedErc20TokenService>()
@@ -53,11 +46,18 @@ namespace Lykke.Service.Assets.Modules
                 .As<ICachedErc20TokenAssetService>()
                 .SingleInstance();
 
+            RegisterRedis(builder);
+
+            RegisterCache<IAsset, AssetDto>(builder, "Assets");
+            RegisterCache<IAssetCategory, AssetCategory>(builder, "AssetCategories");
+            RegisterCache<IAssetPair, AssetPair>(builder, "AssetPairs");
+            RegisterCache<IErc20Token, Erc20Token>(builder, "Erc20Tokens");
+
             builder.RegisterType<AssetsForClientCacheManager>()
                 .As<IAssetsForClientCacheManager>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.RedisSettings.AssetsForClientCacheTimeSpan))
-                .WithParameter(TypedParameter.From($"{_settings.RedisSettings.Instance}:v3:Assets:Client"));
+                .WithParameter(TypedParameter.From(_settings.RedisSettings.Expiration))
+                .WithParameter(TypedParameter.From($"{_settings.RedisSettings.Instance}:v3:ClientSettings"));
         }
 
         private void RegisterRedis(ContainerBuilder builder)
