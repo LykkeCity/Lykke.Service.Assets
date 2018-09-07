@@ -10,10 +10,7 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     Controller for erc 20 tokens
-    /// </summary>
+    [ApiController]
     [Route("api/v2/erc20-tokens")]
     public class Erc20TokensController : Controller
     {

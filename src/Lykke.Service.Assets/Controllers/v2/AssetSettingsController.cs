@@ -9,10 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     Controller for asset settings
-    /// </summary>
+    [ApiController]
     [Route("api/v2/asset-settings")]
     public class AssetSettingsController : Controller
     {

@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("api/v2/asset-categories")]
     public class AssetCategoriesController : Controller
     {

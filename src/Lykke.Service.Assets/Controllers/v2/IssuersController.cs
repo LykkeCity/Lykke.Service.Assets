@@ -10,11 +10,7 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
-
-    /// <inheritdoc />
-    /// <summary>
-    ///     Controller for issuers
-    /// </summary>
+    [ApiController]
     [Route("api/v2/issuers")]
     public class IssuersController : Controller
     {

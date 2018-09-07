@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("api/v2/watch-lists")]
     public class WatchListsController : Controller
     {

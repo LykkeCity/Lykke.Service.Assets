@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("api/v2/asset-conditions")]
     public class AssetConditionsController : Controller
     {

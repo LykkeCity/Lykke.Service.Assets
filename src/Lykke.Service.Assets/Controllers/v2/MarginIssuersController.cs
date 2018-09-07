@@ -9,10 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     Controller for Margin Issuers
-    /// </summary>
+    [ApiController]
     [Route("api/v2/margin-issuers")]
     public class MarginIssuersController : Controller
     {
