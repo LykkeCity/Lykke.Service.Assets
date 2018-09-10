@@ -13,6 +13,7 @@ using Lykke.Service.Assets.Settings;
 using Lykke.Service.Assets.Workflow.Handlers;
 using Lykke.SettingsReader;
 using System.Collections.Generic;
+using Lykke.Messaging.Contract;
 
 namespace Lykke.Service.Assets.Modules
 {
@@ -52,6 +53,19 @@ namespace Lykke.Service.Assets.Modules
             builder.RegisterType<AssetsHandler>();
             builder.RegisterType<AssetPairHandler>();
 
+            builder.Register(ctx => new MessagingEngine(
+                    ctx.Resolve<ILogFactory>(),
+                    new TransportResolver(new Dictionary<string, TransportInfo>
+                    {
+                        {
+                            "RabbitMq",
+                            new TransportInfo(rabbitMqSettings.Endpoint.ToString(), rabbitMqSettings.UserName,
+                                rabbitMqSettings.Password, "None", "RabbitMq")
+                        }
+                    }),
+                    new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())))
+                .As<IMessagingEngine>().SingleInstance();
+
             builder.Register(ctx =>
             {
                 const string defaultPipeline = "commands";
@@ -59,12 +73,7 @@ namespace Lykke.Service.Assets.Modules
 
                 return new CqrsEngine(ctx.Resolve<ILogFactory>(),
                     ctx.Resolve<IDependencyResolver>(),
-                    new MessagingEngine(ctx.Resolve<ILogFactory>(),
-                        new TransportResolver(new Dictionary<string, TransportInfo>
-                        {
-                            {"RabbitMq", new TransportInfo(rabbitMqSettings.Endpoint.ToString(), rabbitMqSettings.UserName, rabbitMqSettings.Password, "None", "RabbitMq")}
-                        }),
-                        new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())),
+                    ctx.Resolve<IMessagingEngine>(),
                     new DefaultEndpointProvider(),
                     true,
                     Register.DefaultEndpointResolver(new RabbitMqConventionEndpointResolver(

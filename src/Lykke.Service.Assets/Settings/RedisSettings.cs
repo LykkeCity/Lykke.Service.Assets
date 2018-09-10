@@ -1,4 +1,5 @@
 ﻿using System;
+using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Service.Assets.Settings
 {
@@ -8,7 +9,8 @@ namespace Lykke.Service.Assets.Settings
         {
             public string Configuration { get; set; }
             public string Instance { get; set; }
-            public TimeSpan Expiration { get; set; }
+            [Optional]
+            public TimeSpan Expiration { get; set; } = TimeSpan.FromDays(1);
         }
     }
 }

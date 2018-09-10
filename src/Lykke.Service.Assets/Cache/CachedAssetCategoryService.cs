@@ -27,15 +27,15 @@ namespace Lykke.Service.Assets.Cache
             return AutoMapper.Mapper.Map<AssetCategory>(await _assetCategoryService.AddAsync(assetCategory));
         }
 
-        public async Task<AssetCategory> GetAsync(string id)
+        public Task<AssetCategory> GetAsync(string id)
         {
-            return await _cache.GetAsync(id, 
+            return _cache.GetAsync(id, 
                 async () => AutoMapper.Mapper.Map<AssetCategory>(await _assetCategoryService.GetAsync(id)));
         }
 
-        public async Task<IEnumerable<AssetCategory>> GetAllAsync()
+        public Task<IEnumerable<AssetCategory>> GetAllAsync()
         {
-            return await _cache.GetListAsync(AllEntitiesKey,
+            return _cache.GetListAsync(AllEntitiesKey,
                 async () => AutoMapper.Mapper.Map<List<AssetCategory>>(await _assetCategoryService.GetAllAsync()));
         }
 
