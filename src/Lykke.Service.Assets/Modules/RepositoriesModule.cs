@@ -1,18 +1,17 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using AzureStorage;
 using AzureStorage.Tables;
 using AzureStorage.Tables.Templates.Index;
-using Common.Log;
 using Lykke.Common.Log;
-using Lykke.Service.Assets.Core;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
+using Lykke.Service.Assets.Settings;
 using Lykke.SettingsReader;
-using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
+using System;
 
-namespace Lykke.Service.Assets.Repositories
+namespace Lykke.Service.Assets.Modules
 {
     public class RepositoriesModule : Module
     {
@@ -30,15 +29,15 @@ namespace Lykke.Service.Assets.Repositories
             const string assetGroupsTableName = "AssetGroups";
             const string assetSettingsTableName = "AssetSettings";
             const string assetIssuerTableName = "AssetIssuers";
-            const string dictionaryTableName  = "Dictionaries";
-            const string erc20TokenTableName  = "Erc20Tokens";
-            const string watchListTableName   = "WatchLists";
+            const string dictionaryTableName = "Dictionaries";
+            const string erc20TokenTableName = "Erc20Tokens";
+            const string watchListTableName = "WatchLists";
             const string assetConditionTableName = "AssetCondition";
             const string assetConditionLayerTableName = "AssetConditionLayer";
 
             string ClientPersonalInfoConnectionString(ApplicationSettings x) => x.AssetsService.Db.ClientPersonalInfoConnString;
-            string DictionariesConnectionString(ApplicationSettings x)       => x.AssetsService.Dictionaries.DbConnectionString;
-            
+            string DictionariesConnectionString(ApplicationSettings x) => x.AssetsService.Db.DictionariesConnectionString;
+
             builder.Register<IAssetAttributeRepository>(x => new AssetAttributeRepository(
                 CreateTable<AssetAttributeEntity>(DictionariesConnectionString, assetAttributesTableName, x.Resolve<ILogFactory>())));
 

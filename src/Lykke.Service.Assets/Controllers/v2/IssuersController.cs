@@ -1,25 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
-
-    /// <inheritdoc />
-    /// <summary>
-    ///     Controller for issuers
-    /// </summary>
+    [ApiController]
     [Route("api/v2/issuers")]
     public class IssuersController : Controller
     {
         private readonly IIssuerService _issuerService;
-
 
         public IssuersController(
             IIssuerService issuerService)
@@ -36,7 +31,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return Created
             (
-                uri:   $"api/v2/issuers/{issuer.Id}",
+                uri: $"api/v2/issuers/{issuer.Id}",
                 value: issuer
             );
         }
@@ -59,15 +54,12 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> Get(string id)
         {
             var asset = await _issuerService.GetAsync(id);
-
-            if (asset != null)
-            {
-                return Ok(Mapper.Map<Issuer>(asset));
-            }
-            else
+            if (asset == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<Issuer>(asset));
         }
 
         [HttpGet]

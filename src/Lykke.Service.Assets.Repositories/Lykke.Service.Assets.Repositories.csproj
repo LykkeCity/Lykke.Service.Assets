@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="Lykke.Logs" Version="5.2.0" />
+    <PackageReference Include="Lykke.Logs" Version="6.0.0" />
+    <PackageReference Include="protobuf-net" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>

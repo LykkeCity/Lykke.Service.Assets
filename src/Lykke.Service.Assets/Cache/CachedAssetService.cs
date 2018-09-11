@@ -70,13 +70,7 @@ namespace Lykke.Service.Assets.Cache
         {
             return await _cache.GetAsync(id, () => _assetService.GetAsync(id));
         }
-
-        public async Task<IEnumerable<IAsset>> GetForCategoryAsync(string categoryId)
-        {
-            var assets = await GetAllAsync(true);
-            return assets.Where(x => x.CategoryId == categoryId);
-        }
-
+        
         public async Task RemoveAsync(string id)
         {
             await InvalidateCache(id);

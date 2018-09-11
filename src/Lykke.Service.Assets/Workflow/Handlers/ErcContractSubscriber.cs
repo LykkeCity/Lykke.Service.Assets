@@ -1,31 +1,35 @@
-﻿using System;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Common;
 using Common.Log;
 using JetBrains.Annotations;
 using Lykke.Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
-using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.IncomingMessages;
+using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Services.Domain;
+using Lykke.Service.Assets.Workflow.Events;
+using System;
+using System.Threading.Tasks;
 
-namespace Lykke.Service.Assets.RabbitSubscribers
+namespace Lykke.Service.Assets.Workflow.Handlers
 {
     [UsedImplicitly]
     public class ErcContractSubscriber : IStartable, IStopable
     {
         private readonly ILog _log;
+        private readonly ILogFactory _logFactory;
         private readonly string _connectionString;
-        private readonly IErcContractProcessor _ercContractProcessor;
         private RabbitMqSubscriber<Erc20ContractCreatedMessage> _subscriber;
+        private readonly ICachedErc20TokenService _erc20TokenService;
 
-        public ErcContractSubscriber(ILogFactory logFactory, IErcContractProcessor ercContractProcessor, string connectionString)
+        public ErcContractSubscriber(ILogFactory logFactory,
+            string connectionString,
+            ICachedErc20TokenService erc20TokenService)
         {
             _log = logFactory.CreateLog(this);
+            _logFactory = logFactory;
             _connectionString = connectionString;
-            _ercContractProcessor = ercContractProcessor;
+            _erc20TokenService = erc20TokenService;
         }
 
         public void Start()
@@ -34,22 +38,23 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 .CreateForSubscriber(_connectionString, "ethereum.indexer.erccontracts", "service.assets")
                 .MakeDurable();
 
-            _subscriber = new RabbitMqSubscriber<Erc20ContractCreatedMessage>(settings,
-                    new ResilientErrorHandlingStrategy(_log, settings,
+            _subscriber = new RabbitMqSubscriber<Erc20ContractCreatedMessage>(
+                    _logFactory,
+                    settings,
+                    new ResilientErrorHandlingStrategy(_logFactory, settings,
                         retryTimeout: TimeSpan.FromSeconds(10),
-                        next: new DeadQueueErrorHandlingStrategy(_log, settings)))
+                        next: new DeadQueueErrorHandlingStrategy(_logFactory, settings)))
                 .SetMessageDeserializer(new JsonMessageDeserializer<Erc20ContractCreatedMessage>())
                 .SetMessageReadStrategy(new MessageReadQueueStrategy())
                 .Subscribe(ProcessMessageAsync)
                 .CreateDefaultBinding()
-                .SetLogger(_log)
                 .Start();
         }
 
         private async Task ProcessMessageAsync(Erc20ContractCreatedMessage arg)
         {
-            // TODO: Orchestrate execution flow here and delegate actual business logic implementation to services layer
-            // Do not implement actual business logic here
+            _log.Info($"Got Erc20ContractCreatedMessage: {arg.Address} ");
+
             var token = new Erc20Token
             {
                 Address = arg.Address,
@@ -64,7 +69,12 @@ namespace Lykke.Service.Assets.RabbitSubscribers
                 TransactionHash = arg.TransactionHash
             };
 
-            await _ercContractProcessor.ProcessErc20ContractAsync(token);
+            // todo: refactor into event generation + projection logic
+            var existingContract = await _erc20TokenService.GetByTokenAddressAsync(token.Address);
+            if (existingContract == null)
+            {
+                await _erc20TokenService.AddAsync(token);
+            }
         }
 
         public void Dispose()

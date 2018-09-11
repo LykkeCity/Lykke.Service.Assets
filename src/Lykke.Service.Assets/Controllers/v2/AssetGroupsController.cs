@@ -1,30 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
-using Common.Log;
-using Lykke.Common.Log;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("/api/v2/asset-groups")]
     public class AssetGroupsController : Controller
     {
         private readonly IAssetGroupService _assetGroupService;
-        private readonly ILog _log;
 
-
-        public AssetGroupsController(
-            IAssetGroupService assetGroupService,
-            ILogFactory logFactory)
+        public AssetGroupsController(IAssetGroupService assetGroupService)
         {
             _assetGroupService = assetGroupService;
-            _log = logFactory.CreateLog(this);
         }
 
         [HttpPost]
@@ -36,14 +30,14 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return Created
             (
-                uri:   $"api/v2/asset-groups/{group.Name}",
+                uri: $"api/v2/asset-groups/{group.Name}",
                 value: group
             );
         }
 
         [HttpPost("{groupName}/assets/{assetId}")]
         [SwaggerOperation("AssetGroupAddAsset")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> AddAsset(string assetId, string groupName)
         {
             await _assetGroupService.AddAssetToGroupAsync(assetId, groupName);
@@ -53,19 +47,18 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpPost("{groupName}/clients/{clientId}")]
         [SwaggerOperation("AssetGroupAddClient")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> AddClient(string clientId, string groupName)
         {
             var group = await _assetGroupService.GetGroupAsync(groupName);
             if (group == null)
             {
-                _log.Warning(context: clientId, message: $"Cannot add client to group '{groupName}', group not found");
                 return NotFound();
             }
 
             await _assetGroupService.AddClientToGroupAsync(clientId, group);
-        
+
             return NoContent();
         }
 
@@ -78,7 +71,6 @@ namespace Lykke.Service.Assets.Controllers.V2
             var group = await _assetGroupService.GetGroupAsync(groupName);
             if (group == null)
             {
-                _log.Warning(context: clientId, message: $"Cannot add client to group '{groupName}', group not found");
                 return NotFound();
             }
 
@@ -93,16 +85,13 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string groupName)
         {
-            var assetGroup = await _assetGroupService.GetGroupAsync(groupName);
-
-            if (assetGroup != null)
-            {
-                return Ok(Mapper.Map<AssetGroup>(assetGroup));
-            }
-            else
+            var group = await _assetGroupService.GetGroupAsync(groupName);
+            if (group == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<AssetGroup>(group));
         }
 
         [HttpGet]
@@ -138,7 +127,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpDelete("{groupName}")]
         [SwaggerOperation("AssetGroupRemove")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Remove(string groupName)
         {
             await _assetGroupService.RemoveGroupAsync(groupName);
@@ -148,7 +137,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpDelete("{groupName}/assets/{assetId}")]
         [SwaggerOperation("AssetGroupRemoveAsset")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> RemoveAsset(string assetId, string groupName)
         {
             await _assetGroupService.RemoveAssetFromGroupAsync(assetId, groupName);
@@ -158,11 +147,11 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpDelete("{groupName}/clients/{clientId}")]
         [SwaggerOperation("AssetGroupRemoveClient")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> RemoveClient(string clientId, string groupName)
         {
             await _assetGroupService.RemoveClientFromGroupAsync(clientId, groupName);
-        
+
             return NoContent();
         }
 

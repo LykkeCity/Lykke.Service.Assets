@@ -1,7 +1,8 @@
 ﻿using Autofac;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.Services;
 
-namespace Lykke.Service.Assets.Services
+namespace Lykke.Service.Assets.Modules
 {
     public class ServicesModule : Module
     {
@@ -26,9 +27,6 @@ namespace Lykke.Service.Assets.Services
                 As<IErc20TokenService>().SingleInstance();
 
 
-            builder.RegisterType<ErcContractProcessor>().
-                As<IErcContractProcessor>().SingleInstance();
-
             builder
                 .RegisterType<AssetExtendedInfoService>()
                 .As<IAssetExtendedInfoService>()
@@ -38,7 +36,7 @@ namespace Lykke.Service.Assets.Services
                 .RegisterType<AssetService>()
                 .As<IAssetService>()
                 .SingleInstance();
-            
+
             builder
                 .RegisterType<AssetGroupService>()
                 .As<IAssetGroupService>()
@@ -60,11 +58,6 @@ namespace Lykke.Service.Assets.Services
                 .SingleInstance();
 
             builder
-                .RegisterType<HealthService>()
-                .As<IHealthService>()
-                .SingleInstance();
-
-            builder
                 .RegisterType<IssuerService>()
                 .As<IIssuerService>()
                 .SingleInstance();
@@ -82,16 +75,6 @@ namespace Lykke.Service.Assets.Services
             builder
                 .RegisterType<MarginIssuerService>()
                 .As<IMarginIssuerService>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<StartupManager>()
-                .As<IStartupManager>()
-                .SingleInstance();
-
-            builder
-                .RegisterType<ShutdownManager>()
-                .As<IShutdownManager>()
                 .SingleInstance();
 
             builder

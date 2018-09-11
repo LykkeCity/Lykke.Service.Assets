@@ -1,15 +1,25 @@
-﻿namespace Lykke.Service.Assets.Cache
+﻿using System.IO;
+
+namespace Lykke.Service.Assets.Cache
 {
     internal static class CacheSerializer
     {
-        public static T Deserialize<T>(byte[] settings)
+        public static T Deserialize<T>(byte[] data)
         {
-            return MessagePack.MessagePackSerializer.Deserialize<T>(settings, MessagePack.Resolvers.ContractlessStandardResolver.Instance);
+            using (var stream = new MemoryStream(data))
+            {
+                return ProtoBuf.Serializer.Deserialize<T>(stream);
+            }
         }
 
-        public static byte[] Serialize<T>(T settings)
+        public static byte[] Serialize<T>(T data)
         {
-            return MessagePack.MessagePackSerializer.Serialize(settings, MessagePack.Resolvers.ContractlessStandardResolver.Instance);
+            using (var stream = new MemoryStream())
+            {
+                ProtoBuf.Serializer.Serialize(stream, data);
+                stream.Flush();
+                return stream.ToArray();
+            }
         }
     }
 }

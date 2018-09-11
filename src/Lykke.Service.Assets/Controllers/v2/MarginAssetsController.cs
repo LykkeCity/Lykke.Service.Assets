@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("/api/v2/margin-assets")]
     public class MarginAssetsController : Controller
     {
         private readonly IMarginAssetService _marginAssetService;
-
 
         public MarginAssetsController(
             IMarginAssetService marginAssetService)
@@ -31,7 +31,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return Created
             (
-                uri:   $"/api/v2/margin-assets/{marginAsset.Id}",
+                uri: $"/api/v2/margin-assets/{marginAsset.Id}",
                 value: marginAsset
             );
         }
@@ -53,15 +53,12 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> Get(string id)
         {
             var marginAsset = await _marginAssetService.GetAsync(id);
-
-            if (marginAsset != null)
-            {
-                return Ok(Mapper.Map<MarginAsset>(marginAsset));
-            }
-            else
+            if (marginAsset == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<MarginAsset>(marginAsset));
         }
 
         [HttpGet]

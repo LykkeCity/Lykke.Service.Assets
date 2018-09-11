@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("api/v2/asset-pairs")]
     public class AssetPairsController : Controller
     {
@@ -27,7 +26,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(AssetPair), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Add([FromBody] AssetPair assetPair)
         {
-            assetPair = Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
+            assetPair = await _assetPairService.AddAsync(assetPair);
 
             return Created
             (
@@ -57,7 +56,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             if (assetPair != null)
             {
-                return Ok(Mapper.Map<AssetPair>(assetPair));
+                return Ok(assetPair);
             }
             else
             {
@@ -70,8 +69,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType(typeof(IEnumerable<AssetPair>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            var assetPairs = (await _assetPairService.GetAllAsync())
-                .Select(Mapper.Map<AssetPair>);
+            var assetPairs = await _assetPairService.GetAllAsync();
 
             return Ok(assetPairs);
         }
@@ -83,7 +81,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         {
             var assetPair = _assetPairService.CreateDefault();
 
-            return Ok(Mapper.Map<AssetPair>(assetPair));
+            return Ok(assetPair);
         }
 
 

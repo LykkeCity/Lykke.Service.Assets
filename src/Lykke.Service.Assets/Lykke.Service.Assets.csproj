@@ -3,40 +3,42 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Version>1.1.0</Version>
+    <AssemblyName>Lykke.Service.Assets</AssemblyName>
+    <RootNamespace>Lykke.Service.Assets</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netcoreapp2.0\Lykke.Service.Assets.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.0\Lykke.Service.Assets.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Lykke.Common.ApiLibrary" Version="1.10.1" />
-    <PackageReference Include="Lykke.Cqrs" Version="5.0.1" />
-    <PackageReference Include="Lykke.Logs" Version="5.2.0" />
-    <PackageReference Include="Lykke.Messaging.RabbitMq" Version="2.1.0" />
-    <PackageReference Include="Lykke.RabbitMqBroker" Version="7.3.0" />
-    <PackageReference Include="Lykke.SettingsReader" Version="3.0.0" />
-    <PackageReference Include="Lykke.SlackNotification.AzureQueue" Version="2.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\contract\Lykke.Service.Assets.Contract\Lykke.Service.Assets.Contract.csproj" />    
-    <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
-    <ProjectReference Include="..\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
-    <ProjectReference Include="..\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <None Update="Dockerfile">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Requests\v1\" />
+    <PackageReference Include="Lykke.Common.ApiLibrary" Version="1.10.1" />
+    <PackageReference Include="Lykke.Cqrs" Version="5.0.1" />
+    <PackageReference Include="Lykke.Logs" Version="6.0.0" />
+    <PackageReference Include="Lykke.Messaging.RabbitMq" Version="2.1.0" />
+    <PackageReference Include="Lykke.RabbitMqBroker" Version="7.3.0" />
+    <PackageReference Include="Lykke.Sdk" Version="5.3.0" />
+    <PackageReference Include="Lykke.SettingsReader" Version="4.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="protobuf-net" Version="2.4.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.495" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\contract\Lykke.Service.Assets.Contract\Lykke.Service.Assets.Contract.csproj" />    
+    <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
+    <ProjectReference Include="..\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <ItemGroup>

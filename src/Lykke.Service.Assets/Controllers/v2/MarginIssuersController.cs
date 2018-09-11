@@ -1,18 +1,15 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     Controller for Margin Issuers
-    /// </summary>
+    [ApiController]
     [Route("api/v2/margin-issuers")]
     public class MarginIssuersController : Controller
     {
@@ -49,16 +46,13 @@ namespace Lykke.Service.Assets.Controllers.V2
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var issuer   = await _marginIssuerService.GetAsync(id);
-
-            if (issuer != null)
-            {
-                return Ok(Mapper.Map<MarginIssuer>(issuer));
-            }
-            else
+            var issuer = await _marginIssuerService.GetAsync(id);
+            if (issuer == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<MarginIssuer>(issuer));
         }
 
         [HttpGet]
@@ -69,7 +63,7 @@ namespace Lykke.Service.Assets.Controllers.V2
             var issuers = await _marginIssuerService.GetAllAsync();
             var responseList = issuers?.Select(Mapper.Map<MarginIssuer>);
 
-            return Ok(new ListOf<MarginIssuer>()
+            return Ok(new ListOf<MarginIssuer>
             {
                 Items = responseList
             });
@@ -81,7 +75,7 @@ namespace Lykke.Service.Assets.Controllers.V2
         public IActionResult GetDefault()
         {
             var issuer = _marginIssuerService.CreateDefault();
-            
+
             return Ok(Mapper.Map<MarginIssuer>(issuer));
         }
 

@@ -1,6 +1,5 @@
-﻿namespace Lykke.Service.Assets.IncomingMessages
+﻿namespace Lykke.Service.Assets.Workflow.Events
 {
-    // NOTE: This is incoming message example
     public class Erc20ContractCreatedMessage
     {
         public string Address { get; set; }

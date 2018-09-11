@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services.Domain;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Services
 {
@@ -19,7 +19,7 @@ namespace Lykke.Service.Assets.Services
         private readonly IAssetsForClientCacheManager _cacheManager;
 
         public AssetConditionService(
-            IAssetConditionRepository assetConditionRepository, 
+            IAssetConditionRepository assetConditionRepository,
             IAssetConditionLayerRepository assetConditionLayerRepository,
             IAssetDefaultConditionRepository assetDefaultConditionRepository,
             IAssetDefaultConditionLayerRepository assetDefaultConditionLayerRepository,
@@ -41,13 +41,13 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IAssetConditionLayer> GetLayerAsync(string layerId)
         {
-            IAssetConditionLayer layer = await _assetConditionLayerRepository.GetAsync(layerId);
+            var layer = await _assetConditionLayerRepository.GetAsync(layerId);
 
             if (layer == null)
                 return null;
 
-            IEnumerable<IAssetCondition> conditions = await _assetConditionRepository.GetAsync(layer.Id);
-            IAssetDefaultCondition defaultCondition = await _assetDefaultConditionRepository.GetAsync(layer.Id);
+            var conditions = await _assetConditionRepository.GetAsync(layer.Id);
+            var defaultCondition = await _assetDefaultConditionRepository.GetAsync(layer.Id);
 
             var model = Mapper.Map<AssetConditionLayer>(layer);
 
@@ -59,9 +59,9 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync()
         {
-            IAssetDefaultConditionLayer defaultLayer = await _assetDefaultConditionLayerRepository.GetAsync();
+            var defaultLayer = await _assetDefaultConditionLayerRepository.GetAsync();
 
-            IEnumerable<IAssetCondition> conditions = await _assetConditionRepository.GetAsync(defaultLayer.Id);
+            var conditions = await _assetConditionRepository.GetAsync(defaultLayer.Id);
 
             var model = Mapper.Map<AssetDefaultConditionLayer>(defaultLayer);
 
@@ -144,14 +144,14 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IEnumerable<IAssetConditionLayer>> GetClientLayers(string clientId)
         {
-            IEnumerable<IAssetConditionLayer> layers = await GetLayersAsync(clientId);
+            var layers = await GetLayersAsync(clientId);
 
             var model = Mapper.Map<List<AssetConditionLayer>>(layers);
 
-            foreach (AssetConditionLayer layer in model)
+            foreach (var layer in model)
             {
-                IEnumerable<IAssetCondition> conditions = await _assetConditionRepository.GetAsync(layer.Id);
-                IAssetDefaultCondition defaultCondition = await _assetDefaultConditionRepository.GetAsync(layer.Id);
+                var conditions = await _assetConditionRepository.GetAsync(layer.Id);
+                var defaultCondition = await _assetDefaultConditionRepository.GetAsync(layer.Id);
 
                 layer.AssetConditions = conditions.ToList();
                 layer.AssetDefaultCondition = defaultCondition;
@@ -176,36 +176,36 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IEnumerable<IAssetCondition>> GetAssetConditionsByClient(string clientId)
         {
-            IList<IAssetCondition> assetConditions = await _cacheManager.TryGetAssetConditionsForClientAsync(clientId);
+            var assetConditions = await _cacheManager.TryGetAssetConditionsForClientAsync(clientId);
 
             if (assetConditions != null)
                 return assetConditions;
 
-            IAssetDefaultConditionLayer assetDefaultLayer =
+            var assetDefaultLayer =
                 await _assetDefaultConditionLayerRepository.GetAsync();
 
-            IEnumerable<IAssetCondition> defaultLayerConditions
+            var defaultLayerConditions
                 = await _assetConditionRepository.GetAsync(assetDefaultLayer.Id);
 
             var map = new Dictionary<string, AssetCondition>();
 
             // Initialize asset conditions using default layer conditions
-            foreach (IAssetCondition condition in defaultLayerConditions)
+            foreach (var condition in defaultLayerConditions)
             {
                 map[condition.Asset] = Mapper.Map<AssetCondition>(condition);
             }
 
             // Merge client conditions layers
-            IEnumerable<IAssetConditionLayer> layers = await GetLayersAsync(clientId);
+            var layers = await GetLayersAsync(clientId);
 
-            foreach (IAssetConditionLayer layer in layers.OrderBy(e => e.Priority))
+            foreach (var layer in layers.OrderBy(e => e.Priority))
             {
                 var explicitAssets = new HashSet<string>();
 
-                IEnumerable<IAssetCondition> conditions = await _assetConditionRepository.GetAsync(layer.Id);
-                
+                var conditions = await _assetConditionRepository.GetAsync(layer.Id);
+
                 // Apply explicit assets conditions
-                foreach (IAssetCondition condition in conditions)
+                foreach (var condition in conditions)
                 {
                     if (!map.TryGetValue(condition.Asset, out var value))
                         map[condition.Asset] = Mapper.Map<AssetCondition>(condition);
@@ -217,13 +217,13 @@ namespace Lykke.Service.Assets.Services
 
                 IAssetConditionSettings defaultAssetCondition = await _assetDefaultConditionRepository.GetAsync(layer.Id);
 
-                if(defaultAssetCondition == null)
+                if (defaultAssetCondition == null)
                     continue;
 
                 // Apply implicit assets conditions
-                IEnumerable<string> implicitAssets = map.Keys.Where(o => !explicitAssets.Contains(o));
+                var implicitAssets = map.Keys.Where(o => !explicitAssets.Contains(o));
 
-                foreach (string asset in implicitAssets)
+                foreach (var asset in implicitAssets)
                 {
                     map[asset].Apply(defaultAssetCondition);
                 }
@@ -244,7 +244,7 @@ namespace Lykke.Service.Assets.Services
 
             var settings = Mapper.Map<AssetConditionLayerSettings>(defaultLayer);
 
-            foreach (IAssetConditionLayer layer in layers.OrderBy(o => o.Priority))
+            foreach (var layer in layers.OrderBy(o => o.Priority))
             {
                 settings.Apply(layer);
             }
@@ -254,7 +254,7 @@ namespace Lykke.Service.Assets.Services
 
         private async Task<IEnumerable<IAssetConditionLayer>> GetLayersAsync(string clientId)
         {
-            IEnumerable<string> layerIds = await _assetConditionLayerLinkClientRepository.GetLayersAsync(clientId);
+            var layerIds = await _assetConditionLayerLinkClientRepository.GetLayersAsync(clientId);
             return await _assetConditionLayerRepository.GetAsync(layerIds);
         }
     }

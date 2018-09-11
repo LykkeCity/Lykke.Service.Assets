@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Controllers.V2
 {
+    [ApiController]
     [Route("api/v2/watch-lists")]
     public class WatchListsController : Controller
     {
         private readonly IWatchListService _watchListService;
-
 
         public WatchListsController(
             IWatchListService watchListService)
@@ -31,7 +31,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return Created
             (
-                uri:   $"api/v2/watch-lists/custom/{watchList.Id}?userId={userId}",
+                uri: $"api/v2/watch-lists/custom/{watchList.Id}?userId={userId}",
                 value: watchList
             );
         }
@@ -45,14 +45,14 @@ namespace Lykke.Service.Assets.Controllers.V2
 
             return Created
             (
-                uri:   $"api/v2/watch-lists/predefined/{watchList.Id}",
+                uri: $"api/v2/watch-lists/predefined/{watchList.Id}",
                 value: watchList
             );
         }
 
         [HttpDelete("custom/{watchListId}")]
         [SwaggerOperation("WatchListCustomRemove")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> CustomRemove(string watchListId, [FromQuery] string userId)
         {
             await _watchListService.RemoveCustomAsync(userId, watchListId);
@@ -62,7 +62,7 @@ namespace Lykke.Service.Assets.Controllers.V2
 
         [HttpGet("all")]
         [SwaggerOperation("WatchListGetAll")]
-        [ProducesResponseType(typeof(IEnumerable<WatchList>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<WatchList>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll([FromQuery] string userId)
         {
             var watchLists = (await _watchListService.GetAllAsync(userId))
@@ -100,38 +100,32 @@ namespace Lykke.Service.Assets.Controllers.V2
         public async Task<IActionResult> GetCustom(string watchListId, [FromQuery] string userId)
         {
             var watchList = await _watchListService.GetCustomAsync(userId, watchListId);
-
-            if (watchList != null)
-            {
-                return Ok(Mapper.Map<WatchList>(watchList));
-            }
-            else
+            if (watchList == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<WatchList>(watchList));
         }
 
         [HttpGet("predefined/{watchListId}")]
         [SwaggerOperation("WatchListGetPredefined")]
         [ProducesResponseType(typeof(WatchList), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetPredefined(string watchListId)
         {
             var watchList = await _watchListService.GetPredefinedAsync(watchListId);
-
-            if (watchList != null)
-            {
-                return Ok(Mapper.Map<WatchList>(watchList));
-            }
-            else
+            if (watchList == null)
             {
                 return NotFound();
             }
+
+            return Ok(Mapper.Map<WatchList>(watchList));
         }
 
         [HttpDelete("predefined/{watchListId}")]
         [SwaggerOperation("WatchListRemovePredefined")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> PredefinedRemove(string watchListId)
         {
             await _watchListService.RemovePredefinedAsync(watchListId);
