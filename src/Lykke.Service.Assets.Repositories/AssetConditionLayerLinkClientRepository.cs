@@ -34,11 +34,10 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task RemoveLayerFromClientsAsync(string layerId)
         {
-            IEnumerable<AssetConditionLayerLinkClientEntity> entities =
-                await _table.GetDataRowKeysOnlyAsync(new[] {GetRowKey(layerId)});
+            var entities = await _table.GetDataRowKeysOnlyAsync(new[] {GetRowKey(layerId)});
 
-            foreach (AssetConditionLayerLinkClientEntity entity in entities)
-                await _table.DeleteAsync(entity);
+            var tasks = entities.Select(x => _table.DeleteAsync(x)).ToArray();
+            await Task.WhenAll(tasks);
         }
 
         private static string GetPartitionKey(string clientId)

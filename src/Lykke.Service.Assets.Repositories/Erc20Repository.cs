@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AzureStorage;
 using AzureStorage.Tables.Templates.Index;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Repositories
 {
     public class Erc20TokenRepository : IErc20TokenRepository
     {
         private const string AssetIndexPartition = "Erc20TokenAssetId";
-        private const int PieceSize = 1000;
         private readonly INoSQLTableStorage<Erc20TokenEntity> _erc20AssetEntityTable;
         private readonly INoSQLTableStorage<AzureIndex> _indexAssetIdTable;
 
@@ -40,16 +39,12 @@ namespace Lykke.Service.Assets.Repositories
 
         public async Task<IEnumerable<IErc20Token>> GetAllAsync()
         {
-            var allEntities = await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey());
-
-            return allEntities;
+            return await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey());
         }
 
         public async Task<IErc20Token> GetByTokenAddressAsync(string tokenAddress)
         {
-            var entity = await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), GetRowKey(tokenAddress));
-
-            return entity;
+            return await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), GetRowKey(tokenAddress));
         }
 
         public async Task<IErc20Token> GetByAssetIdAsync(string assetId)
@@ -58,13 +53,6 @@ namespace Lykke.Service.Assets.Repositories
             var entity = await _erc20AssetEntityTable.GetDataAsync(index);
 
             return entity;
-        }
-
-        public async Task<IEnumerable<IErc20Token>> GetByAssetIdAsync(string[] assetIds)
-        {
-            var indexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetIds);
-
-            return await GetByAssetIndexesAsync(indexes);
         }
 
         public async Task UpdateAsync(IErc20Token erc20Token)
@@ -87,7 +75,7 @@ namespace Lykke.Service.Assets.Repositories
 
             return (await GetByAssetIndexesAsync(indexes))
                 // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
-                .Where(x => x.AssetId != null);
+                .Where(x => x?.AssetId != null);
         }
 
         private async Task<IEnumerable<IErc20Token>> GetByAssetIndexesAsync(IEnumerable<AzureIndex> assetIndexes)
@@ -96,19 +84,7 @@ namespace Lykke.Service.Assets.Repositories
                 // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
                 .Distinct();
 
-
-            var entities = new List<IErc20Token>();
-
-            foreach (var rowKey in rowKeys)
-            {
-                var entity = await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), rowKey);
-                if (entity != null)
-                {
-                    entities.Add(entity);
-                }
-            }
-
-            return entities;
+            return await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), rowKeys);
         }
 
         private static void SetEntityKeys(Erc20TokenEntity entity)

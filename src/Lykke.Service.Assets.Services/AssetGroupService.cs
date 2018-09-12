@@ -1,37 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services.Domain;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Services
 {
     public class AssetGroupService : IAssetGroupService
     {
-        private readonly IAssetGroupAssetLinkRepository  _assetGroupAssetLinkRepository;
+        private readonly IAssetGroupAssetLinkRepository _assetGroupAssetLinkRepository;
         private readonly IClientAssetGroupLinkRepository _clientAssetGroupLinkRepository;
         private readonly IAssetGroupClientLinkRepository _assetGroupClientLinkRepository;
-        private readonly IAssetGroupRepository           _assetGroupRepository;
-        private readonly IAssetsForClientCacheManager    _cacheManager;
-        private readonly IAssetConditionService          _assetConditionService;
+        private readonly IAssetGroupRepository _assetGroupRepository;
+        private readonly IAssetsForClientCacheManager _cacheManager;
+        private readonly IAssetConditionService _assetConditionService;
 
 
         public AssetGroupService(
             IClientAssetGroupLinkRepository clientAssetGroupLinkRepository,
             IAssetGroupClientLinkRepository assetGroupClientLinkRepository,
-            IAssetGroupAssetLinkRepository  assetGroupAssetLinkRepository,
-            IAssetsForClientCacheManager    cacheManager,
-            IAssetGroupRepository           assetGroupRepository, 
-            IAssetConditionService          assetConditionService)
+            IAssetGroupAssetLinkRepository assetGroupAssetLinkRepository,
+            IAssetsForClientCacheManager cacheManager,
+            IAssetGroupRepository assetGroupRepository,
+            IAssetConditionService assetConditionService)
         {
-            _assetGroupRepository           = assetGroupRepository;
+            _assetGroupRepository = assetGroupRepository;
             _cacheManager = cacheManager;
             _assetConditionService = assetConditionService;
             _clientAssetGroupLinkRepository = clientAssetGroupLinkRepository;
             _assetGroupClientLinkRepository = assetGroupClientLinkRepository;
-            _assetGroupAssetLinkRepository  = assetGroupAssetLinkRepository;
+            _assetGroupAssetLinkRepository = assetGroupAssetLinkRepository;
         }
 
 
@@ -41,11 +41,11 @@ namespace Lykke.Service.Assets.Services
 
             var assetGroupAssetLink = new AssetGroupAssetLink
             {
-                AssetId                      = assetId,
+                AssetId = assetId,
                 ClientsCanCashInViaBankCards = assetGroup.ClientsCanCashInViaBankCards,
-                GroupName                    = assetGroup.Name,
-                IsIosDevice                  = assetGroup.IsIosDevice,
-                SwiftDepositEnabled          = assetGroup.SwiftDepositEnabled
+                GroupName = assetGroup.Name,
+                IsIosDevice = assetGroup.IsIosDevice,
+                SwiftDepositEnabled = assetGroup.SwiftDepositEnabled
             };
 
             await _assetGroupAssetLinkRepository.AddAsync(assetGroupAssetLink);
@@ -69,7 +69,7 @@ namespace Lykke.Service.Assets.Services
 
             return group;
         }
-        
+
         public async Task<bool> CashInViaBankCardEnabledAsync(string clientId, bool isIosDevice)
         {
             var cache = await _cacheManager.TryGetCashInViaBankCardEnabledForClientAsync(clientId, isIosDevice);
@@ -81,13 +81,13 @@ namespace Lykke.Service.Assets.Services
             var assetGroups = (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).ToArray();
 
             var cashInViaBankCardsEnableForDeviceInAnyGroup = assetGroups.Any(x => x.ClientsCanCashInViaBankCards && x.IsIosDevice == isIosDevice);
-            var clientDeviceNotAssignedToAnyGroup            = assetGroups.All(x => x.IsIosDevice != isIosDevice);
+            var clientDeviceNotAssignedToAnyGroup = assetGroups.All(x => x.IsIosDevice != isIosDevice);
 
             var conditions = await _assetConditionService.GetAssetConditionsLayerSettingsByClient(clientId);
             var conditionLayerCashInViaBankCardEnabled = conditions.ClientsCanCashInViaBankCards ?? true;
 
-            var result = 
-                conditionLayerCashInViaBankCardEnabled && 
+            var result =
+                conditionLayerCashInViaBankCardEnabled &&
                 (cashInViaBankCardsEnableForDeviceInAnyGroup || clientDeviceNotAssignedToAnyGroup);
 
             await _cacheManager.SaveCashInViaBankCardEnabledForClientAsync(clientId, isIosDevice, result);
@@ -102,20 +102,13 @@ namespace Lykke.Service.Assets.Services
 
         public async Task<IEnumerable<string>> GetAssetIdsForClient(string clientId, bool isIosDevice)
         {
-            var clientAssetIds = new List<string>();
             var clientAssetGroups =
                 (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).Where(x =>
                     x.IsIosDevice == isIosDevice);
 
-            foreach (var group in clientAssetGroups)
-            {
-                var groupAssetIds =
-                    (await _assetGroupAssetLinkRepository.GetAllAsync(group.GroupName)).Select(x => x.AssetId);
-
-                clientAssetIds.AddRange(groupAssetIds);
-            }
-
-            return clientAssetIds;
+            var tasks = clientAssetGroups.Select(group => _assetGroupAssetLinkRepository.GetAllAsync(group.GroupName));
+            var groupAssets = await Task.WhenAll(tasks.ToArray());
+            return groupAssets.SelectMany(x => x).Select(x => x.AssetId);
         }
 
         public async Task<IEnumerable<string>> GetAssetIdsForGroupAsync(string groupName)
@@ -151,18 +144,22 @@ namespace Lykke.Service.Assets.Services
 
         public async Task RemoveGroupAsync(string groupName)
         {
-            foreach (var assetId in await GetAssetIdsForGroupAsync(groupName))
-            {
-                await _assetGroupAssetLinkRepository.RemoveAsync(assetId, groupName);
-            }
+            var tasks = new List<Task>();
+            var assetLinksTasks = (await GetAssetIdsForGroupAsync(groupName)).Select(assetId =>
+                _assetGroupAssetLinkRepository.RemoveAsync(assetId, groupName));
+            tasks.AddRange(assetLinksTasks);
 
-            foreach (var clientId in await GetClientIdsForGroupAsync(groupName))
-            {
-                await _clientAssetGroupLinkRepository.RemoveAsync(clientId, groupName);
-                await _assetGroupClientLinkRepository.RemoveAsync(clientId, groupName);
-            }
+            var clientIds = (await GetClientIdsForGroupAsync(groupName)).ToArray();
+            var clientAssetGroupTasks =
+                clientIds.Select(clientId => _clientAssetGroupLinkRepository.RemoveAsync(clientId, groupName));
+            tasks.AddRange(clientAssetGroupTasks);
+            var assetGroupTasks =
+                clientIds.Select(clientId => _assetGroupClientLinkRepository.RemoveAsync(clientId, groupName));
+            tasks.AddRange(assetGroupTasks);
 
-            await _assetGroupRepository.RemoveAsync(groupName);
+            tasks.Add(_assetGroupRepository.RemoveAsync(groupName));
+            await Task.WhenAll(tasks.ToArray());
+
             await _cacheManager.ClearCacheAsync($"RemoveGroupAsync {groupName}");
         }
 
@@ -177,7 +174,7 @@ namespace Lykke.Service.Assets.Services
             var assetGroups = (await _assetGroupClientLinkRepository.GetAllAsync(clientId)).ToArray();
 
             var swiftDepositEnabledForDeviceInAnyGroup = assetGroups.Any(x => x.SwiftDepositEnabled && x.IsIosDevice == isIosDevice);
-            var clientDeviceNotAssignedToAnyGroup      = assetGroups.All(x => x.IsIosDevice != isIosDevice);
+            var clientDeviceNotAssignedToAnyGroup = assetGroups.All(x => x.IsIosDevice != isIosDevice);
 
             var conditions = await _assetConditionService.GetAssetConditionsLayerSettingsByClient(clientId);
             var conditionLayerSwiftDepositEnabled = conditions.SwiftDepositEnabled ?? true;
@@ -193,18 +190,21 @@ namespace Lykke.Service.Assets.Services
 
         public async Task UpdateGroupAsync(IAssetGroup group)
         {
-            foreach (var assetId in await GetAssetIdsForGroupAsync(group.Name))
-            {
-                await _assetGroupAssetLinkRepository.UpdateAsync(assetId, group);
-            }
+            var tasks = new List<Task>();
+            var assetLinksTasks = (await GetAssetIdsForGroupAsync(group.Name)).Select(assetId =>
+                _assetGroupAssetLinkRepository.UpdateAsync(assetId, group));
+            tasks.AddRange(assetLinksTasks);
 
-            foreach (var clientId in await GetClientIdsForGroupAsync(group.Name))
-            {
-                await _clientAssetGroupLinkRepository.UpdateAsync(clientId, group);
-                await _assetGroupClientLinkRepository.UpdateAsync(clientId, group);
-            }
+            var clientIds = (await GetClientIdsForGroupAsync(group.Name)).ToArray();
+            var clientAssetGroupTasks =
+                clientIds.Select(clientId => _clientAssetGroupLinkRepository.UpdateAsync(clientId, group));
+            tasks.AddRange(clientAssetGroupTasks);
+            var assetGroupTasks =
+                clientIds.Select(clientId => _assetGroupClientLinkRepository.UpdateAsync(clientId, group));
+            tasks.AddRange(assetGroupTasks);
 
-            await _assetGroupRepository.UpdateAsync(group);
+            tasks.Add(_assetGroupRepository.UpdateAsync(group));
+            await Task.WhenAll(tasks.ToArray());
 
             await _cacheManager.ClearCacheAsync($"UpdateGroupAsync {group.Name}");
         }
