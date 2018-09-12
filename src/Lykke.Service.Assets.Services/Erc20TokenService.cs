@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Lykke.Service.Assets.Core.Domain;
+﻿using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Services
 {
@@ -22,15 +22,10 @@ namespace Lykke.Service.Assets.Services
 
             return token;
         }
-        
+
         public async Task<IEnumerable<IErc20Token>> GetAllAsync()
         {
             return await _erc20TokenRepository.GetAllAsync();
-        }
-
-        public async Task<IEnumerable<IErc20Token>> GetByAssetIdsAsync(string[] assetIds)
-        {
-            return await _erc20TokenRepository.GetByAssetIdAsync(assetIds);
         }
 
         public async Task<IErc20Token> GetByAssetIdAsync(string assetId)

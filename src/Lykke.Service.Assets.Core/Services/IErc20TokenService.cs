@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Lykke.Service.Assets.Core.Domain;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Lykke.Service.Assets.Core.Domain;
 
 
 namespace Lykke.Service.Assets.Core.Services
@@ -8,10 +8,8 @@ namespace Lykke.Service.Assets.Core.Services
     public interface IErc20TokenService
     {
         Task<IErc20Token> AddAsync(IErc20Token erc20Token);
-        
-        Task<IEnumerable<IErc20Token>> GetAllAsync();
 
-        Task<IEnumerable<IErc20Token>> GetByAssetIdsAsync(string[] assetIds);
+        Task<IEnumerable<IErc20Token>> GetAllAsync();
 
         Task<IErc20Token> GetByAssetIdAsync(string assetId);
 
