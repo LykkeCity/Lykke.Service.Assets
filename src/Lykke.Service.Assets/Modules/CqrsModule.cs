@@ -8,7 +8,6 @@ using Lykke.Messaging.RabbitMq;
 using Lykke.Messaging.Serialization;
 using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Services.Commands;
-using Lykke.Service.Assets.Services.Events;
 using Lykke.Service.Assets.Settings;
 using Lykke.Service.Assets.Workflow.Handlers;
 using Lykke.SettingsReader;

@@ -26,12 +26,12 @@ namespace Lykke.Service.Assets.Contract.Events
         public int InvertedAccuracy { get; set; }
 
         [ProtoMember(7, IsRequired = true)]
-        public bool IsDisabled { get; set; }
-
-        [ProtoMember(8, IsRequired = true)]
         public decimal MinVolume { get; set; }
 
-        [ProtoMember(9, IsRequired = true)]
+        [ProtoMember(8, IsRequired = true)]
         public decimal MinInvertedVolume { get; set; }
+
+        [ProtoMember(9, IsRequired = true)]
+        public bool IsDisabled { get; set; }
     }
 }

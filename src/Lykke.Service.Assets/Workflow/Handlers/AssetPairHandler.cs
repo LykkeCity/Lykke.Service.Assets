@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Common.Chaos;
 using Lykke.Cqrs;
+using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core.Repositories;
-using Lykke.Service.Assets.Services.Events;
 
 namespace Lykke.Service.Assets.Workflow.Handlers
 {
