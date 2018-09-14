@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using JetBrains.Annotations;
-using System;
-using System.Net.Http;
 using Lykke.Service.Assets.Client.Projections;
 using Lykke.Service.Assets.Client.ReadModels;
+using System;
+using System.Net.Http;
 
 namespace Lykke.Service.Assets.Client
 {
@@ -18,8 +18,9 @@ namespace Lykke.Service.Assets.Client
         /// </summary>
         /// <param name="builder">The container builder for adding the services to.</param>
         /// <param name="serviceUrl">Service endpoint URL.</param>
+        /// <param name="registerDefaultAssetsReadModel">Whether to register the default in-memory assets and asset-pairs read model.</param>
         [UsedImplicitly]
-        public static void RegisterAssetsClient(this ContainerBuilder builder, string serviceUrl)
+        public static void RegisterAssetsClient(this ContainerBuilder builder, string serviceUrl, bool registerDefaultAssetsReadModel = true)
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
@@ -30,7 +31,10 @@ namespace Lykke.Service.Assets.Client
                 .As<IAssetsService>()
                 .SingleInstance();
 
-            builder.RegisterDefaultAssetsReadModel();
+            if (registerDefaultAssetsReadModel)
+            {
+                builder.RegisterDefaultAssetsReadModel();
+            }
         }
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace Lykke.Service.Assets.Client
         /// </summary>
         /// <param name="builder">The container builder for adding the services to.</param>
         [UsedImplicitly]
-        public static void RegisterDefaultAssetsReadModel(this ContainerBuilder builder)
+        private static void RegisterDefaultAssetsReadModel(this ContainerBuilder builder)
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
