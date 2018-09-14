@@ -4,14 +4,14 @@ using System.Collections.Generic;
 namespace Lykke.Service.Assets.Client.ReadModels
 {
     /// <summary>
-    /// Read-model for the AssetPairs context.
+    /// Read-model repository for the AssetPairs context.
     /// </summary>
-    public interface IAssetPairsReadModel
+    public interface IAssetPairsReadModelRepository
     {
         /// <summary>
         /// Get the asset-pair by id. Returns null if not found.
         /// </summary>
-        AssetPair Get(string id);
+        AssetPair TryGet(string id);
 
         /// <summary>
         /// Get all asset-pairs.

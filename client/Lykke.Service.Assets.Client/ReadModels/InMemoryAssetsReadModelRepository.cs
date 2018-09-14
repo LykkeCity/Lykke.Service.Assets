@@ -6,24 +6,24 @@ using System.Linq;
 
 namespace Lykke.Service.Assets.Client.ReadModels
 {
-    class AssetPairsReadModel : IAssetPairsReadModel, IStartable
+    class InMemoryAssetsReadModelRepository : IAssetsReadModelRepository, IStartable
     {
-        public const string AllKey = "AllAssetPairs";
+        public const string AllKey = "AllAssets";
 
         private readonly IAssetsService _assetsService;
         private readonly IMemoryCache _cache;
 
-        public AssetPairsReadModel(IAssetsService assetsService, IMemoryCache cache)
+        public InMemoryAssetsReadModelRepository(IAssetsService assetsService, IMemoryCache cache)
         {
             _assetsService = assetsService;
             _cache = cache;
         }
 
-        public AssetPair Get(string id)
+        public Asset TryGet(string id)
         {
             try
             {
-                if (!_cache.TryGetValue(id, out AssetPair value))
+                if (!_cache.TryGetValue(id, out Asset value))
                     return null;
                 return value;
             }
@@ -33,19 +33,19 @@ namespace Lykke.Service.Assets.Client.ReadModels
             }
         }
 
-        public IReadOnlyCollection<AssetPair> GetAll()
+        public IReadOnlyCollection<Asset> GetAll()
         {
             var ids = _cache.Get<List<string>>(AllKey);
-            return ids.Select(x => _cache.Get<AssetPair>(x)).ToArray();
+            return ids.Select(x => _cache.Get<Asset>(x)).ToArray();
         }
 
         public void Start()
         {
-            var assetPairs = _assetsService.AssetPairGetAll();
-            _cache.Set(AllKey, assetPairs.Select(x => x.Id).ToList());
-            foreach (var assetPair in assetPairs)
+            var assets = _assetsService.AssetGetAll(true);
+            _cache.Set(AllKey, assets.Select(x => x.Id).ToList());
+            foreach (var asset in assets)
             {
-                _cache.Set(assetPair.Id, Mapper.ToAssetPair(assetPair));
+                _cache.Set(asset.Id, Mapper.ToAsset(asset));
             }
         }
     }

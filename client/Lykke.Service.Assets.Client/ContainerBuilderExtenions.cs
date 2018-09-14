@@ -48,12 +48,12 @@ namespace Lykke.Service.Assets.Client
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.RegisterType<AssetsReadModel>()
-                .As<IAssetsReadModel>()
+            builder.RegisterType<InMemoryAssetsReadModelRepository>()
+                .As<IAssetsReadModelRepository>()
                 .As<IStartable>()
                 .AutoActivate();
-            builder.RegisterType<AssetPairsReadModel>()
-                .As<IAssetPairsReadModel>()
+            builder.RegisterType<InMemoryAssetPairsReadModelRepository>()
+                .As<IAssetPairsReadModelRepository>()
                 .As<IStartable>()
                 .AutoActivate();
 

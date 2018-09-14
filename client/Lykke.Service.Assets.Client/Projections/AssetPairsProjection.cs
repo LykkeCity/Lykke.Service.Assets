@@ -17,9 +17,9 @@ namespace Lykke.Service.Assets.Client.Projections
 
         private Task Handle(AssetPairCreatedEvent evt)
         {
-            var ids = _cache.Get<List<string>>(AssetPairsReadModel.AllKey);
+            var ids = _cache.Get<List<string>>(InMemoryAssetPairsReadModelRepository.AllKey);
             ids.Add(evt.Id);
-            _cache.Set(AssetPairsReadModel.AllKey, ids);
+            _cache.Set(InMemoryAssetPairsReadModelRepository.AllKey, ids);
 
             _cache.Set(evt.Id, Mapper.ToAssetPair(evt));
             return Task.CompletedTask;

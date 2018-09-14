@@ -5,43 +5,43 @@ using System.Linq;
 namespace Lykke.Service.Assets.Client.ReadModels
 {
     /// <summary>
-    /// Useful, but non-optimized extension for IAssetsReadModel and IAssetPairsReadModel.
+    /// Useful, but non-optimized extension for IAssetsReadModelRepository and IAssetPairsReadModelRepository.
     /// </summary>
     public static class AssetsReadModelExtensions
     {
         /// <summary>
         /// Get the asset if it is enabled. Returns null, if the asset is disabled.
         /// </summary>
-        public static Asset GetIfEnabled(this IAssetsReadModel readModel, string id)
+        public static Asset TryGetIfEnabled(this IAssetsReadModelRepository readModelRepository, string id)
         {
-            var asset = readModel.Get(id);
+            var asset = readModelRepository.TryGet(id);
             return asset != null && !asset.IsDisabled ? asset : null;
         }
 
         /// <summary>
         /// Get the asset-pair if it is enabled. Returns null, if the asset-pair is disabled.
         /// </summary>
-        public static AssetPair GetIfEnabled(this IAssetPairsReadModel readModel, string id)
+        public static AssetPair TryGetIfEnabled(this IAssetPairsReadModelRepository readModelRepository, string id)
         {
-            var assetPair = readModel.Get(id);
+            var assetPair = readModelRepository.TryGet(id);
             return assetPair != null && !assetPair.IsDisabled ? assetPair : null;
         }
 
         /// <summary>
         /// Get all enabled assets.
         /// </summary>
-        public static IReadOnlyCollection<Asset> GetAllEnabled(this IAssetsReadModel readModel)
+        public static IReadOnlyCollection<Asset> GetAllEnabled(this IAssetsReadModelRepository readModelRepository)
         {
-            var assets = readModel.GetAll();
+            var assets = readModelRepository.GetAll();
             return assets.Where(x => !x.IsDisabled).ToArray();
         }
 
         /// <summary>
         /// Get all enabled asset-pairs.
         /// </summary>
-        public static IReadOnlyCollection<AssetPair> GetAllEnabled(this IAssetPairsReadModel readModel, string id)
+        public static IReadOnlyCollection<AssetPair> GetAllEnabled(this IAssetPairsReadModelRepository readModelRepository, string id)
         {
-            var assetPairs = readModel.GetAll();
+            var assetPairs = readModelRepository.GetAll();
             return assetPairs.Where(x => !x.IsDisabled).ToArray();
         }
     }
