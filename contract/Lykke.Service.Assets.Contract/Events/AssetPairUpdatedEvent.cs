@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Lykke.Service.Assets.Contract.Events
 {
-    [MessagePackObject(keyAsPropertyName: true)]
+    [MessagePackObject(true)]
     [ProtoContract]
     public class AssetPairUpdatedEvent
     {
