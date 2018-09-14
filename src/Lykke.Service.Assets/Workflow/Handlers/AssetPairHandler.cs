@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using JetBrains.Annotations;
 using Lykke.Common.Chaos;
 using Lykke.Cqrs;
@@ -28,7 +29,7 @@ namespace Lykke.Service.Assets.Workflow.Handlers
 
             _chaosKitty.Meow("repository unavailable");
 
-            eventPublisher.PublishEvent(new AssetPairCreatedEvent { AssetPair = command.AssetPair });
+            eventPublisher.PublishEvent(Mapper.Map<AssetPairCreatedEvent>(command.AssetPair));
 
             return CommandHandlingResult.Ok();
         }
@@ -39,7 +40,7 @@ namespace Lykke.Service.Assets.Workflow.Handlers
 
             _chaosKitty.Meow("repository unavailable");
 
-            eventPublisher.PublishEvent(new AssetPairUpdatedEvent { AssetPair = command.AssetPair });
+            eventPublisher.PublishEvent(Mapper.Map<AssetPairUpdatedEvent>(command.AssetPair));
 
             return CommandHandlingResult.Ok();
         }

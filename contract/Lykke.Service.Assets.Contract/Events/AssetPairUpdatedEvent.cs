@@ -11,7 +11,7 @@ namespace Lykke.Service.Assets.Contract.Events
         public string Id { get; set; }
 
         [ProtoMember(2, IsRequired = true)]
-        public string DisplayId { get; set; }
+        public string Name { get; set; }
 
         [ProtoMember(3, IsRequired = true)]
         public string BaseAssetId { get; set; }

@@ -48,10 +48,8 @@ namespace Lykke.Service.Assets
 
             CreateMap<Services.Domain.Asset, AssetCreatedEvent>();
             CreateMap<Services.Domain.Asset, AssetUpdatedEvent>();
-            CreateMap<Services.Domain.AssetPair, AssetPairCreatedEvent>()
-                .ForMember(x => x.DisplayId, opt => opt.MapFrom(source => source.Name));
-            CreateMap<Services.Domain.AssetPair, AssetPairUpdatedEvent>()
-                .ForMember(x => x.DisplayId, opt => opt.MapFrom(source => source.Name));
+            CreateMap<Services.Domain.AssetPair, AssetPairCreatedEvent>();
+            CreateMap<Services.Domain.AssetPair, AssetPairUpdatedEvent>();
         }
     }
 }
