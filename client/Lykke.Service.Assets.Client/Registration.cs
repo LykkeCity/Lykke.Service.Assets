@@ -5,6 +5,9 @@ using Lykke.Service.Assets.Contract.Events;
 
 namespace Lykke.Service.Assets.Client
 {
+    /// <summary>
+    /// Extensions for the IBoundedContextRegistration.
+    /// </summary>
     public static class Registration
     {
         /// <summary>

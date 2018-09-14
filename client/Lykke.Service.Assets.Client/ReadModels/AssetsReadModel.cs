@@ -42,6 +42,7 @@ namespace Lykke.Service.Assets.Client.ReadModels
         public void Start()
         {
             var assets = _assetsService.AssetGetAll(true);
+            _cache.Set(AllKey, assets.Select(x => x.Id).ToList());
             foreach (var asset in assets)
             {
                 _cache.Set(asset.Id, Mapper.ToAsset(asset));

@@ -1,5 +1,8 @@
 ﻿namespace Lykke.Service.Assets.Client.Models.v3
 {
+    /// <summary>
+    /// The main model for the AssetPair.
+    /// </summary>
     public class AssetPair
     {
         public string Id { get; set; }

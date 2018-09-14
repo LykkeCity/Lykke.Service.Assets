@@ -1,29 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using Lykke.Service.Assets.Client.Models.v3;
+using System.Collections.Generic;
 using System.Linq;
-using Lykke.Service.Assets.Client.Models.v3;
 
 namespace Lykke.Service.Assets.Client.ReadModels
 {
+    /// <summary>
+    /// Useful, but non-optimized extension for IAssetsReadModel and IAssetPairsReadModel.
+    /// </summary>
     public static class AssetsReadModelExtensions
     {
+        /// <summary>
+        /// Get the asset if it is enabled. Returns null, if the asset is disabled.
+        /// </summary>
         public static Asset GetIfEnabled(this IAssetsReadModel readModel, string id)
         {
             var asset = readModel.Get(id);
             return asset != null && !asset.IsDisabled ? asset : null;
         }
 
+        /// <summary>
+        /// Get the asset-pair if it is enabled. Returns null, if the asset-pair is disabled.
+        /// </summary>
         public static AssetPair GetIfEnabled(this IAssetPairsReadModel readModel, string id)
         {
             var assetPair = readModel.Get(id);
             return assetPair != null && !assetPair.IsDisabled ? assetPair : null;
         }
 
+        /// <summary>
+        /// Get all enabled assets.
+        /// </summary>
         public static IReadOnlyCollection<Asset> GetAllEnabled(this IAssetsReadModel readModel)
         {
             var assets = readModel.GetAll();
             return assets.Where(x => !x.IsDisabled).ToArray();
         }
 
+        /// <summary>
+        /// Get all enabled asset-pairs.
+        /// </summary>
         public static IReadOnlyCollection<AssetPair> GetAllEnabled(this IAssetPairsReadModel readModel, string id)
         {
             var assetPairs = readModel.GetAll();
