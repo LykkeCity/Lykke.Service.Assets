@@ -1,7 +1,7 @@
 ﻿using MessagePack;
 using ProtoBuf;
 
-namespace Lykke.Service.Assets.Contract.Events
+namespace Lykke.Service.Assets.Client.Events
 {
     [MessagePackObject(true)]
     [ProtoContract]

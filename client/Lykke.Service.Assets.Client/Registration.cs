@@ -1,7 +1,7 @@
 ﻿using Lykke.Cqrs.Configuration;
 using Lykke.Cqrs.Configuration.BoundedContext;
+using Lykke.Service.Assets.Client.Events;
 using Lykke.Service.Assets.Client.Projections;
-using Lykke.Service.Assets.Contract.Events;
 
 namespace Lykke.Service.Assets.Client
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Client.Events;
 using Lykke.Service.Assets.Client.ReadModels;
-using Lykke.Service.Assets.Contract.Events;
 
 namespace Lykke.Service.Assets.Client.Projections
 {

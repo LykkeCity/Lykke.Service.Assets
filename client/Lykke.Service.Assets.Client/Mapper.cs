@@ -1,5 +1,5 @@
-﻿using Lykke.Service.Assets.Client.Models.v3;
-using Lykke.Service.Assets.Contract.Events;
+﻿using Lykke.Service.Assets.Client.Events;
+using Lykke.Service.Assets.Client.Models.v3;
 
 namespace Lykke.Service.Assets.Client
 {

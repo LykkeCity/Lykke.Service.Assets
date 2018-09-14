@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Lykke.Service.Assets.Contract.Events;
+using Lykke.Service.Assets.Client.Events;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Requests.v2.AssetConditions;
 using Lykke.Service.Assets.Responses.v2.AssetConditions;

@@ -2,10 +2,10 @@
 using JetBrains.Annotations;
 using Lykke.Common.Chaos;
 using Lykke.Cqrs;
-using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Core.Repositories;
 using System;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Client.Events;
 
 namespace Lykke.Service.Assets.Workflow.Handlers
 {
