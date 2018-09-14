@@ -68,6 +68,7 @@ namespace Lykke.Service.Assets.Modules
             options.ClientName = "Lykke.Service.Assets";
 
             var redis = ConnectionMultiplexer.Connect(options);
+            redis.PreserveAsyncOrder = false;
 
             builder.RegisterInstance(redis).SingleInstance();
             builder.Register(
