@@ -81,7 +81,7 @@ namespace Lykke.Service.Assets.Modules
                         environment: "lykke",
                         exclusiveQueuePostfix: "k8s")),
 
-                Register.BoundedContext("assets")
+                Register.BoundedContext(BoundedContext.Name)
                     .ListeningCommands(
                             typeof(CreateAssetCommand),
                             typeof(UpdateAssetCommand))
@@ -107,7 +107,7 @@ namespace Lykke.Service.Assets.Modules
                             typeof(UpdateAssetCommand),
                             typeof(CreateAssetPairCommand),
                             typeof(UpdateAssetPairCommand))
-                        .To("assets").With(defaultPipeline)
+                        .To(BoundedContext.Name).With(defaultPipeline)
                 );
             })
             .As<ICqrsEngine>().SingleInstance().AutoActivate();
