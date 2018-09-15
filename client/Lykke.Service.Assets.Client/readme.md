@@ -12,5 +12,5 @@ builder.RegisterAssetsClient(_settings.CurrentValue.AssetsServiceClient.ServiceU
 Register.BoundedContext(<context-name>)
   .WithAssetsReadModel()
 3) Your code:
-IAssetPairsReadModel Get, GetAll
-IAssetsReadModel Get, GetAll
+IAssetPairsReadModelRepository TryGet, GetAll, TryGetIfEnabled, GetAllEnabled
+IAssetsReadModelRepository TryGet, GetAll, TryGetIfEnabled, GetAllEnabled
