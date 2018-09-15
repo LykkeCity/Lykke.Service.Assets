@@ -24,8 +24,7 @@ namespace Lykke.Service.Assets.Client.ReadModels
         {
             try
             {
-                if (!_cache.TryGetValue(id, out AssetPair value))
-                    return null;
+                _cache.TryGetValue(id, out AssetPair value);
                 return value;
             }
             catch (System.InvalidCastException)
