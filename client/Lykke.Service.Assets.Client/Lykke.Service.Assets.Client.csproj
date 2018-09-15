@@ -27,6 +27,7 @@
   <ItemGroup>
     <PackageReference Include="Lykke.Cqrs" Version="5.2.0" />
     <PackageReference Include="Lykke.Logs" Version="6.0.0" />
+    <PackageReference Include="Lykke.SettingsReader" Version="4.0.1" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.13" />
   </ItemGroup>
 

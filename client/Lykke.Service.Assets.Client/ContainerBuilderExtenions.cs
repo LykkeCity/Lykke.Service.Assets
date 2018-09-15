@@ -17,6 +17,26 @@ namespace Lykke.Service.Assets.Client
         /// Register the asset services.
         /// </summary>
         /// <param name="builder">The container builder for adding the services to.</param>
+        /// <param name="serviceSettings">Service settings.</param>
+        /// <param name="registerDefaultAssetsReadModel">Whether to register the default in-memory assets and asset-pairs read model.
+        /// Please call IBoundedContextRegistration.WithAssetsReadModel during configuration of your bounded context.</param>
+        [UsedImplicitly]
+        public static void RegisterAssetsClient(this ContainerBuilder builder, 
+            [NotNull] AssetServiceSettings serviceSettings, 
+            bool registerDefaultAssetsReadModel = true)
+        {
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+            if (serviceSettings == null)
+                throw new ArgumentNullException(nameof(serviceSettings));
+
+            builder.RegisterAssetsClient(serviceSettings.ServiceUrl, registerDefaultAssetsReadModel);
+        }
+
+        /// <summary>
+        /// Register the asset services.
+        /// </summary>
+        /// <param name="builder">The container builder for adding the services to.</param>
         /// <param name="serviceUrl">Service endpoint URL.</param>
         /// <param name="registerDefaultAssetsReadModel">Whether to register the default in-memory assets and asset-pairs read model.
         /// Please call IBoundedContextRegistration.WithAssetsReadModel during configuration of your bounded context.</param>
