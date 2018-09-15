@@ -15,17 +15,15 @@ namespace Lykke.Service.Assets.Client
         /// </summary>
         public static IBoundedContextRegistration WithAssetsReadModel(this IBoundedContextRegistration bcr)
         {
-            const string assetsContextName = "assets";
-            const string assetPairsContextName = "assets";
             const string defaultRoute = "self";
 
             return bcr
                 .ListeningEvents(typeof(AssetCreatedEvent), typeof(AssetUpdatedEvent))
-                    .From(assetsContextName).On(defaultRoute)
-                    .WithProjection(typeof(AssetsProjection), assetsContextName)
+                    .From(BoundedContext.Name).On(defaultRoute)
+                    .WithProjection(typeof(AssetsProjection), BoundedContext.Name)
                 .ListeningEvents(typeof(AssetPairCreatedEvent), typeof(AssetPairUpdatedEvent))
-                    .From(assetPairsContextName).On(defaultRoute)
-                    .WithProjection(typeof(AssetPairsProjection), assetPairsContextName);
+                    .From(BoundedContext.Name).On(defaultRoute)
+                    .WithProjection(typeof(AssetPairsProjection), BoundedContext.Name);
         }
     }
 }
