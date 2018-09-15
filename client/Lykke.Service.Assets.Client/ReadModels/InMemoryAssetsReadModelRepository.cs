@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Concurrent;
+using Autofac;
 using Lykke.Service.Assets.Client.Models.v3;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
@@ -23,8 +24,7 @@ namespace Lykke.Service.Assets.Client.ReadModels
         {
             try
             {
-                if (!_cache.TryGetValue(id, out Asset value))
-                    return null;
+                _cache.TryGetValue(id, out Asset value);
                 return value;
             }
             catch (System.InvalidCastException)
@@ -35,14 +35,14 @@ namespace Lykke.Service.Assets.Client.ReadModels
 
         public IReadOnlyCollection<Asset> GetAll()
         {
-            var ids = _cache.Get<List<string>>(AllKey);
+            var ids = _cache.Get<ConcurrentBag<string>>(AllKey);
             return ids.Select(x => _cache.Get<Asset>(x)).ToArray();
         }
 
         public void Start()
         {
             var assets = _assetsService.AssetGetAll(true);
-            _cache.Set(AllKey, assets.Select(x => x.Id).ToList());
+            _cache.Set(AllKey, new ConcurrentBag<string>(assets.Select(x => x.Id)));
             foreach (var asset in assets)
             {
                 _cache.Set(asset.Id, Mapper.ToAsset(asset));
