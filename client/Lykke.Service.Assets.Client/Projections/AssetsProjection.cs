@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client.Events;
@@ -17,7 +18,7 @@ namespace Lykke.Service.Assets.Client.Projections
 
         private Task Handle(AssetCreatedEvent evt)
         {
-            var ids = _cache.Get<List<string>>(InMemoryAssetsReadModelRepository.AllKey);
+            var ids = _cache.Get<ConcurrentBag<string>>(InMemoryAssetsReadModelRepository.AllKey);
             ids.Add(evt.Id);
             _cache.Set(InMemoryAssetsReadModelRepository.AllKey, ids);
 
