@@ -42,11 +42,11 @@ namespace Lykke.Service.Assets.Client.ReadModels
         public void Start()
         {
             var assets = _assetsService.AssetGetAll(true);
-            _cache.Set(AllKey, new ConcurrentBag<string>(assets.Select(x => x.Id)));
             foreach (var asset in assets)
             {
                 _cache.Set(asset.Id, Mapper.ToAsset(asset));
             }
+            _cache.Set(AllKey, new ConcurrentBag<string>(assets.Select(x => x.Id)));
         }
     }
 }
