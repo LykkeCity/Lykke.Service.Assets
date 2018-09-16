@@ -31,7 +31,7 @@ namespace Lykke.Service.Assets.Services
         {
             _cqrsEngine.SendCommand(
                 new CreateAssetPairCommand { AssetPair = Mapper.Map<AssetPair>(assetPair) },
-                "assets", "assets");
+                BoundedContext.Name, BoundedContext.Name);
 
             return Task.FromResult(assetPair);
         }
@@ -64,7 +64,7 @@ namespace Lykke.Service.Assets.Services
         {
             _cqrsEngine.SendCommand(
                 new UpdateAssetPairCommand { AssetPair = Mapper.Map<AssetPair>(assetPair) },
-                "assets", "assets");
+                BoundedContext.Name, BoundedContext.Name);
 
             return Task.CompletedTask;
         }

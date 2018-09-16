@@ -6,14 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="Moq" Version="4.9.0" />
+    <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
-    <ProjectReference Include="..\..\contract\Lykke.Service.Assets.Contract\Lykke.Service.Assets.Contract.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />

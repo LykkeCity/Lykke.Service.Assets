@@ -6,14 +6,13 @@ using Lykke.Cqrs.Configuration;
 using Lykke.Messaging;
 using Lykke.Messaging.RabbitMq;
 using Lykke.Messaging.Serialization;
-using Lykke.Service.Assets.Contract.Events;
 using Lykke.Service.Assets.Services.Commands;
-using Lykke.Service.Assets.Services.Events;
 using Lykke.Service.Assets.Settings;
 using Lykke.Service.Assets.Workflow.Handlers;
 using Lykke.SettingsReader;
 using System.Collections.Generic;
 using Lykke.Messaging.Contract;
+using Lykke.Service.Assets.Client.Events;
 
 namespace Lykke.Service.Assets.Modules
 {
@@ -82,7 +81,7 @@ namespace Lykke.Service.Assets.Modules
                         environment: "lykke",
                         exclusiveQueuePostfix: "k8s")),
 
-                Register.BoundedContext("assets")
+                Register.BoundedContext(BoundedContext.Name)
                     .ListeningCommands(
                             typeof(CreateAssetCommand),
                             typeof(UpdateAssetCommand))
@@ -108,7 +107,7 @@ namespace Lykke.Service.Assets.Modules
                             typeof(UpdateAssetCommand),
                             typeof(CreateAssetPairCommand),
                             typeof(UpdateAssetPairCommand))
-                        .To("assets").With(defaultPipeline)
+                        .To(BoundedContext.Name).With(defaultPipeline)
                 );
             })
             .As<ICqrsEngine>().SingleInstance().AutoActivate();

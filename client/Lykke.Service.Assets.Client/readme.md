@@ -1,14 +1,16 @@
-﻿# Lykke.Service.Assets API Client Generation
-> see https://aka.ms/autorest
+# Lykke.Service.Balances 
 
-1) Launch Lykke.Service.Assets on port 5000
-2) Run ```autorest readme.md``` or execute ```update.ps1```
-> see https://aka.ms/autorest
-``` yaml 
-input-file: http://localhost:5000/swagger/v1/swagger.json
+# Purpose
 
-csharp:
-  namespace: Lykke.Service.Assets.Client
-  output-folder: ./
-  output-file: AssetsService.Generated.cs
-```
+  - access to the Lykke.Service.Assets service.
+
+# Usages
+
+1) Autofac module
+builder.RegisterAssetsClient(_settings.CurrentValue.AssetsServiceClient.ServiceUrl);
+2) CqrsModule
+Register.BoundedContext(<context-name>)
+  .WithAssetsReadModel()
+3) Your code:
+IAssetPairsReadModelRepository TryGet, GetAll, TryGetIfEnabled, GetAllEnabled
+IAssetsReadModelRepository TryGet, GetAll, TryGetIfEnabled, GetAllEnabled
