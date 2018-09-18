@@ -39,7 +39,7 @@ namespace Lykke.Service.Assets.Client.ReadModels
         /// <summary>
         /// Get all enabled asset-pairs.
         /// </summary>
-        public static IReadOnlyCollection<AssetPair> GetAllEnabled(this IAssetPairsReadModelRepository readModelRepository, string id)
+        public static IReadOnlyCollection<AssetPair> GetAllEnabled(this IAssetPairsReadModelRepository readModelRepository)
         {
             var assetPairs = readModelRepository.GetAll();
             return assetPairs.Where(x => !x.IsDisabled).ToArray();

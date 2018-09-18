@@ -9,7 +9,7 @@ namespace Lykke.Service.Assets.Client.ReadModels
 {
     class InMemoryAssetPairsReadModelRepository : IAssetPairsReadModelRepository, IStartable
     {
-        public const string AllKey = "AssetPairs";
+        private const string AllKey = "AssetPairs";
 
         private readonly IAssetsService _assetsService;
         private readonly IMemoryCache _cache;
