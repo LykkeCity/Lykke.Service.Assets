@@ -23,11 +23,6 @@ namespace Lykke.Service.Assets.Services
             return token;
         }
 
-        public async Task<IEnumerable<IErc20Token>> GetAllAsync()
-        {
-            return await _erc20TokenRepository.GetAllAsync();
-        }
-
         public async Task<IErc20Token> GetByAssetIdAsync(string assetId)
         {
             return await _erc20TokenRepository.GetByAssetIdAsync(assetId);

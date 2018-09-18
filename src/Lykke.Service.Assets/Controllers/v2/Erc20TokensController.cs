@@ -49,19 +49,6 @@ namespace Lykke.Service.Assets.Controllers.V2
             );
         }
 
-        [HttpGet]
-        [SwaggerOperation("Erc20TokenGetAll")]
-        [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAll()
-        {
-            var allTokens = await _erc20TokenService.GetAllAsync();
-
-            return Ok(new ListOf<Erc20Token>
-            {
-                Items = allTokens
-            });
-        }
-
         [HttpGet("with-assets")]
         [SwaggerOperation("Erc20TokenGetAllWithAssets")]
         [ProducesResponseType(typeof(ListOf<Erc20Token>), (int)HttpStatusCode.OK)]
