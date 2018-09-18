@@ -17,5 +17,15 @@ namespace Lykke.Service.Assets.Client.ReadModels
         /// Get all asset-pairs.
         /// </summary>
         IReadOnlyCollection<AssetPair> GetAll();
+        
+        /// <summary>
+        /// Add asset-pair.
+        /// </summary>
+        void Add(AssetPair assetPair);
+
+        /// <summary>
+        /// Update asset-pair.
+        /// </summary>
+        void Update(AssetPair assetPair);
     }
 }
