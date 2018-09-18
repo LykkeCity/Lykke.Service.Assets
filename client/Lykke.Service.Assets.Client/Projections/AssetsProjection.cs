@@ -1,34 +1,27 @@
 ﻿using Lykke.Service.Assets.Client.Events;
 using Lykke.Service.Assets.Client.ReadModels;
-using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Client.Projections
 {
     class AssetsProjection
     {
-        private readonly IMemoryCache _cache;
+        private readonly IAssetsReadModelRepository _assets;
 
-        public AssetsProjection(IMemoryCache cache)
+        public AssetsProjection(IAssetsReadModelRepository assets)
         {
-            _cache = cache;
+            _assets = assets;
         }
 
         private Task Handle(AssetCreatedEvent evt)
         {
-            _cache.Set(evt.Id, Mapper.ToAsset(evt));
-
-            var ids = _cache.Get<ConcurrentBag<string>>(InMemoryAssetsReadModelRepository.AllKey);
-            ids.Add(evt.Id);
-            _cache.Set(InMemoryAssetsReadModelRepository.AllKey, ids);
-
+            _assets.Add(Mapper.ToAsset(evt));
             return Task.CompletedTask;
         }
 
         public Task Handle(AssetUpdatedEvent evt)
         {
-            _cache.Set(evt.Id, Mapper.ToAsset(evt));
+            _assets.Update(Mapper.ToAsset(evt));
             return Task.CompletedTask;
         }
     }
