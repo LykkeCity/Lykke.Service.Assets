@@ -109,7 +109,7 @@ namespace Lykke.Service.Assets.Modules
         private INoSQLTableStorage<T> CreateTable<T>(Func<ApplicationSettings, string> connectionString, string name, ILogFactory logFactory)
             where T : TableEntity, new()
         {
-            return AzureTableStorage<T>.Create(_settings.ConnectionString(connectionString), name, logFactory);
+            return AzureTableStorage<T>.Create(_settings.ConnectionString(connectionString), name, logFactory, TimeSpan.FromSeconds(30));
         }
     }
 }
