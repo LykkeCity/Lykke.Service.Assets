@@ -6,8 +6,6 @@ namespace Lykke.Service.Assets.Core.Repositories
 {
     public interface IErc20TokenRepository
     {
-        Task<IEnumerable<IErc20Token>> GetAllAsync();
-
         Task<IErc20Token> GetByTokenAddressAsync(string tokenAddress);
 
         Task<IErc20Token> GetByAssetIdAsync(string assetId);

@@ -9,8 +9,6 @@ namespace Lykke.Service.Assets.Core.Services
     {
         Task<IErc20Token> AddAsync(IErc20Token erc20Token);
 
-        Task<IEnumerable<IErc20Token>> GetAllAsync();
-
         Task<IErc20Token> GetByAssetIdAsync(string assetId);
 
         Task UpdateAsync(IErc20Token erc20Token);

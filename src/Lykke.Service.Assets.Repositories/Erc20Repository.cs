@@ -37,11 +37,6 @@ namespace Lykke.Service.Assets.Repositories
             }
         }
 
-        public async Task<IEnumerable<IErc20Token>> GetAllAsync()
-        {
-            return await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey());
-        }
-
         public async Task<IErc20Token> GetByTokenAddressAsync(string tokenAddress)
         {
             return await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), GetRowKey(tokenAddress));

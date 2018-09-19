@@ -11,7 +11,6 @@ namespace Lykke.Service.Assets.Cache
     {
         private readonly IErc20TokenService _tokenService;
         private readonly DistributedCache<IErc20Token, Erc20Token> _cache;
-        private const string AllEntitiesKey = "All";
         private const string WithAssetsKey = "WithAssets";
 
         public CachedErc20TokenService(
@@ -29,12 +28,6 @@ namespace Lykke.Service.Assets.Cache
             await _tokenService.AddAsync(token);
 
             return AutoMapper.Mapper.Map<Erc20Token>(token);
-        }
-
-        public Task<IEnumerable<Erc20Token>> GetAllAsync()
-        {
-            return _cache.GetListAsync(AllEntitiesKey,
-                async () => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllAsync()));
         }
 
         public async Task<IEnumerable<Erc20Token>> GetByAssetIdsAsync(string[] assetIds)
@@ -89,7 +82,6 @@ namespace Lykke.Service.Assets.Cache
             {
                 await _cache.RemoveAsync(id);
             }
-            await _cache.RemoveAsync(AllEntitiesKey);
             await _cache.RemoveAsync(WithAssetsKey);
         }
     }
