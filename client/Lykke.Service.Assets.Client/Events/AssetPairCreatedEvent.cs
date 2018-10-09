@@ -33,5 +33,8 @@ namespace Lykke.Service.Assets.Client.Events
 
         [ProtoMember(9, IsRequired = true)]
         public bool IsDisabled { get; set; }
+
+        [ProtoMember(10, IsRequired = true)]
+        public string ExchangeId { get; set; }
     }
 }

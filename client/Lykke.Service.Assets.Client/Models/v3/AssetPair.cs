@@ -14,5 +14,6 @@
         public decimal MinVolume { get; set; }
         public decimal MinInvertedVolume { get; set; }
         public bool IsDisabled { get; set; }
+        public string ExchangeId { get; set; }
     }
 }

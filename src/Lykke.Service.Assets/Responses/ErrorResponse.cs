@@ -6,7 +6,7 @@ namespace Lykke.Service.Assets.Responses
 {
     public class ErrorResponse
     {
-        public Dictionary<string, List<string>> ErrorMessages { get; } = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> ErrorMessages { get; set; } = new Dictionary<string, List<string>>();
 
         public static ErrorResponse Create(ModelStateDictionary modelState)
         {

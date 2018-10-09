@@ -38,5 +38,8 @@ namespace Lykke.Service.Assets.Responses.V2
 
         [ProtoMember(11)]
         public string Source2 { get; set; }
+
+        [ProtoMember(12)]
+        public string ExchangeId { get; set; }
     }
 }

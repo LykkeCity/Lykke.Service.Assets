@@ -29,5 +29,11 @@
         /// Minimum volume of Limit or Market orders for inverted pair
         /// </summary>
         double MinInvertedVolume { get; }
+
+        /// <summary>
+        /// Asset pair can be listed on external exchange
+        /// For Lykke exchange value is "null"
+        /// </summary>
+        string ExchangeId { get; }
     }
 }

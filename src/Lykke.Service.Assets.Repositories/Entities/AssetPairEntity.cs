@@ -33,5 +33,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         /// Minimum volume of Limit or Market orders for inverted pair
         /// </summary>
         public double MinInvertedVolume { get; set;}
+
+        public string ExchangeId { get; set; }
     }
 }
