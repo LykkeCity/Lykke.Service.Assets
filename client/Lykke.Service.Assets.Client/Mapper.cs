@@ -53,7 +53,8 @@ namespace Lykke.Service.Assets.Client
                 BaseAssetId = evt.BaseAssetId,
                 QuotingAssetId = evt.QuotingAssetId,
                 MinVolume = evt.MinVolume,
-                MinInvertedVolume = evt.MinInvertedVolume
+                MinInvertedVolume = evt.MinInvertedVolume,
+                ExchangeId = evt.ExchangeId
             };
         }
 
@@ -69,7 +70,8 @@ namespace Lykke.Service.Assets.Client
                 BaseAssetId = evt.BaseAssetId,
                 QuotingAssetId = evt.QuotingAssetId,
                 MinVolume = evt.MinVolume,
-                MinInvertedVolume = evt.MinInvertedVolume
+                MinInvertedVolume = evt.MinInvertedVolume,
+                ExchangeId = evt.ExchangeId
             };
         }
 
@@ -85,7 +87,8 @@ namespace Lykke.Service.Assets.Client
                 BaseAssetId = assetPair.BaseAssetId,
                 QuotingAssetId = assetPair.QuotingAssetId,
                 MinVolume = (decimal)assetPair.MinVolume,
-                MinInvertedVolume = (decimal)assetPair.MinInvertedVolume
+                MinInvertedVolume = (decimal)assetPair.MinInvertedVolume,
+                ExchangeId = assetPair.ExchangeId
             };
         }
     }
