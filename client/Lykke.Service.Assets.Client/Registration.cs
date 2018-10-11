@@ -13,16 +13,14 @@ namespace Lykke.Service.Assets.Client
         /// <summary>
         /// Use the default in-memory assets and asset-pairs read model.
         /// </summary>
-        public static IBoundedContextRegistration WithAssetsReadModel(this IBoundedContextRegistration bcr)
+        public static IBoundedContextRegistration WithAssetsReadModel(this IBoundedContextRegistration bcr, string route = "self")
         {
-            const string defaultRoute = "self";
-
             return bcr
                 .ListeningEvents(typeof(AssetCreatedEvent), typeof(AssetUpdatedEvent))
-                    .From(BoundedContext.Name).On(defaultRoute)
+                    .From(BoundedContext.Name).On(route)
                     .WithProjection(typeof(AssetsProjection), BoundedContext.Name)
                 .ListeningEvents(typeof(AssetPairCreatedEvent), typeof(AssetPairUpdatedEvent))
-                    .From(BoundedContext.Name).On(defaultRoute)
+                    .From(BoundedContext.Name).On(route)
                     .WithProjection(typeof(AssetPairsProjection), BoundedContext.Name);
         }
     }
