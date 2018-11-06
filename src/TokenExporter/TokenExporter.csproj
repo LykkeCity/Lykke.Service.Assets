@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <AssemblyName>TokenExporter</AssemblyName>
+        <UseNETCoreGenerator>true</UseNETCoreGenerator>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CsvHelper" Version="8.0.0-beta01" />
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
+    </ItemGroup>
+
+</Project>
