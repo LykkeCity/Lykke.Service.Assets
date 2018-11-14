@@ -83,7 +83,7 @@ namespace Lykke.Service.Assets.Cache
             else
             {
                 var cached = await _redisDatabase.StringGetAsync(keys.Select(k => (RedisKey)GetCacheKey($"{prefix}:{k}")).ToArray());
-                cachedItems = cached.Select(c => CacheSerializer.Deserialize<T>(c));
+                cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c));
                 if (cached.Length == keys.Count)
                     return cachedItems;
                 notFoundKeys = new List<string>();
