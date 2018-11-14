@@ -65,8 +65,11 @@ namespace Lykke.Service.Assets.Cache
 
         public async Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync(string[] assetIds = null)
         {
-            return await _cache.GetListAsync(WithAssetsKey,
-                async () => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllWithAssetsAsync(assetIds)));
+            return await _cache.GetListAsync(
+                WithAssetsKey,
+                assetIds,
+                a => a.AssetId,
+                async ids => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllWithAssetsAsync(ids)));
         }
 
         private async Task InvalidateCache(string id = null)
@@ -74,6 +77,7 @@ namespace Lykke.Service.Assets.Cache
             if (id != null)
             {
                 await _cache.RemoveAsync(id);
+                await _cache.RemoveAsync($"{WithAssetsKey}:{id}");
             }
             await _cache.RemoveAsync(WithAssetsKey);
         }
