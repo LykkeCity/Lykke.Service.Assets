@@ -1,6 +1,6 @@
-﻿using Lykke.Service.Assets.Core.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Repositories
 {
@@ -14,6 +14,6 @@ namespace Lykke.Service.Assets.Core.Repositories
 
         Task UpdateAsync(IErc20Token erc20Token);
 
-        Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync();
+        Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync(IEnumerable<string> assetIds);
     }
 }

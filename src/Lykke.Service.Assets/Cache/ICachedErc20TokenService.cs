@@ -17,6 +17,6 @@ namespace Lykke.Service.Assets.Cache
 
         Task<Erc20Token> GetByTokenAddressAsync(string tokenAddress);
 
-        Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync();
+        Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync(string[] assetIds = null);
     }
 }

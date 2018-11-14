@@ -1,7 +1,6 @@
-﻿using Lykke.Service.Assets.Core.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Lykke.Service.Assets.Core.Domain;
 
 namespace Lykke.Service.Assets.Core.Services
 {
@@ -15,6 +14,6 @@ namespace Lykke.Service.Assets.Core.Services
 
         Task<IErc20Token> GetByTokenAddressAsync(string tokenAddress);
 
-        Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync();
+        Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync(IEnumerable<string> assetIds);
     }
 }

@@ -1,9 +1,8 @@
-﻿using Lykke.Service.Assets.Core.Domain;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Responses.V2;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Cache
 {
@@ -39,17 +38,11 @@ namespace Lykke.Service.Assets.Cache
             {
                 var token = await GetByAssetIdAsync(assetIds[0]);
                 if (token == null)
-                {
                     return new Erc20Token[0];
-                }
-                else
-                {
-                    return new[] { token };
-                }
+                return new[] { token };
             }
 
-            var tokens = await GetAllWithAssetsAsync();
-            return tokens.Where(x => assetIds.Contains(x.AssetId));
+            return await GetAllWithAssetsAsync(assetIds);
         }
 
         public Task<Erc20Token> GetByAssetIdAsync(string assetId)
@@ -70,10 +63,10 @@ namespace Lykke.Service.Assets.Cache
                 async () => AutoMapper.Mapper.Map<Erc20Token>(await _tokenService.GetByTokenAddressAsync(tokenAddress)));
         }
 
-        public async Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync()
+        public async Task<IEnumerable<Erc20Token>> GetAllWithAssetsAsync(string[] assetIds = null)
         {
             return await _cache.GetListAsync(WithAssetsKey,
-                async () => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllWithAssetsAsync()));
+                async () => AutoMapper.Mapper.Map<List<Erc20Token>>(await _tokenService.GetAllWithAssetsAsync(assetIds)));
         }
 
         private async Task InvalidateCache(string id = null)
