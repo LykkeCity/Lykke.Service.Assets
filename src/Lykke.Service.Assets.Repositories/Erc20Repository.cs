@@ -1,12 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using AzureStorage;
 using AzureStorage.Tables.Templates.Index;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Repositories.Entities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets.Repositories
 {
@@ -22,7 +22,6 @@ namespace Lykke.Service.Assets.Repositories
             _indexAssetIdTable = indexAssetIdTable;
             _erc20AssetEntityTable = erc20AssetEntityTable;
         }
-
 
         public async Task AddAsync(IErc20Token erc20Token)
         {
@@ -64,22 +63,20 @@ namespace Lykke.Service.Assets.Repositories
             }
         }
 
-        public async Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync()
+        public async Task<IEnumerable<IErc20Token>> GetAllWithAssetsAsync(IEnumerable<string> assetIds)
         {
-            var indexes = await _indexAssetIdTable.GetDataAsync(AssetIndexPartition);
+            var indexes = assetIds == null
+                ? await _indexAssetIdTable.GetDataAsync(AssetIndexPartition)
+                : await _indexAssetIdTable.GetDataAsync(AssetIndexPartition, assetIds.Distinct());
 
-            return (await GetByAssetIndexesAsync(indexes))
-                // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
-                .Where(x => x?.AssetId != null);
-        }
-
-        private async Task<IEnumerable<IErc20Token>> GetByAssetIndexesAsync(IEnumerable<AzureIndex> assetIndexes)
-        {
-            var rowKeys = assetIndexes.Select(x => x.PrimaryRowKey)
+            var rowKeys = indexes
+                .Select(x => x.PrimaryRowKey)
                 // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
                 .Distinct();
 
-            return await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), rowKeys);
+            return (await _erc20AssetEntityTable.GetDataAsync(GetPartitionKey(), rowKeys))
+                // Ensure, that our indexes are not corrupted. It's important, we have already faced problems with them.
+                .Where(x => x?.AssetId != null);
         }
 
         private static void SetEntityKeys(Erc20TokenEntity entity)
