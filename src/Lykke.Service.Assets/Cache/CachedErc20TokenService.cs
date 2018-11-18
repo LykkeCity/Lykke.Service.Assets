@@ -53,7 +53,7 @@ namespace Lykke.Service.Assets.Cache
 
         public async Task UpdateAsync(IErc20Token token)
         {
-            await InvalidateCache();
+            await InvalidateCache(token.AssetId);
             await _tokenService.UpdateAsync(token);
         }
 
