@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Lykke.Sdk;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services;
 
@@ -8,6 +9,11 @@ namespace Lykke.Service.Assets.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder
+                .RegisterType<StartupManager>()
+                .As<IStartupManager>()
+                .SingleInstance();
+
             builder
                 .RegisterType<AssetAttributeService>()
                 .As<IAssetAttributeService>()
@@ -23,9 +29,10 @@ namespace Lykke.Service.Assets.Modules
                 .As<IErc20TokenAssetService>()
                 .SingleInstance();
 
-            builder.RegisterType<Erc20TokenService>().
-                As<IErc20TokenService>().SingleInstance();
-
+            builder
+                .RegisterType<Erc20TokenService>()
+                .As<IErc20TokenService>()
+                .SingleInstance();
 
             builder
                 .RegisterType<AssetExtendedInfoService>()
