@@ -70,7 +70,8 @@ namespace Lykke.Service.Assets.Modules
                 const string defaultPipeline = "commands";
                 const string defaultRoute = "self";
 
-                return new CqrsEngine(ctx.Resolve<ILogFactory>(),
+                var engine = new CqrsEngine(
+                    ctx.Resolve<ILogFactory>(),
                     ctx.Resolve<IDependencyResolver>(),
                     ctx.Resolve<IMessagingEngine>(),
                     new DefaultEndpointProvider(),
@@ -80,37 +81,39 @@ namespace Lykke.Service.Assets.Modules
                         SerializationFormat.MessagePack,
                         environment: "lykke",
                         exclusiveQueuePostfix: "k8s")),
-
-                Register.BoundedContext(BoundedContext.Name)
-                    .ListeningCommands(
-                            typeof(CreateAssetCommand),
-                            typeof(UpdateAssetCommand))
-                        .On(defaultRoute)
-                    .PublishingEvents(
-                            typeof(AssetCreatedEvent),
-                            typeof(AssetUpdatedEvent))
-                        .With(defaultPipeline)
-                    .WithCommandsHandler<AssetsHandler>()
-                    .ListeningCommands(
-                            typeof(CreateAssetPairCommand),
-                            typeof(UpdateAssetPairCommand))
-                        .On(defaultRoute)
-                    .PublishingEvents(
-                            typeof(AssetPairCreatedEvent),
-                            typeof(AssetPairUpdatedEvent))
-                        .With(defaultPipeline)
-                    .WithCommandsHandler<AssetPairHandler>(),
-
-                Register.DefaultRouting
-                    .PublishingCommands(
-                            typeof(CreateAssetCommand),
-                            typeof(UpdateAssetCommand),
-                            typeof(CreateAssetPairCommand),
-                            typeof(UpdateAssetPairCommand))
-                        .To(BoundedContext.Name).With(defaultPipeline)
-                );
+                    Register.BoundedContext(BoundedContext.Name)
+                        .ListeningCommands(
+                                typeof(CreateAssetCommand),
+                                typeof(UpdateAssetCommand))
+                            .On(defaultRoute)
+                        .PublishingEvents(
+                                typeof(AssetCreatedEvent),
+                                typeof(AssetUpdatedEvent))
+                            .With(defaultPipeline)
+                        .WithCommandsHandler<AssetsHandler>()
+                        .ListeningCommands(
+                                typeof(CreateAssetPairCommand),
+                                typeof(UpdateAssetPairCommand))
+                            .On(defaultRoute)
+                        .PublishingEvents(
+                                typeof(AssetPairCreatedEvent),
+                                typeof(AssetPairUpdatedEvent))
+                            .With(defaultPipeline)
+                        .WithCommandsHandler<AssetPairHandler>(),
+                    Register.DefaultRouting
+                        .PublishingCommands(
+                                typeof(CreateAssetCommand),
+                                typeof(UpdateAssetCommand),
+                                typeof(CreateAssetPairCommand),
+                                typeof(UpdateAssetPairCommand))
+                            .To(BoundedContext.Name).With(defaultPipeline)
+                    );
+                engine.StartPublishers();
+                return engine;
             })
-            .As<ICqrsEngine>().SingleInstance().AutoActivate();
+            .As<ICqrsEngine>()
+            .SingleInstance()
+            .AutoActivate();
         }
     }
 }
