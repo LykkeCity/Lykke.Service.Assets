@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Log;
+using Lykke.Common.Log;
 using StackExchange.Redis;
 
 namespace Lykke.Service.Assets.Cache
@@ -10,15 +12,18 @@ namespace Lykke.Service.Assets.Cache
     {
         private const int _maxConcurrentTasksCount = 50;
 
+        private readonly ILog _log;
         private readonly IDatabase _redisDatabase;
         private readonly string _partitionKey;
         private readonly TimeSpan _expiration;
 
         public DistributedCache(
+            ILogFactory logFactory,
             IDatabase redisDatabase,
             TimeSpan expiration,
             string partitionKey)
         {
+            _log = logFactory.CreateLog(this);
             _redisDatabase = redisDatabase;
             _partitionKey = partitionKey;
             _expiration = expiration;
@@ -31,31 +36,42 @@ namespace Lykke.Service.Assets.Cache
 
         public async Task<T> GetAsync(string key, Func<Task<I>> factory)
         {
-            var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
-            if (cached.HasValue)
+            try
             {
-                return CacheSerializer.Deserialize<T>(cached);
-            }
+                var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
+                if (cached.HasValue)
+                    return CacheSerializer.Deserialize<T>(cached);
 
-            var result = await factory() as T;
-            if (result != null)
-            {
-                await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+                var result = await factory() as T;
+                if (result != null)
+                    await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+
+                return result;
             }
-            return result;
+            catch (Exception e)
+            {
+                _log.Warning(e.Message, e);
+                return await factory() as T;
+            }
         }
 
         public async Task<IEnumerable<T>> GetListAsync(string key, Func<Task<IEnumerable<I>>> factory)
         {
-            var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
-            if (cached.HasValue)
+            try
             {
-                return CacheSerializer.Deserialize<T[]>(cached);
-            }
+                var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
+                if (cached.HasValue)
+                    return CacheSerializer.Deserialize<T[]>(cached);
 
-            var result = (await factory()).Cast<T>().ToArray();
-            await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
-            return result;
+                var result = (await factory()).Cast<T>().ToArray();
+                await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _log.Warning(e.Message, e);
+                return (await factory()).Cast<T>().ToArray();
+            }
         }
 
         public async Task<IEnumerable<T>> GetListAsync(
@@ -64,52 +80,67 @@ namespace Lykke.Service.Assets.Cache
             Func<T, string> keyExtractor,
             Func<IEnumerable<string>, Task<IEnumerable<I>>> factory)
         {
-            IEnumerable<T> cachedItems;
-            List<string> notFoundKeys;
-            if (keys == null)
+            try
             {
-                var cached = await _redisDatabase.StringGetAsync(GetCacheKey(prefix));
-                if (cached.HasValue)
+                IEnumerable<T> cachedItems;
+                List<string> notFoundKeys;
+                if (keys == null)
                 {
-                    var resultItems = CacheSerializer.Deserialize<T[]>(cached);
-                    await CacheDataAsync(
-                        resultItems,
-                        keyExtractor,
-                        prefix);
-                    return resultItems;
+                    var cached = await _redisDatabase.StringGetAsync(GetCacheKey(prefix));
+                    if (cached.HasValue)
+                    {
+                        var resultItems = CacheSerializer.Deserialize<T[]>(cached);
+                        await CacheDataAsync(
+                            resultItems,
+                            keyExtractor,
+                            prefix);
+                        return resultItems;
+                    }
+                    cachedItems = new T[0];
+                    notFoundKeys = null;
                 }
-                cachedItems = new T[0];
-                notFoundKeys = null;
+                else
+                {
+                    var cached = await _redisDatabase.StringGetAsync(keys.Select(k => (RedisKey)GetCacheKey($"{prefix}:{k}")).ToArray());
+                    cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c));
+                    if (cachedItems.Count() == keys.Count)
+                        return cachedItems;
+
+                    notFoundKeys = new List<string>();
+                    var cachedKeysHash = new HashSet<string>(cachedItems.Select(keyExtractor));
+                    foreach (var key in keys)
+                    {
+                        if (cachedKeysHash.Contains(key))
+                            continue;
+                        notFoundKeys.Add(key);
+                    }
+                }
+
+                var foundResults = (await factory(notFoundKeys)).Cast<T>();
+                await CacheDataAsync(
+                    foundResults,
+                    keyExtractor,
+                    prefix);
+
+                return cachedItems.Concat(foundResults);
             }
-            else
+            catch (Exception e)
             {
-                var cached = await _redisDatabase.StringGetAsync(keys.Select(k => (RedisKey)GetCacheKey($"{prefix}:{k}")).ToArray());
-                cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c));
-                if (cachedItems.Count() == keys.Count)
-                    return cachedItems;
-
-                notFoundKeys = new List<string>();
-                var cachedKeysHash = new HashSet<string>(cachedItems.Select(keyExtractor));
-                foreach (var key in keys)
-                {
-                    if (cachedKeysHash.Contains(key))
-                        continue;
-                    notFoundKeys.Add(key);
-                }
+                _log.Warning(e.Message, e);
+                return (await factory(keys)).Cast<T>();
             }
-
-            var foundResults = (await factory(notFoundKeys)).Cast<T>();
-            await CacheDataAsync(
-                foundResults,
-                keyExtractor,
-                prefix);
-
-            return cachedItems.Concat(foundResults);
         }
 
         public async Task RemoveAsync(string id)
         {
-            await _redisDatabase.KeyDeleteAsync(GetCacheKey(id));
+            try
+            {
+                await _redisDatabase.KeyDeleteAsync(GetCacheKey(id));
+            }
+            catch (Exception e)
+            {
+                _log.Warning(e.Message, e);
+            }
         }
 
         private async Task CacheDataAsync<T>(
