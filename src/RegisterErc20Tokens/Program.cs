@@ -99,13 +99,6 @@ namespace RegisterErc20Tokens
             });
         }
 
-        private static bool ContractFiresTransferEvent(ContractMetadata contract)
-        {
-            var contractCode = _web3.Eth.GetCode.SendRequestAsync(contract.Address).Result;
-
-            return true;//contractCode.Contains("ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef");
-        }
-
         private static bool ContractHasOrCallsTransferMethod(ContractMetadata contract)
         {
             var contractCode = _web3.Eth.GetCode.SendRequestAsync(contract.Address).Result;
@@ -143,12 +136,6 @@ namespace RegisterErc20Tokens
                             if (!ContractHasOrCallsTransferMethod(contract))
                             {
                                 operationResult = "transfer method not detected";
-                                operationSucceeded = false;
-                            }
-
-                            if (!ContractFiresTransferEvent(contract))
-                            {
-                                operationResult = "contract never fires Transfer event";
                                 operationSucceeded = false;
                             }
                         }
