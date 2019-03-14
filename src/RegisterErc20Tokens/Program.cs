@@ -99,13 +99,6 @@ namespace RegisterErc20Tokens
             });
         }
 
-        private static bool ContractFiresTransferEvent(ContractMetadata contract)
-        {
-            var contractCode = _web3.Eth.GetCode.SendRequestAsync(contract.Address).Result;
-
-            return contractCode.Contains("ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef");
-        }
-
         private static bool ContractHasOrCallsTransferMethod(ContractMetadata contract)
         {
             var contractCode = _web3.Eth.GetCode.SendRequestAsync(contract.Address).Result;
@@ -143,12 +136,6 @@ namespace RegisterErc20Tokens
                             if (!ContractHasOrCallsTransferMethod(contract))
                             {
                                 operationResult = "transfer method not detected";
-                                operationSucceeded = false;
-                            }
-
-                            if (!ContractFiresTransferEvent(contract))
-                            {
-                                operationResult = "contract never fires Transfer event";
                                 operationSucceeded = false;
                             }
                         }
@@ -198,7 +185,7 @@ namespace RegisterErc20Tokens
 
                     if (operationSucceeded)
                     {
-                        var assetId = erc20Token.AssetId ?? contract.AssetId;
+                        var assetId = contract.AssetId;
                         Asset asset = null;
                         bool updateAsset = !string.IsNullOrEmpty(contract.AssetId);
 
@@ -247,6 +234,8 @@ namespace RegisterErc20Tokens
                             asset.BlockChainAssetId = tokenAddress;
                             erc20Token = erc20Token ?? _assetsService.Erc20TokenGetByAddress(tokenAddress);
                             erc20Token.AssetId = assetId;
+                            asset.Blockchain = Blockchain.Ethereum;
+                            asset.Type = AssetType.Erc20Token;
                             _assetsService.AssetUpdate(asset);
                             _assetsService.Erc20TokenUpdate(erc20Token);
                         }
