@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client.Models;
@@ -17,7 +17,7 @@ namespace Lykke.Service.Assets.Client
         /// <returns></returns>
         public static IList<Asset> AssetGetAll(this IAssetsService operations)
         {
-            return operations.AssetGetAllAsync(false).GetAwaiter().GetResult();
+            return operations.AssetGetAllAsync(true).GetAwaiter().GetResult();
         }
         
         /// <summary>
@@ -28,7 +28,7 @@ namespace Lykke.Service.Assets.Client
         /// <returns></returns>
         public static async Task<IList<Asset>> AssetGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (var result = await operations.AssetGetAllWithHttpMessagesAsync(false, null, cancellationToken).ConfigureAwait(false))
+            using (var result = await operations.AssetGetAllWithHttpMessagesAsync(true, null, cancellationToken).ConfigureAwait(false))
             {
                 return result.Body;
             }
