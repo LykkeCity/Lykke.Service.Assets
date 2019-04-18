@@ -44,7 +44,7 @@ namespace Lykke.Service.Assets.Services
             #endregion
         }
 
-        public Task<IEnumerable<IAssetCondition>> GetConditions(string layerId)
+        public Task<IEnumerable<IAssetCondition>> GetConditionsAsync(string layerId)
         {
             if (string.IsNullOrEmpty(layerId))
                 throw new ArgumentNullException(nameof(layerId));
@@ -55,7 +55,7 @@ namespace Lykke.Service.Assets.Services
                 GetExpirationDate());
         }
 
-        public Task<IAssetConditionSettings> GetDefaultConditions(string layerId)
+        public Task<IAssetConditionSettings> GetDefaultConditionsAsync(string layerId)
         {
             if (string.IsNullOrEmpty(layerId))
                 throw new ArgumentNullException(nameof(layerId));
@@ -66,7 +66,7 @@ namespace Lykke.Service.Assets.Services
                 GetExpirationDate());
         }
 
-        public Task<IAssetDefaultConditionLayer> GetDefaultLayer()
+        public Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync()
         {
             return _assetDefaultConditionLayerCache.GetOrAddAsync(
                 "assetDefaultLayerCache", 

@@ -57,16 +57,16 @@ namespace Lykke.Service.Assets.Services.Tests
             MockDefaultConditionLayerTo(_defaultConditionLayer);
             
             // act
-            var firstFetchResult = await _service.GetDefaultLayer();
+            var firstFetchResult = await _service.GetDefaultLayerAsync();
             
             MockDefaultConditionLayerTo(_anotherConditionLayer);
 
-            var fetchResultFromCache = await _service.GetDefaultLayer();
+            var fetchResultFromCache = await _service.GetDefaultLayerAsync();
 
             // let the cache become expired
             await Task.Delay(TimeSpan.FromSeconds(CacheTimeoutSeconds + 1));
             
-            var thirdFetchResult = await _service.GetDefaultLayer();
+            var thirdFetchResult = await _service.GetDefaultLayerAsync();
 
             // assert cache works fine
             Assert.AreSame(firstFetchResult, _defaultConditionLayer);
@@ -83,7 +83,7 @@ namespace Lykke.Service.Assets.Services.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task GetConditions__InvalidInput_RaisesException(string layerId)
         {
-            await _service.GetConditions(layerId);
+            await _service.GetConditionsAsync(layerId);
         }
         
         [DataTestMethod]
@@ -92,7 +92,7 @@ namespace Lykke.Service.Assets.Services.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task GetDefaultConditions__InvalidInput_RaisesException(string layerId)
         {
-            await _service.GetDefaultConditions(layerId);
+            await _service.GetDefaultConditionsAsync(layerId);
         }
 
         private void MockDefaultConditionLayerTo(AssetDefaultConditionLayer layer)

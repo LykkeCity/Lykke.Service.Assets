@@ -184,9 +184,9 @@ namespace Lykke.Service.Assets.Services
             if (assetConditions != null)
                 return assetConditions;
 
-            var assetDefaultLayer = await _cachedAssetConditionsService.GetDefaultLayer();
+            var assetDefaultLayer = await _cachedAssetConditionsService.GetDefaultLayerAsync();
 
-            var defaultLayerConditions = await _cachedAssetConditionsService.GetConditions(assetDefaultLayer.Id);
+            var defaultLayerConditions = await _cachedAssetConditionsService.GetConditionsAsync(assetDefaultLayer.Id);
 
             var map = new Dictionary<string, AssetCondition>();
 
@@ -203,7 +203,7 @@ namespace Lykke.Service.Assets.Services
             {
                 var explicitAssets = new HashSet<string>();
 
-                var conditions = await _cachedAssetConditionsService.GetConditions(layer.Id);
+                var conditions = await _cachedAssetConditionsService.GetConditionsAsync(layer.Id);
 
                 // Apply explicit assets conditions
                 foreach (var condition in conditions)
@@ -216,7 +216,7 @@ namespace Lykke.Service.Assets.Services
                     explicitAssets.Add(condition.Asset);
                 }
 
-                var defaultAssetCondition = await _cachedAssetConditionsService.GetDefaultConditions(layer.Id);
+                var defaultAssetCondition = await _cachedAssetConditionsService.GetDefaultConditionsAsync(layer.Id);
 
                 if (defaultAssetCondition == null)
                     continue;

@@ -6,8 +6,8 @@ namespace Lykke.Service.Assets.Core.Services
 {
     public interface ICachedAssetConditionsService
     {
-        Task<IEnumerable<IAssetCondition>> GetConditions(string layerId);
-        Task<IAssetConditionSettings> GetDefaultConditions(string layerId);
-        Task<IAssetDefaultConditionLayer> GetDefaultLayer();
+        Task<IEnumerable<IAssetCondition>> GetConditionsAsync(string layerId);
+        Task<IAssetConditionSettings> GetDefaultConditionsAsync(string layerId);
+        Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync();
     }
 }
