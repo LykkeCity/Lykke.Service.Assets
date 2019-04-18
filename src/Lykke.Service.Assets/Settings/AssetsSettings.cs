@@ -8,6 +8,7 @@
             public RabbitSettings Rabbit { get; set; }
             public RedisSettings RedisSettings { get; set; }
             public CqrsSettings Cqrs { get; set; }
+            public InternalCacheSettings InternalCache { get; set; }
         }
     }
 }

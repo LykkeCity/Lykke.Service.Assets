@@ -4,6 +4,7 @@ using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Responses.V2;
+using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Settings;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
@@ -44,6 +45,12 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<CachedErc20TokenAssetService>()
                 .As<ICachedErc20TokenAssetService>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<CachedAssetConditionsService>()
+                .WithParameter(TypedParameter.From(_settings.InternalCache.ExpirationPeriod))
+                .As<ICachedAssetConditionsService>()
                 .SingleInstance();
 
             RegisterRedis(builder);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
@@ -8,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Services.Domain;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Lykke.Service.Assets.Services.Tests
 {
@@ -45,13 +47,21 @@ namespace Lykke.Service.Assets.Services.Tests
         [TestInitialize]
         public void TestInitialized()
         {
+            var cachedAssetConditionsService = new CachedAssetConditionsService(
+                new MemoryCache(new MemoryCacheOptions()),
+                new TimeSpan(0, 5, 0),
+                _assetDefaultConditionLayerRepositoryMock.Object,
+                _assetConditionRepositoryMock.Object,
+                _assetDefaultConditionRepositoryMock.Object);
+            
             _service = new AssetConditionService(
                 _assetConditionRepositoryMock.Object,
                 _assetConditionLayerRepositoryMock.Object,
                 _assetDefaultConditionRepositoryMock.Object,
                 _assetDefaultConditionLayerRepositoryMock.Object,
                 _assetConditionLayerLinkClientRepositoryMock.Object,
-                _cacheMock.Object);
+                _cacheMock.Object,
+                cachedAssetConditionsService);
 
             _assetConditionLayerLinkClientRepositoryMock.Setup(o => o.GetLayersAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult((IEnumerable<string>) new List<string>()));
