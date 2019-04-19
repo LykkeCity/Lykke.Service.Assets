@@ -30,6 +30,11 @@ namespace Lykke.Service.Assets
                     logs.AzureTableName = "AssetsServiceLog";
                     logs.AzureTableConnectionStringResolver = settings => settings.AssetsService.Db.LogsConnString;
                 };
+
+                options.Extend = (sc, settingsManager) =>
+                {
+                    sc.AddMemoryCache();
+                };
             });
         }
 

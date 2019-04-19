@@ -1,3 +1,4 @@
+
 # Global wildcards
 *.aps
 *.bak
@@ -33,6 +34,7 @@
 [Dd]ebug/
 [Rr]elease/
 ipch/
+**/.vscode/
 
 # Visual Studio project upgrade
 [Bb]ackup/
