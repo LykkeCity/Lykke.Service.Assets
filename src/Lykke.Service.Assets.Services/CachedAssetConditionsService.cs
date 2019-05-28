@@ -1,80 +1,64 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Lykke.Common.Cache;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
-using Microsoft.Extensions.Caching.Memory;
+using Lykke.Service.Assets.Repositories.DTOs;
 
 namespace Lykke.Service.Assets.Services
 {
     public class CachedAssetConditionsService : ICachedAssetConditionsService
     {
-        #region Repositories
         private readonly IAssetDefaultConditionLayerRepository _assetDefaultConditionLayerRepository;
         private readonly IAssetConditionRepository _assetConditionRepository;
         private readonly IAssetDefaultConditionRepository _assetDefaultConditionRepository;
-        #endregion
-        
-        #region Ondemand caches
-        private readonly OnDemandDataCache<IAssetDefaultConditionLayer> _assetDefaultConditionLayerCache;
-        private readonly OnDemandDataCache<IEnumerable<IAssetCondition>> _assetConditionCache;
-        private readonly OnDemandDataCache<IAssetConditionSettings> _assetDefaultConditionCache;
-        #endregion
-        
-        private readonly TimeSpan _cacheExpirationPeriod;
+        private readonly IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto> _assetDefaultConditionLayerCache;
+        private readonly IDistributedCache<IAssetCondition, AssetConditionDto> _assetConditionCache;
+        private readonly IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto> _assetDefaultConditionCache;
 
         public CachedAssetConditionsService(
-            IMemoryCache memoryCache, 
-            TimeSpan cacheExpirationPeriod, 
             IAssetDefaultConditionLayerRepository assetDefaultConditionLayerRepository, 
             IAssetConditionRepository assetConditionRepository, 
-            IAssetDefaultConditionRepository assetDefaultConditionRepository)
+            IAssetDefaultConditionRepository assetDefaultConditionRepository,
+            IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto> assetDefaultConditionLayerCache,
+            IDistributedCache<IAssetCondition, AssetConditionDto> assetConditionCache,
+            IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto> assetDefaultConditionCache
+            )
         {
-            _cacheExpirationPeriod = cacheExpirationPeriod;
             _assetDefaultConditionLayerRepository = assetDefaultConditionLayerRepository;
             _assetConditionRepository = assetConditionRepository;
             _assetDefaultConditionRepository = assetDefaultConditionRepository;
             
             #region Ondemand caches initialization
-            _assetDefaultConditionLayerCache = new OnDemandDataCache<IAssetDefaultConditionLayer>(memoryCache);
-            _assetConditionCache = new OnDemandDataCache<IEnumerable<IAssetCondition>>(memoryCache);
-            _assetDefaultConditionCache = new OnDemandDataCache<IAssetConditionSettings>(memoryCache);
+            _assetDefaultConditionLayerCache = assetDefaultConditionLayerCache;
+            _assetConditionCache = assetConditionCache;
+            _assetDefaultConditionCache = assetDefaultConditionCache;
             #endregion
         }
 
-        public Task<IEnumerable<IAssetCondition>> GetConditionsAsync(string layerId)
+        public async Task<IEnumerable<IAssetCondition>> GetConditionsAsync(string layerId)
         {
             if (string.IsNullOrEmpty(layerId))
                 throw new ArgumentNullException(nameof(layerId));
             
-            return _assetConditionCache.GetOrAddAsync(
-                $"assetConditionCache-{layerId}", 
-                async x => await _assetConditionRepository.GetAsync(layerId), 
-                GetExpirationDate());
+            return await _assetConditionCache.GetListAsync($"{layerId}", 
+                async () => await _assetConditionRepository.GetAsync(layerId));
         }
 
-        public Task<IAssetConditionSettings> GetDefaultConditionsAsync(string layerId)
+        public async Task<IAssetConditionSettings> GetDefaultConditionsAsync(string layerId)
         {
             if (string.IsNullOrEmpty(layerId))
                 throw new ArgumentNullException(nameof(layerId));
             
-            return _assetDefaultConditionCache.GetOrAddAsync(
-                $"assetDefaultConditionCache-{layerId}",
-                async x => await _assetDefaultConditionRepository.GetAsync(layerId),
-                GetExpirationDate());
+            return await _assetDefaultConditionCache.GetAsync($"{layerId}",
+                async () => await _assetDefaultConditionRepository.GetAsync(layerId));
         }
 
-        public Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync()
+        public async Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync()
         {
-            return _assetDefaultConditionLayerCache.GetOrAddAsync(
-                "assetDefaultLayerCache", 
-                async x => await _assetDefaultConditionLayerRepository.GetAsync(),
-                GetExpirationDate());
+            return await _assetDefaultConditionLayerCache.GetAsync("default", 
+                async () => await _assetDefaultConditionLayerRepository.GetAsync());
         }
-        
-        private DateTime GetExpirationDate() 
-            => DateTime.UtcNow.Add(_cacheExpirationPeriod);
     }
 }

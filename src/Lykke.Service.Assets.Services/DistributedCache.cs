@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Common.Log;
+using Lykke.Service.Assets.Core.Services;
 using StackExchange.Redis;
 
-namespace Lykke.Service.Assets.Cache
+namespace Lykke.Service.Assets.Services
 {
-    public class DistributedCache<I, T> where T : class, I
+    public class DistributedCache<I, T> : IDistributedCache<I, T> where T : class, I
     {
-        private const int _maxConcurrentTasksCount = 50;
+        private const int MaxConcurrentTasksCount = 50;
 
         private readonly ILog _log;
         private readonly IDatabase _redisDatabase;
@@ -29,7 +30,7 @@ namespace Lykke.Service.Assets.Cache
             _expiration = expiration;
         }
 
-        private string GetCacheKey(string id)
+        public string GetCacheKey(string id)
         {
             return $"{_partitionKey}:{id}";
         }
@@ -143,7 +144,7 @@ namespace Lykke.Service.Assets.Cache
             }
         }
 
-        private async Task CacheDataAsync<T>(
+        public async Task CacheDataAsync<T>(
             IEnumerable<T> items,
             Func<T, string> keyExtractor,
             string prefix)
@@ -158,7 +159,7 @@ namespace Lykke.Service.Assets.Cache
                     if (!await _redisDatabase.KeyExistsAsync(cacheKey))
                         await _redisDatabase.StringSetAsync(cacheKey, CacheSerializer.Serialize(item), _expiration);
                 }));
-                if (tasks.Count >= _maxConcurrentTasksCount)
+                if (tasks.Count >= MaxConcurrentTasksCount)
                 {
                     await Task.WhenAll(tasks);
                     tasks.Clear();

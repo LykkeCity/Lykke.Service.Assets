@@ -5,6 +5,7 @@ using AutoMapper;
 using AzureStorage;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
+using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Repositories.Entities;
 
 namespace Lykke.Service.Assets.Repositories
@@ -25,7 +26,7 @@ namespace Lykke.Service.Assets.Repositories
         /// <returns>A collection of asset conditions.</returns>
         public async Task<IEnumerable<IAssetCondition>> GetAsync(string layerId)
         {
-            return await _storage.GetDataAsync(GetPartitionKey(layerId));
+            return (await _storage.GetDataAsync(GetPartitionKey(layerId))).Select(Mapper.Map<AssetConditionDto>);
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace Lykke.Service.Assets.Repositories
         /// <returns>A collection of asset conditions.</returns>
         public async Task<IEnumerable<IAssetCondition>> GetAsync(IEnumerable<string> layers)
         {
-            return await _storage.GetDataAsync(layers.Select(GetPartitionKey));
+            return (await _storage.GetDataAsync(layers.Select(GetPartitionKey))).Select(Mapper.Map<AssetConditionDto>);
         }
 
         /// <summary>

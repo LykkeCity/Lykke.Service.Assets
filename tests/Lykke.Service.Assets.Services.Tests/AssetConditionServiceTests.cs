@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -9,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Lykke.Service.Assets.Repositories.DTOs;
 using Lykke.Service.Assets.Services.Domain;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Lykke.Service.Assets.Services.Tests
 {
@@ -41,6 +41,15 @@ namespace Lykke.Service.Assets.Services.Tests
 
         private readonly Mock<IAssetsForClientCacheManager> _cacheMock =
             new Mock<IAssetsForClientCacheManager>();
+        
+        private readonly Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>_assetDefaultConditionLayerCacheMock =
+            new Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>();
+        
+        private readonly Mock<IDistributedCache<IAssetCondition, AssetConditionDto>> _assetConditionCacheMock =
+            new Mock<IDistributedCache<IAssetCondition, AssetConditionDto>>();
+        
+        private readonly Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>> _assetDefaultConditionCacheMock =
+            new Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>>();
 
         private AssetConditionService _service;
 
@@ -48,11 +57,13 @@ namespace Lykke.Service.Assets.Services.Tests
         public void TestInitialized()
         {
             var cachedAssetConditionsService = new CachedAssetConditionsService(
-                new MemoryCache(new MemoryCacheOptions()),
-                new TimeSpan(0, 5, 0),
                 _assetDefaultConditionLayerRepositoryMock.Object,
                 _assetConditionRepositoryMock.Object,
-                _assetDefaultConditionRepositoryMock.Object);
+                _assetDefaultConditionRepositoryMock.Object,
+                _assetDefaultConditionLayerCacheMock.Object,
+                _assetConditionCacheMock.Object,
+                _assetDefaultConditionCacheMock.Object
+                );
             
             _service = new AssetConditionService(
                 _assetConditionRepositoryMock.Object,
@@ -73,8 +84,15 @@ namespace Lykke.Service.Assets.Services.Tests
                 .Returns((string layerId) =>
                     Task.FromResult(_layers.FirstOrDefault(o => o.Id == layerId)?.AssetDefaultCondition));
 
+            _assetDefaultConditionCacheMock.Setup(o => o.GetAsync(It.IsAny<string>(), It.IsAny<Func<Task<IAssetDefaultCondition>>>()))
+                .Returns((string layerId, Func<Task<IAssetDefaultCondition>> fn) =>
+                    Task.FromResult(Mapper.Map<AssetDefaultConditionDto>(_layers.FirstOrDefault(o => o.Id == layerId)?.AssetDefaultCondition)));
+
             _assetDefaultConditionLayerRepositoryMock.Setup(o => o.GetAsync())
                 .Returns(Task.FromResult((IAssetDefaultConditionLayer)_defaultConditionLayer));
+            
+            _assetDefaultConditionLayerCacheMock.Setup(o => o.GetAsync(It.IsAny<string>(), It.IsAny<Func<Task<IAssetDefaultConditionLayer>>>()))
+                .Returns(Task.FromResult(Mapper.Map<AssetDefaultConditionLayerDto>(_defaultConditionLayer)));
 
             _assetConditionLayerRepositoryMock.Setup(o => o.GetAsync(It.IsAny<IEnumerable<string>>()))
                 .Returns(Task.FromResult((IEnumerable<IAssetConditionLayer>) _layers));
@@ -85,6 +103,14 @@ namespace Lykke.Service.Assets.Services.Tests
                     Task.FromResult((IEnumerable<IAssetCondition>) (layerId == _defaultConditionLayer.Id
                         ? _defaultConditionLayer.AssetConditions
                         : _layers.First(o => o.Id == layerId).AssetConditions)));
+            
+            _assetConditionCacheMock.Setup(o =>
+                    o.GetListAsync(It.Is<string>(p => p == _defaultConditionLayer.Id || _layers.Any(l => l.Id == p)), 
+                            It.IsAny<Func<Task<IEnumerable<IAssetCondition>>>>()))
+                .Returns((string layerId, Func<Task<IEnumerable<IAssetCondition>>> fn) =>
+                    Task.FromResult(Mapper.Map<IEnumerable<AssetConditionDto>>((layerId == _defaultConditionLayer.Id
+                        ? _defaultConditionLayer.AssetConditions
+                        : _layers.First(o => o.Id == layerId).AssetConditions))));
         }
 
         [TestMethod]

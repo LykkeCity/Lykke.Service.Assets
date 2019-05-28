@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.Services.Domain;
-using Microsoft.Extensions.Caching.Memory;
+using Lykke.Service.Assets.Repositories.DTOs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -23,58 +21,28 @@ namespace Lykke.Service.Assets.Services.Tests
         private readonly Mock<IAssetDefaultConditionRepository> _assetDefaultConditionRepositoryMock =
             new Mock<IAssetDefaultConditionRepository>();
         
+        private readonly Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>_assetDefaultConditionLayerCache =
+            new Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>();
+        
+        private readonly Mock<IDistributedCache<IAssetCondition, AssetConditionDto>> _assetConditionCache =
+            new Mock<IDistributedCache<IAssetCondition, AssetConditionDto>>();
+        
+        private readonly Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>> _assetDefaultConditionCache =
+            new Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>>();
+        
         private ICachedAssetConditionsService _service;
-        
-        private readonly AssetDefaultConditionLayer _defaultConditionLayer = new AssetDefaultConditionLayer
-        {
-            Id = "DefaultLayer",
-            AssetConditions = new List<IAssetCondition>()
-        };
-        
-        private readonly AssetDefaultConditionLayer _anotherConditionLayer = new AssetDefaultConditionLayer
-        {
-            Id = "AnotherLayer",
-            AssetConditions = new List<IAssetCondition>()
-        };
-        
-        private const int CacheTimeoutSeconds = 1;
-        
+
         [TestInitialize]
         public void Initialize()
         {
             _service = new CachedAssetConditionsService(
-                new MemoryCache(new MemoryCacheOptions()),
-                TimeSpan.FromSeconds(CacheTimeoutSeconds),
                 _assetDefaultConditionLayerRepositoryMock.Object,
                 _assetConditionRepositoryMock.Object,
-                _assetDefaultConditionRepositoryMock.Object);
-        }
-
-        [TestMethod]
-        public async Task GetDefaultLayer__Cache_Expires_After_TTL()
-        {
-            // arrange
-            MockDefaultConditionLayerTo(_defaultConditionLayer);
-            
-            // act
-            var firstFetchResult = await _service.GetDefaultLayerAsync();
-            
-            MockDefaultConditionLayerTo(_anotherConditionLayer);
-
-            var fetchResultFromCache = await _service.GetDefaultLayerAsync();
-
-            // let the cache become expired
-            await Task.Delay(TimeSpan.FromSeconds(CacheTimeoutSeconds + 1));
-            
-            var thirdFetchResult = await _service.GetDefaultLayerAsync();
-
-            // assert cache works fine
-            Assert.AreSame(firstFetchResult, _defaultConditionLayer);
-            Assert.AreSame(fetchResultFromCache, firstFetchResult);
-            
-            // assert cache expires correctly
-            Assert.AreSame(thirdFetchResult, _anotherConditionLayer);
-            Assert.AreNotSame(thirdFetchResult, firstFetchResult);
+                _assetDefaultConditionRepositoryMock.Object,
+                _assetDefaultConditionLayerCache.Object,
+                _assetConditionCache.Object,
+                _assetDefaultConditionCache.Object
+                );
         }
 
         [DataTestMethod]
@@ -93,12 +61,6 @@ namespace Lykke.Service.Assets.Services.Tests
         public async Task GetDefaultConditions__InvalidInput_RaisesException(string layerId)
         {
             await _service.GetDefaultConditionsAsync(layerId);
-        }
-
-        private void MockDefaultConditionLayerTo(AssetDefaultConditionLayer layer)
-        {
-            _assetDefaultConditionLayerRepositoryMock.Setup(o => o.GetAsync())
-                .Returns(Task.FromResult((IAssetDefaultConditionLayer) layer));
         }
     }
 }

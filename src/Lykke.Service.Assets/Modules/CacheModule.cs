@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Lykke.Service.Assets.Cache;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Services;
@@ -8,6 +9,8 @@ using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Settings;
 using Lykke.SettingsReader;
 using StackExchange.Redis;
+using AssetPair = Lykke.Service.Assets.Responses.V2.AssetPair;
+using Erc20Token = Lykke.Service.Assets.Responses.V2.Erc20Token;
 
 namespace Lykke.Service.Assets.Modules
 {
@@ -49,7 +52,6 @@ namespace Lykke.Service.Assets.Modules
 
             builder
                 .RegisterType<CachedAssetConditionsService>()
-                .WithParameter(TypedParameter.From(_settings.InternalCache.ExpirationPeriod))
                 .As<ICachedAssetConditionsService>()
                 .SingleInstance();
 
@@ -59,6 +61,9 @@ namespace Lykke.Service.Assets.Modules
             RegisterCache<IAssetCategory, AssetCategory>(builder, "AssetCategories");
             RegisterCache<IAssetPair, AssetPair>(builder, "AssetPairs");
             RegisterCache<IErc20Token, Erc20Token>(builder, "Erc20Tokens");
+            RegisterCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>(builder, "AssetDefaultConditionLayer");
+            RegisterCache<IAssetCondition, AssetConditionDto>(builder, "AssetConditions");
+            RegisterCache<IAssetDefaultCondition, AssetDefaultConditionDto>(builder, "AssetDefaultCondition");
 
             builder.RegisterType<AssetsForClientCacheManager>()
                 .As<IAssetsForClientCacheManager>()
@@ -73,28 +78,32 @@ namespace Lykke.Service.Assets.Modules
             var options = ConfigurationOptions.Parse(_settings.RedisSettings.Configuration);
             options.ReconnectRetryPolicy = new ExponentialRetry(3000, 15000);
             options.ClientName = "Lykke.Service.Assets";
+            
+            builder.Register(c =>
+                {
+                    var lazy = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(options));
+                    return lazy.Value;
+                })
+                .As<IConnectionMultiplexer>()
+                .SingleInstance();
 
-            var redis = ConnectionMultiplexer.Connect(options);
-            redis.PreserveAsyncOrder = false;
+            builder.Register(c => c.Resolve<IConnectionMultiplexer>().GetDatabase())
+                .As<IDatabase>();
 
-            builder.RegisterInstance(redis).SingleInstance();
-            builder.Register(
-                c =>
-                    c.Resolve<ConnectionMultiplexer>()
-                        .GetServer(redis.GetEndPoints()[0]));
-
-            builder.Register(
-                c =>
-                    c.Resolve<ConnectionMultiplexer>()
-                        .GetDatabase());
+            builder.Register(c =>
+            {
+                var redis = c.Resolve<IConnectionMultiplexer>();
+                return redis.GetServer(redis.GetEndPoints()[0]);
+            });
         }
 
         private void RegisterCache<I, T>(ContainerBuilder builder, string partitionKey) where T : class, I
         {
             builder.RegisterType<DistributedCache<I, T>>()
-                .SingleInstance()
+                .As<IDistributedCache<I, T>>()
                 .WithParameter(TypedParameter.From(_settings.RedisSettings.Expiration))
-                .WithParameter(TypedParameter.From($"{_settings.RedisSettings.Instance}:v3:{partitionKey}"));
+                .WithParameter(TypedParameter.From($"{_settings.RedisSettings.Instance}:v3:{partitionKey}"))
+                .SingleInstance();
         }
     }
 }

@@ -10,13 +10,13 @@ namespace Lykke.Service.Assets.Cache
     public class CachedAssetService : ICachedAssetService
     {
         private readonly IAssetService _assetService;
-        private readonly DistributedCache<IAsset, AssetDto> _cache;
+        private readonly IDistributedCache<IAsset, AssetDto> _cache;
         private const string AllEntitiesKey = "All";
         private const string AllTradableKey = "AllTradable";
 
         public CachedAssetService(
             IAssetService assetService,
-            DistributedCache<IAsset, AssetDto> cache)
+            IDistributedCache<IAsset, AssetDto> cache)
         {
             _assetService = assetService;
             _cache = cache;
