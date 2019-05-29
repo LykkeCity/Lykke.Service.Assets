@@ -113,6 +113,8 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<AssetDefaultConditionLayerEntity, AssetDefaultConditionLayerDto>(MemberList.Destination)
                 .ForMember(dest => dest.AssetConditions, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RowKey));
+            
+            CreateMap<AssetConditionEntity, AssetConditionDto>(MemberList.Destination);
         }
     }
 }

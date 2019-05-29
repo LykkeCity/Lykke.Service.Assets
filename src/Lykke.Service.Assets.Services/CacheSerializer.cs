@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Lykke.Service.Assets.Cache
+namespace Lykke.Service.Assets.Services
 {
     internal static class CacheSerializer
     {

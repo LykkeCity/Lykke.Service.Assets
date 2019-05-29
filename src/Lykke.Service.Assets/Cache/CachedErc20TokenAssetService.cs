@@ -8,12 +8,12 @@ namespace Lykke.Service.Assets.Cache
     public class CachedErc20TokenAssetService : ICachedErc20TokenAssetService
     {
         private readonly IErc20TokenAssetService _tokenAssetService;
-        private readonly DistributedCache<IAsset, AssetDto> _cache;
+        private readonly IDistributedCache<IAsset, AssetDto> _cache;
         private const string AllEntitiesKey = "All";
 
         public CachedErc20TokenAssetService(
             IErc20TokenAssetService tokenAssetService,
-            DistributedCache<IAsset, AssetDto> cache)
+            IDistributedCache<IAsset, AssetDto> cache)
         {
             _tokenAssetService = tokenAssetService;
             _cache = cache;
