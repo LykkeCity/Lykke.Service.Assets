@@ -32,9 +32,13 @@ namespace Lykke.Service.Assets.Client
             services.AddTransient<IUpdater<AssetPair>>(x => new AssetPairsUpdater(x.GetService<IAssetsService>()));
             services.AddTransient(x => CreateDictionaryCache<AssetPair>(x, settings.AssetPairsCacheExpirationPeriod, log, autoRefresh));
 
+            services.AddTransient<IUpdater<Erc20Token>>(x => new Erc20TokensUpdater(x.GetService<IAssetsService>()));
+            services.AddTransient(x => CreateDictionaryCache<Erc20Token>(x, settings.AssetPairsCacheExpirationPeriod, log, autoRefresh));
+
             services.AddSingleton<IAssetsServiceWithCache>(x => new AssetsServiceWithCache(
                     x.GetService<IDictionaryCache<Asset>>(),
-                    x.GetService<IDictionaryCache<AssetPair>>()
+                    x.GetService<IDictionaryCache<AssetPair>>(),
+                    x.GetService<IDictionaryCache<Erc20Token>>()
                     ));
         }
 

@@ -9,6 +9,8 @@ namespace Lykke.Service.Assets.Client
 
         public TimeSpan AssetPairsCacheExpirationPeriod { get; set; }
 
+        public TimeSpan Erc20TokensCacheExpirationPeriod { get; set; }
+
         public Uri BaseUri { get; set; }
 
 
@@ -16,9 +18,10 @@ namespace Lykke.Service.Assets.Client
         {
             return new AssetServiceSettings
             {
-                BaseUri                         = baseUri,
-                AssetsCacheExpirationPeriod     = cacheExpirationPeriod,
-                AssetPairsCacheExpirationPeriod = cacheExpirationPeriod
+                BaseUri = baseUri,
+                AssetsCacheExpirationPeriod = cacheExpirationPeriod,
+                AssetPairsCacheExpirationPeriod = cacheExpirationPeriod,
+                Erc20TokensCacheExpirationPeriod = cacheExpirationPeriod,
             };
         }
     }

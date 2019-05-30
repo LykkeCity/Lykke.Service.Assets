@@ -33,6 +33,7 @@ namespace Lykke.Service.Assets.Client
             builder.Register(x => new AssetsUpdater(x.Resolve<IAssetsService>()))
                 .As<IUpdater<Asset>>()
                 .InstancePerDependency(); // These calls are optional, just for clarification purpose.
+
             builder.Register(x =>
                     CreateDictionaryCache<Asset>(x, settings.AssetsCacheExpirationPeriod, x.Resolve<ILogFactory>(),
                         autoRefresh)
@@ -43,8 +44,19 @@ namespace Lykke.Service.Assets.Client
             builder.Register(x => new AssetPairsUpdater(x.Resolve<IAssetsService>()))
                 .As<IUpdater<AssetPair>>()
                 .InstancePerDependency();
+
             builder.Register(x => 
                     CreateDictionaryCache<AssetPair>(x, settings.AssetPairsCacheExpirationPeriod,
+                        x.Resolve<ILogFactory>(), autoRefresh)
+                )
+                .InstancePerDependency();
+            // ---
+            builder.Register(x => new Erc20TokensUpdater(x.Resolve<IAssetsService>()))
+                .As<IUpdater<Erc20Token>>()
+                .InstancePerDependency();
+
+            builder.Register(x =>
+                    CreateDictionaryCache<Erc20Token>(x, settings.Erc20TokensCacheExpirationPeriod,
                         x.Resolve<ILogFactory>(), autoRefresh)
                 )
                 .InstancePerDependency();
@@ -52,7 +64,8 @@ namespace Lykke.Service.Assets.Client
             // ---
             builder.Register(x => new AssetsServiceWithCache(
                     x.Resolve<IDictionaryCache<Asset>>(),
-                    x.Resolve<IDictionaryCache<AssetPair>>())
+                    x.Resolve<IDictionaryCache<AssetPair>>(),
+                    x.Resolve<IDictionaryCache<Erc20Token>>())
                 )
                 .As<IAssetsServiceWithCache>()
                 .SingleInstance();

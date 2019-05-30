@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,12 +12,17 @@ namespace Lykke.Service.Assets.Client
     {
         private readonly IDictionaryCache<Asset> _assetsCache;
         private readonly IDictionaryCache<AssetPair> _assetPairsCache;
+        private readonly IDictionaryCache<Erc20Token> _erc20TokenCache;
 
         ///<inheritdoc/>
-        public AssetsServiceWithCache(IDictionaryCache<Asset> assetsCache, IDictionaryCache<AssetPair> assetPairsCache)
+        public AssetsServiceWithCache(
+            IDictionaryCache<Asset> assetsCache, 
+            IDictionaryCache<AssetPair> assetPairsCache,
+            IDictionaryCache<Erc20Token> erc20TokenCache)
         {
             _assetsCache = assetsCache;
             _assetPairsCache = assetPairsCache;
+            _erc20TokenCache = erc20TokenCache;
         }
 
         ///<inheritdoc/>
@@ -35,6 +40,14 @@ namespace Lykke.Service.Assets.Client
             return items
                 .Where(x => x.IsTradable || includeNonTradable)
                 .ToList();
+        }
+
+        ///<inheritdoc/>
+        public async Task<ListOfErc20Token> TryGetErc20TokenAllWithAssetsAsync()
+        {
+            var allTokens = await _erc20TokenCache.GetAll(default(CancellationToken));
+
+            return new ListOfErc20Token(allTokens.ToList());
         }
 
         ///<inheritdoc/>
