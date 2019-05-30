@@ -43,9 +43,9 @@ namespace Lykke.Service.Assets.Client
         }
 
         ///<inheritdoc/>
-        public async Task<ListOfErc20Token> TryGetErc20TokenAllWithAssetsAsync()
+        public async Task<ListOfErc20Token> TryGetErc20TokenAllWithAssetsAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            var allTokens = await _erc20TokenCache.GetAll(default(CancellationToken));
+            var allTokens = await _erc20TokenCache.GetAll(cancellationToken);
 
             return new ListOfErc20Token(allTokens.ToList());
         }

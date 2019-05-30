@@ -1,4 +1,4 @@
-using Lykke.Service.Assets.Client.Models;
+﻿using Lykke.Service.Assets.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -46,5 +46,10 @@ namespace Lykke.Service.Assets.Client
         ///    Forcibly updates client-side assets cache
         /// </summary>
         Task UpdateAssetsCacheAsync(CancellationToken cancellationToken = new CancellationToken());
+
+        /// <summary>
+        ///   Get all erc 20 tokens with assets
+        /// </summary>
+        Task<ListOfErc20Token> TryGetErc20TokenAllWithAssetsAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }
