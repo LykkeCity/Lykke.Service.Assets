@@ -83,7 +83,7 @@ namespace Lykke.Service.Assets.Services
         {
             try
             {
-                IEnumerable<T> cachedItems;
+                List<T> cachedItems;
                 List<string> notFoundKeys;
                 if (keys == null)
                 {
@@ -97,14 +97,14 @@ namespace Lykke.Service.Assets.Services
                             prefix);
                         return resultItems;
                     }
-                    cachedItems = new T[0];
+                    cachedItems = new List<T>();
                     notFoundKeys = null;
                 }
                 else
                 {
                     var cached = await _redisDatabase.StringGetAsync(keys.Select(k => (RedisKey)GetCacheKey($"{prefix}:{k}")).ToArray());
-                    cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c));
-                    if (cachedItems.Count() == keys.Count)
+                    cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c)).ToList();
+                    if (cachedItems.Count == keys.Count)
                         return cachedItems;
 
                     notFoundKeys = new List<string>();
@@ -117,7 +117,7 @@ namespace Lykke.Service.Assets.Services
                     }
                 }
 
-                var foundResults = (await factory(notFoundKeys)).Cast<T>();
+                var foundResults = (await factory(notFoundKeys)).Cast<T>().ToList();
                 await CacheDataAsync(
                     foundResults,
                     keyExtractor,
@@ -167,6 +167,11 @@ namespace Lykke.Service.Assets.Services
             }
             if (tasks.Count > 0)
                 await Task.WhenAll(tasks);
+        }
+
+        public Task CacheDataAsync<T>(string key, IEnumerable<T> items)
+        {
+            return _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(items), _expiration);
         }
     }
 }

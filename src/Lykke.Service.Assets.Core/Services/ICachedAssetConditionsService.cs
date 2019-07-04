@@ -9,5 +9,8 @@ namespace Lykke.Service.Assets.Core.Services
         Task<IEnumerable<IAssetCondition>> GetConditionsAsync(string layerId);
         Task<IAssetConditionSettings> GetDefaultConditionsAsync(string layerId);
         Task<IAssetDefaultConditionLayer> GetDefaultLayerAsync();
+        Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition);
+        Task DeleteAssetConditionAsync(string layerId, string assetId);
+        Task DeleteAssetConditionsAsync(string layerId);
     }
 }

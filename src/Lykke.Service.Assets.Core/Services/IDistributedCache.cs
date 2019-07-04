@@ -22,5 +22,7 @@ namespace Lykke.Service.Assets.Core.Services
             IEnumerable<T> items,
             Func<T, string> keyExtractor,
             string prefix);
+
+        Task CacheDataAsync<T>(string key, IEnumerable<T> items);
     }
 }

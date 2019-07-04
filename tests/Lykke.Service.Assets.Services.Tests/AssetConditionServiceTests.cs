@@ -41,15 +41,17 @@ namespace Lykke.Service.Assets.Services.Tests
 
         private readonly Mock<IAssetsForClientCacheManager> _cacheMock =
             new Mock<IAssetsForClientCacheManager>();
-        
+
         private readonly Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>_assetDefaultConditionLayerCacheMock =
             new Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>();
-        
+
         private readonly Mock<IDistributedCache<IAssetCondition, AssetConditionDto>> _assetConditionCacheMock =
             new Mock<IDistributedCache<IAssetCondition, AssetConditionDto>>();
-        
+
         private readonly Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>> _assetDefaultConditionCacheMock =
             new Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>>();
+
+        private readonly Mock<IAssetsForClientCacheManager> _assetsForClientCacheManagerMock = new Mock<IAssetsForClientCacheManager>();
 
         private AssetConditionService _service;
 
@@ -62,11 +64,11 @@ namespace Lykke.Service.Assets.Services.Tests
                 _assetDefaultConditionRepositoryMock.Object,
                 _assetDefaultConditionLayerCacheMock.Object,
                 _assetConditionCacheMock.Object,
-                _assetDefaultConditionCacheMock.Object
+                _assetDefaultConditionCacheMock.Object,
+                _assetsForClientCacheManagerMock.Object
                 );
-            
+
             _service = new AssetConditionService(
-                _assetConditionRepositoryMock.Object,
                 _assetConditionLayerRepositoryMock.Object,
                 _assetDefaultConditionRepositoryMock.Object,
                 _assetDefaultConditionLayerRepositoryMock.Object,
@@ -90,7 +92,7 @@ namespace Lykke.Service.Assets.Services.Tests
 
             _assetDefaultConditionLayerRepositoryMock.Setup(o => o.GetAsync())
                 .Returns(Task.FromResult((IAssetDefaultConditionLayer)_defaultConditionLayer));
-            
+
             _assetDefaultConditionLayerCacheMock.Setup(o => o.GetAsync(It.IsAny<string>(), It.IsAny<Func<Task<IAssetDefaultConditionLayer>>>()))
                 .Returns(Task.FromResult(Mapper.Map<AssetDefaultConditionLayerDto>(_defaultConditionLayer)));
 
@@ -103,9 +105,9 @@ namespace Lykke.Service.Assets.Services.Tests
                     Task.FromResult((IEnumerable<IAssetCondition>) (layerId == _defaultConditionLayer.Id
                         ? _defaultConditionLayer.AssetConditions
                         : _layers.First(o => o.Id == layerId).AssetConditions)));
-            
+
             _assetConditionCacheMock.Setup(o =>
-                    o.GetListAsync(It.Is<string>(p => p == _defaultConditionLayer.Id || _layers.Any(l => l.Id == p)), 
+                    o.GetListAsync(It.Is<string>(p => p == _defaultConditionLayer.Id || _layers.Any(l => l.Id == p)),
                             It.IsAny<Func<Task<IEnumerable<IAssetCondition>>>>()))
                 .Returns((string layerId, Func<Task<IEnumerable<IAssetCondition>>> fn) =>
                     Task.FromResult(Mapper.Map<IEnumerable<AssetConditionDto>>((layerId == _defaultConditionLayer.Id
@@ -133,8 +135,8 @@ namespace Lykke.Service.Assets.Services.Tests
             _assetConditionLayerRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
                 .Returns(Task.FromResult((IAssetConditionLayer) layer));
 
-            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
-                .Returns(Task.FromResult((IEnumerable<IAssetCondition>) conditions));
+            _assetConditionCacheMock.Setup(o => o.GetListAsync(It.Is<string>(p => p == layer.Id), It.IsAny<Func<Task<IEnumerable<IAssetCondition>>>>()))
+                .Returns(Task.FromResult(Mapper.Map<IEnumerable<AssetConditionDto>>(conditions)));
 
             _assetDefaultConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
                 .Returns(Task.FromResult((IAssetDefaultCondition) defaultConditions));
@@ -164,8 +166,8 @@ namespace Lykke.Service.Assets.Services.Tests
             _assetDefaultConditionLayerRepositoryMock.Setup(o => o.GetAsync())
                 .Returns(Task.FromResult((IAssetDefaultConditionLayer) layer));
 
-            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
-                .Returns(Task.FromResult((IEnumerable<IAssetCondition>)conditions));
+            _assetConditionCacheMock.Setup(o => o.GetListAsync(It.Is<string>(p => p == layer.Id), It.IsAny<Func<Task<IEnumerable<IAssetCondition>>>>()))
+                .Returns(Task.FromResult(Mapper.Map<IEnumerable<AssetConditionDto>>(conditions)));
 
             // act
             IAssetDefaultConditionLayer result = await _service.GetDefaultLayerAsync();
@@ -222,8 +224,8 @@ namespace Lykke.Service.Assets.Services.Tests
                     layer
                 }));
 
-            _assetConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
-                .Returns(Task.FromResult((IEnumerable<IAssetCondition>)conditions));
+            _assetConditionCacheMock.Setup(o => o.GetListAsync(It.Is<string>(p => p == layer.Id), It.IsAny<Func<Task<IEnumerable<IAssetCondition>>>>()))
+                .Returns(Task.FromResult(Mapper.Map<IEnumerable<AssetConditionDto>>(conditions)));
 
             _assetDefaultConditionRepositoryMock.Setup(o => o.GetAsync(It.Is<string>(p => p == layer.Id)))
                 .Returns(Task.FromResult((IAssetDefaultCondition)defaultConditions));
@@ -265,7 +267,7 @@ namespace Lykke.Service.Assets.Services.Tests
             });
 
             ((List<IAssetCondition>)_defaultConditionLayer.AssetConditions).Add(CreateAssetCondition(asset3, true, regulation2));
-            
+
             // act
             IEnumerable<IAssetCondition> result = await _service.GetAssetConditionsByClient(clientId);
 
@@ -431,7 +433,7 @@ namespace Lykke.Service.Assets.Services.Tests
             // assert
             Assert.AreEqual(0, result.Count(o => o.AvailableToClient == true || o.Regulation == regulation2));
         }
-        
+
         [TestMethod]
         public async Task GetAssetConditionsLayerSettingsByClient_Use_Default_Settings_If_No_Conditions()
         {
@@ -481,7 +483,7 @@ namespace Lykke.Service.Assets.Services.Tests
             {
                 CreateAssetConditionLayer("1", 1, true, false, new List<IAssetCondition>())
             });
-            
+
             // act
             IAssetConditionLayerSettings settings = await _service.GetAssetConditionsLayerSettingsByClient(clientId);
 
@@ -489,7 +491,7 @@ namespace Lykke.Service.Assets.Services.Tests
             Assert.AreEqual(false, settings.ClientsCanCashInViaBankCards);
             Assert.AreEqual(true, settings.SwiftDepositEnabled);
         }
-        
+
         private static AssetConditionLayerDto CreateAssetConditionLayer(string id, double priority, bool? swift, bool? cashIn, List<IAssetCondition> conditions, IAssetDefaultCondition defaultCondition = null)
         {
             return new AssetConditionLayerDto
