@@ -14,22 +14,24 @@ namespace Lykke.Service.Assets.Services.Tests
     {
         private readonly Mock<IAssetDefaultConditionLayerRepository> _assetDefaultConditionLayerRepositoryMock =
             new Mock<IAssetDefaultConditionLayerRepository>();
-        
+
         private readonly Mock<IAssetConditionRepository> _assetConditionRepositoryMock =
             new Mock<IAssetConditionRepository>();
-        
+
         private readonly Mock<IAssetDefaultConditionRepository> _assetDefaultConditionRepositoryMock =
             new Mock<IAssetDefaultConditionRepository>();
-        
+
         private readonly Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>_assetDefaultConditionLayerCache =
             new Mock<IDistributedCache<IAssetDefaultConditionLayer, AssetDefaultConditionLayerDto>>();
-        
+
         private readonly Mock<IDistributedCache<IAssetCondition, AssetConditionDto>> _assetConditionCache =
             new Mock<IDistributedCache<IAssetCondition, AssetConditionDto>>();
-        
+
         private readonly Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>> _assetDefaultConditionCache =
             new Mock<IDistributedCache<IAssetDefaultCondition, AssetDefaultConditionDto>>();
-        
+
+        private readonly Mock<IAssetsForClientCacheManager> _assetsForClientCacheManagerMock = new Mock<IAssetsForClientCacheManager>();
+
         private ICachedAssetConditionsService _service;
 
         [TestInitialize]
@@ -41,7 +43,8 @@ namespace Lykke.Service.Assets.Services.Tests
                 _assetDefaultConditionRepositoryMock.Object,
                 _assetDefaultConditionLayerCache.Object,
                 _assetConditionCache.Object,
-                _assetDefaultConditionCache.Object
+                _assetDefaultConditionCache.Object,
+                _assetsForClientCacheManagerMock.Object
                 );
         }
 
@@ -53,7 +56,7 @@ namespace Lykke.Service.Assets.Services.Tests
         {
             await _service.GetConditionsAsync(layerId);
         }
-        
+
         [DataTestMethod]
         [DataRow(null)]
         [DataRow("")]

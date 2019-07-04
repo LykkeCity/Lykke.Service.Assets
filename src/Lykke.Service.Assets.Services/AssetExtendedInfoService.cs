@@ -12,13 +12,11 @@ namespace Lykke.Service.Assets.Services
     {
         private readonly IAssetExtendedInfoRepository _assetExtendedInfoRepository;
 
-
         public AssetExtendedInfoService(
             IAssetExtendedInfoRepository assetExtendedInfoRepository)
         {
             _assetExtendedInfoRepository = assetExtendedInfoRepository;
         }
-
 
         public async Task<IAssetExtendedInfo> AddAsync(IAssetExtendedInfo assetInfo)
         {
