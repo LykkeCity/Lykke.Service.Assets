@@ -63,7 +63,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string IdIssuer { get; set; }
 
         public bool IsBase { get; set; }
-        
+
         public bool IsDisabled { get; set; }
 
         public bool IsTradable { get; set; }
@@ -79,7 +79,7 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string Name { get; set; }
 
         public bool NotLykkeAsset { get; set; }
-        
+
         public string PartnersIdsJson { get; set; }
 
         public bool SellScreen { get; set; }
@@ -99,7 +99,11 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public double CashinMinimalAmount { get; set; }
 
         public double CashoutMinimalAmount { get; set; }
-        
+
         public string LykkeEntityId { get; set; }
+
+        public long SiriusAssetId { get; set; }
+        public string SiriusBlockchainId { get; set; }
+        public string BlockchainIntegrationType { get; set; }
     }
 }

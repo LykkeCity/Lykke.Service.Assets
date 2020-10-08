@@ -115,5 +115,9 @@ namespace Lykke.Service.Assets.Core.Domain
         /// </summary>
         [Obsolete("No need reference to legal entity.")]
         string LykkeEntityId { get; }
+
+        long SiriusAssetId { get; }
+        string SiriusBlockchainId { get; }
+        BlockchainIntegrationType BlockchainIntegrationType { get; }
     }
 }
