@@ -18,8 +18,10 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<IAsset, AssetEntity>()
                 .ForMember(dest => dest.Blockchain,      opt => opt.MapFrom(src => src.Blockchain.ToString()))
                 .ForMember(dest => dest.PartnersIdsJson, opt => opt.MapFrom(src => src.PartnerIds != null ? src.PartnerIds.ToJson(false) : null))
-                .ForMember(dest => dest.Type,            opt => opt.MapFrom(src => src.Type != null ? src.Type.ToString() : null));
-            
+                .ForMember(dest => dest.Type,            opt => opt.MapFrom(src => src.Type != null ? src.Type.ToString() : null))
+                .ForMember(dest => dest.BlockchainIntegrationType, opt => opt.MapFrom(src => src.BlockchainIntegrationType.ToString()))
+                ;
+
             CreateMap<IAssetGroup, AssetGroupEntity>()
                 .ForMember(dest => dest.AssetId,  opt => opt.Ignore())
                 .ForMember(dest => dest.ClientId, opt => opt.Ignore());
@@ -85,7 +87,8 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<AssetEntity, AssetDto>()
                 .ForMember(dest => dest.Blockchain, opt => opt.MapFrom(src => Enum.Parse<Blockchain>(src.Blockchain)))
                 .ForMember(dest => dest.PartnerIds, opt => opt.MapFrom(src => src.PartnersIdsJson != null ? src.PartnersIdsJson.DeserializeJson<string[]>() : null))
-                .ForMember(dest => dest.Type,       opt => opt.MapFrom(src => src.Type != null ? Enum.Parse<AssetType>(src.Type) : default(AssetType?)));
+                .ForMember(dest => dest.Type,       opt => opt.MapFrom(src => src.Type != null ? Enum.Parse<AssetType>(src.Type) : default(AssetType?)))
+                .ForMember(dest => dest.BlockchainIntegrationType, opt => opt.MapFrom(src => src.BlockchainIntegrationType != null ? Enum.Parse<BlockchainIntegrationType>(src.BlockchainIntegrationType) : default(BlockchainIntegrationType)));
 
             CreateMap<AssetGroupEntity, AssetGroupAssetLinkDto>()
                 .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Name));
@@ -113,7 +116,7 @@ namespace Lykke.Service.Assets.Repositories
             CreateMap<AssetDefaultConditionLayerEntity, AssetDefaultConditionLayerDto>(MemberList.Destination)
                 .ForMember(dest => dest.AssetConditions, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RowKey));
-            
+
             CreateMap<AssetConditionEntity, AssetConditionDto>(MemberList.Destination);
         }
     }

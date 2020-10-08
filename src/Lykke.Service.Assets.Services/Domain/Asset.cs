@@ -27,7 +27,7 @@ namespace Lykke.Service.Assets.Services.Domain
         public string BlockchainIntegrationLayerAssetId { get; set; }
 
         public bool BuyScreen { get; set; }
-        
+
         public string CategoryId { get; set; }
 
         public bool CrosschainWithdrawal { get; set; }
@@ -63,7 +63,7 @@ namespace Lykke.Service.Assets.Services.Domain
         public string IdIssuer { get; set; }
 
         public bool IsBase { get; set; }
-        
+
         public bool IsDisabled { get; set; }
 
         public bool IsTradable { get; set; }
@@ -99,7 +99,11 @@ namespace Lykke.Service.Assets.Services.Domain
         public double CashinMinimalAmount { get; set; }
 
         public double CashoutMinimalAmount { get; set; }
-        
+
         public string LykkeEntityId { get; set; }
+
+        public long SiriusAssetId { get; set; }
+        public string SiriusBlockchainId { get; set; }
+        public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
     }
 }
