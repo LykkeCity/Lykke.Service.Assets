@@ -74,7 +74,7 @@ namespace Lykke.Service.Assets.Repositories.DTOs
 
         [ProtoMember(23)]
         public bool ForwardWithdrawal { get; set; }
-        
+
         [ProtoMember(24)]
         public bool HideDeposit { get; set; }
 
@@ -152,5 +152,12 @@ namespace Lykke.Service.Assets.Repositories.DTOs
 
         [ProtoMember(49)]
         public string LykkeEntityId { get; set; }
+
+        [ProtoMember(50)]
+        public long SiriusAssetId { get; set; }
+        [ProtoMember(51)]
+        public string SiriusBlockchainId { get; set; }
+        [ProtoMember(52)]
+        public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
     }
 }

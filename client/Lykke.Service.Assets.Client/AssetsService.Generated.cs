@@ -316,10 +316,6 @@ namespace Lykke.Service.Assets.Client
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "assetId");
             }
-            if (attribute != null)
-            {
-                attribute.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -438,10 +434,6 @@ namespace Lykke.Service.Assets.Client
             if (assetId == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "assetId");
-            }
-            if (attribute != null)
-            {
-                attribute.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1041,10 +1033,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> AssetCategoryUpdateWithHttpMessagesAsync(AssetCategory assetCategory = default(AssetCategory), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetCategory != null)
-            {
-                assetCategory.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1153,10 +1141,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<AssetCategory>> AssetCategoryAddWithHttpMessagesAsync(AssetCategory assetCategory = default(AssetCategory), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetCategory != null)
-            {
-                assetCategory.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1648,10 +1632,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateLayerWithHttpMessagesAsync(EditAssetConditionLayerModel model = default(EditAssetConditionLayerModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (model != null)
-            {
-                model.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1800,10 +1780,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionAddLayerWithHttpMessagesAsync(EditAssetConditionLayerModel model = default(EditAssetConditionLayerModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (model != null)
-            {
-                model.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -2214,10 +2190,6 @@ namespace Lykke.Service.Assets.Client
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "layerId");
             }
-            if (model != null)
-            {
-                model.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -2380,10 +2352,6 @@ namespace Lykke.Service.Assets.Client
             if (layerId == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "layerId");
-            }
-            if (model != null)
-            {
-                model.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2671,10 +2639,6 @@ namespace Lykke.Service.Assets.Client
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "layerId");
             }
-            if (model != null)
-            {
-                model.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -2837,10 +2801,6 @@ namespace Lykke.Service.Assets.Client
             if (layerId == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "layerId");
-            }
-            if (model != null)
-            {
-                model.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3685,10 +3645,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<ErrorResponse>> AssetConditionUpdateDefaultLayerWithHttpMessagesAsync(EditAssetDefaultConditionLayerModel model = default(EditAssetDefaultConditionLayerModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (model != null)
-            {
-                model.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -3929,10 +3885,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> AssetExtendedInfoUpdateWithHttpMessagesAsync(AssetExtendedInfo assetInfo = default(AssetExtendedInfo), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetInfo != null)
-            {
-                assetInfo.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -4041,10 +3993,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<AssetExtendedInfo>> AssetExtendedInfoAddWithHttpMessagesAsync(AssetExtendedInfo assetInfo = default(AssetExtendedInfo), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetInfo != null)
-            {
-                assetInfo.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -4774,10 +4722,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> AssetGroupUpdateWithHttpMessagesAsync(AssetGroup group = default(AssetGroup), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (group != null)
-            {
-                group.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -4886,10 +4830,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<AssetGroup>> AssetGroupAddWithHttpMessagesAsync(AssetGroup group = default(AssetGroup), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (group != null)
-            {
-                group.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -6223,10 +6163,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> AssetPairUpdateWithHttpMessagesAsync(AssetPair assetPair = default(AssetPair), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetPair != null)
-            {
-                assetPair.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -6335,10 +6271,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<AssetPair>> AssetPairAddWithHttpMessagesAsync(AssetPair assetPair = default(AssetPair), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetPair != null)
-            {
-                assetPair.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -7452,10 +7384,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> AssetUpdateWithHttpMessagesAsync(Asset asset = default(Asset), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (asset != null)
-            {
-                asset.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -7564,10 +7492,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<Asset>> AssetAddWithHttpMessagesAsync(Asset asset = default(Asset), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (asset != null)
-            {
-                asset.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -8286,10 +8210,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<ListOfAsset>> AssetGetBySpecificationWithHttpMessagesAsync(AssetSpecification specification = default(AssetSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (specification != null)
-            {
-                specification.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -9153,10 +9073,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> AssetSettingsUpdateWithHttpMessagesAsync(AssetSettings settings = default(AssetSettings), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings != null)
-            {
-                settings.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -9265,10 +9181,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<AssetSettings>> AssetSettingsAddWithHttpMessagesAsync(AssetSettings settings = default(AssetSettings), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings != null)
-            {
-                settings.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -10439,10 +10351,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> Erc20TokenUpdateWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (token != null)
-            {
-                token.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -10551,10 +10459,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<Erc20Token>> Erc20TokenAddWithHttpMessagesAsync(Erc20Token token = default(Erc20Token), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (token != null)
-            {
-                token.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -11060,10 +10964,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<ListOfErc20Token>> Erc20TokenGetBySpecificationWithHttpMessagesAsync(Erc20TokenSpecification specification = default(Erc20TokenSpecification), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (specification != null)
-            {
-                specification.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -11421,10 +11321,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> IssuerUpdateWithHttpMessagesAsync(Issuer issuer = default(Issuer), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (issuer != null)
-            {
-                issuer.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -11533,10 +11429,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<Issuer>> IssuerAddWithHttpMessagesAsync(Issuer issuer = default(Issuer), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (issuer != null)
-            {
-                issuer.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -12266,10 +12158,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> MarginAssetPairUpdateWithHttpMessagesAsync(MarginAssetPair assetCategory = default(MarginAssetPair), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetCategory != null)
-            {
-                assetCategory.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -12378,10 +12266,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<MarginAssetPair>> MarginAssetPairAddWithHttpMessagesAsync(MarginAssetPair marginAssetPair = default(MarginAssetPair), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (marginAssetPair != null)
-            {
-                marginAssetPair.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -13111,10 +12995,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> MarginAssetUpdateWithHttpMessagesAsync(MarginAsset assetCategory = default(MarginAsset), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (assetCategory != null)
-            {
-                assetCategory.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -13223,10 +13103,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<MarginAsset>> MarginAssetAddWithHttpMessagesAsync(MarginAsset marginAsset = default(MarginAsset), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (marginAsset != null)
-            {
-                marginAsset.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -13956,10 +13832,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> MarginIssuerUpdateWithHttpMessagesAsync(MarginIssuer marginIssuer = default(MarginIssuer), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (marginIssuer != null)
-            {
-                marginIssuer.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -14065,10 +13937,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> MarginIssuerAddWithHttpMessagesAsync(MarginIssuer marginIssuer = default(MarginIssuer), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (marginIssuer != null)
-            {
-                marginIssuer.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -14794,10 +14662,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> WatchListUpdateCustomWithHttpMessagesAsync(WatchList watchList = default(WatchList), string userId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (watchList != null)
-            {
-                watchList.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -14918,10 +14782,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<WatchList>> WatchListAddCustomWithHttpMessagesAsync(WatchList watchList = default(WatchList), string userId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (watchList != null)
-            {
-                watchList.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -15172,10 +15032,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse> WatchListUpdatePredefinedWithHttpMessagesAsync(WatchList watchList = default(WatchList), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (watchList != null)
-            {
-                watchList.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -15284,10 +15140,6 @@ namespace Lykke.Service.Assets.Client
         /// </return>
         public async Task<HttpOperationResponse<WatchList>> WatchListAddPredefinedWithHttpMessagesAsync(WatchList watchList = default(WatchList), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (watchList != null)
-            {
-                watchList.Validate();
-            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -20887,23 +20739,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Value")]
         public string Value { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Key == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Key");
-            }
-            if (Value == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Value");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -20963,33 +20798,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Attributes")]
         public IList<AssetAttribute> Attributes { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (AssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetId");
-            }
-            if (Attributes == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Attributes");
-            }
-            if (Attributes != null)
-            {
-                foreach (var element in Attributes)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
     }
 }
 // <auto-generated>
@@ -21067,31 +20875,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "SortOrder")]
         public int SortOrder { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (AndroidIconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AndroidIconUrl");
-            }
-            if (IosIconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IosIconUrl");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -21194,23 +20977,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Regulation")]
         public string Regulation { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Asset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
-            }
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -21305,19 +21071,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Regulation")]
         public string Regulation { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -21432,645 +21185,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "DefaultCondition")]
         public AssetDefaultConditionModel DefaultCondition { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Description == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Description");
-            }
-            if (AssetConditions == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetConditions");
-            }
-            if (DefaultCondition == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DefaultCondition");
-            }
-            if (AssetConditions != null)
-            {
-                foreach (var element in AssetConditions)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-            if (DefaultCondition != null)
-            {
-                DefaultCondition.Validate();
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Represents an edited properties of asset default condition layer.
-    /// </summary>
-    public partial class EditAssetConditionLayerModel
-    {
-        /// <summary>
-        /// Initializes a new instance of the EditAssetConditionLayerModel
-        /// class.
-        /// </summary>
-        public EditAssetConditionLayerModel()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the EditAssetConditionLayerModel
-        /// class.
-        /// </summary>
-        /// <param name="id">The layer id.</param>
-        /// <param name="priority">The asset condition layer priority.</param>
-        /// <param name="description">The asset condition layer
-        /// description.</param>
-        /// <param name="clientsCanCashInViaBankCards">The client ability to
-        /// cash in via bank cards.</param>
-        /// <param name="swiftDepositEnabled">The client ability to swift
-        /// deposit.</param>
-        public EditAssetConditionLayerModel(string id, double priority, string description, bool clientsCanCashInViaBankCards, bool swiftDepositEnabled)
-        {
-            Id = id;
-            Priority = priority;
-            Description = description;
-            ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
-            SwiftDepositEnabled = swiftDepositEnabled;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets the layer id.
-        /// </summary>
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the asset condition layer priority.
-        /// </summary>
-        [JsonProperty(PropertyName = "Priority")]
-        public double Priority { get; set; }
-
-        /// <summary>
-        /// Gets or sets the asset condition layer description.
-        /// </summary>
-        [JsonProperty(PropertyName = "Description")]
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client ability to cash in via bank cards.
-        /// </summary>
-        [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
-        public bool ClientsCanCashInViaBankCards { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client ability to swift deposit.
-        /// </summary>
-        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool SwiftDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Description == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Description");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class ErrorResponse
-    {
-        /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
-        /// </summary>
-        public ErrorResponse()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
-        /// </summary>
-        public ErrorResponse(IDictionary<string, IList<string>> errorMessages)
-        {
-            ErrorMessages = errorMessages;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "ErrorMessages")]
-        public IDictionary<string, IList<string>> ErrorMessages { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (ErrorMessages == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ErrorMessages");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Represents an edited properties of asset condition.
-    /// </summary>
-    public partial class EditAssetConditionModel
-    {
-        /// <summary>
-        /// Initializes a new instance of the EditAssetConditionModel class.
-        /// </summary>
-        public EditAssetConditionModel()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the EditAssetConditionModel class.
-        /// </summary>
-        /// <param name="asset">The asset id.</param>
-        /// <param name="availableToClient">Indicated that specified asset
-        /// available to client.</param>
-        /// <param name="isTradable">Indicates that assets is tradable.</param>
-        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
-        /// deposit enabled for asset.</param>
-        /// <param name="swiftDepositEnabled">Indicates that swift deposit
-        /// enabled for asset.</param>
-        /// <param name="regulation">The regulation for specified
-        /// asset.</param>
-        public EditAssetConditionModel(string asset, bool availableToClient, bool isTradable, bool bankCardsDepositEnabled, bool swiftDepositEnabled, string regulation)
-        {
-            Asset = asset;
-            AvailableToClient = availableToClient;
-            IsTradable = isTradable;
-            BankCardsDepositEnabled = bankCardsDepositEnabled;
-            SwiftDepositEnabled = swiftDepositEnabled;
-            Regulation = regulation;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets the asset id.
-        /// </summary>
-        [JsonProperty(PropertyName = "Asset")]
-        public string Asset { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicated that specified asset available to client.
-        /// </summary>
-        [JsonProperty(PropertyName = "AvailableToClient")]
-        public bool AvailableToClient { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicates that assets is tradable.
-        /// </summary>
-        [JsonProperty(PropertyName = "IsTradable")]
-        public bool IsTradable { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicates that bank cards deposit enabled for asset.
-        /// </summary>
-        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
-        public bool BankCardsDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicates that swift deposit enabled for asset.
-        /// </summary>
-        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool SwiftDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the regulation for specified asset.
-        /// </summary>
-        [JsonProperty(PropertyName = "Regulation")]
-        public string Regulation { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Asset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
-            }
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Represents an edited properties of default (wildcard) asset condition.
-    /// </summary>
-    public partial class EditAssetDefaultConditionModel
-    {
-        /// <summary>
-        /// Initializes a new instance of the EditAssetDefaultConditionModel
-        /// class.
-        /// </summary>
-        public EditAssetDefaultConditionModel()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the EditAssetDefaultConditionModel
-        /// class.
-        /// </summary>
-        /// <param name="availableToClient">Indicated that specified asset
-        /// available to client.</param>
-        /// <param name="isTradable">Indicates that assets is tradable.</param>
-        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
-        /// deposit enabled for asset.</param>
-        /// <param name="swiftDepositEnabled">Indicates that swift deposit
-        /// enabled for asset.</param>
-        /// <param name="regulation">The regulation for specified
-        /// asset.</param>
-        public EditAssetDefaultConditionModel(bool availableToClient, bool isTradable, bool bankCardsDepositEnabled, bool swiftDepositEnabled, string regulation)
-        {
-            AvailableToClient = availableToClient;
-            IsTradable = isTradable;
-            BankCardsDepositEnabled = bankCardsDepositEnabled;
-            SwiftDepositEnabled = swiftDepositEnabled;
-            Regulation = regulation;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets indicated that specified asset available to client.
-        /// </summary>
-        [JsonProperty(PropertyName = "AvailableToClient")]
-        public bool AvailableToClient { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicates that assets is tradable.
-        /// </summary>
-        [JsonProperty(PropertyName = "IsTradable")]
-        public bool IsTradable { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicates that bank cards deposit enabled for asset.
-        /// </summary>
-        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
-        public bool BankCardsDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets indicates that swift deposit enabled for asset.
-        /// </summary>
-        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool SwiftDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the regulation for specified asset.
-        /// </summary>
-        [JsonProperty(PropertyName = "Regulation")]
-        public string Regulation { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Represents an asset default condition layer.
-    /// </summary>
-    public partial class AssetDefaultConditionLayerModel
-    {
-        /// <summary>
-        /// Initializes a new instance of the AssetDefaultConditionLayerModel
-        /// class.
-        /// </summary>
-        public AssetDefaultConditionLayerModel()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the AssetDefaultConditionLayerModel
-        /// class.
-        /// </summary>
-        /// <param name="id">The layer id.</param>
-        /// <param name="clientsCanCashInViaBankCards">The client ability to
-        /// cash in via bank cards.</param>
-        /// <param name="swiftDepositEnabled">The client ability to swift
-        /// deposit.</param>
-        /// <param name="assetConditions">The collection of asset conditions
-        /// for layer.</param>
-        public AssetDefaultConditionLayerModel(string id, bool clientsCanCashInViaBankCards, bool swiftDepositEnabled, IList<AssetConditionModel> assetConditions)
-        {
-            Id = id;
-            ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
-            SwiftDepositEnabled = swiftDepositEnabled;
-            AssetConditions = assetConditions;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets the layer id.
-        /// </summary>
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client ability to cash in via bank cards.
-        /// </summary>
-        [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
-        public bool ClientsCanCashInViaBankCards { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client ability to swift deposit.
-        /// </summary>
-        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool SwiftDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of asset conditions for layer.
-        /// </summary>
-        [JsonProperty(PropertyName = "AssetConditions")]
-        public IList<AssetConditionModel> AssetConditions { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (AssetConditions == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetConditions");
-            }
-            if (AssetConditions != null)
-            {
-                foreach (var element in AssetConditions)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Represents an edited properties of asset default condition layer.
-    /// </summary>
-    public partial class EditAssetDefaultConditionLayerModel
-    {
-        /// <summary>
-        /// Initializes a new instance of the
-        /// EditAssetDefaultConditionLayerModel class.
-        /// </summary>
-        public EditAssetDefaultConditionLayerModel()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the
-        /// EditAssetDefaultConditionLayerModel class.
-        /// </summary>
-        /// <param name="clientsCanCashInViaBankCards">The client ability to
-        /// cash in via bank cards.</param>
-        /// <param name="swiftDepositEnabled">The client ability to swift
-        /// deposit.</param>
-        public EditAssetDefaultConditionLayerModel(bool clientsCanCashInViaBankCards, bool swiftDepositEnabled)
-        {
-            ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
-            SwiftDepositEnabled = swiftDepositEnabled;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets the client ability to cash in via bank cards.
-        /// </summary>
-        [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
-        public bool ClientsCanCashInViaBankCards { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client ability to swift deposit.
-        /// </summary>
-        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
-        public bool SwiftDepositEnabled { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            //Nothing to validate
-        }
     }
 }
 // <auto-generated>
@@ -22166,43 +21280,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "PopIndex")]
         public int PopIndex { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (AssetClass == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetClass");
-            }
-            if (AssetDescriptionUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetDescriptionUrl");
-            }
-            if (Description == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Description");
-            }
-            if (FullName == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "FullName");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (MarketCapitalization == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "MarketCapitalization");
-            }
-            if (NumberOfCoins == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "NumberOfCoins");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -22274,19 +21351,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "SwiftDepositEnabled")]
         public bool SwiftDepositEnabled { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -22406,43 +21470,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "ExchangeId")]
         public string ExchangeId { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (BaseAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BaseAssetId");
-            }
-            if (QuotingAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "QuotingAssetId");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Source == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source");
-            }
-            if (Source2 == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source2");
-            }
-            if (ExchangeId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ExchangeId");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -22544,39 +21571,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "IsDisabled")]
         public bool IsDisabled { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (BaseAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BaseAssetId");
-            }
-            if (QuotingAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "QuotingAssetId");
-            }
-            if (Source == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source");
-            }
-            if (Source2 == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source2");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -22616,7 +21610,9 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
-        public Asset(int accuracy, string assetAddress, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, string blockChainAssetId, bool blockchainDepositEnabled, string blockChainId, bool blockchainWithdrawal, string blockchainIntegrationLayerId, string blockchainIntegrationLayerAssetId, bool buyScreen, string categoryId, bool crosschainWithdrawal, int defaultOrder, string definitionUrl, int displayAccuracy, string displayId, double dustLimit, string forwardBaseAsset, int forwardFrozenDays, string forwardMemoUrl, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, string iconUrl, string id, string idIssuer, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, double lowVolumeAmount, int multiplierPower, string name, bool notLykkeAsset, IList<string> partnerIds, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, string symbol, bool isTrusted, bool privateWalletsEnabled, double cashinMinimalAmount, double cashoutMinimalAmount, string lykkeEntityId)
+        /// <param name="blockchainIntegrationType">Possible values include:
+        /// 'None', 'Bil', 'Sirius'</param>
+        public Asset(int accuracy, string assetAddress, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, string blockChainAssetId, bool blockchainDepositEnabled, string blockChainId, bool blockchainWithdrawal, string blockchainIntegrationLayerId, string blockchainIntegrationLayerAssetId, bool buyScreen, string categoryId, bool crosschainWithdrawal, int defaultOrder, string definitionUrl, int displayAccuracy, string displayId, double dustLimit, string forwardBaseAsset, int forwardFrozenDays, string forwardMemoUrl, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, string iconUrl, string id, string idIssuer, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, double lowVolumeAmount, int multiplierPower, string name, bool notLykkeAsset, IList<string> partnerIds, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, string symbol, AssetType? type, bool isTrusted, bool privateWalletsEnabled, double cashinMinimalAmount, double cashoutMinimalAmount, string lykkeEntityId, long siriusAssetId, string siriusBlockchainId, BlockchainIntegrationType blockchainIntegrationType)
         {
             Accuracy = accuracy;
             AssetAddress = assetAddress;
@@ -22661,19 +21657,16 @@ namespace Lykke.Service.Assets.Client.Models
             SwiftDepositEnabled = swiftDepositEnabled;
             SwiftWithdrawal = swiftWithdrawal;
             Symbol = symbol;
+            Type = type;
             IsTrusted = isTrusted;
             PrivateWalletsEnabled = privateWalletsEnabled;
             CashinMinimalAmount = cashinMinimalAmount;
             CashoutMinimalAmount = cashoutMinimalAmount;
             LykkeEntityId = lykkeEntityId;
+            SiriusAssetId = siriusAssetId;
+            SiriusBlockchainId = siriusBlockchainId;
+            BlockchainIntegrationType = blockchainIntegrationType;
             CustomInit();
-        }
-        /// <summary>
-        /// Static constructor for Asset class.
-        /// </summary>
-        static Asset()
-        {
-            Type = "Erc20Token";
         }
 
         /// <summary>
@@ -22898,6 +21891,12 @@ namespace Lykke.Service.Assets.Client.Models
         public string Symbol { get; set; }
 
         /// <summary>
+        /// Gets or sets possible values include: 'Erc20Token'
+        /// </summary>
+        [JsonProperty(PropertyName = "Type")]
+        public AssetType? Type { get; set; }
+
+        /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "IsTrusted")]
         public bool IsTrusted { get; set; }
@@ -22924,158 +21923,19 @@ namespace Lykke.Service.Assets.Client.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Type")]
-        public static string Type { get; private set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (AssetAddress == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetAddress");
-            }
-            if (BlockChainAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainAssetId");
-            }
-            if (BlockChainId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainId");
-            }
-            if (BlockchainIntegrationLayerId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockchainIntegrationLayerId");
-            }
-            if (BlockchainIntegrationLayerAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockchainIntegrationLayerAssetId");
-            }
-            if (CategoryId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "CategoryId");
-            }
-            if (DefinitionUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DefinitionUrl");
-            }
-            if (DisplayId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DisplayId");
-            }
-            if (ForwardBaseAsset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardBaseAsset");
-            }
-            if (ForwardMemoUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardMemoUrl");
-            }
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (IdIssuer == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IdIssuer");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (PartnerIds == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "PartnerIds");
-            }
-            if (Symbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Symbol");
-            }
-            if (LykkeEntityId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "LykkeEntityId");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class AssetSpecification
-    {
-        /// <summary>
-        /// Initializes a new instance of the AssetSpecification class.
-        /// </summary>
-        public AssetSpecification()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the AssetSpecification class.
-        /// </summary>
-        public AssetSpecification(IList<string> ids, bool isTradable)
-        {
-            Ids = ids;
-            IsTradable = isTradable;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
+        [JsonProperty(PropertyName = "SiriusAssetId")]
+        public long SiriusAssetId { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Ids")]
-        public IList<string> Ids { get; set; }
+        [JsonProperty(PropertyName = "SiriusBlockchainId")]
+        public string SiriusBlockchainId { get; set; }
 
         /// <summary>
+        /// Gets or sets possible values include: 'None', 'Bil', 'Sirius'
         /// </summary>
-        [JsonProperty(PropertyName = "IsTradable")]
-        public bool IsTradable { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Ids == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Ids");
-            }
-        }
+        [JsonProperty(PropertyName = "BlockchainIntegrationType")]
+        public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
     }
 }
 // <auto-generated>
@@ -23372,71 +22232,935 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "IsTrusted")]
         public bool IsTrusted { get; set; }
 
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class Issuer
+    {
         /// <summary>
-        /// Validate the object.
+        /// Initializes a new instance of the Issuer class.
         /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
+        public Issuer()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (BlockChainId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainId");
-            }
-            if (BlockChainAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainAssetId");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Symbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Symbol");
-            }
-            if (IdIssuer == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IdIssuer");
-            }
-            if (AssetAddress == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetAddress");
-            }
-            if (CategoryId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "CategoryId");
-            }
-            if (DefinitionUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DefinitionUrl");
-            }
-            if (PartnerIds == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "PartnerIds");
-            }
-            if (DisplayId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DisplayId");
-            }
-            if (ForwardBaseAsset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardBaseAsset");
-            }
-            if (ForwardMemoUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardMemoUrl");
-            }
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
+            CustomInit();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the Issuer class.
+        /// </summary>
+        public Issuer(string iconUrl, string id, string name)
+        {
+            IconUrl = iconUrl;
+            Id = id;
+            Name = name;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IconUrl")]
+        public string IconUrl { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Name")]
+        public string Name { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class MarginAssetPair
+    {
+        /// <summary>
+        /// Initializes a new instance of the MarginAssetPair class.
+        /// </summary>
+        public MarginAssetPair()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MarginAssetPair class.
+        /// </summary>
+        public MarginAssetPair(int accuracy, string baseAssetId, string id, int invertedAccuracy, string name, string quotingAssetId)
+        {
+            Accuracy = accuracy;
+            BaseAssetId = baseAssetId;
+            Id = id;
+            InvertedAccuracy = invertedAccuracy;
+            Name = name;
+            QuotingAssetId = quotingAssetId;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Accuracy")]
+        public int Accuracy { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "BaseAssetId")]
+        public string BaseAssetId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "InvertedAccuracy")]
+        public int InvertedAccuracy { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "QuotingAssetId")]
+        public string QuotingAssetId { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class MarginAsset
+    {
+        /// <summary>
+        /// Initializes a new instance of the MarginAsset class.
+        /// </summary>
+        public MarginAsset()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MarginAsset class.
+        /// </summary>
+        public MarginAsset(int accuracy, double dustLimit, string id, string idIssuer, double multiplier, string name, string symbol)
+        {
+            Accuracy = accuracy;
+            DustLimit = dustLimit;
+            Id = id;
+            IdIssuer = idIssuer;
+            Multiplier = multiplier;
+            Name = name;
+            Symbol = symbol;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Accuracy")]
+        public int Accuracy { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "DustLimit")]
+        public double DustLimit { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IdIssuer")]
+        public string IdIssuer { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Multiplier")]
+        public double Multiplier { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Symbol")]
+        public string Symbol { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class WatchList
+    {
+        /// <summary>
+        /// Initializes a new instance of the WatchList class.
+        /// </summary>
+        public WatchList()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the WatchList class.
+        /// </summary>
+        public WatchList(IList<string> assetIds, string id, string name, int order, bool readOnlyProperty)
+        {
+            AssetIds = assetIds;
+            Id = id;
+            Name = name;
+            Order = order;
+            ReadOnlyProperty = readOnlyProperty;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "AssetIds")]
+        public IList<string> AssetIds { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Order")]
+        public int Order { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ReadOnly")]
+        public bool ReadOnlyProperty { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Represents an edited properties of asset default condition layer.
+    /// </summary>
+    public partial class EditAssetConditionLayerModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the EditAssetConditionLayerModel
+        /// class.
+        /// </summary>
+        public EditAssetConditionLayerModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the EditAssetConditionLayerModel
+        /// class.
+        /// </summary>
+        /// <param name="id">The layer id.</param>
+        /// <param name="priority">The asset condition layer priority.</param>
+        /// <param name="description">The asset condition layer
+        /// description.</param>
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
+        public EditAssetConditionLayerModel(string id, double priority, string description, bool clientsCanCashInViaBankCards, bool swiftDepositEnabled)
+        {
+            Id = id;
+            Priority = priority;
+            Description = description;
+            ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
+            SwiftDepositEnabled = swiftDepositEnabled;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the layer id.
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the asset condition layer priority.
+        /// </summary>
+        [JsonProperty(PropertyName = "Priority")]
+        public double Priority { get; set; }
+
+        /// <summary>
+        /// Gets or sets the asset condition layer description.
+        /// </summary>
+        [JsonProperty(PropertyName = "Description")]
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
+        /// </summary>
+        [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
+        public bool ClientsCanCashInViaBankCards { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client ability to swift deposit.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool SwiftDepositEnabled { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ErrorResponse
+    {
+        /// <summary>
+        /// Initializes a new instance of the ErrorResponse class.
+        /// </summary>
+        public ErrorResponse()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ErrorResponse class.
+        /// </summary>
+        public ErrorResponse(IDictionary<string, IList<string>> errorMessages)
+        {
+            ErrorMessages = errorMessages;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ErrorMessages")]
+        public IDictionary<string, IList<string>> ErrorMessages { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Represents an edited properties of asset condition.
+    /// </summary>
+    public partial class EditAssetConditionModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the EditAssetConditionModel class.
+        /// </summary>
+        public EditAssetConditionModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the EditAssetConditionModel class.
+        /// </summary>
+        /// <param name="asset">The asset id.</param>
+        /// <param name="availableToClient">Indicated that specified asset
+        /// available to client.</param>
+        /// <param name="isTradable">Indicates that assets is tradable.</param>
+        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
+        /// deposit enabled for asset.</param>
+        /// <param name="swiftDepositEnabled">Indicates that swift deposit
+        /// enabled for asset.</param>
+        /// <param name="regulation">The regulation for specified
+        /// asset.</param>
+        public EditAssetConditionModel(string asset, bool availableToClient, bool isTradable, bool bankCardsDepositEnabled, bool swiftDepositEnabled, string regulation)
+        {
+            Asset = asset;
+            AvailableToClient = availableToClient;
+            IsTradable = isTradable;
+            BankCardsDepositEnabled = bankCardsDepositEnabled;
+            SwiftDepositEnabled = swiftDepositEnabled;
+            Regulation = regulation;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the asset id.
+        /// </summary>
+        [JsonProperty(PropertyName = "Asset")]
+        public string Asset { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicated that specified asset available to client.
+        /// </summary>
+        [JsonProperty(PropertyName = "AvailableToClient")]
+        public bool AvailableToClient { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that assets is tradable.
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool IsTradable { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that bank cards deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
+        public bool BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that swift deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regulation for specified asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "Regulation")]
+        public string Regulation { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Represents an edited properties of default (wildcard) asset condition.
+    /// </summary>
+    public partial class EditAssetDefaultConditionModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the EditAssetDefaultConditionModel
+        /// class.
+        /// </summary>
+        public EditAssetDefaultConditionModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the EditAssetDefaultConditionModel
+        /// class.
+        /// </summary>
+        /// <param name="availableToClient">Indicated that specified asset
+        /// available to client.</param>
+        /// <param name="isTradable">Indicates that assets is tradable.</param>
+        /// <param name="bankCardsDepositEnabled">Indicates that bank cards
+        /// deposit enabled for asset.</param>
+        /// <param name="swiftDepositEnabled">Indicates that swift deposit
+        /// enabled for asset.</param>
+        /// <param name="regulation">The regulation for specified
+        /// asset.</param>
+        public EditAssetDefaultConditionModel(bool availableToClient, bool isTradable, bool bankCardsDepositEnabled, bool swiftDepositEnabled, string regulation)
+        {
+            AvailableToClient = availableToClient;
+            IsTradable = isTradable;
+            BankCardsDepositEnabled = bankCardsDepositEnabled;
+            SwiftDepositEnabled = swiftDepositEnabled;
+            Regulation = regulation;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets indicated that specified asset available to client.
+        /// </summary>
+        [JsonProperty(PropertyName = "AvailableToClient")]
+        public bool AvailableToClient { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that assets is tradable.
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool IsTradable { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that bank cards deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "BankCardsDepositEnabled")]
+        public bool BankCardsDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets indicates that swift deposit enabled for asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regulation for specified asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "Regulation")]
+        public string Regulation { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Represents an asset default condition layer.
+    /// </summary>
+    public partial class AssetDefaultConditionLayerModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the AssetDefaultConditionLayerModel
+        /// class.
+        /// </summary>
+        public AssetDefaultConditionLayerModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the AssetDefaultConditionLayerModel
+        /// class.
+        /// </summary>
+        /// <param name="id">The layer id.</param>
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
+        /// <param name="assetConditions">The collection of asset conditions
+        /// for layer.</param>
+        public AssetDefaultConditionLayerModel(string id, bool clientsCanCashInViaBankCards, bool swiftDepositEnabled, IList<AssetConditionModel> assetConditions)
+        {
+            Id = id;
+            ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
+            SwiftDepositEnabled = swiftDepositEnabled;
+            AssetConditions = assetConditions;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the layer id.
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
+        /// </summary>
+        [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
+        public bool ClientsCanCashInViaBankCards { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client ability to swift deposit.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool SwiftDepositEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of asset conditions for layer.
+        /// </summary>
+        [JsonProperty(PropertyName = "AssetConditions")]
+        public IList<AssetConditionModel> AssetConditions { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Represents an edited properties of asset default condition layer.
+    /// </summary>
+    public partial class EditAssetDefaultConditionLayerModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the
+        /// EditAssetDefaultConditionLayerModel class.
+        /// </summary>
+        public EditAssetDefaultConditionLayerModel()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the
+        /// EditAssetDefaultConditionLayerModel class.
+        /// </summary>
+        /// <param name="clientsCanCashInViaBankCards">The client ability to
+        /// cash in via bank cards.</param>
+        /// <param name="swiftDepositEnabled">The client ability to swift
+        /// deposit.</param>
+        public EditAssetDefaultConditionLayerModel(bool clientsCanCashInViaBankCards, bool swiftDepositEnabled)
+        {
+            ClientsCanCashInViaBankCards = clientsCanCashInViaBankCards;
+            SwiftDepositEnabled = swiftDepositEnabled;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the client ability to cash in via bank cards.
+        /// </summary>
+        [JsonProperty(PropertyName = "ClientsCanCashInViaBankCards")]
+        public bool ClientsCanCashInViaBankCards { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client ability to swift deposit.
+        /// </summary>
+        [JsonProperty(PropertyName = "SwiftDepositEnabled")]
+        public bool SwiftDepositEnabled { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class AssetSpecification
+    {
+        /// <summary>
+        /// Initializes a new instance of the AssetSpecification class.
+        /// </summary>
+        public AssetSpecification()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the AssetSpecification class.
+        /// </summary>
+        public AssetSpecification(IList<string> ids, bool isTradable)
+        {
+            Ids = ids;
+            IsTradable = isTradable;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Ids")]
+        public IList<string> Ids { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IsTradable")]
+        public bool IsTradable { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfAsset
+    {
+        /// <summary>
+        /// Initializes a new instance of the ListOfAsset class.
+        /// </summary>
+        public ListOfAsset()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfAsset class.
+        /// </summary>
+        public ListOfAsset(IList<Asset> items)
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<Asset> Items { get; set; }
+
     }
 }
 // <auto-generated>
@@ -23556,27 +23280,59 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "PrivateIncrement")]
         public int PrivateIncrement { get; set; }
 
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfAssetSettings
+    {
         /// <summary>
-        /// Validate the object.
+        /// Initializes a new instance of the ListOfAssetSettings class.
         /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
+        public ListOfAssetSettings()
         {
-            if (Asset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
-            }
-            if (ChangeWallet == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ChangeWallet");
-            }
-            if (HotWallet == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "HotWallet");
-            }
+            CustomInit();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfAssetSettings class.
+        /// </summary>
+        public ListOfAssetSettings(IList<AssetSettings> items)
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<AssetSettings> Items { get; set; }
+
     }
 }
 // <auto-generated>
@@ -23684,47 +23440,59 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "TransactionHash")]
         public string TransactionHash { get; set; }
 
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class ListOfErc20Token
+    {
         /// <summary>
-        /// Validate the object.
+        /// Initializes a new instance of the ListOfErc20Token class.
         /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
+        public ListOfErc20Token()
         {
-            if (AssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetId");
-            }
-            if (Address == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Address");
-            }
-            if (BlockHash == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockHash");
-            }
-            if (DeployerAddress == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DeployerAddress");
-            }
-            if (TokenName == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TokenName");
-            }
-            if (TokenSymbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TokenSymbol");
-            }
-            if (TokenTotalSupply == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TokenTotalSupply");
-            }
-            if (TransactionHash == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TransactionHash");
-            }
+            CustomInit();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the ListOfErc20Token class.
+        /// </summary>
+        public ListOfErc20Token(IList<Erc20Token> items)
+        {
+            Items = items;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Items")]
+        public IList<Erc20Token> Items { get; set; }
+
     }
 }
 // <auto-generated>
@@ -23778,19 +23546,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Ids")]
         public IList<string> Ids { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Ids == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Ids");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -23850,23 +23605,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "value")]
         public string Value { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Type == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Type");
-            }
-            if (Value == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Value");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -23944,349 +23682,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "issueIndicators")]
         public IList<IssueIndicator> IssueIndicators { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Version == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Version");
-            }
-            if (Env == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Env");
-            }
-            if (IssueIndicators == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IssueIndicators");
-            }
-            if (IssueIndicators != null)
-            {
-                foreach (var element in IssueIndicators)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class Issuer
-    {
-        /// <summary>
-        /// Initializes a new instance of the Issuer class.
-        /// </summary>
-        public Issuer()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Issuer class.
-        /// </summary>
-        public Issuer(string iconUrl, string id, string name)
-        {
-            IconUrl = iconUrl;
-            Id = id;
-            Name = name;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "IconUrl")]
-        public string IconUrl { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class MarginAssetPair
-    {
-        /// <summary>
-        /// Initializes a new instance of the MarginAssetPair class.
-        /// </summary>
-        public MarginAssetPair()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the MarginAssetPair class.
-        /// </summary>
-        public MarginAssetPair(int accuracy, string baseAssetId, string id, int invertedAccuracy, string name, string quotingAssetId)
-        {
-            Accuracy = accuracy;
-            BaseAssetId = baseAssetId;
-            Id = id;
-            InvertedAccuracy = invertedAccuracy;
-            Name = name;
-            QuotingAssetId = quotingAssetId;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Accuracy")]
-        public int Accuracy { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "BaseAssetId")]
-        public string BaseAssetId { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "InvertedAccuracy")]
-        public int InvertedAccuracy { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "QuotingAssetId")]
-        public string QuotingAssetId { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (BaseAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BaseAssetId");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (QuotingAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "QuotingAssetId");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class MarginAsset
-    {
-        /// <summary>
-        /// Initializes a new instance of the MarginAsset class.
-        /// </summary>
-        public MarginAsset()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the MarginAsset class.
-        /// </summary>
-        public MarginAsset(int accuracy, double dustLimit, string id, string idIssuer, double multiplier, string name, string symbol)
-        {
-            Accuracy = accuracy;
-            DustLimit = dustLimit;
-            Id = id;
-            IdIssuer = idIssuer;
-            Multiplier = multiplier;
-            Name = name;
-            Symbol = symbol;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Accuracy")]
-        public int Accuracy { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "DustLimit")]
-        public double DustLimit { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "IdIssuer")]
-        public string IdIssuer { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Multiplier")]
-        public double Multiplier { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Symbol")]
-        public string Symbol { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (IdIssuer == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IdIssuer");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Symbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Symbol");
-            }
-        }
     }
 }
 // <auto-generated>
@@ -24352,353 +23747,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class WatchList
-    {
-        /// <summary>
-        /// Initializes a new instance of the WatchList class.
-        /// </summary>
-        public WatchList()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the WatchList class.
-        /// </summary>
-        public WatchList(IList<string> assetIds, string id, string name, int order, bool readOnlyProperty)
-        {
-            AssetIds = assetIds;
-            Id = id;
-            Name = name;
-            Order = order;
-            ReadOnlyProperty = readOnlyProperty;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "AssetIds")]
-        public IList<string> AssetIds { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Order")]
-        public int Order { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "ReadOnly")]
-        public bool ReadOnlyProperty { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (AssetIds == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetIds");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class ListOfAsset
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfAsset class.
-        /// </summary>
-        public ListOfAsset()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfAsset class.
-        /// </summary>
-        public ListOfAsset(IList<Asset> items)
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<Asset> Items { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class ListOfAssetSettings
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfAssetSettings class.
-        /// </summary>
-        public ListOfAssetSettings()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfAssetSettings class.
-        /// </summary>
-        public ListOfAssetSettings(IList<AssetSettings> items)
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<AssetSettings> Items { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace Lykke.Service.Assets.Client.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime;
-    using System.Runtime.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class ListOfErc20Token
-    {
-        /// <summary>
-        /// Initializes a new instance of the ListOfErc20Token class.
-        /// </summary>
-        public ListOfErc20Token()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ListOfErc20Token class.
-        /// </summary>
-        public ListOfErc20Token(IList<Erc20Token> items)
-        {
-            Items = items;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Items")]
-        public IList<Erc20Token> Items { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
     }
 }
 // <auto-generated>
@@ -24752,29 +23800,6 @@ namespace Lykke.Service.Assets.Client.Models
         [JsonProperty(PropertyName = "Items")]
         public IList<MarginIssuer> Items { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
     }
 }
 // <auto-generated>
@@ -24842,6 +23867,134 @@ namespace Lykke.Service.Assets.Client.Models
                     return Blockchain.Bitcoin;
                 case "Ethereum":
                     return Blockchain.Ethereum;
+            }
+            return null;
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines values for BlockchainIntegrationType.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum BlockchainIntegrationType
+    {
+        [EnumMember(Value = "None")]
+        None,
+        [EnumMember(Value = "Bil")]
+        Bil,
+        [EnumMember(Value = "Sirius")]
+        Sirius
+    }
+    internal static class BlockchainIntegrationTypeEnumExtension
+    {
+        internal static string ToSerializedValue(this BlockchainIntegrationType? value)
+        {
+            return value == null ? null : ((BlockchainIntegrationType)value).ToSerializedValue();
+        }
+
+        internal static string ToSerializedValue(this BlockchainIntegrationType value)
+        {
+            switch( value )
+            {
+                case BlockchainIntegrationType.None:
+                    return "None";
+                case BlockchainIntegrationType.Bil:
+                    return "Bil";
+                case BlockchainIntegrationType.Sirius:
+                    return "Sirius";
+            }
+            return null;
+        }
+
+        internal static BlockchainIntegrationType? ParseBlockchainIntegrationType(this string value)
+        {
+            switch( value )
+            {
+                case "None":
+                    return BlockchainIntegrationType.None;
+                case "Bil":
+                    return BlockchainIntegrationType.Bil;
+                case "Sirius":
+                    return BlockchainIntegrationType.Sirius;
+            }
+            return null;
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines values for AssetType.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum AssetType
+    {
+        [EnumMember(Value = "Erc20Token")]
+        Erc20Token
+    }
+    internal static class AssetTypeEnumExtension
+    {
+        internal static string ToSerializedValue(this AssetType? value)
+        {
+            return value == null ? null : ((AssetType)value).ToSerializedValue();
+        }
+
+        internal static string ToSerializedValue(this AssetType value)
+        {
+            switch( value )
+            {
+                case AssetType.Erc20Token:
+                    return "Erc20Token";
+            }
+            return null;
+        }
+
+        internal static AssetType? ParseAssetType(this string value)
+        {
+            switch( value )
+            {
+                case "Erc20Token":
+                    return AssetType.Erc20Token;
             }
             return null;
         }
