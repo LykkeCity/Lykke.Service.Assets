@@ -20895,14 +20895,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Key == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Key");
-            }
-            if (Value == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Value");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -20971,24 +20964,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (AssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetId");
-            }
-            if (Attributes == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Attributes");
-            }
-            if (Attributes != null)
-            {
-                foreach (var element in Attributes)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21075,22 +21051,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (AndroidIconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AndroidIconUrl");
-            }
-            if (IosIconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IosIconUrl");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21202,14 +21163,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Asset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
-            }
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21313,10 +21267,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21440,36 +21391,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Description == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Description");
-            }
-            if (AssetConditions == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetConditions");
-            }
-            if (DefaultCondition == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DefaultCondition");
-            }
-            if (AssetConditions != null)
-            {
-                foreach (var element in AssetConditions)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-            if (DefaultCondition != null)
-            {
-                DefaultCondition.Validate();
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21574,14 +21496,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Description == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Description");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21644,10 +21559,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (ErrorMessages == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ErrorMessages");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21759,14 +21671,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Asset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
-            }
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21872,10 +21777,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Regulation == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Regulation");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -21972,24 +21874,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (AssetConditions == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetConditions");
-            }
-            if (AssetConditions != null)
-            {
-                foreach (var element in AssetConditions)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -22174,34 +22059,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (AssetClass == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetClass");
-            }
-            if (AssetDescriptionUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetDescriptionUrl");
-            }
-            if (Description == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Description");
-            }
-            if (FullName == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "FullName");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (MarketCapitalization == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "MarketCapitalization");
-            }
-            if (NumberOfCoins == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "NumberOfCoins");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -22282,10 +22140,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -22414,34 +22269,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (BaseAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BaseAssetId");
-            }
-            if (QuotingAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "QuotingAssetId");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Source == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source");
-            }
-            if (Source2 == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source2");
-            }
-            if (ExchangeId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ExchangeId");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -22552,30 +22380,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (BaseAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BaseAssetId");
-            }
-            if (QuotingAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "QuotingAssetId");
-            }
-            if (Source == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source");
-            }
-            if (Source2 == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Source2");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -22956,74 +22761,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (AssetAddress == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetAddress");
-            }
-            if (BlockChainAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainAssetId");
-            }
-            if (BlockChainId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainId");
-            }
-            if (BlockchainIntegrationLayerId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockchainIntegrationLayerId");
-            }
-            if (BlockchainIntegrationLayerAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockchainIntegrationLayerAssetId");
-            }
-            if (CategoryId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "CategoryId");
-            }
-            if (DefinitionUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DefinitionUrl");
-            }
-            if (DisplayId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DisplayId");
-            }
-            if (ForwardBaseAsset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardBaseAsset");
-            }
-            if (ForwardMemoUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardMemoUrl");
-            }
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (IdIssuer == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IdIssuer");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (PartnerIds == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "PartnerIds");
-            }
-            if (Symbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Symbol");
-            }
-            if (LykkeEntityId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "LykkeEntityId");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23092,10 +22830,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Ids == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Ids");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23401,62 +23136,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (BlockChainId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainId");
-            }
-            if (BlockChainAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockChainAssetId");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Symbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Symbol");
-            }
-            if (IdIssuer == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IdIssuer");
-            }
-            if (AssetAddress == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetAddress");
-            }
-            if (CategoryId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "CategoryId");
-            }
-            if (DefinitionUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DefinitionUrl");
-            }
-            if (PartnerIds == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "PartnerIds");
-            }
-            if (DisplayId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DisplayId");
-            }
-            if (ForwardBaseAsset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardBaseAsset");
-            }
-            if (ForwardMemoUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ForwardMemoUrl");
-            }
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23585,18 +23265,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Asset == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
-            }
-            if (ChangeWallet == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "ChangeWallet");
-            }
-            if (HotWallet == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "HotWallet");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23713,38 +23382,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (AssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetId");
-            }
-            if (Address == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Address");
-            }
-            if (BlockHash == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BlockHash");
-            }
-            if (DeployerAddress == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "DeployerAddress");
-            }
-            if (TokenName == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TokenName");
-            }
-            if (TokenSymbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TokenSymbol");
-            }
-            if (TokenTotalSupply == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TokenTotalSupply");
-            }
-            if (TransactionHash == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "TransactionHash");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23807,10 +23445,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Ids == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Ids");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23879,14 +23514,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Type == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Type");
-            }
-            if (Value == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Value");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -23973,32 +23601,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Version == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Version");
-            }
-            if (Env == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Env");
-            }
-            if (IssueIndicators == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IssueIndicators");
-            }
-            if (IssueIndicators != null)
-            {
-                foreach (var element in IssueIndicators)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24073,18 +23676,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24177,22 +23769,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (BaseAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "BaseAssetId");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (QuotingAssetId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "QuotingAssetId");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24291,22 +23868,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (IdIssuer == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IdIssuer");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
-            if (Symbol == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Symbol");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24381,18 +23943,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (IconUrl == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "IconUrl");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24479,18 +24030,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (AssetIds == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "AssetIds");
-            }
-            if (Id == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
-            }
-            if (Name == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24553,20 +24093,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24629,20 +24156,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24705,20 +24219,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24781,20 +24282,7 @@ namespace Lykke.Service.Assets.Client.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (Items == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Items");
-            }
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
+            //Nothing to validate
         }
     }
 }
@@ -24938,6 +24426,76 @@ namespace Lykke.Service.Assets.Client.Models
         }
     }
 }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines values for BlockchainIntegrationType.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum BlockchainIntegrationType
+    {
+        [EnumMember(Value = "None")]
+        None,
+        [EnumMember(Value = "Bil")]
+        Bil,
+        [EnumMember(Value = "Sirius")]
+        Sirius
+    }
+    internal static class BlockchainIntegrationTypeEnumExtension
+    {
+        internal static string ToSerializedValue(this BlockchainIntegrationType? value)
+        {
+            return value == null ? null : ((BlockchainIntegrationType)value).ToSerializedValue();
+        }
+
+        internal static string ToSerializedValue(this BlockchainIntegrationType value)
+        {
+            switch( value )
+            {
+                case BlockchainIntegrationType.None:
+                    return "None";
+                case BlockchainIntegrationType.Bil:
+                    return "Bil";
+                case BlockchainIntegrationType.Sirius:
+                    return "Sirius";
+            }
+            return null;
+        }
+
+        internal static BlockchainIntegrationType? ParseBlockchainIntegrationType(this string value)
+        {
+            switch( value )
+            {
+                case "None":
+                    return BlockchainIntegrationType.None;
+                case "Bil":
+                    return BlockchainIntegrationType.Bil;
+                case "Sirius":
+                    return BlockchainIntegrationType.Sirius;
+            }
+            return null;
+        }
+    }
 }
 // <auto-generated>
 // Code generated by Microsoft (R) AutoRest Code Generator.
