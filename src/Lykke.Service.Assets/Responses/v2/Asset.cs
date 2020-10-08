@@ -99,7 +99,11 @@ namespace Lykke.Service.Assets.Responses.V2
         public double CashinMinimalAmount { get; set; }
 
         public double CashoutMinimalAmount { get; set; }
-        
+
         public string LykkeEntityId { get; set; }
+
+        public long SiriusAssetId { get; set; }
+        public string SiriusBlockchainId { get; set; }
+        public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
     }
 }
