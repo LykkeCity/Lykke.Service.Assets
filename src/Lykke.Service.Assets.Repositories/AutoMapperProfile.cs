@@ -88,7 +88,7 @@ namespace Lykke.Service.Assets.Repositories
                 .ForMember(dest => dest.Blockchain, opt => opt.MapFrom(src => Enum.Parse<Blockchain>(src.Blockchain)))
                 .ForMember(dest => dest.PartnerIds, opt => opt.MapFrom(src => src.PartnersIdsJson != null ? src.PartnersIdsJson.DeserializeJson<string[]>() : null))
                 .ForMember(dest => dest.Type,       opt => opt.MapFrom(src => src.Type != null ? Enum.Parse<AssetType>(src.Type) : default(AssetType?)))
-                .ForMember(dest => dest.BlockchainIntegrationType, opt => opt.MapFrom(src => src.BlockchainIntegrationType != null ? Enum.Parse<BlockchainIntegrationType>(src.Type) : default(BlockchainIntegrationType)));
+                .ForMember(dest => dest.BlockchainIntegrationType, opt => opt.MapFrom(src => src.BlockchainIntegrationType != null ? Enum.Parse<BlockchainIntegrationType>(src.BlockchainIntegrationType) : default(BlockchainIntegrationType)));
 
             CreateMap<AssetGroupEntity, AssetGroupAssetLinkDto>()
                 .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Name));
