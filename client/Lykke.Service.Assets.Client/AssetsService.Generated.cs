@@ -22444,7 +22444,9 @@ namespace Lykke.Service.Assets.Client.Models
         /// <param name="blockchain">Possible values include: 'None',
         /// 'Bitcoin', 'Ethereum'</param>
         /// <param name="type">Possible values include: 'Erc20Token'</param>
-        public Asset(int accuracy, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, bool privateWalletsEnabled, double cashinMinimalAmount, double cashoutMinimalAmount, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string blockchainIntegrationLayerId = default(string), string blockchainIntegrationLayerAssetId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?), string lykkeEntityId = default(string))
+        /// <param name="blockchainIntegrationType">Possible values include:
+        /// 'None', 'Bil', 'Sirius'</param>
+        public Asset(int accuracy, bool bankCardsDepositEnabled, bool otherDepositOptionsEnabled, Blockchain blockchain, bool blockchainDepositEnabled, bool blockchainWithdrawal, bool buyScreen, bool crosschainWithdrawal, int defaultOrder, double dustLimit, int forwardFrozenDays, bool forwardWithdrawal, bool hideDeposit, bool hideIfZero, bool hideWithdraw, bool isBase, bool isDisabled, bool isTradable, bool issueAllowed, bool kycNeeded, int multiplierPower, bool notLykkeAsset, bool sellScreen, bool swiftDepositEnabled, bool swiftWithdrawal, bool isTrusted, bool privateWalletsEnabled, double cashinMinimalAmount, double cashoutMinimalAmount, string assetAddress = default(string), string blockChainAssetId = default(string), string blockChainId = default(string), string blockchainIntegrationLayerId = default(string), string blockchainIntegrationLayerAssetId = default(string), string categoryId = default(string), string definitionUrl = default(string), int? displayAccuracy = default(int?), string displayId = default(string), string forwardBaseAsset = default(string), string forwardMemoUrl = default(string), string iconUrl = default(string), string id = default(string), string idIssuer = default(string), double? lowVolumeAmount = default(double?), string name = default(string), IList<string> partnerIds = default(IList<string>), string symbol = default(string), AssetType? type = default(AssetType?), string lykkeEntityId = default(string), long siriusAssetId = default(long), string siriusBlockchainId = default(string), BlockchainIntegrationType blockchainIntegrationType = default(BlockchainIntegrationType))
         {
             Accuracy = accuracy;
             AssetAddress = assetAddress;
@@ -22495,6 +22497,9 @@ namespace Lykke.Service.Assets.Client.Models
             CashinMinimalAmount = cashinMinimalAmount;
             CashoutMinimalAmount = cashoutMinimalAmount;
             LykkeEntityId = lykkeEntityId;
+            SiriusAssetId = siriusAssetId;
+            SiriusBlockchainId = siriusBlockchainId;
+            BlockchainIntegrationType = blockchainIntegrationType;
             CustomInit();
         }
 
@@ -22749,6 +22754,22 @@ namespace Lykke.Service.Assets.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "LykkeEntityId")]
         public string LykkeEntityId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "SiriusAssetId")]
+        public long SiriusAssetId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "SiriusBlockchainId")]
+        public string SiriusBlockchainId { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'None', 'Bil', 'Sirius'
+        /// </summary>
+        [JsonProperty(PropertyName = "BlockchainIntegrationType")]
+        public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -24312,6 +24333,76 @@ namespace Lykke.Service.Assets.Client.Models
             {
                 case "Erc20Token":
                     return AssetType.Erc20Token;
+            }
+            return null;
+        }
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace Lykke.Service.Assets.Client.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Runtime;
+    using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines values for BlockchainIntegrationType.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum BlockchainIntegrationType
+    {
+        [EnumMember(Value = "None")]
+        None,
+        [EnumMember(Value = "Bil")]
+        Bil,
+        [EnumMember(Value = "Sirius")]
+        Sirius
+    }
+    internal static class BlockchainIntegrationTypeEnumExtension
+    {
+        internal static string ToSerializedValue(this BlockchainIntegrationType? value)
+        {
+            return value == null ? null : ((BlockchainIntegrationType)value).ToSerializedValue();
+        }
+
+        internal static string ToSerializedValue(this BlockchainIntegrationType value)
+        {
+            switch( value )
+            {
+                case BlockchainIntegrationType.None:
+                    return "None";
+                case BlockchainIntegrationType.Bil:
+                    return "Bil";
+                case BlockchainIntegrationType.Sirius:
+                    return "Sirius";
+            }
+            return null;
+        }
+
+        internal static BlockchainIntegrationType? ParseBlockchainIntegrationType(this string value)
+        {
+            switch( value )
+            {
+                case "None":
+                    return BlockchainIntegrationType.None;
+                case "Bil":
+                    return BlockchainIntegrationType.Bil;
+                case "Sirius":
+                    return BlockchainIntegrationType.Sirius;
             }
             return null;
         }
