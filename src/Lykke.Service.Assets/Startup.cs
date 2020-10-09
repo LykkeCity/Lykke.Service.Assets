@@ -92,12 +92,12 @@ namespace Lykke.Service.Assets
 
                 services.AddDistributedRedisCache(options =>
                 {
-                    options.Configuration = settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration;
-                    options.InstanceName = settings.CurrentValue.AssetsService.RadisSettings.InstanceName;
+                    options.Configuration = settings.CurrentValue.AssetsService.RedisSettings.Configuration;
+                    options.InstanceName = settings.CurrentValue.AssetsService.RedisSettings.Instance;
                 });
 
                 services.AddLykkeLogging(
-                    assetServiceSettings.ConnectionString(x => x.Logs.DbConnectionString),
+                    assetServiceSettings.ConnectionString(x => x.Db.LogsConnString),
                     "AssetsServiceLog",
                     settings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
                     settings.CurrentValue.SlackNotifications.AzureQueue.QueueName,
@@ -129,7 +129,7 @@ namespace Lykke.Service.Assets
                 builder.RegisterModule(new CqrsModule(settings.Nested(x => x.AssetsService)));
                 builder.RegisterModule(new RepositoriesModule(settings));
                 builder.RegisterModule(new ServicesModule());
-                
+
                 ApplicationContainer = builder.Build();
 
                 Log = ApplicationContainer.Resolve<ILogFactory>().CreateLog(this);
@@ -188,7 +188,7 @@ namespace Lykke.Service.Assets
                     x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
                 app.UseStaticFiles();
-                
+
                 appLifetime.ApplicationStarted.Register(()  => StartApplication().Wait());
                 appLifetime.ApplicationStopping.Register(() => StopApplication().Wait());
                 appLifetime.ApplicationStopped.Register(CleanUp);

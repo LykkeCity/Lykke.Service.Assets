@@ -4,7 +4,7 @@ namespace Lykke.Service.Assets.Core
 {
     public interface IAssetsForClientCacheManagerSettings
     {
-        string InstanceName { get; }
+        string Instance { get; }
         TimeSpan AssetsForClientCacheTimeSpan { get; }
     }
 }

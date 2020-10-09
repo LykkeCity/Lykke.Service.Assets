@@ -60,7 +60,7 @@ namespace Lykke.Service.Assets.Modules
 
             RegisterRabbitMqSubscribers(builder);
 
-            builder.RegisterInstance(_settings.CurrentValue.AssetsService.RadisSettings)
+            builder.RegisterInstance(_settings.CurrentValue.AssetsService.RedisSettings)
                 .As<IAssetsForClientCacheManagerSettings>()
                 .SingleInstance();
 
@@ -71,7 +71,7 @@ namespace Lykke.Service.Assets.Modules
 
         private void RegisterRedis(ContainerBuilder builder)
         {
-            var redis = ConnectionMultiplexer.Connect(_settings.CurrentValue.AssetsService.RadisSettings.RedisConfiguration);
+            var redis = ConnectionMultiplexer.Connect(_settings.CurrentValue.AssetsService.RedisSettings.Configuration);
 
             builder.RegisterInstance(redis).SingleInstance();
             builder.Register(
@@ -100,7 +100,7 @@ namespace Lykke.Service.Assets.Modules
         {
             builder.RegisterType<DistributedCache<I, T>>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.Dictionaries.CacheExpirationPeriod))
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.AssetsService.RedisSettings.Expiration))
                 .WithParameter(TypedParameter.From(partitionKey));
         }
     }

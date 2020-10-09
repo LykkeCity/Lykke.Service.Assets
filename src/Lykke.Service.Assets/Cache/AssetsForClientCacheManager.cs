@@ -27,9 +27,9 @@ namespace Lykke.Service.Assets.Cache
         private readonly ILog _log;
 
         public AssetsForClientCacheManager(
-            IDistributedCache cache, 
+            IDistributedCache cache,
             IAssetsForClientCacheManagerSettings settings,
-            IServer redisServer, 
+            IServer redisServer,
             IDatabase redisDatabase,
             ILogFactory logFactory)
         {
@@ -42,10 +42,10 @@ namespace Lykke.Service.Assets.Cache
 
         public async Task ClearCacheAsync(string reason)
         {
-            RedisKey[] keys = _redisServer.Keys(pattern: $"{_settings.InstanceName}{PatternClient}*", pageSize: 1000).ToArray();
+            RedisKey[] keys = _redisServer.Keys(pattern: $"{_settings.Instance}{PatternClient}*", pageSize: 1000).ToArray();
 
             await _redisDatabase.KeyDeleteAsync(keys);
-            
+
             _log.Info($"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
         }
 
@@ -120,7 +120,7 @@ namespace Lykke.Service.Assets.Cache
             {
                 _log.Error(exception);
             }
-            
+
             return default(T);
         }
 

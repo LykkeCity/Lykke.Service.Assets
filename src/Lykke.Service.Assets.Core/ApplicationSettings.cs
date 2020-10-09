@@ -12,14 +12,10 @@ namespace Lykke.Service.Assets.Core
 
         public class AssetsSettings
         {
-            public DictionariesSettings Dictionaries { get; set; }
-            public LogsSettings Logs { get; set; }
             public DbSettings Db { get; set; }
             public RabbitSettings Rabbit { get; set; }
-            public RadisSettings RadisSettings { get; set; }
-            public string QueuePostfix { get; set; }
-            public TimeSpan RetryDelay { get; set; }
-            public string SagasRabbitMqConnStr { get; set; }
+            public RedisSettings RedisSettings { get; set; }
+            public CqrsSettings Cqrs { get; set; }
             [Optional]
             public ChaosSettings ChaosKitty { get; set; }
         }
@@ -32,24 +28,14 @@ namespace Lykke.Service.Assets.Core
         public class DbSettings
         {
             public string ClientPersonalInfoConnString { get; set; }
-        }
-
-        public class DictionariesSettings
-        {
-            public string DbConnectionString { get; set; }
-            public TimeSpan CacheExpirationPeriod { get; set; }
-        }
-
-        public class LogsSettings
-        {
-            public string DbConnectionString { get; set; }
+            public string LogsConnString { get; set; }
+            public string DictionariesConnectionString { get; set; }
         }
 
         public class SlackNotificationsSettings
         {
             public AzureQueueSettings AzureQueue { get; set; }
 
-            public int ThrottlingLimitSeconds { get; set; }
         }
 
         public class AzureQueueSettings
@@ -59,11 +45,17 @@ namespace Lykke.Service.Assets.Core
             public string QueueName { get; set; }
         }
 
-        public class RadisSettings : IAssetsForClientCacheManagerSettings
+        public class RedisSettings : IAssetsForClientCacheManagerSettings
         {
-            public string RedisConfiguration { get; set; }
-            public string InstanceName { get; set; }
+            public string Configuration { get; set; }
+            public string Instance { get; set; }
+            public TimeSpan Expiration { get; set; }
             public TimeSpan AssetsForClientCacheTimeSpan { get; set; }
+        }
+
+        public class CqrsSettings
+        {
+            public string RabbitConnectionString { get; set; }
         }
     }
 }

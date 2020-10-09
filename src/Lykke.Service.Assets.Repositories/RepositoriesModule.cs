@@ -37,8 +37,8 @@ namespace Lykke.Service.Assets.Repositories
             const string assetConditionLayerTableName = "AssetConditionLayer";
 
             string ClientPersonalInfoConnectionString(ApplicationSettings x) => x.AssetsService.Db.ClientPersonalInfoConnString;
-            string DictionariesConnectionString(ApplicationSettings x)       => x.AssetsService.Dictionaries.DbConnectionString;
-            
+            string DictionariesConnectionString(ApplicationSettings x)       => x.AssetsService.Db.DictionariesConnectionString;
+
             builder.Register<IAssetAttributeRepository>(x => new AssetAttributeRepository(
                 CreateTable<AssetAttributeEntity>(DictionariesConnectionString, assetAttributesTableName, x.Resolve<ILogFactory>())));
 

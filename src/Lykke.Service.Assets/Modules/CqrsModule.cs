@@ -40,18 +40,12 @@ namespace Lykke.Service.Assets.Modules
                     .As<IChaosKitty>()
                     .SingleInstance();
             }
-            
+
             Messaging.Serialization.MessagePackSerializerFactory.Defaults.FormatterResolver = MessagePack.Resolvers.ContractlessStandardResolver.Instance;
 
             builder.Register(context => new AutofacDependencyResolver(context)).As<IDependencyResolver>().SingleInstance();
 
-            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.SagasRabbitMqConnStr };
-
-#if DEBUG
-            const string virtualHost = "/debug";
-#endif
-
-            var defaultRetryDelay = (long)_settings.RetryDelay.TotalMilliseconds;
+            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.Cqrs.RabbitConnectionString };
 
             builder.RegisterType<AssetsHandler>();
 
@@ -62,31 +56,23 @@ namespace Lykke.Service.Assets.Modules
 
                 return new CqrsEngine(ctx.Resolve<ILogFactory>(),
                     ctx.Resolve<IDependencyResolver>(),
-#if DEBUG
-                    new MessagingEngine(ctx.Resolve<ILogFactory>(),
-                        new TransportResolver(new Dictionary<string, TransportInfo>
-                        {
-                            {"RabbitMq", new TransportInfo(rabbitMqSettings.Endpoint + virtualHost, rabbitMqSettings.UserName, rabbitMqSettings.Password, "None", "RabbitMq")}
-                        }),
-                        new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())),
-#else
+
                     new MessagingEngine(ctx.Resolve<ILogFactory>(),
                         new TransportResolver(new Dictionary<string, TransportInfo>
                         {
                             {"RabbitMq", new TransportInfo(rabbitMqSettings.Endpoint.ToString(), rabbitMqSettings.UserName, rabbitMqSettings.Password, "None", "RabbitMq")}
                         }),
                         new RabbitMqTransportFactory(ctx.Resolve<ILogFactory>())),
-#endif
+
                     new DefaultEndpointProvider(),
                     true,
                     Register.DefaultEndpointResolver(new RabbitMqConventionEndpointResolver(
                         "RabbitMq",
                         "messagepack",
                         environment: "lykke",
-                        exclusiveQueuePostfix: _settings.QueuePostfix)),
+                        exclusiveQueuePostfix: "k8s")),
 
                 Register.BoundedContext("assets")
-                    .FailedCommandRetryDelay(defaultRetryDelay)
                     .ListeningCommands(
                             typeof(CreateAssetCommand),
                             typeof(UpdateAssetCommand),
