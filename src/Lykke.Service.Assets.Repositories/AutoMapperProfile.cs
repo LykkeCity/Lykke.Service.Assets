@@ -19,8 +19,7 @@ namespace Lykke.Service.Assets.Repositories
                 .ForMember(dest => dest.Blockchain,      opt => opt.MapFrom(src => src.Blockchain.ToString()))
                 .ForMember(dest => dest.PartnersIdsJson, opt => opt.MapFrom(src => src.PartnerIds != null ? src.PartnerIds.ToJson(false) : null))
                 .ForMember(dest => dest.Type,            opt => opt.MapFrom(src => src.Type != null ? src.Type.ToString() : null))
-                .ForMember(dest => dest.BlockchainIntegrationType, opt => opt.MapFrom(src => src.BlockchainIntegrationType.ToString()))
-                ;
+                .ForMember(dest => dest.BlockchainIntegrationType, opt => opt.MapFrom(src => src.BlockchainIntegrationType.ToString()));
 
             CreateMap<IAssetGroup, AssetGroupEntity>()
                 .ForMember(dest => dest.AssetId,  opt => opt.Ignore())
