@@ -72,17 +72,32 @@ namespace Lykke.Service.Assets.Services
             }
         }
 
+        private readonly Dictionary<string, IEnumerable<T>> _dataList = new Dictionary<string, IEnumerable<T>>();
+
         public async Task<IEnumerable<T>> GetListAsync(string key, Func<Task<IEnumerable<I>>> factory)
         {
             try
             {
-                var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
-                if (cached.HasValue)
-                    return CacheSerializer.Deserialize<T[]>(cached);
+                //var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
+                //if (cached.HasValue)
+                //    return CacheSerializer.Deserialize<T[]>(cached);
+
+                lock (_dataList)
+                {
+                    if (_dataList.TryGetValue(key, out var cached))
+                    {
+                        return cached;
+                    }
+                }
 
                 var result = (await factory()).Cast<T>().ToArray();
-                
-                await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+
+                //await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+
+                lock (_dataList)
+                {
+                    _dataList[key] = result;
+                }
 
                 return result;
             }
