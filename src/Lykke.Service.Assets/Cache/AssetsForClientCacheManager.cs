@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson.IO;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Lykke.Service.Assets.Cache
 {
@@ -88,7 +90,7 @@ namespace Lykke.Service.Assets.Cache
             return conditons?.Cast<IAssetCondition>().ToList();
         }
 
-        private static Dictionary<string, object> _data = new Dictionary<string, object>();
+        private static Dictionary<string, string> _data = new Dictionary<string, string>();
 
         private async Task SetAsync<T>(string key, T value)
         {
@@ -96,7 +98,7 @@ namespace Lykke.Service.Assets.Cache
             {
                 lock (_data)
                 {
-                    _data[key] = value;
+                    _data[key] = value.ToJson();
                 }
                 //await _redisDatabase.StringSetAsync(key, value.ToJson(), _expiration);
             }
@@ -113,7 +115,11 @@ namespace Lykke.Service.Assets.Cache
                 lock (_data)
                 {
                     if (_data.TryGetValue(key, out var result))
-                        return (T)result;
+                    {
+                        var resp = JsonConvert.DeserializeObject<T>(result);
+                        
+                        return resp;
+                    }
                 }
 
                 //string value = await _redisDatabase.StringGetAsync(key);
