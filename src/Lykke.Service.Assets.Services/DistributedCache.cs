@@ -169,7 +169,11 @@ namespace Lykke.Service.Assets.Services
         {
             try
             {
-                await _redisDatabase.KeyDeleteAsync(GetCacheKey(id));
+                lock (_data)
+                {
+                    _data.Remove(GetCacheKey(id));
+                }
+                //await _redisDatabase.KeyDeleteAsync(GetCacheKey(id));
             }
             catch (Exception e)
             {
