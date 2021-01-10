@@ -10,19 +10,19 @@ namespace Lykke.Service.Assets.Core.Services
         Task<T> GetAsync(string key, Func<Task<I>> factory);
         Task<IEnumerable<T>> GetListAsync(string key, Func<Task<IEnumerable<I>>> factory);
 
-        Task<IEnumerable<T>> GetListAsync(
-            string prefix,
-            ICollection<string> keys,
-            Func<T, string> keyExtractor,
-            Func<IEnumerable<string>, Task<IEnumerable<I>>> factory);
+        //Task<IEnumerable<T>> GetListAsync(
+        //    string prefix,
+        //    ICollection<string> keys,
+        //    Func<T, string> keyExtractor,
+        //    Func<IEnumerable<string>, Task<IEnumerable<I>>> factory);
 
         Task RemoveAsync(string id);
 
-        Task CacheDataAsync<T>(
-            IEnumerable<T> items,
-            Func<T, string> keyExtractor,
-            string prefix);
+        //Task CacheDataAsync<T>(
+        //    IEnumerable<T> items,
+        //    Func<T, string> keyExtractor,
+        //    string prefix);
 
-        Task CacheDataAsync<T>(string key, IEnumerable<T> items);
+        Task CacheDataAsync<Y>(string key, IEnumerable<Y> items);
     }
 }

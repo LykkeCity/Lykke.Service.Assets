@@ -17,7 +17,7 @@ namespace Lykke.Service.Assets.Cache
     public class AssetsForClientCacheManager : IAssetsForClientCacheManager
     {
         private readonly IServer _redisServer;
-        private readonly IDatabase _redisDatabase;
+        //private readonly IDatabase _redisDatabase;
         private readonly ILog _log;
         private readonly string _partitionKey;
         private readonly TimeSpan _expiration;
@@ -29,7 +29,7 @@ namespace Lykke.Service.Assets.Cache
             string partitionKey, TimeSpan expiration)
         {
             _redisServer = redisServer;
-            _redisDatabase = redisDatabase;
+            //_redisDatabase = redisDatabase;
             _expiration = expiration;
             _log = logFactory.CreateLog(this);
             _partitionKey = partitionKey;
@@ -39,7 +39,11 @@ namespace Lykke.Service.Assets.Cache
         {
             RedisKey[] keys = _redisServer.Keys(pattern: $"{_partitionKey}*", pageSize: 1000).ToArray();
 
-            await _redisDatabase.KeyDeleteAsync(keys);
+            //await _redisDatabase.KeyDeleteAsync(keys);
+            lock (_data)
+            {
+                _data.Clear();
+            }
 
             _log.Info($"Clear assets cache, count of record: {keys.Length}, reason: {reason}");
         }
@@ -48,12 +52,14 @@ namespace Lykke.Service.Assets.Cache
         {
             try
             {
-                await Task.WhenAll(
-                    _redisDatabase.KeyDeleteAsync(GetKeyCashInViaBankCardEnabled(clientId, true)),
-                    _redisDatabase.KeyDeleteAsync(GetKeyCashInViaBankCardEnabled(clientId, false)),
-                    _redisDatabase.KeyDeleteAsync(GetKeySwiftDepositEnabled(clientId, true)),
-                    _redisDatabase.KeyDeleteAsync(GetKeySwiftDepositEnabled(clientId, false)),
-                    _redisDatabase.KeyDeleteAsync(GetKeyAssetConditions(clientId)));
+                lock (_data)
+                {
+                    _data.Remove(GetKeyCashInViaBankCardEnabled(clientId, true));
+                    _data.Remove(GetKeyCashInViaBankCardEnabled(clientId, false));
+                    _data.Remove(GetKeySwiftDepositEnabled(clientId, true));
+                    _data.Remove(GetKeySwiftDepositEnabled(clientId, false));
+                    _data.Remove(GetKeyAssetConditions(clientId));
+                }
             }
             catch (Exception exception)
             {
@@ -82,11 +88,17 @@ namespace Lykke.Service.Assets.Cache
             return conditons?.Cast<IAssetCondition>().ToList();
         }
 
+        private static Dictionary<string, object> _data = new Dictionary<string, object>();
+
         private async Task SetAsync<T>(string key, T value)
         {
             try
             {
-                await _redisDatabase.StringSetAsync(key, value.ToJson(), _expiration);
+                lock (_data)
+                {
+                    _data[key] = value;
+                }
+                //await _redisDatabase.StringSetAsync(key, value.ToJson(), _expiration);
             }
             catch (Exception exception)
             {
@@ -98,12 +110,18 @@ namespace Lykke.Service.Assets.Cache
         {
             try
             {
-                string value = await _redisDatabase.StringGetAsync(key);
-
-                if (!string.IsNullOrEmpty(value))
+                lock (_data)
                 {
-                    return value.DeserializeJson<T>();
+                    if (_data.TryGetValue(key, out var result))
+                        return (T)result;
                 }
+
+                //string value = await _redisDatabase.StringGetAsync(key);
+
+                //if (!string.IsNullOrEmpty(value))
+                //{
+                //    return value.DeserializeJson<T>();
+                //}
             }
             catch (Exception exception)
             {

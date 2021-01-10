@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using Common.Log;
 using Lykke.Common.Log;
 using Lykke.Service.Assets.Core.Services;
+using MongoDB.Bson.IO;
+using Newtonsoft.Json;
 using StackExchange.Redis;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace Lykke.Service.Assets.Services
 {
@@ -14,7 +18,7 @@ namespace Lykke.Service.Assets.Services
         private const int MaxConcurrentTasksCount = 50;
 
         private readonly ILog _log;
-        private readonly IDatabase _redisDatabase;
+        //private readonly IDatabase _redisDatabase;
         private readonly string _partitionKey;
         private readonly TimeSpan _expiration;
 
@@ -25,7 +29,7 @@ namespace Lykke.Service.Assets.Services
             string partitionKey)
         {
             _log = logFactory.CreateLog(this);
-            _redisDatabase = redisDatabase;
+            //_redisDatabase = redisDatabase;
             _partitionKey = partitionKey;
             _expiration = expiration;
         }
@@ -72,7 +76,7 @@ namespace Lykke.Service.Assets.Services
             }
         }
 
-        private readonly Dictionary<string, IEnumerable<T>> _dataList = new Dictionary<string, IEnumerable<T>>();
+        private readonly Dictionary<string, List<T>> _dataList = new Dictionary<string, List<T>>();
 
         public async Task<IEnumerable<T>> GetListAsync(string key, Func<Task<IEnumerable<I>>> factory)
         {
@@ -96,7 +100,7 @@ namespace Lykke.Service.Assets.Services
 
                 lock (_dataList)
                 {
-                    _dataList[key] = result;
+                    _dataList[key] = result.ToList();
                 }
 
                 return result;
@@ -108,62 +112,62 @@ namespace Lykke.Service.Assets.Services
             }
         }
 
-        public async Task<IEnumerable<T>> GetListAsync(
-            string prefix,
-            ICollection<string> keys,
-            Func<T, string> keyExtractor,
-            Func<IEnumerable<string>, Task<IEnumerable<I>>> factory)
-        {
-            try
-            {
-                List<T> cachedItems;
-                List<string> notFoundKeys;
-                if (keys == null)
-                {
-                    var cached = await _redisDatabase.StringGetAsync(GetCacheKey(prefix));
-                    if (cached.HasValue)
-                    {
-                        var resultItems = CacheSerializer.Deserialize<T[]>(cached);
-                        await CacheDataAsync(
-                            resultItems,
-                            keyExtractor,
-                            prefix);
-                        return resultItems;
-                    }
-                    cachedItems = new List<T>();
-                    notFoundKeys = null;
-                }
-                else
-                {
-                    var cached = await _redisDatabase.StringGetAsync(keys.Select(k => (RedisKey)GetCacheKey($"{prefix}:{k}")).ToArray());
-                    cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c)).ToList();
-                    if (cachedItems.Count == keys.Count)
-                        return cachedItems;
+        //public async Task<IEnumerable<T>> GetListAsync(
+        //    string prefix,
+        //    ICollection<string> keys,
+        //    Func<T, string> keyExtractor,
+        //    Func<IEnumerable<string>, Task<IEnumerable<I>>> factory)
+        //{
+        //    try
+        //    {
+        //        List<T> cachedItems;
+        //        List<string> notFoundKeys;
+        //        if (keys == null)
+        //        {
+        //            var cached = await _redisDatabase.StringGetAsync(GetCacheKey(prefix));
+        //            if (cached.HasValue)
+        //            {
+        //                var resultItems = CacheSerializer.Deserialize<T[]>(cached);
+        //                await CacheDataAsync(
+        //                    resultItems,
+        //                    keyExtractor,
+        //                    prefix);
+        //                return resultItems;
+        //            }
+        //            cachedItems = new List<T>();
+        //            notFoundKeys = null;
+        //        }
+        //        else
+        //        {
+        //            var cached = await _redisDatabase.StringGetAsync(keys.Select(k => (RedisKey)GetCacheKey($"{prefix}:{k}")).ToArray());
+        //            cachedItems = cached.Where(c => c.HasValue).Select(c => CacheSerializer.Deserialize<T>(c)).ToList();
+        //            if (cachedItems.Count == keys.Count)
+        //                return cachedItems;
 
-                    notFoundKeys = new List<string>();
-                    var cachedKeysHash = new HashSet<string>(cachedItems.Select(keyExtractor));
-                    foreach (var key in keys)
-                    {
-                        if (cachedKeysHash.Contains(key))
-                            continue;
-                        notFoundKeys.Add(key);
-                    }
-                }
+        //            notFoundKeys = new List<string>();
+        //            var cachedKeysHash = new HashSet<string>(cachedItems.Select(keyExtractor));
+        //            foreach (var key in keys)
+        //            {
+        //                if (cachedKeysHash.Contains(key))
+        //                    continue;
+        //                notFoundKeys.Add(key);
+        //            }
+        //        }
 
-                var foundResults = (await factory(notFoundKeys)).Cast<T>().ToList();
-                await CacheDataAsync(
-                    foundResults,
-                    keyExtractor,
-                    prefix);
+        //        var foundResults = (await factory(notFoundKeys)).Cast<T>().ToList();
+        //        await CacheDataAsync(
+        //            foundResults,
+        //            keyExtractor,
+        //            prefix);
 
-                return cachedItems.Concat(foundResults);
-            }
-            catch (Exception e)
-            {
-                _log.Warning(e.Message, e);
-                return (await factory(keys)).Cast<T>();
-            }
-        }
+        //        return cachedItems.Concat(foundResults);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _log.Warning(e.Message, e);
+        //        return (await factory(keys)).Cast<T>();
+        //    }
+        //}
 
         public async Task RemoveAsync(string id)
         {
@@ -181,34 +185,42 @@ namespace Lykke.Service.Assets.Services
             }
         }
 
-        public async Task CacheDataAsync<T>(
-            IEnumerable<T> items,
-            Func<T, string> keyExtractor,
-            string prefix)
-        {
-            var tasks = new List<Task>();
-            foreach (var item in items)
-            {
-                var key = keyExtractor(item);
-                tasks.Add(Task.Run(async () =>
-                {
-                    var cacheKey = GetCacheKey($"{prefix}:{key}");
-                    if (!await _redisDatabase.KeyExistsAsync(cacheKey))
-                        await _redisDatabase.StringSetAsync(cacheKey, CacheSerializer.Serialize(item), _expiration);
-                }));
-                if (tasks.Count >= MaxConcurrentTasksCount)
-                {
-                    await Task.WhenAll(tasks);
-                    tasks.Clear();
-                }
-            }
-            if (tasks.Count > 0)
-                await Task.WhenAll(tasks);
-        }
+        //public async Task CacheDataAsync<T>(
+        //    IEnumerable<T> items,
+        //    Func<T, string> keyExtractor,
+        //    string prefix)
+        //{
+        //    var tasks = new List<Task>();
+        //    foreach (var item in items)
+        //    {
+        //        var key = keyExtractor(item);
+        //        tasks.Add(Task.Run(async () =>
+        //        {
+        //            var cacheKey = GetCacheKey($"{prefix}:{key}");
+        //            if (!await _redisDatabase.KeyExistsAsync(cacheKey))
+        //                await _redisDatabase.StringSetAsync(cacheKey, CacheSerializer.Serialize(item), _expiration);
+        //        }));
+        //        if (tasks.Count >= MaxConcurrentTasksCount)
+        //        {
+        //            await Task.WhenAll(tasks);
+        //            tasks.Clear();
+        //        }
+        //    }
+        //    if (tasks.Count > 0)
+        //        await Task.WhenAll(tasks);
+        //}
 
-        public Task CacheDataAsync<T>(string key, IEnumerable<T> items)
+        public async Task CacheDataAsync<Y>(string key, IEnumerable<Y> items)
         {
-            return _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(items), _expiration);
+            lock (_dataList)
+            {
+                var json = items.ToJson();
+                var data = JsonConvert.DeserializeObject<List<T>>(json);
+                _dataList[key] = data;
+
+            }
+
+            //return _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(items), _expiration);
         }
     }
 }
