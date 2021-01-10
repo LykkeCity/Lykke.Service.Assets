@@ -107,6 +107,7 @@ namespace Lykke.Service.Assets.Cache
             }
             catch (Exception exception)
             {
+                Console.WriteLine($"Error! key: {key}, T: {typeof(T).Name}");
                 _log.Error(exception);
             }
 
