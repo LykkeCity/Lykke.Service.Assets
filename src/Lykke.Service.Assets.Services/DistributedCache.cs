@@ -51,6 +51,7 @@ namespace Lykke.Service.Assets.Services
             }
             catch (Exception e)
             {
+                Console.WriteLine($"Error! key: {key}, I: {typeof(I).Name}; T: {typeof(T)}");
                 _log.Warning(e.Message, e);
                 return await factory() as T;
             }
