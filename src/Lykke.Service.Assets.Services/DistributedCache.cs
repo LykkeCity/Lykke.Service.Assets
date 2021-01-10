@@ -35,10 +35,20 @@ namespace Lykke.Service.Assets.Services
             return $"{_partitionKey}:{id}";
         }
 
+        private readonly Dictionary<string, T> _data = new Dictionary<string, T>();
+
         public async Task<T> GetAsync(string key, Func<Task<I>> factory)
         {
             try
             {
+                lock (_data)
+                {
+                    if (_data.TryGetValue(key, out var cached))
+                    {
+                        return cached;
+                    }
+                }
+
                 //var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
                 //if (cached.HasValue)
                 //    return CacheSerializer.Deserialize<T>(cached);
@@ -46,6 +56,11 @@ namespace Lykke.Service.Assets.Services
                 var result = await factory() as T;
                 //if (result != null)
                 //    await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+
+                lock (_data)
+                {
+                    _data[key] = result;
+                }
 
                 return result;
             }
@@ -61,12 +76,14 @@ namespace Lykke.Service.Assets.Services
         {
             try
             {
-                //var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
-                //if (cached.HasValue)
-                //    return CacheSerializer.Deserialize<T[]>(cached);
+                var cached = await _redisDatabase.StringGetAsync(GetCacheKey(key));
+                if (cached.HasValue)
+                    return CacheSerializer.Deserialize<T[]>(cached);
 
                 var result = (await factory()).Cast<T>().ToArray();
-                //await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+                
+                await _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(result), _expiration);
+
                 return result;
             }
             catch (Exception e)
