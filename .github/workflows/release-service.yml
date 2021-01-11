@@ -21,20 +21,10 @@ jobs:
       run: dotnet test --no-build --configuration Release
 
     - name: Publish API
-      run: dotnet publish ./src/Lykke.Service.Assets/Lykke.Service.Assets.csproj --output --configuration Release
+      run: dotnet publish --no-build ./src/Lykke.Service.Assets/Lykke.Service.Assets.csproj --configuration Release
 
     - name: Check API dir
       run: ls ./src/Lykke.Service.Assets/bin/Release/netcoreapp2.1/publish
-
-    - name: Publish Manager API to registry TEST tag
-      uses: swisschain/Publish-Docker-Github-Action@master
-      with:
-        name: swisschains/antares-service-asset:test
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        workdir: ./src/Lykke.Service.Assets/bin/Release/netcoreapp2.1/publish
-        # snapshot: true # use snapshot to push an additional image, which is tagged with {YEAR}{MONTH}{DAY}{HOUR}{MINUTE}{SECOND}{first 6 digits of the git sha}
-        tag_names: false
 
     - name: Publish API to Registry
       uses: swisschain/Publish-Docker-Github-Action@master
