@@ -1,0 +1,25 @@
+name: Release API client nuget
+
+on:
+  push:
+    tags: "client-*"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+    - name: Build
+      run: dotnet build --configuration Release /p:AssemblyVersion=${GITHUB_REF#refs/tags/api-client-}
+    - name: Test
+      run: dotnet test --no-build --configuration Release
+    - name: Create the package
+      run: dotnet pack --configuration Release client/Lykke.Service.Assets.Client /p:Version=${GITHUB_REF#refs/tags/api-client-}
+    - name: Publish the package to GPR
+      run: dotnet nuget push client/Lykke.Service.Assets.Client/bin/Release/*.nupkg -s "https://api.nuget.org/v3/index.json" -k ${{ secrets.NUGET_TOCKEN }}
