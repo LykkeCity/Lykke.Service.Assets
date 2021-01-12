@@ -22,10 +22,10 @@ jobs:
       run: dotnet test --no-build --configuration Release
 
     - name: Publish Service
-      run: dotnet publish --no-build ./src/Lykke.Service.Assets/Lykke.Service.Assets.csproj --configuration Release
+      run: dotnet publish --no-build ./src/Lykke.Service.Assets/Lykke.Service.Assets.csproj --configuration Release --output ./publish-api
 
     - name: Check Service dir
-      run: ls ./src/Lykke.Service.Assets/bin/Release/netcoreapp2.1/publish
+      run: ls ./publish-api
 
     - name: Publish Manager API to registry
       uses: swisschain/Publish-Docker-Github-Action@master
@@ -33,7 +33,7 @@ jobs:
         name: swisschains/antares-service-asset:dev
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        workdir: ./src/Lykke.Service.Assets/bin/Release/netcoreapp2.1/publish
+        workdir: ./publish-api
         # snapshot: true # use snapshot to push an additional image, which is tagged with {YEAR}{MONTH}{DAY}{HOUR}{MINUTE}{SECOND}{first 6 digits of the git sha}
         tag_names: true
     - name: Restart service
