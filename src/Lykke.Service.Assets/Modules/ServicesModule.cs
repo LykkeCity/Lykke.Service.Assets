@@ -1,5 +1,5 @@
-﻿using Autofac;
-using Lykke.Sdk;
+﻿using Antares.Sdk.Services;
+using Autofac;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services;
 

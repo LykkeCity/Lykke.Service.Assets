@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Antares.Sdk.Services;
 using Lykke.Cqrs;
-using Lykke.Sdk;
 
 namespace Lykke.Service.Assets.Services
 {

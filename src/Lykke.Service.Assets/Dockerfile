@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1.0-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0.1-buster-slim
 WORKDIR /app
 COPY . .
 ENTRYPOINT ["dotnet", "Lykke.Service.Assets.dll"]

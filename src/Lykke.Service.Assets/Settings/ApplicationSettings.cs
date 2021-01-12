@@ -1,4 +1,4 @@
-﻿using Lykke.Sdk.Settings;
+﻿using Antares.Sdk.Settings;
 
 namespace Lykke.Service.Assets.Settings
 {

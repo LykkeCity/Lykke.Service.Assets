@@ -15,7 +15,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 2.2.103
+        dotnet-version: 5.0.101
     - name: Build
       run: dotnet build --configuration Release /p:AssemblyVersion=0.0.0
     - name: Test

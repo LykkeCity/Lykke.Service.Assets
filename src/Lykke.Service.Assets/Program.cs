@@ -1,4 +1,4 @@
-﻿using Lykke.Sdk;
+﻿using Antares.Sdk;
 using System.Threading.Tasks;
 
 namespace Lykke.Service.Assets
