@@ -40,5 +40,5 @@ jobs:
       uses: swisschain/kube-restart-pods@master
       env:
         KUBE_CONFIG_DATA: ${{ secrets.LYKKE_TEST_KUBE_CONFIG_DATA }}
-        NAMESPACE: lykke-service
+        NAMESPACE: services
         POD: assets
