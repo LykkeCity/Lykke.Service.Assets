@@ -31,11 +31,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Tools", "5. Tools", "{8A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterErc20Tokens", "src\RegisterErc20Tokens\RegisterErc20Tokens.csproj", "{3F018E8F-E690-48C8-AFA5-6E8D3F6B3721}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.NoSql", "src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj", "{53776146-EDB3-4D00-B5E5-E1C71A6E834A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets.NoSql", "src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj", "{53776146-EDB3-4D00-B5E5-E1C71A6E834A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.Core.Domain", "src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj", "{9AED8B96-6A25-4FF2-B681-89D84062E5BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets.Core.Domain", "src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj", "{9AED8B96-6A25-4FF2-B681-89D84062E5BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antares.Service.Assets.Client", "client\Antares.Service.Assets.Client\Antares.Service.Assets.Client.csproj", "{BCCA12E3-0363-422C-886A-AFF7B26D77C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Antares.Service.Assets.Client", "client\Antares.Service.Assets.Client\Antares.Service.Assets.Client.csproj", "{BCCA12E3-0363-422C-886A-AFF7B26D77C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.Tests.ConsoleApp", "tests\Lykke.Service.Assets.Tests.ConsoleApp\Lykke.Service.Assets.Tests.ConsoleApp.csproj", "{488EB70C-00BA-476A-BEB8-E74534925CA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{BCCA12E3-0363-422C-886A-AFF7B26D77C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCCA12E3-0363-422C-886A-AFF7B26D77C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCCA12E3-0363-422C-886A-AFF7B26D77C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{488EB70C-00BA-476A-BEB8-E74534925CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{488EB70C-00BA-476A-BEB8-E74534925CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{488EB70C-00BA-476A-BEB8-E74534925CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{488EB70C-00BA-476A-BEB8-E74534925CA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{53776146-EDB3-4D00-B5E5-E1C71A6E834A} = {0C32A041-EA3F-4888-A58E-2B50F0AE0E58}
 		{9AED8B96-6A25-4FF2-B681-89D84062E5BC} = {9ED8EFD0-B340-4111-9BA1-F79B205DB0D3}
 		{BCCA12E3-0363-422C-886A-AFF7B26D77C1} = {3420C66E-488B-49E5-95D4-992D9E1F7540}
+		{488EB70C-00BA-476A-BEB8-E74534925CA3} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA175073-FA32-46DA-85F7-6B5D3ED37EA0}
