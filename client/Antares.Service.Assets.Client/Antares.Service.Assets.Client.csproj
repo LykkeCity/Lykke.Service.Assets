@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Swisschain</Authors>
     <Company>Swisschain</Company>
     <Product>Antares.Service.Assets</Product>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MyNoSqlServer20.DataReader" Version="1.2.17" />
+    <PackageReference Include="MyNoSqlServer.DataReader" Version="1.2.17" />
   </ItemGroup>
 
   <ItemGroup>
