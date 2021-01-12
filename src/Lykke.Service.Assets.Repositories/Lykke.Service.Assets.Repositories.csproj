@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
   </ItemGroup>
 

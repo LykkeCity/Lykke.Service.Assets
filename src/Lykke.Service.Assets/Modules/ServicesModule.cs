@@ -17,6 +17,8 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<AssetAttributeService>()
                 .As<IAssetAttributeService>()
+                .As<IStartable>()
+                .AutoActivate()
                 .SingleInstance();
 
             builder

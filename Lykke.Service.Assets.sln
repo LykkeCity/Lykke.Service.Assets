@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29430.225
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.Assets", "src\Lykke.Service.Assets\Lykke.Service.Assets.csproj", "{80BA53B9-CA23-49E0-B9FE-DBA581E82B47}"
 EndProject
@@ -30,6 +30,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Tools", "5. Tools", "{8A1E8836-5C34-4BB5-869B-D41D563E7898}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterErc20Tokens", "src\RegisterErc20Tokens\RegisterErc20Tokens.csproj", "{3F018E8F-E690-48C8-AFA5-6E8D3F6B3721}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.NoSql", "src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj", "{53776146-EDB3-4D00-B5E5-E1C71A6E834A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.Assets.Core.Domain", "src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj", "{9AED8B96-6A25-4FF2-B681-89D84062E5BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +77,14 @@ Global
 		{3F018E8F-E690-48C8-AFA5-6E8D3F6B3721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F018E8F-E690-48C8-AFA5-6E8D3F6B3721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F018E8F-E690-48C8-AFA5-6E8D3F6B3721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53776146-EDB3-4D00-B5E5-E1C71A6E834A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53776146-EDB3-4D00-B5E5-E1C71A6E834A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53776146-EDB3-4D00-B5E5-E1C71A6E834A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53776146-EDB3-4D00-B5E5-E1C71A6E834A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AED8B96-6A25-4FF2-B681-89D84062E5BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AED8B96-6A25-4FF2-B681-89D84062E5BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AED8B96-6A25-4FF2-B681-89D84062E5BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AED8B96-6A25-4FF2-B681-89D84062E5BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +98,8 @@ Global
 		{17D57AB6-C6E8-4C12-A5BF-08F871B5C61C} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
 		{6AB4D8FF-E7FE-4F68-97E3-CF2D374DB540} = {6F04271F-62A2-4C7F-82D9-EDBD1773C745}
 		{3F018E8F-E690-48C8-AFA5-6E8D3F6B3721} = {8A1E8836-5C34-4BB5-869B-D41D563E7898}
+		{53776146-EDB3-4D00-B5E5-E1C71A6E834A} = {0C32A041-EA3F-4888-A58E-2B50F0AE0E58}
+		{9AED8B96-6A25-4FF2-B681-89D84062E5BC} = {9ED8EFD0-B340-4111-9BA1-F79B205DB0D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA175073-FA32-46DA-85F7-6B5D3ED37EA0}

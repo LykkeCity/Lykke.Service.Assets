@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets\Lykke.Service.Assets.csproj" />
+    <ProjectReference Include="..\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

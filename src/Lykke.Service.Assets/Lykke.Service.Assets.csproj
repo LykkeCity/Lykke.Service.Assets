@@ -34,6 +34,8 @@
   <ItemGroup>    
     <ProjectReference Include="..\..\client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />    
     <ProjectReference Include="..\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
+    <ProjectReference Include="..\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.Assets.Services\Lykke.Service.Assets.Services.csproj" />
   </ItemGroup>
