@@ -36,3 +36,9 @@ jobs:
         workdir: ./src/Lykke.Service.Assets/bin/Release/netcoreapp2.1/publish
         # snapshot: true # use snapshot to push an additional image, which is tagged with {YEAR}{MONTH}{DAY}{HOUR}{MINUTE}{SECOND}{first 6 digits of the git sha}
         tag_names: true
+    - name: Restart service
+      uses: swisschain/kube-restart-pods@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.LYKKE_DEV_KUBE_CONFIG_DATA }}
+        NAMESPACE: lykke-service
+        POD: assets
