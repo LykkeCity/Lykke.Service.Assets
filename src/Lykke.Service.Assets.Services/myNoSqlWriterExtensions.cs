@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common;
@@ -89,7 +90,12 @@ namespace Lykke.Service.Assets.Services
             try
             {
                 var data = _readAllRecordsCallback.Invoke();
-                _writer.CleanAndBulkInsertAsync(data).GetAwaiter().GetResult();
+
+                foreach (var group in data.GroupBy(e => e.PartitionKey))
+                {
+                    _writer.CleanAndBulkInsertAsync(group.Key, group).GetAwaiter().GetResult();
+                }
+
                 _log.Info($"Reload MyNoSql table for entity {typeof(TEntity).Name}. Count Record: {data.Count}");
             }
             catch (Exception ex)

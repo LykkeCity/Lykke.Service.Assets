@@ -5,7 +5,7 @@ namespace Lykke.Service.Assets.NoSql.Models.AssetAttributeModel
 {
     public class AssetAttributeNoSql: MyNoSqlDbEntity, IAssetAttribute
     {
-        public static string TableName = "Antares.Asset.Attribute";
+        public static string TableName = "antares.asset.attribute";
 
         public static string GeneratePartitionKey(string assetId) => assetId;
         public static string GenerateRowKey(string key) => key;
