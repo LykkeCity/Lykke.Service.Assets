@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Swisschain</Authors>
+    <Company>Swisschain</Company>
+    <Product>Antares.Service.Assets</Product>
+    <Description>Client for Antares.Service.Assets API</Description>
+    <Copyright></Copyright>
+    <PackageLicenseUrl>https://github.com/swisschain/Antares.Service.Assets/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/swisschain/Antares.Service.Assets</PackageProjectUrl>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/60782394</PackageIconUrl>
+    <RepositoryUrl>https://github.com/swisschain/Antares.Service.Assets.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Antares;Swisschain</PackageTags>
+    <PackageId>Swisschain.Antares.Service.Assets.Client</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MyNoSqlServer20.DataReader" Version="1.2.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj" />
+    <ProjectReference Include="..\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
+  </ItemGroup>
+
+</Project>

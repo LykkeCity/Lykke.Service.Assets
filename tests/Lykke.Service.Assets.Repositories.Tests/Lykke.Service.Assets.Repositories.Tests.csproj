@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Core\Lykke.Service.Assets.Core.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.Assets.Repositories\Lykke.Service.Assets.Repositories.csproj" />
-    <ProjectReference Include="..\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>

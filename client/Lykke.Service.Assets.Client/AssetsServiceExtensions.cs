@@ -15,7 +15,7 @@ namespace Lykke.Service.Assets.Client
         /// </summary>
         /// <param name='operations'>The operations group for this extension method</param>
         /// <returns></returns>
-        public static IList<Asset> AssetGetAll(this IAssetsService operations)
+        public static IList<Asset> AssetGetAll(this IAssetsServiceHttp operations)
         {
             return operations.AssetGetAllAsync(true).GetAwaiter().GetResult();
         }
@@ -26,7 +26,7 @@ namespace Lykke.Service.Assets.Client
         /// <param name='operations'>The operations group for this extension method.</param>
         /// <param name='cancellationToken'>The cancellation token.</param>
         /// <returns></returns>
-        public static async Task<IList<Asset>> AssetGetAllAsync(this IAssetsService operations, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<Asset>> AssetGetAllAsync(this IAssetsServiceHttp operations, CancellationToken cancellationToken = default(CancellationToken))
         {
             using (var result = await operations.AssetGetAllWithHttpMessagesAsync(true, null, cancellationToken).ConfigureAwait(false))
             {
