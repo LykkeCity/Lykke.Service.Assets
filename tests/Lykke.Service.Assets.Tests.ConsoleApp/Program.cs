@@ -20,7 +20,7 @@ namespace Lykke.Service.Assets.Tests.ConsoleApp
 
             Console.WriteLine($"Assets count: {res.Count}");
 
-            var attr = client.AssetAttributes.GetAll().GetAwaiter().GetResult();
+            var attr = client.AssetAttributes.GetAll();
             Console.WriteLine($"Attr count: {attr.Count}");
             foreach (var item in attr)
             {

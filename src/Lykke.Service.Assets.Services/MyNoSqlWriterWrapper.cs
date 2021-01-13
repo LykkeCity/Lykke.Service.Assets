@@ -10,30 +10,32 @@ using MyNoSqlServer.Abstractions;
 
 namespace Lykke.Service.Assets.Services
 {
-    public class MyNoSqlWriterWrapper<TEntity> : IDisposable where TEntity : IMyNoSqlDbEntity, new()
+    public interface IMyNoSqlWriterWrapper<TEntity> where TEntity : IMyNoSqlDbEntity, new()
+    {
+        Task<bool> TryInsertOrReplaceAsync(TEntity entity);
+        Task<bool> TryDeleteAsync(string partitionKey, string rowKey);
+        void Start(Func<IList<TEntity>> readAllRecordsCallback, TimeSpan? reloadTimerPeriod = null);
+    }
+
+    public class MyNoSqlWriterWrapper<TEntity> : IDisposable, IMyNoSqlWriterWrapper<TEntity> where TEntity : IMyNoSqlDbEntity, new()
     {
         private readonly IMyNoSqlServerDataWriter<TEntity> _writer;
-        private readonly Func<IList<TEntity>> _readAllRecordsCallback;
+        private Func<IList<TEntity>> _readAllRecordsCallback;
         private readonly ILog _log;
         private Timer _timer;
         private bool _isStarted = false;
         private readonly object _sync = new object();
 
-        private readonly TimeSpan _reloadTimerPeriod;
+        private TimeSpan _reloadTimerPeriod;
 
 
         public MyNoSqlWriterWrapper(
             IMyNoSqlServerDataWriter<TEntity> writer,
-            Func<IList<TEntity>> readAllRecordsCallback,
-            ILog log,
-            TimeSpan? reloadTimerPeriod = null)
+            ILogFactory logFactory)
         {
             _writer = writer;
-            _readAllRecordsCallback = readAllRecordsCallback 
-                ?? throw new ArgumentException($"readAllRecordsCallback cannot be null. TEntity: {typeof(TEntity).Name}", nameof(readAllRecordsCallback));
-            _log = log;
-
-            _reloadTimerPeriod = reloadTimerPeriod ?? TimeSpan.FromMinutes(10);
+            _log = logFactory.CreateLog(this);
+            
         }
 
         public async Task<bool> TryInsertOrReplaceAsync(TEntity entity)
@@ -64,14 +66,21 @@ namespace Lykke.Service.Assets.Services
             }
         }
 
-        public void Start()
+        public void Start(Func<IList<TEntity>> readAllRecordsCallback, TimeSpan? reloadTimerPeriod = null)
         {
+            if (readAllRecordsCallback == null)
+                throw new ArgumentException($"readAllRecordsCallback cannot be null. TEntity: {typeof(TEntity).Name}", nameof(readAllRecordsCallback));
+
             lock (_sync)
             {
+                _reloadTimerPeriod = reloadTimerPeriod ?? TimeSpan.FromMinutes(10);
                 _timer = new Timer(DoTimer);
                 _isStarted = true;
             }
-            
+
+            _readAllRecordsCallback = readAllRecordsCallback;
+
+
             DoTimer(null);
 
             _log.Info($"Started wrapper MyNoSql table for entity {typeof(TEntity).Name}");
@@ -116,8 +125,11 @@ namespace Lykke.Service.Assets.Services
         {
             lock (_sync)
             {
-                _isStarted = false;
-                _timer?.Dispose();
+                if (_isStarted)
+                {
+                    _isStarted = false;
+                    _timer?.Dispose();
+                }
             }
         }
     }

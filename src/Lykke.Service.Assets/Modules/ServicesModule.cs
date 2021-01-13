@@ -24,6 +24,8 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<AssetCategoryService>()
                 .As<IAssetCategoryService>()
+                .As<IStartable>()
+                .AutoActivate()
                 .SingleInstance();
 
             builder

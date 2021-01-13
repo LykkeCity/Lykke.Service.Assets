@@ -1,6 +1,8 @@
 ﻿using System;
 using Autofac;
+using Lykke.Service.Assets.NoSql.Models;
 using Lykke.Service.Assets.NoSql.Models.AssetAttributeModel;
+using Lykke.Service.Assets.Services;
 using Lykke.Service.Assets.Settings;
 using Lykke.SettingsReader;
 using MyNoSqlServer.Abstractions;
@@ -27,6 +29,7 @@ namespace Lykke.Service.Assets.Modules
         protected override void Load(ContainerBuilder builder)
         {
             RegisterMyNoSqlWriter<AssetAttributeNoSql>(builder, AssetAttributeNoSql.TableName);
+            RegisterMyNoSqlWriter<AssetCategoryNoSql>(builder, AssetCategoryNoSql.TableName);
         }
 
         private void RegisterMyNoSqlWriter<TEntity>(ContainerBuilder builder, string table)
@@ -38,6 +41,11 @@ namespace Lykke.Service.Assets.Modules
                 })
                 .As<IMyNoSqlServerDataWriter<TEntity>>()
                 .SingleInstance();
+
+            builder.RegisterType<MyNoSqlWriterWrapper<TEntity>>()
+                .As<IMyNoSqlWriterWrapper<TEntity>>()
+                .SingleInstance();
+
         }
     }
 }

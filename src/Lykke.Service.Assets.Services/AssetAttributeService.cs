@@ -14,19 +14,17 @@ using MyNoSqlServer.Abstractions;
 
 namespace Lykke.Service.Assets.Services
 {
-    public class AssetAttributeService : IAssetAttributeService, IStartable, IDisposable
+    public class AssetAttributeService : IAssetAttributeService, IStartable
     {
         private readonly IAssetAttributeRepository _assetAttributeRepository;
-        private readonly MyNoSqlWriterWrapper<AssetAttributeNoSql> _myNoSqlWriter;
+        private readonly IMyNoSqlWriterWrapper<AssetAttributeNoSql> _myNoSqlWriter;
 
         public AssetAttributeService(
             IAssetAttributeRepository assetAttributeRepository,
-            IMyNoSqlServerDataWriter<AssetAttributeNoSql> myNoSqlWriter,
-            ILogFactory logFactory)
+            IMyNoSqlWriterWrapper<AssetAttributeNoSql> myNoSqlWriter)
         {
             _assetAttributeRepository = assetAttributeRepository;
-            var log = logFactory.CreateLog(this);
-            _myNoSqlWriter = new MyNoSqlWriterWrapper<AssetAttributeNoSql>(myNoSqlWriter, ReadAllData, log);
+            _myNoSqlWriter = myNoSqlWriter;
         }
 
         public async Task<IAssetAttribute> AddAsync(string assetId, IAssetAttribute attribute)
@@ -114,12 +112,7 @@ namespace Lykke.Service.Assets.Services
 
         public void Start()
         {
-            _myNoSqlWriter.Start();
-        }
-
-        public void Dispose()
-        {
-            _myNoSqlWriter?.Dispose();
+            _myNoSqlWriter.Start(ReadAllData);
         }
     }
 }

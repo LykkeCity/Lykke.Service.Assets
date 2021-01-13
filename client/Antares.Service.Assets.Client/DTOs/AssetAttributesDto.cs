@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Lykke.Service.Assets.Core.Domain;
 
-namespace Antares.Service.Assets.Client
+namespace Antares.Service.Assets.Client.DTOs
 {
     internal class AssetAttributesDto: IAssetAttributes
     {
