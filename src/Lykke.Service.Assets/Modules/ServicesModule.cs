@@ -41,11 +41,15 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<AssetExtendedInfoService>()
                 .As<IAssetExtendedInfoService>()
+                .As<IStartable>()
+                .AutoActivate()
                 .SingleInstance();
 
             builder
                 .RegisterType<AssetService>()
                 .As<IAssetService>()
+                .As<IStartable>()
+                .AutoActivate()
                 .SingleInstance();
 
             builder

@@ -12,6 +12,10 @@ namespace Antares.Service.Assets.Client
 
         IAssetCategoryClient AssetCategory { get; }
 
+        IAssetExtendedInfoClient AssetExtendedInfo { get; }
+
+        IAssetsClient Assets { get; }
+
         IAssetsServiceHttp HttpClient { get; }
     }
 
@@ -29,5 +33,19 @@ namespace Antares.Service.Assets.Client
     {
         IAssetCategory Get(string id);
         IList<IAssetCategory> GetAll();
+    }
+
+    public interface IAssetExtendedInfoClient
+    {
+        IAssetExtendedInfo Get(string id);
+        IList<IAssetExtendedInfo> GetAll();
+    }
+
+    public interface IAssetsClient
+    {
+        IAsset Get(string id);
+        IList<IAsset> GetAll(bool includeNonTradable = false);
+
+        IList<IAsset> GetBySpecification(IReadOnlyList<string> ids = null, bool? IsTradable = null);
     }
 }

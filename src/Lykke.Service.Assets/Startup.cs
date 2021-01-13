@@ -67,8 +67,6 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         public void Configure(IApplicationBuilder app)
         {
-            ConfigureAutoMapper();
-
             app.UseLykkeConfiguration(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
@@ -78,6 +76,8 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            ConfigureAutoMapper();
+
             var configurationRoot = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .Build();

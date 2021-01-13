@@ -1,7 +1,7 @@
 ﻿using Lykke.Service.Assets.Core.Domain;
 using MyNoSqlServer.Abstractions;
 
-namespace Lykke.Service.Assets.NoSql.Models.AssetAttributeModel
+namespace Lykke.Service.Assets.NoSql.Models
 {
     public class AssetAttributeNoSql: MyNoSqlDbEntity, IAssetAttribute
     {

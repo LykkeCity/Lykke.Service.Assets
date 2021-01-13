@@ -8,7 +8,7 @@ using Lykke.Common.Log;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
-using Lykke.Service.Assets.NoSql.Models.AssetAttributeModel;
+using Lykke.Service.Assets.NoSql.Models;
 using Lykke.Service.Assets.Services.Domain;
 using MyNoSqlServer.Abstractions;
 

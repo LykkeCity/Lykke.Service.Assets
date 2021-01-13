@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Antares.Service.Assets.Client.DTOs;
 using Autofac;
@@ -9,7 +11,6 @@ using Lykke.Common.Log;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.NoSql.Models;
-using Lykke.Service.Assets.NoSql.Models.AssetAttributeModel;
 using MyNoSqlServer.Abstractions;
 using MyNoSqlServer.DataReader;
 
@@ -21,6 +22,8 @@ namespace Antares.Service.Assets.Client
 
         private readonly IMyNoSqlServerDataReader<AssetAttributeNoSql> _readerAssetAttributeNoSql;
         private readonly IMyNoSqlServerDataReader<AssetCategoryNoSql> _readerAssetCategoryNoSql;
+        private readonly IMyNoSqlServerDataReader<AssetExtendedInfoNoSql> _readerAssetExtendedInfoNoSql;
+        private readonly IMyNoSqlServerDataReader<AssetNoSql> _readerAssetNoSql;
         private readonly AssetsServiceHttp _httpClient;
 
         public AssetsServiceClient(
@@ -35,16 +38,35 @@ namespace Antares.Service.Assets.Client
             
             _readerAssetAttributeNoSql = new MyNoSqlReadRepository<AssetAttributeNoSql>(_myNoSqlClient, AssetAttributeNoSql.TableName);
             _readerAssetCategoryNoSql = new MyNoSqlReadRepository<AssetCategoryNoSql>(_myNoSqlClient, AssetCategoryNoSql.TableName);
+            _readerAssetExtendedInfoNoSql = new MyNoSqlReadRepository<AssetExtendedInfoNoSql>(_myNoSqlClient, AssetExtendedInfoNoSql.TableName);
+            _readerAssetNoSql = new MyNoSqlReadRepository<AssetNoSql>(_myNoSqlClient, AssetNoSql.TableName);
         }
 
         public IAssetAttributesClient AssetAttributes => this;
         public IAssetCategoryClient AssetCategory => this;
+        public IAssetExtendedInfoClient AssetExtendedInfo => this;
+
+        public IAssetsClient Assets => this;
 
         public IAssetsServiceHttp HttpClient => _httpClient;
 
         public void Start()
         {
             _myNoSqlClient.Start();
+
+            var sw = new Stopwatch();
+            sw.Start();
+            var iteration = 0;
+            while (iteration < 100)
+            {
+                iteration++;
+                if (Assets.GetAll().Count > 0 && AssetExtendedInfo.GetAll().Count >0)
+                    break;
+
+                Thread.Sleep(100);
+            }
+            sw.Stop();
+            Console.WriteLine($"AssetService client is started. Wait time: {sw.ElapsedMilliseconds} ms");
         }
 
         public void Dispose()

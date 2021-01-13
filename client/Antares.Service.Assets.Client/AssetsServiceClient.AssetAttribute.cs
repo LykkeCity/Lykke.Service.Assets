@@ -8,7 +8,7 @@ using Autofac;
 using Lykke.Common.Log;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Core.Domain;
-using Lykke.Service.Assets.NoSql.Models.AssetAttributeModel;
+using Lykke.Service.Assets.NoSql.Models;
 using MyNoSqlServer.Abstractions;
 using MyNoSqlServer.DataReader;
 
