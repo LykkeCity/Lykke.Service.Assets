@@ -10,7 +10,6 @@ namespace Antares.Service.Assets.Client
     {
         IAsset IAssetsClient.Get(string id)
         {
-            //_readerAssetNoSql
             try
             {
                 var data = _readerAssetNoSql.Get(

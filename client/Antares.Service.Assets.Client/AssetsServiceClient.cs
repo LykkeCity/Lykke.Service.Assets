@@ -24,6 +24,7 @@ namespace Antares.Service.Assets.Client
         private readonly IMyNoSqlServerDataReader<AssetCategoryNoSql> _readerAssetCategoryNoSql;
         private readonly IMyNoSqlServerDataReader<AssetExtendedInfoNoSql> _readerAssetExtendedInfoNoSql;
         private readonly IMyNoSqlServerDataReader<AssetNoSql> _readerAssetNoSql;
+        private readonly IMyNoSqlServerDataReader<AssetPairNoSql> _readerAssetPairNoSql;
         private readonly AssetsServiceHttp _httpClient;
 
         public AssetsServiceClient(
@@ -40,11 +41,13 @@ namespace Antares.Service.Assets.Client
             _readerAssetCategoryNoSql = new MyNoSqlReadRepository<AssetCategoryNoSql>(_myNoSqlClient, AssetCategoryNoSql.TableName);
             _readerAssetExtendedInfoNoSql = new MyNoSqlReadRepository<AssetExtendedInfoNoSql>(_myNoSqlClient, AssetExtendedInfoNoSql.TableName);
             _readerAssetNoSql = new MyNoSqlReadRepository<AssetNoSql>(_myNoSqlClient, AssetNoSql.TableName);
+            _readerAssetPairNoSql = new MyNoSqlReadRepository<AssetPairNoSql>(_myNoSqlClient, AssetPairNoSql.TableName);
         }
 
         public IAssetAttributesClient AssetAttributes => this;
         public IAssetCategoryClient AssetCategory => this;
         public IAssetExtendedInfoClient AssetExtendedInfo => this;
+        public IAssetPairsClient AssetPairs => this;
 
         public IAssetsClient Assets => this;
 
@@ -60,7 +63,7 @@ namespace Antares.Service.Assets.Client
             while (iteration < 100)
             {
                 iteration++;
-                if (Assets.GetAll().Count > 0 && AssetExtendedInfo.GetAll().Count >0)
+                if (Assets.GetAll().Count > 0 && AssetExtendedInfo.GetAll().Count >0 && AssetPairs.GetAll().Count>0)
                     break;
 
                 Thread.Sleep(100);

@@ -38,8 +38,12 @@ namespace Lykke.Service.Assets.Services
         {
             await ValidateAsset(asset);
 
+            await _assetRepository.InsertOrReplaceAsync(asset);
+
             await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetNoSql.Create(asset));
 
+            
+            //todo: remove cqrs
             _cqrsEngine.SendCommand(
                 new CreateAssetCommand { Asset = Mapper.Map<Asset>(asset) },
                 BoundedContext.Name, BoundedContext.Name);
@@ -95,8 +99,12 @@ namespace Lykke.Service.Assets.Services
         {
             await ValidateAsset(asset);
 
+            await _assetRepository.UpdateAsync(asset);
+
             await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetNoSql.Create(asset));
 
+
+            //todo: remove cqrs
             _cqrsEngine.SendCommand(
                 new UpdateAssetCommand { Asset = Mapper.Map<Asset>(asset) },
                 BoundedContext.Name, BoundedContext.Name);

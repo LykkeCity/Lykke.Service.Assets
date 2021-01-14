@@ -65,6 +65,8 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<AssetPairService>()
                 .As<IAssetPairService>()
+                .As<IStartable>()
+                .AutoActivate()
                 .SingleInstance();
 
             builder

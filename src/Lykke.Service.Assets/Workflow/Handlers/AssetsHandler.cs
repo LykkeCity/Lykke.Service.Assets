@@ -25,7 +25,7 @@ namespace Lykke.Service.Assets.Workflow.Handlers
 
         public async Task<CommandHandlingResult> Handle(Services.Commands.CreateAssetCommand command, IEventPublisher eventPublisher)
         {
-            await _assetRepository.InsertOrReplaceAsync(command.Asset);
+            //await _assetRepository.InsertOrReplaceAsync(command.Asset);
 
             _chaosKitty.Meow("repository unavailable");
 
@@ -36,7 +36,7 @@ namespace Lykke.Service.Assets.Workflow.Handlers
 
         public async Task<CommandHandlingResult> Handle(Services.Commands.UpdateAssetCommand command, IEventPublisher eventPublisher)
         {
-            await _assetRepository.UpdateAsync(command.Asset);
+            //await _assetRepository.UpdateAsync(command.Asset);
 
             _chaosKitty.Meow("repository unavailable");
 

@@ -47,7 +47,7 @@ namespace Lykke.Service.Assets.Services
             {
                 lock (_data)
                 {
-                    if (_data.TryGetValue(key, out var cached))
+                    if (_data.TryGetValue(GetCacheKey(key), out var cached))
                     {
                         return cached;
                     }
@@ -63,7 +63,7 @@ namespace Lykke.Service.Assets.Services
 
                 lock (_data)
                 {
-                    _data[key] = result;
+                    _data[GetCacheKey(key)] = result;
                 }
 
                 return result;
@@ -88,7 +88,7 @@ namespace Lykke.Service.Assets.Services
 
                 lock (_dataList)
                 {
-                    if (_dataList.TryGetValue(key, out var cached))
+                    if (_dataList.TryGetValue(GetCacheKey(key), out var cached))
                     {
                         return cached;
                     }
@@ -100,7 +100,7 @@ namespace Lykke.Service.Assets.Services
 
                 lock (_dataList)
                 {
-                    _dataList[key] = result.ToList();
+                    _dataList[GetCacheKey(key)] = result.ToList();
                 }
 
                 return result;
@@ -216,7 +216,7 @@ namespace Lykke.Service.Assets.Services
             {
                 var json = items.ToJson();
                 var data = JsonConvert.DeserializeObject<List<T>>(json);
-                _dataList[key] = data;
+                _dataList[GetCacheKey(key)] = data;
 
             }
 

@@ -52,6 +52,10 @@ namespace Lykke.Service.Assets.Tests.ConsoleApp
             Console.WriteLine("spec 3");
             assets = client.Assets.GetBySpecification(IsTradable: false);
             Console.WriteLine($"count Not IsTradable: {assets.Count}");
+
+            Console.WriteLine();
+            var assetPairs = client.AssetPairs.GetAll();
+            Console.WriteLine($"Asset pairs count: {assetPairs.Count}");
         }
     }
 }

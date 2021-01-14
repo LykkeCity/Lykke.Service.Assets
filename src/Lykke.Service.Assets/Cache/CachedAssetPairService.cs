@@ -24,7 +24,9 @@ namespace Lykke.Service.Assets.Cache
         {
             await InvalidateCache();
 
-            return AutoMapper.Mapper.Map<AssetPair>(await _assetPairService.AddAsync(assetPair));
+            var pair = await _assetPairService.AddAsync(assetPair);
+
+            return AutoMapper.Mapper.Map<AssetPair>(pair);
         }
 
         public AssetPair CreateDefault()

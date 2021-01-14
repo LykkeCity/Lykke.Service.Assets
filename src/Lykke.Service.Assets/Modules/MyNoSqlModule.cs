@@ -32,6 +32,9 @@ namespace Lykke.Service.Assets.Modules
             RegisterMyNoSqlWriter<AssetCategoryNoSql>(builder, AssetCategoryNoSql.TableName);
             RegisterMyNoSqlWriter<AssetExtendedInfoNoSql>(builder, AssetExtendedInfoNoSql.TableName);
             RegisterMyNoSqlWriter<AssetNoSql>(builder, AssetNoSql.TableName);
+            RegisterMyNoSqlWriter<AssetPairNoSql>(builder, AssetPairNoSql.TableName);
+
+            
         }
 
         private void RegisterMyNoSqlWriter<TEntity>(ContainerBuilder builder, string table)

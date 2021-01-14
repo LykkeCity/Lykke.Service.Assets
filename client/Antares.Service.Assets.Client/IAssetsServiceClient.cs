@@ -16,6 +16,8 @@ namespace Antares.Service.Assets.Client
 
         IAssetsClient Assets { get; }
 
+        IAssetPairsClient AssetPairs { get; }
+
         IAssetsServiceHttp HttpClient { get; }
     }
 
@@ -47,5 +49,11 @@ namespace Antares.Service.Assets.Client
         IList<IAsset> GetAll(bool includeNonTradable = false);
 
         IList<IAsset> GetBySpecification(IReadOnlyList<string> ids = null, bool? IsTradable = null);
+    }
+
+    public interface IAssetPairsClient
+    {
+        IAssetPair Get(string id);
+        IList<IAssetPair> GetAll();
     }
 }
