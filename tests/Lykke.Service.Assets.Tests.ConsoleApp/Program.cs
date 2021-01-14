@@ -13,7 +13,7 @@ namespace Lykke.Service.Assets.Tests.ConsoleApp
         static void Main(string[] args)
         {
             var client = new AssetsServiceClient("nosql.share.svc.cluster.local:5125", 
-                "http://assets.lykke-service.svc.cluster.local", null);
+                "http://assets.lykke-service.svc.cluster.local");
 
             client.Start();
 

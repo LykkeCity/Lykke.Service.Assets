@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Lykke.Service.Assets.Client;
 
 namespace Antares.Service.Assets.Client
 {
@@ -8,9 +9,6 @@ namespace Antares.Service.Assets.Client
         /// <summary>
         /// Register IAssetsServiceClient in the builder
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="myNoSqlServerReaderHostPort"></param>
-        /// <param name="assetServiceHttpApiUrl"></param>
         public static void RegisterAssetsHttpClient(this ContainerBuilder builder, string myNoSqlServerReaderHostPort, string assetServiceHttpApiUrl)
         {
             if (builder == null)
@@ -27,6 +25,17 @@ namespace Antares.Service.Assets.Client
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance();
+        }
+
+        /// <summary>
+        /// Register IAssetsServiceClient in the builder
+        /// </summary>
+        public static void RegisterAssetsHttpClient(this ContainerBuilder builder, AssetServiceSettings serviceSettings)
+        {
+            if (builder == null)
+                throw new ArgumentNullException(nameof(serviceSettings));
+
+            builder.RegisterAssetsHttpClient(serviceSettings.AssetServiceMyNoSqlReaderHostPort, serviceSettings.ServiceUrl);
         }
     }
 }
