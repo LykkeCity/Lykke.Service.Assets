@@ -29,8 +29,7 @@ namespace Antares.Service.Assets.Client
 
         public AssetsServiceClient(
             string myNoSqlServerReaderHostPort, 
-            string assetServiceHttpApiUrl, 
-            ILogFactory logFactory)
+            string assetServiceHttpApiUrl)
         {
             var host = Environment.GetEnvironmentVariable("HOST") ?? Environment.MachineName;
             _httpClient = new AssetsServiceHttp(new Uri(assetServiceHttpApiUrl), new HttpClient());
