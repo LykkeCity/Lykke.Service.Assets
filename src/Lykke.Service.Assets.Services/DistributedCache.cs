@@ -8,6 +8,7 @@ using Lykke.Common.Log;
 using Lykke.Service.Assets.Core.Services;
 using MongoDB.Bson.IO;
 using Newtonsoft.Json;
+using Prometheus;
 using StackExchange.Redis;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
@@ -22,6 +23,12 @@ namespace Lykke.Service.Assets.Services
         private readonly string _partitionKey;
         private readonly TimeSpan _expiration;
 
+        private readonly string _name;
+
+        public static readonly Gauge CacheItemCount = Prometheus.Metrics
+            .CreateGauge("lykke_distributed_cache_count",
+                "Count object in cache.",
+                new GaugeConfiguration { LabelNames = new[] { "name", "cache_type" } });
         public DistributedCache(
             ILogFactory logFactory,
             IDatabase redisDatabase,
@@ -32,6 +39,11 @@ namespace Lykke.Service.Assets.Services
             //_redisDatabase = redisDatabase;
             _partitionKey = partitionKey;
             _expiration = expiration;
+
+            _name = $"{typeof(I).Name}-{typeof(T).Name}";
+
+            CacheItemCount.WithLabels(_name, "single-item").Set(0);
+            CacheItemCount.WithLabels(_name, "list-item").Set(0);
         }
 
         public string GetCacheKey(string id)
@@ -64,6 +76,7 @@ namespace Lykke.Service.Assets.Services
                 lock (_data)
                 {
                     _data[GetCacheKey(key)] = result;
+                    CacheItemCount.WithLabels(_name, "single-item").Set(_data.Count);
                 }
 
                 return result;
@@ -101,6 +114,7 @@ namespace Lykke.Service.Assets.Services
                 lock (_dataList)
                 {
                     _dataList[GetCacheKey(key)] = result.ToList();
+                    CacheItemCount.WithLabels(_name, "list-item").Set(_dataList.Count);
                 }
 
                 return result;
@@ -176,6 +190,7 @@ namespace Lykke.Service.Assets.Services
                 lock (_data)
                 {
                     _data.Remove(GetCacheKey(id));
+                    CacheItemCount.WithLabels(_name, "single-item").Set(_data.Count);
                 }
                 //await _redisDatabase.KeyDeleteAsync(GetCacheKey(id));
             }
@@ -217,7 +232,7 @@ namespace Lykke.Service.Assets.Services
                 var json = items.ToJson();
                 var data = JsonConvert.DeserializeObject<List<T>>(json);
                 _dataList[GetCacheKey(key)] = data;
-
+                CacheItemCount.WithLabels(_name, "list-item").Set(_dataList.Count);
             }
 
             //return _redisDatabase.StringSetAsync(GetCacheKey(key), CacheSerializer.Serialize(items), _expiration);

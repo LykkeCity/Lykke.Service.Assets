@@ -8,6 +8,8 @@ using System;
 using Autofac;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Configuration;
+using Prometheus;
+using Swisschain.Sdk.Metrics.Rest;
 
 namespace Lykke.Service.Assets
 {
@@ -67,6 +69,10 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         public void Configure(IApplicationBuilder app)
         {
+            app.UseMetricServer();
+
+            app.UseMiddleware<PrometheusMetricsMiddleware>();
+
             app.UseLykkeConfiguration(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
