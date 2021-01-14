@@ -5,6 +5,7 @@ using Lykke.Service.Assets.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Prometheus;
 
 namespace Lykke.Service.Assets
 {
@@ -42,6 +43,8 @@ namespace Lykke.Service.Assets
         public void Configure(IApplicationBuilder app)
         {
             ConfigureAutoMapper();
+
+            app.UseMetricServer();
 
             app.UseLykkeConfiguration(options =>
             {
