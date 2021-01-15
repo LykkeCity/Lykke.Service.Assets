@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
-    <ProjectReference Include="..\..\src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj" />
-    <ProjectReference Include="..\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
+    <ProjectReference PrivateAssets="All" Include="..\..\src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
+    <ProjectReference PrivateAssets="All" Include="..\..\src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj" />
+    <ProjectReference PrivateAssets="All" Include="..\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
   </ItemGroup>
 
   <!--
