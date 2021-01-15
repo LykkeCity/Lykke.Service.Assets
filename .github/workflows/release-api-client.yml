@@ -20,6 +20,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --configuration Release
     - name: Create the package
-      run: dotnet pack --no-build --configuration Release client/Antares.Service.Assets.Client /p:Version=${GITHUB_REF#refs/tags/client-}
+      run: dotnet pack --configuration Release client/Antares.Service.Assets.Client /p:Version=${GITHUB_REF#refs/tags/client-}
     - name: Publish the package to GPR
       run: dotnet nuget push client/Antares.Service.Assets.Client/bin/Release/*.nupkg -s "https://api.nuget.org/v3/index.json" -k ${{ secrets.NUGET_TOCKEN }}
