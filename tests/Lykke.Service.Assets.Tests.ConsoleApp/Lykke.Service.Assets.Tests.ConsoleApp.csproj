@@ -11,6 +11,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\client\Antares.Service.Assets.Client\Antares.Service.Assets.Client.csproj" />
+    <ProjectReference Include="..\..\client\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj" />
   </ItemGroup>
 
 </Project>
