@@ -32,7 +32,7 @@ namespace Antares.Service.Assets.Client
             string assetServiceHttpApiUrl)
         {
             var host = Environment.GetEnvironmentVariable("HOST") ?? Environment.MachineName;
-            _httpClient = new AssetsServiceHttp(new Uri(assetServiceHttpApiUrl), new HttpClient());
+            _httpClient = new AssetsServiceHttp(new Uri(assetServiceHttpApiUrl));
 
             _myNoSqlClient = new MyNoSqlTcpClient(() => myNoSqlServerReaderHostPort,host);
             
