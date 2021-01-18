@@ -29,7 +29,8 @@ namespace Antares.Service.Assets.Client
         {
             try
             {
-                var data = _readerAssetExtendedInfoNoSql.Get()
+                var data = _readerAssetExtendedInfoNoSql
+                    .Get(AssetExtendedInfoNoSql.GeneratePartitionKey())
                     .Select(e => (IAssetExtendedInfo)e.ExtendedInfo).ToList();
 
                 return data;
@@ -41,6 +42,21 @@ namespace Antares.Service.Assets.Client
             }
         }
 
-        
+        IAssetExtendedInfo IAssetExtendedInfoClient.GetDefault()
+        {
+            try
+            {
+                var data = _readerAssetExtendedInfoNoSql.Get(
+                    AssetExtendedInfoNoSql.DefaultInfoPartitionKey,
+                    AssetExtendedInfoNoSql.DefaultInfoRowKey);
+
+                return data?.ExtendedInfo;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cannot read from MyNoSQL. Table: ${AssetExtendedInfoNoSql.TableName}, PK: {AssetExtendedInfoNoSql.DefaultInfoPartitionKey}, RK: {AssetExtendedInfoNoSql.DefaultInfoRowKey}, Ex: {ex}");
+                throw;
+            }
+        }
     }
 }

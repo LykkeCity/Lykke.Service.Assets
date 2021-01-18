@@ -25,7 +25,7 @@ namespace Antares.Service.Assets.Client
             }
         }
 
-        IList<IAsset> IAssetsClient.GetAll(bool includeNonTradable)
+        List<IAsset> IAssetsClient.GetAll(bool includeNonTradable)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace Antares.Service.Assets.Client
             }
         }
 
-        IList<IAsset> IAssetsClient.GetBySpecification(IReadOnlyList<string> ids, bool? isTradable)
+        List<IAsset> IAssetsClient.GetBySpecification(IReadOnlyList<string> ids, bool? isTradable)
         {
             try
             {

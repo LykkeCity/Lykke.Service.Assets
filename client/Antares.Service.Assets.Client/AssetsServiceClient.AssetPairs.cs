@@ -25,7 +25,7 @@ namespace Antares.Service.Assets.Client
             }
         }
 
-        IList<IAssetPair> IAssetPairsClient.GetAll()
+        List<IAssetPair> IAssetPairsClient.GetAll()
         {
             try
             {

@@ -42,20 +42,21 @@ namespace Antares.Service.Assets.Client
     {
         IAssetExtendedInfo Get(string id);
         IList<IAssetExtendedInfo> GetAll();
+        IAssetExtendedInfo GetDefault();
     }
 
     public interface IAssetsClient
     {
         IAsset Get(string assetId);
-        IList<IAsset> GetAll(bool includeNonTradable = false);
+        List<IAsset> GetAll(bool includeNonTradable = false);
 
-        IList<IAsset> GetBySpecification(IReadOnlyList<string> ids = null, bool? IsTradable = null);
+        List<IAsset> GetBySpecification(IReadOnlyList<string> ids = null, bool? IsTradable = null);
     }
 
     public interface IAssetPairsClient
     {
         IAssetPair Get(string id);
-        IList<IAssetPair> GetAll();
+        List<IAssetPair> GetAll();
     }
 
 
