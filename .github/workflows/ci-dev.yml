@@ -30,7 +30,7 @@ jobs:
     - name: Publish Manager API to registry
       uses: swisschain/Publish-Docker-Github-Action@master
       with:
-        name: swisschains/antares-service-asset:dev
+        name: swisschains/antares-service-assets:dev
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: ./publish-api
