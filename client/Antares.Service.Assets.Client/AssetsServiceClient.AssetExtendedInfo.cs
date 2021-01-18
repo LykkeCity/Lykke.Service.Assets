@@ -25,7 +25,7 @@ namespace Antares.Service.Assets.Client
             }
         }
 
-        IList<IAssetExtendedInfo> IAssetExtendedInfoClient.GetAll()
+        List<IAssetExtendedInfo> IAssetExtendedInfoClient.GetAll()
         {
             try
             {

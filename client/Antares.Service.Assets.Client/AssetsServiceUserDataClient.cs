@@ -13,7 +13,7 @@ using MyNoSqlServer.DataReader;
 
 namespace Antares.Service.Assets.Client
 {
-    public class AssetsServiceUserDataClient: IStartable, IDisposable, IAssetsServiceUserDataClient, IWatchListsClient
+    public class AssetsServiceUserDataClient: IStartable, IDisposable, IAssetsServiceUserDataClient, IWatchListsClient, IAvailableAssetClient
     {
         private readonly MyNoSqlTcpClient _myNoSqlClient;
         private readonly AssetsServiceHttp _httpClient;
@@ -51,6 +51,7 @@ namespace Antares.Service.Assets.Client
         }
 
         public IWatchListsClient WatchLists => this;
+        private IAvailableAssetClient AvailableAssets => this;
         public IAssetsServiceHttp HttpClient => _httpClient;
 
         async Task<IWatchList> IWatchListsClient.AddCustomAsync(WatchListDto watchList, string clientId)
@@ -70,7 +71,7 @@ namespace Antares.Service.Assets.Client
             await HttpClient.WatchListCustomRemoveWithHttpMessagesAsync(watchListId, clientId);
         }
 
-        async Task<IEnumerable<IWatchList>> IWatchListsClient.GetAllCustom(string clientId)
+        async Task<List<IWatchList>> IWatchListsClient.GetAllCustom(string clientId)
         {
             var result = await HttpClient.WatchListGetAllCustomAsync(clientId);
             var data = result.Select(e => (IWatchList) FromWatchListResponse(e)).ToList();
@@ -103,6 +104,12 @@ namespace Antares.Service.Assets.Client
             return data;
         }
 
+        async Task<List<string>> IAvailableAssetClient.GetAssetIds(string clientId, bool isIosDevice)
+        {
+            var result = await HttpClient.ClientGetAssetIdsAsync(clientId, isIosDevice);
+            return result.ToList();
+        }
+
         private WatchListDto FromWatchListResponse(WatchList item)
         {
             return new WatchListDto()
@@ -119,5 +126,7 @@ namespace Antares.Service.Assets.Client
         {
             return new WatchList(item.AssetIds, item.Id, item.Name, item.Order, item.ReadOnly);
         }
+
+        
     }
 }

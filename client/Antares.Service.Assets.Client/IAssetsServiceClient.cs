@@ -41,7 +41,7 @@ namespace Antares.Service.Assets.Client
     public interface IAssetExtendedInfoClient
     {
         IAssetExtendedInfo Get(string id);
-        IList<IAssetExtendedInfo> GetAll();
+        List<IAssetExtendedInfo> GetAll();
         IAssetExtendedInfo GetDefault();
     }
 
