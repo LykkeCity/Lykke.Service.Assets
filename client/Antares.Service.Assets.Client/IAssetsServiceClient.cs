@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Antares.Service.Assets.Client.Models;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.Assets.Core.Domain;
@@ -45,7 +46,7 @@ namespace Antares.Service.Assets.Client
 
     public interface IAssetsClient
     {
-        IAsset Get(string id);
+        IAsset Get(string assetId);
         IList<IAsset> GetAll(bool includeNonTradable = false);
 
         IList<IAsset> GetBySpecification(IReadOnlyList<string> ids = null, bool? IsTradable = null);
@@ -56,4 +57,10 @@ namespace Antares.Service.Assets.Client
         IAssetPair Get(string id);
         IList<IAssetPair> GetAll();
     }
+
+
+
+
+
+
 }

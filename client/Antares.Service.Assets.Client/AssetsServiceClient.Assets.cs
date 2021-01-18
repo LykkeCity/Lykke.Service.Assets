@@ -8,19 +8,19 @@ namespace Antares.Service.Assets.Client
 {
     public partial class AssetsServiceClient : IAssetsClient
     {
-        IAsset IAssetsClient.Get(string id)
+        IAsset IAssetsClient.Get(string assetId)
         {
             try
             {
                 var data = _readerAssetNoSql.Get(
                     AssetNoSql.GeneratePartitionKey(),
-                    AssetNoSql.GenerateRowKey(id));
+                    AssetNoSql.GenerateRowKey(assetId));
 
                 return data?.Asset;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Cannot read from MyNoSQL. Table: ${AssetNoSql.TableName}, PK: {AssetNoSql.GeneratePartitionKey()}, RK: {AssetNoSql.GenerateRowKey(id)}, Ex: {ex}");
+                Console.WriteLine($"Cannot read from MyNoSQL. Table: ${AssetNoSql.TableName}, PK: {AssetNoSql.GeneratePartitionKey()}, RK: {AssetNoSql.GenerateRowKey(assetId)}, Ex: {ex}");
                 throw;
             }
         }
