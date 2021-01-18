@@ -51,7 +51,7 @@ namespace Antares.Service.Assets.Client
         }
 
         public IWatchListsClient WatchLists => this;
-        private IAvailableAssetClient AvailableAssets => this;
+        public IAvailableAssetClient AvailableAssets => this;
         public IAssetsServiceHttp HttpClient => _httpClient;
 
         async Task<IWatchList> IWatchListsClient.AddCustomAsync(WatchListDto watchList, string clientId)
