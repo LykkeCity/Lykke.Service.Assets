@@ -19,7 +19,7 @@ namespace Lykke.Service.Assets.Services
     public class AssetService : IAssetService, IStartable
     {
         private readonly IAssetRepository _assetRepository;
-        [NotNull] private readonly IMyNoSqlWriterWrapper<AssetNoSql> _myNoSqlWriter;
+        private readonly IMyNoSqlWriterWrapper<AssetNoSql> _myNoSqlWriter;
         private readonly ICqrsEngine _cqrsEngine;
 
 

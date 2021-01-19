@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -6,10 +7,12 @@ using Lykke.Service.Assets.Services.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Lykke.Service.Assets.NoSql.Models;
 
 namespace Lykke.Service.Assets.Services
 {
-    public class AssetConditionService : IAssetConditionService
+    public class AssetConditionService : IAssetConditionService, IStartable
     {
         private readonly IAssetConditionLayerRepository _assetConditionLayerRepository;
         private readonly IAssetDefaultConditionRepository _assetDefaultConditionRepository;
@@ -17,6 +20,8 @@ namespace Lykke.Service.Assets.Services
         private readonly IAssetConditionLayerLinkClientRepository _assetConditionLayerLinkClientRepository;
         private readonly IAssetsForClientCacheManager _cacheManager;
         private readonly ICachedAssetConditionsService _cachedAssetConditionsService;
+        private readonly IMyNoSqlWriterWrapper<AssetConditionNoSql> _myNoSqlWriter;
+        private readonly int _maxClientsInNoSqlCache;
 
         public AssetConditionService(
             IAssetConditionLayerRepository assetConditionLayerRepository,
@@ -24,7 +29,9 @@ namespace Lykke.Service.Assets.Services
             IAssetDefaultConditionLayerRepository assetDefaultConditionLayerRepository,
             IAssetConditionLayerLinkClientRepository assetConditionLayerLinkClientRepository,
             IAssetsForClientCacheManager cacheManager,
-            ICachedAssetConditionsService cachedAssetConditionsService)
+            ICachedAssetConditionsService cachedAssetConditionsService,
+            IMyNoSqlWriterWrapper<AssetConditionNoSql> myNoSqlWriter,
+            int maxClientsInNoSqlCache)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
             _assetDefaultConditionRepository = assetDefaultConditionRepository;
@@ -32,6 +39,8 @@ namespace Lykke.Service.Assets.Services
             _assetConditionLayerLinkClientRepository = assetConditionLayerLinkClientRepository;
             _cacheManager = cacheManager;
             _cachedAssetConditionsService = cachedAssetConditionsService;
+            _myNoSqlWriter = myNoSqlWriter;
+            _maxClientsInNoSqlCache = maxClientsInNoSqlCache;
         }
 
         public async Task<IEnumerable<IAssetConditionLayer>> GetLayersAsync()
@@ -226,6 +235,8 @@ namespace Lykke.Service.Assets.Services
             // Update asset conditions cache
             await _cacheManager.SaveAssetConditionsForClientAsync(clientId, assetConditions);
 
+            await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetConditionNoSql.Create(clientId, assetConditions));
+
             return assetConditions;
         }
 
@@ -248,6 +259,11 @@ namespace Lykke.Service.Assets.Services
         {
             var layerIds = await _assetConditionLayerLinkClientRepository.GetLayersAsync(clientId);
             return await _assetConditionLayerRepository.GetAsync(layerIds);
+        }
+
+        public void Start()
+        {
+            _myNoSqlWriter.StartWithClearing(_maxClientsInNoSqlCache);
         }
     }
 }

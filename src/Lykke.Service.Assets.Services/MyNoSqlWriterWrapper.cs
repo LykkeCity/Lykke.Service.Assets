@@ -15,12 +15,15 @@ namespace Lykke.Service.Assets.Services
         Task<bool> TryInsertOrReplaceAsync(TEntity entity);
         Task<bool> TryDeleteAsync(string partitionKey, string rowKey);
         void Start(Func<IList<TEntity>> readAllRecordsCallback, TimeSpan? reloadTimerPeriod = null);
+        void StartWithClearing(int countInCache, TimeSpan? reloadTimerPeriod = null);
     }
 
     public class MyNoSqlWriterWrapper<TEntity> : IDisposable, IMyNoSqlWriterWrapper<TEntity> where TEntity : IMyNoSqlDbEntity, new()
     {
         private readonly IMyNoSqlServerDataWriter<TEntity> _writer;
         private Func<IList<TEntity>> _readAllRecordsCallback;
+        private int? _maxInCache;
+
         private readonly ILog _log;
         private Timer _timer;
         private bool _isStarted = false;
@@ -79,6 +82,25 @@ namespace Lykke.Service.Assets.Services
             }
 
             _readAllRecordsCallback = readAllRecordsCallback;
+            _maxInCache = null;
+
+
+            DoTimer(null);
+
+            _log.Info($"Started wrapper MyNoSql table for entity {typeof(TEntity).Name}");
+        }
+
+        public void StartWithClearing(int countInCache, TimeSpan? reloadTimerPeriod = null)
+        {
+            lock (_sync)
+            {
+                _reloadTimerPeriod = reloadTimerPeriod ?? TimeSpan.FromMinutes(10);
+                _timer = new Timer(DoTimer);
+                _isStarted = true;
+            }
+
+            _readAllRecordsCallback = null;
+            _maxInCache = countInCache;
 
 
             DoTimer(null);
@@ -98,14 +120,23 @@ namespace Lykke.Service.Assets.Services
 
             try
             {
-                var data = _readAllRecordsCallback.Invoke();
-
-                foreach (var group in data.GroupBy(e => e.PartitionKey))
+                if (_readAllRecordsCallback != null)
                 {
-                    _writer.CleanAndBulkInsertAsync(group.Key, group).GetAwaiter().GetResult();
+                    var data = _readAllRecordsCallback.Invoke();
+
+                    foreach (var group in data.GroupBy(e => e.PartitionKey))
+                    {
+                        _writer.CleanAndBulkInsertAsync(group.Key, group).GetAwaiter().GetResult();
+                    }
+
+                    _log.Info($"Reload MyNoSql table for entity {typeof(TEntity).Name}. Count Record: {data.Count}");
                 }
 
-                _log.Info($"Reload MyNoSql table for entity {typeof(TEntity).Name}. Count Record: {data.Count}");
+                if (_maxInCache.HasValue)
+                {
+                    _writer.CleanAndKeepMaxPartitions(_maxInCache.Value).GetAwaiter().GetResult();
+                    _log.Info($"Clear MyNoSql table for entity {typeof(TEntity).Name}. Max Record: {_maxInCache}");
+                }
             }
             catch (Exception ex)
             {

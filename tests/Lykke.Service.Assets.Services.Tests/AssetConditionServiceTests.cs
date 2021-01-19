@@ -6,6 +6,7 @@ using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.NoSql.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Lykke.Service.Assets.Repositories.DTOs;
@@ -53,6 +54,8 @@ namespace Lykke.Service.Assets.Services.Tests
 
         private readonly Mock<IAssetsForClientCacheManager> _assetsForClientCacheManagerMock = new Mock<IAssetsForClientCacheManager>();
 
+        private readonly Mock<IMyNoSqlWriterWrapper<AssetConditionNoSql>> _myNoSqlWriterMock = new Mock<IMyNoSqlWriterWrapper<AssetConditionNoSql>>();
+
         private AssetConditionService _service;
 
         [TestInitialize]
@@ -74,7 +77,9 @@ namespace Lykke.Service.Assets.Services.Tests
                 _assetDefaultConditionLayerRepositoryMock.Object,
                 _assetConditionLayerLinkClientRepositoryMock.Object,
                 _cacheMock.Object,
-                cachedAssetConditionsService);
+                cachedAssetConditionsService,
+                _myNoSqlWriterMock.Object,
+                10);
 
             _assetConditionLayerLinkClientRepositoryMock.Setup(o => o.GetLayersAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult((IEnumerable<string>) new List<string>()));

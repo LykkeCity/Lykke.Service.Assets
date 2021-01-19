@@ -9,6 +9,8 @@ using Autofac;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.Assets.Core.Domain;
+using Lykke.Service.Assets.NoSql.Models;
+using MyNoSqlServer.Abstractions;
 using MyNoSqlServer.DataReader;
 
 namespace Antares.Service.Assets.Client
@@ -18,12 +20,15 @@ namespace Antares.Service.Assets.Client
         private readonly MyNoSqlTcpClient _myNoSqlClient;
         private readonly AssetsServiceHttp _httpClient;
 
+        private readonly IMyNoSqlServerDataReader<AssetConditionNoSql> _readerAssetConditionNoSql;
+
         public AssetsServiceUserDataClient(string myNoSqlServerReaderHostPort, string assetServiceHttpApiUrl)
         {
             var host = Environment.GetEnvironmentVariable("HOST") ?? Environment.MachineName;
             _httpClient = new AssetsServiceHttp(new Uri(assetServiceHttpApiUrl));
 
             _myNoSqlClient = new MyNoSqlTcpClient(() => myNoSqlServerReaderHostPort, host);
+            _readerAssetConditionNoSql = new MyNoSqlReadRepository<AssetConditionNoSql>(_myNoSqlClient, AssetConditionNoSql.TableName);
         }
 
         public void Start()
@@ -106,6 +111,23 @@ namespace Antares.Service.Assets.Client
 
         async Task<List<string>> IAvailableAssetClient.GetAssetIds(string clientId, bool isIosDevice)
         {
+            try
+            {
+                var data = _readerAssetConditionNoSql.Get(
+                    AssetConditionNoSql.GeneratePartitionKey(clientId),
+                    AssetConditionNoSql.GenerateRowKey());
+
+                if (data?.AssetConditions != null)
+                {
+                    return data.AssetConditions.Where(o => o.AvailableToClient == true).Select(o => o.Asset).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cannot read from MyNoSQL. Table: ${AssetConditionNoSql.TableName}, PK: {AssetConditionNoSql.GeneratePartitionKey(clientId)}, RK: {AssetConditionNoSql.GenerateRowKey()}, Ex: {ex}");
+                throw;
+            }
+            
             var result = await HttpClient.ClientGetAssetIdsAsync(clientId, isIosDevice);
             return result.ToList();
         }

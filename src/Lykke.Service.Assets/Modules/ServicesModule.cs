@@ -2,11 +2,21 @@
 using Autofac;
 using Lykke.Service.Assets.Core.Services;
 using Lykke.Service.Assets.Services;
+using Lykke.Service.Assets.Settings;
+using Lykke.SettingsReader;
 
 namespace Lykke.Service.Assets.Modules
 {
     public class ServicesModule : Module
     {
+        private readonly IReloadingManager<ApplicationSettings> _settings;
+
+        public ServicesModule(IReloadingManager<ApplicationSettings> settings)
+        {
+            _settings = settings;
+        }
+
+
         protected override void Load(ContainerBuilder builder)
         {
             builder
@@ -60,6 +70,9 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<AssetConditionService>()
                 .As<IAssetConditionService>()
+                .As<IStartable>()
+                .AutoActivate()
+                .WithParameter("maxClientsInNoSqlCache", _settings.CurrentValue.AssetsService.MyNoSqlServer.MaxClientsInCache)
                 .SingleInstance();
 
             builder
