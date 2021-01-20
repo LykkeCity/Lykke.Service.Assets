@@ -10,7 +10,7 @@ namespace Lykke.Service.Assets.NoSql.Models
         public const string TableName = "antares.asset.asset-condition-by-clients";
 
         public static string GeneratePartitionKey(string clientId) => clientId;
-        public static string GenerateRowKey() => "";
+        public static string GenerateRowKey() => "--AssetCondition--";
         
         
         public string ClientId { get; set; }
