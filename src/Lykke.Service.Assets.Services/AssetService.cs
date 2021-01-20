@@ -146,11 +146,6 @@ namespace Lykke.Service.Assets.Services
         private IList<AssetNoSql> GetAllData()
         {
             var data = GetAllAsync(true).GetAwaiter().GetResult().Select(AssetNoSql.Create).ToList();
-
-            var defaultAsset = AssetNoSql.Create(CreateDefault());
-            defaultAsset.PartitionKey = AssetNoSql.DefaultAssetPartitioKey;
-            defaultAsset.RowKey = AssetNoSql.DefaultAssetRowKey;
-            data.Add(defaultAsset);
             return data;
         }
     }

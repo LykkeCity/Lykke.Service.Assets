@@ -8,9 +8,6 @@ namespace Lykke.Service.Assets.NoSql.Models
     {
         public const string TableName = "antares.asset.assets";
 
-        public const string DefaultAssetPartitioKey = "--default--";
-        public const string DefaultAssetRowKey = "--default--";
-
         public static string GeneratePartitionKey() => "assets";
         public static string GenerateRowKey(string assetId) => assetId;
 
