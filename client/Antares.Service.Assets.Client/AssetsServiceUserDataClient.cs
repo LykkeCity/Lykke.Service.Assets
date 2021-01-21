@@ -134,6 +134,10 @@ namespace Antares.Service.Assets.Client
 
         private WatchListDto FromWatchListResponse(WatchList item)
         {
+            if (item == null)
+                return null;
+
+
             return new WatchListDto()
             {
                 Id = item.Id,
@@ -146,6 +150,9 @@ namespace Antares.Service.Assets.Client
 
         private WatchList FromWatchListDto(WatchListDto item)
         {
+            if (item == null)
+                return null;
+
             return new WatchList(item.AssetIds, item.Id, item.Name, item.Order, item.ReadOnly);
         }
 
