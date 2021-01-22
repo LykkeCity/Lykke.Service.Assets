@@ -110,6 +110,9 @@ namespace Lykke.Service.Assets.Modules
             builder
                 .RegisterType<WatchListService>()
                 .As<IWatchListService>()
+                .As<IStartable>()
+                .AutoActivate()
+                .WithParameter("maxClientsInNoSqlCache", _settings.CurrentValue.AssetsService.MyNoSqlServer.MaxClientsInCache)
                 .SingleInstance();
         }
     }

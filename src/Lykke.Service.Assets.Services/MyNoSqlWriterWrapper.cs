@@ -16,6 +16,8 @@ namespace Lykke.Service.Assets.Services
         Task<bool> TryDeleteAsync(string partitionKey, string rowKey);
         void Start(Func<IList<TEntity>> readAllRecordsCallback, TimeSpan? reloadTimerPeriod = null);
         void StartWithClearing(int countInCache, TimeSpan? reloadTimerPeriod = null);
+        Task CleanAndBulkInsertAsync(string partitionKey, IEnumerable<TEntity> list);
+        Task Clear();
     }
 
     public class MyNoSqlWriterWrapper<TEntity> : IDisposable, IMyNoSqlWriterWrapper<TEntity> where TEntity : IMyNoSqlDbEntity, new()
@@ -106,6 +108,16 @@ namespace Lykke.Service.Assets.Services
             DoTimer(null);
 
             _log.Info($"Started wrapper MyNoSql table for entity {typeof(TEntity).Name}");
+        }
+
+        public async Task Clear()
+        {
+            await _writer.CleanAndKeepMaxPartitions(0);
+        }
+
+        public async Task CleanAndBulkInsertAsync(string partitionKey, IEnumerable<TEntity> list)
+        {
+            await _writer.CleanAndBulkInsertAsync(partitionKey, list);
         }
 
         private void DoTimer(object state)

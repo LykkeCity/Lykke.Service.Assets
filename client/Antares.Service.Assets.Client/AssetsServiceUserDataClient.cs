@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Antares.Service.Assets.Client.Models;
 using Autofac;
+using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.Assets.Core.Domain;
@@ -21,14 +23,21 @@ namespace Antares.Service.Assets.Client
         private readonly AssetsServiceHttp _httpClient;
 
         private readonly IMyNoSqlServerDataReader<AssetConditionNoSql> _readerAssetConditionNoSql;
+        private readonly IMyNoSqlServerDataReader<WatchListCustomNoSql> _readerWatchListCustomNoSql;
+        private MyNoSqlReadRepository<WatchListPredefinedNoSql> _readerWatchListPredefinedNoSql;
+        private ILog _log;
 
-        public AssetsServiceUserDataClient(string myNoSqlServerReaderHostPort, string assetServiceHttpApiUrl)
+
+        public AssetsServiceUserDataClient(string myNoSqlServerReaderHostPort, string assetServiceHttpApiUrl, ILogFactory logFactory)
         {
+            _log = logFactory.CreateLog(this);
             var host = Environment.GetEnvironmentVariable("HOST") ?? Environment.MachineName;
             _httpClient = new AssetsServiceHttp(new Uri(assetServiceHttpApiUrl));
 
             _myNoSqlClient = new MyNoSqlTcpClient(() => myNoSqlServerReaderHostPort, host);
             _readerAssetConditionNoSql = new MyNoSqlReadRepository<AssetConditionNoSql>(_myNoSqlClient, AssetConditionNoSql.TableName);
+            _readerWatchListCustomNoSql = new MyNoSqlReadRepository<WatchListCustomNoSql>(_myNoSqlClient, WatchListCustomNoSql.TableNameCustomWatchList);
+            _readerWatchListPredefinedNoSql = new MyNoSqlReadRepository<WatchListPredefinedNoSql>(_myNoSqlClient, WatchListPredefinedNoSql.TableNamePredefinedWatchList);
         }
 
         public void Start()
@@ -41,13 +50,13 @@ namespace Antares.Service.Assets.Client
             while (iteration < 100)
             {
                 iteration++;
-                //if (Assets.GetAll().Count > 0 && AssetExtendedInfo.GetAll().Count > 0 && AssetPairs.GetAll().Count > 0)
-                break;
+                if (_readerWatchListPredefinedNoSql.Count() > 0)
+                    break;
 
                 Thread.Sleep(100);
             }
             sw.Stop();
-            Console.WriteLine($"AssetsWatchLists client is started. Wait time: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"AssetsServiceUserDataClient client is started. Wait time: {sw.ElapsedMilliseconds} ms");
         }
 
         public void Dispose()
@@ -58,6 +67,29 @@ namespace Antares.Service.Assets.Client
         public IWatchListsClient WatchLists => this;
         public IAvailableAssetClient AvailableAssets => this;
         public IAssetsServiceHttp HttpClient => _httpClient;
+
+        async Task<List<string>> IAvailableAssetClient.GetAssetIds(string clientId, bool isIosDevice)
+        {
+            try
+            {
+                var data = _readerAssetConditionNoSql.Get(
+                    AssetConditionNoSql.GeneratePartitionKey(clientId),
+                    AssetConditionNoSql.GenerateRowKey());
+
+                if (data?.AssetConditions != null)
+                {
+                    return data.AssetConditions.Where(o => o.AvailableToClient == true).Select(o => o.Asset).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"Cannot read from MyNoSQL. Table: ${AssetConditionNoSql.TableName}, PK: {AssetConditionNoSql.GeneratePartitionKey(clientId)}, RK: {AssetConditionNoSql.GenerateRowKey()}");
+                throw;
+            }
+
+            var result = await HttpClient.ClientGetAssetIdsAsync(clientId, isIosDevice);
+            return result.ToList();
+        }
 
         async Task<IWatchList> IWatchListsClient.AddCustomAsync(WatchListDto watchList, string clientId)
         {
@@ -76,13 +108,6 @@ namespace Antares.Service.Assets.Client
             await HttpClient.WatchListCustomRemoveWithHttpMessagesAsync(watchListId, clientId);
         }
 
-        async Task<List<IWatchList>> IWatchListsClient.GetAllCustom(string clientId)
-        {
-            var result = await HttpClient.WatchListGetAllCustomAsync(clientId);
-            var data = result.Select(e => (IWatchList) FromWatchListResponse(e)).ToList();
-            return data;
-        }
-
         async Task<IWatchList> IWatchListsClient.AddPredefinedAsync(WatchListDto watchList)
         {
             var result = await HttpClient.WatchListAddPredefinedAsync(FromWatchListDto(watchList));
@@ -95,41 +120,92 @@ namespace Antares.Service.Assets.Client
             await HttpClient.WatchListUpdatePredefinedAsync(FromWatchListDto(watchList));
         }
 
+
         async Task<IWatchList> IWatchListsClient.GetCustomWatchListAsync(string clientId, string watchListId)
-        {
-            var result = await HttpClient.WatchListGetCustomAsync(watchListId, clientId);
-            var data = FromWatchListResponse(result);
-            return data;
-        }
-
-        async Task<IWatchList> IWatchListsClient.GetPredefinedWatchListAsync(string watchListId)
-        {
-            var result = await HttpClient.WatchListGetPredefinedAsync(watchListId);
-            var data = FromWatchListResponse(result);
-            return data;
-        }
-
-        async Task<List<string>> IAvailableAssetClient.GetAssetIds(string clientId, bool isIosDevice)
         {
             try
             {
-                var data = _readerAssetConditionNoSql.Get(
-                    AssetConditionNoSql.GeneratePartitionKey(clientId),
-                    AssetConditionNoSql.GenerateRowKey());
+                var data = _readerWatchListCustomNoSql.Get(WatchListCustomNoSql.GeneratePartitionKey(clientId), WatchListCustomNoSql.GenerateRowKey(watchListId));
 
-                if (data?.AssetConditions != null)
+                if (data != null)
                 {
-                    return data.AssetConditions.Where(o => o.AvailableToClient == true).Select(o => o.Asset).ToList();
+                    return data;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Cannot read from MyNoSQL. Table: ${AssetConditionNoSql.TableName}, PK: {AssetConditionNoSql.GeneratePartitionKey(clientId)}, RK: {AssetConditionNoSql.GenerateRowKey()}, Ex: {ex}");
+                _log.Error(ex, $"Cannot read from MyNoSQL. Table: ${WatchListCustomNoSql.TableNameCustomWatchList}, PK: {WatchListCustomNoSql.GeneratePartitionKey(clientId)}", ex);
+            }
+
+            try
+            {
+                var result = await HttpClient.WatchListGetCustomAsync(watchListId, clientId);
+                var data = FromWatchListResponse(result);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"Cannot read from API. Method: WatchListGetCustomAsync, clientId: {clientId}, watchListId: {watchListId}");
                 throw;
             }
-            
-            var result = await HttpClient.ClientGetAssetIdsAsync(clientId, isIosDevice);
-            return result.ToList();
+        }
+
+        async Task<IWatchList> IWatchListsClient.GetPredefinedWatchListAsync(string watchListId)
+        {
+            try
+            {
+                var data = _readerWatchListCustomNoSql.Get(WatchListPredefinedNoSql.GeneratePartitionKey(), WatchListPredefinedNoSql.GenerateRowKey(watchListId));
+
+                if (data != null)
+                {
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"Cannot read from MyNoSQL. Table: ${WatchListPredefinedNoSql.TableNamePredefinedWatchList}, PK: {WatchListPredefinedNoSql.GeneratePartitionKey()}, RK: {WatchListPredefinedNoSql.GenerateRowKey(watchListId)}", ex);
+            }
+
+            try
+            {
+                var result = await HttpClient.WatchListGetPredefinedAsync(watchListId);
+                var data = FromWatchListResponse(result);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"Cannot read from API. Method: WatchListGetPredefinedAsync, watchListId: {watchListId}");
+                throw;
+            }
+        }
+
+        async Task<List<IWatchList>> IWatchListsClient.GetAllCustom(string clientId)
+        {
+            try
+            {
+                var data = _readerWatchListCustomNoSql.Get(WatchListCustomNoSql.GeneratePartitionKey(clientId));
+
+                if (data != null)
+                {
+                    return data.Select(e => (IWatchList)e).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"Cannot read from MyNoSQL. Table: ${WatchListCustomNoSql.TableNameCustomWatchList}, PK: {WatchListCustomNoSql.GeneratePartitionKey(clientId)}", ex);
+            }
+
+            try
+            {
+                var result = await HttpClient.WatchListGetAllCustomAsync(clientId);
+                var resultData = result.Select(e => (IWatchList) FromWatchListResponse(e)).ToList();
+                return resultData;
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"Cannot read from API. Method: WatchListGetAllCustomAsync, clientId: {clientId}");
+                throw;
+            }
         }
 
         private WatchListDto FromWatchListResponse(WatchList item)

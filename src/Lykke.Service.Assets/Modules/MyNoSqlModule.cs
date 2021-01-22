@@ -34,8 +34,9 @@ namespace Lykke.Service.Assets.Modules
             RegisterMyNoSqlWriter<AssetNoSql>(builder, AssetNoSql.TableName);
             RegisterMyNoSqlWriter<AssetPairNoSql>(builder, AssetPairNoSql.TableName);
             RegisterMyNoSqlWriter<AssetConditionNoSql>(builder, AssetConditionNoSql.TableName);
+            RegisterMyNoSqlWriter<WatchListCustomNoSql>(builder, WatchListCustomNoSql.TableNameCustomWatchList);
+            RegisterMyNoSqlWriter<WatchListPredefinedNoSql>(builder, WatchListPredefinedNoSql.TableNamePredefinedWatchList);
 
-            
         }
 
         private void RegisterMyNoSqlWriter<TEntity>(ContainerBuilder builder, string table)

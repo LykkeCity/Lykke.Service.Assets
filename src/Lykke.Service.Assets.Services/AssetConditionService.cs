@@ -79,23 +79,28 @@ namespace Lykke.Service.Assets.Services
             return model;
         }
 
-        public Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition)
+        public async Task AddAssetConditionAsync(string layerId, IAssetCondition assetCondition)
         {
-            return _cachedAssetConditionsService.AddAssetConditionAsync(layerId, assetCondition);
+            await _myNoSqlWriter.Clear();
+            await _cachedAssetConditionsService.AddAssetConditionAsync(layerId, assetCondition);
         }
 
-        public Task UpdateAssetConditionAsync(string layerId, IAssetCondition assetCondition)
+        public async Task UpdateAssetConditionAsync(string layerId, IAssetCondition assetCondition)
         {
-            return _cachedAssetConditionsService.AddAssetConditionAsync(layerId, assetCondition);
+            await _myNoSqlWriter.Clear();
+            await _cachedAssetConditionsService.AddAssetConditionAsync(layerId, assetCondition);
         }
 
-        public Task DeleteAssetConditionAsync(string layerId, string assetId)
+        public async Task DeleteAssetConditionAsync(string layerId, string assetId)
         {
-            return _cachedAssetConditionsService.DeleteAssetConditionAsync(layerId, assetId);
+            await _myNoSqlWriter.Clear();
+            await _cachedAssetConditionsService.DeleteAssetConditionAsync(layerId, assetId);
         }
 
         public async Task AddDefaultAssetConditionAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
         {
+            await _myNoSqlWriter.Clear();
+
             await _assetDefaultConditionRepository.InsertOrReplaceAsync(layerId, assetDefaultCondition);
 
             await _cacheManager.ClearCacheAsync("Added default asset condition");
@@ -103,6 +108,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task UpdateDefaultAssetConditionAsync(string layerId, IAssetDefaultCondition assetDefaultCondition)
         {
+            await _myNoSqlWriter.Clear();
+
             await _assetDefaultConditionRepository.InsertOrReplaceAsync(layerId, assetDefaultCondition);
 
             await _cacheManager.ClearCacheAsync("Updated default asset condition");
@@ -110,6 +117,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task DeleteDefaultAssetConditionAsync(string layerId)
         {
+            await _myNoSqlWriter.Clear();
+
             await _assetDefaultConditionRepository.DeleteAsync(layerId);
 
             await _cacheManager.ClearCacheAsync("Deleted default asset condition");
@@ -122,6 +131,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task UpdateLayerAsync(IAssetConditionLayer layer)
         {
+            await _myNoSqlWriter.Clear();
+
             await _assetConditionLayerRepository.InsertOrReplaceAsync(layer);
 
             await _cacheManager.ClearCacheAsync("Updated condition layer");
@@ -129,6 +140,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task DeleteLayerAsync(string layerId)
         {
+            await _myNoSqlWriter.Clear();
+
             await Task.WhenAll(
                 _assetConditionLayerLinkClientRepository.RemoveLayerFromClientsAsync(layerId),
                 _cachedAssetConditionsService.DeleteAssetConditionsAsync(layerId),
@@ -140,6 +153,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task UpdateDefaultLayerAsync(IAssetConditionLayerSettings settings)
         {
+            await _myNoSqlWriter.Clear();
+
             await _assetDefaultConditionLayerRepository.InsertOrReplaceAsync(settings);
 
             await _cacheManager.ClearCacheAsync("Default asset condition layer changed");
@@ -165,6 +180,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task AddClientLayerAsync(string clientId, string layerId)
         {
+            await _myNoSqlWriter.TryDeleteAsync(AssetConditionNoSql.GeneratePartitionKey(clientId), AssetConditionNoSql.GenerateRowKey());
+
             await _assetConditionLayerLinkClientRepository.AddAsync(clientId, layerId);
 
             await _cacheManager.RemoveClientFromCacheAsync(clientId);
@@ -172,6 +189,8 @@ namespace Lykke.Service.Assets.Services
 
         public async Task RemoveClientLayerAsync(string clientId, string layerId)
         {
+            await _myNoSqlWriter.TryDeleteAsync(AssetConditionNoSql.GeneratePartitionKey(clientId), AssetConditionNoSql.GenerateRowKey());
+
             await _assetConditionLayerLinkClientRepository.RemoveAsync(clientId, layerId);
 
             await _cacheManager.RemoveClientFromCacheAsync(clientId);
