@@ -5,7 +5,7 @@ namespace Lykke.Service.Assets.NoSql.Models
 {
     public class AssetCategoryNoSql : MyNoSqlDbEntity
     {
-        public const string TableName = "antares.asset.category";
+        public const string TableName = "antares_asset_category";
 
         public static string GeneratePartitionKey() => "category";
         public static string GenerateRowKey(string id) => id;

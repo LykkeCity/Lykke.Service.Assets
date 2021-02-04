@@ -7,7 +7,7 @@ namespace Lykke.Service.Assets.NoSql.Models
 {
     public class WatchListPredefinedNoSql : MyNoSqlDbEntity, IWatchList
     {
-        public const string TableNamePredefinedWatchList = "antares.asset.predefined-watch-list";
+        public const string TableNamePredefinedWatchList = "antares_asset_predefined-watch-list";
 
         public static string GeneratePartitionKey() => "predefined";
         public static string GenerateRowKey(string watchListId) => watchListId;

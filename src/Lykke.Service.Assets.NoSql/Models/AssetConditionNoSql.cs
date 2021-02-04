@@ -7,12 +7,12 @@ namespace Lykke.Service.Assets.NoSql.Models
 {
     public class AssetConditionNoSql : MyNoSqlDbEntity
     {
-        public const string TableName = "antares.asset.asset-condition-by-clients";
+        public const string TableName = "antares_asset_asset-condition-by-clients";
 
         public static string GeneratePartitionKey(string clientId) => clientId;
         public static string GenerateRowKey() => "--AssetCondition--";
-        
-        
+
+
         public string ClientId { get; set; }
 
         public List<AssetConditionModel> AssetConditions { get; set; }
