@@ -5,7 +5,7 @@ namespace Lykke.Service.Assets.NoSql.Models
 {
     public class AssetExtendedInfoNoSql: MyNoSqlDbEntity
     {
-        public const string TableName = "antares.asset.asset-extended-info";
+        public const string TableName = "antares_asset_asset-extended-info";
 
         public const string DefaultInfoPartitionKey = "--default--";
         public const string DefaultInfoRowKey = "--default--";
