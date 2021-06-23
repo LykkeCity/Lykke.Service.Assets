@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Log;
+using Lykke.Common.Log;
+using Lykke.Logs;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -79,7 +82,10 @@ namespace Lykke.Service.Assets.Services.Tests
                 _cacheMock.Object,
                 cachedAssetConditionsService,
                 _myNoSqlWriterMock.Object,
-                10);
+                10,
+                new List<string>(),
+                EmptyLogFactory.Instance
+            );
 
             _assetConditionLayerLinkClientRepositoryMock.Setup(o => o.GetLayersAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult((IEnumerable<string>) new List<string>()));

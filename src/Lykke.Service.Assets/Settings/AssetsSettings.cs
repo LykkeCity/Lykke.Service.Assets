@@ -1,4 +1,6 @@
-﻿namespace Lykke.Service.Assets.Settings
+﻿using System.Collections.Generic;
+
+namespace Lykke.Service.Assets.Settings
 {
     public partial class ApplicationSettings
     {
@@ -10,6 +12,8 @@
             public CqrsSettings Cqrs { get; set; }
 
             public MyNoSqlSettings MyNoSqlServer { get; set; }
+
+            public List<string> ClientIdsToLog { get; set; } = new();
         }
     }
 }
