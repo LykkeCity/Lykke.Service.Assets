@@ -83,7 +83,7 @@ namespace Lykke.Service.Assets.Services.Tests
                 cachedAssetConditionsService,
                 _myNoSqlWriterMock.Object,
                 10,
-                new HashSet<string>(),
+                new List<string>(),
                 EmptyLogFactory.Instance
             );
 

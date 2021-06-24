@@ -24,7 +24,7 @@ namespace Lykke.Service.Assets.Services
         private readonly ICachedAssetConditionsService _cachedAssetConditionsService;
         private readonly IMyNoSqlWriterWrapper<AssetConditionNoSql> _myNoSqlWriter;
         private readonly int _maxClientsInNoSqlCache;
-        private readonly ISet<string> _clientIdsToLog;
+        private readonly List<string> _clientIdsToLog;
         private readonly ILog _log;
 
         public AssetConditionService(
@@ -36,7 +36,7 @@ namespace Lykke.Service.Assets.Services
             ICachedAssetConditionsService cachedAssetConditionsService,
             IMyNoSqlWriterWrapper<AssetConditionNoSql> myNoSqlWriter,
             int maxClientsInNoSqlCache,
-            ISet<string> clientIdsToLog,
+            List<string> clientIdsToLog,
             ILogFactory logFactory)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
