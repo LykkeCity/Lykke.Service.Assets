@@ -73,6 +73,7 @@ namespace Lykke.Service.Assets.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .WithParameter("maxClientsInNoSqlCache", _settings.CurrentValue.AssetsService.MyNoSqlServer.MaxClientsInCache)
+                .WithParameter("clientIdsToLog", _settings.CurrentValue.AssetsService.ClientIdsToLog)
                 .SingleInstance();
 
             builder

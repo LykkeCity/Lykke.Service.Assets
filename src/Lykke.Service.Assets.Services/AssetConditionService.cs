@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -8,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Common;
+using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.NoSql.Models;
 
 namespace Lykke.Service.Assets.Services
@@ -22,6 +24,8 @@ namespace Lykke.Service.Assets.Services
         private readonly ICachedAssetConditionsService _cachedAssetConditionsService;
         private readonly IMyNoSqlWriterWrapper<AssetConditionNoSql> _myNoSqlWriter;
         private readonly int _maxClientsInNoSqlCache;
+        private readonly ISet<string> _clientIdsToLog;
+        private readonly ILog _log;
 
         public AssetConditionService(
             IAssetConditionLayerRepository assetConditionLayerRepository,
@@ -31,7 +35,9 @@ namespace Lykke.Service.Assets.Services
             IAssetsForClientCacheManager cacheManager,
             ICachedAssetConditionsService cachedAssetConditionsService,
             IMyNoSqlWriterWrapper<AssetConditionNoSql> myNoSqlWriter,
-            int maxClientsInNoSqlCache)
+            int maxClientsInNoSqlCache,
+            ISet<string> clientIdsToLog,
+            ILogFactory logFactory)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
             _assetDefaultConditionRepository = assetDefaultConditionRepository;
@@ -41,6 +47,8 @@ namespace Lykke.Service.Assets.Services
             _cachedAssetConditionsService = cachedAssetConditionsService;
             _myNoSqlWriter = myNoSqlWriter;
             _maxClientsInNoSqlCache = maxClientsInNoSqlCache;
+            _clientIdsToLog = clientIdsToLog;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task<IEnumerable<IAssetConditionLayer>> GetLayersAsync()
@@ -200,8 +208,14 @@ namespace Lykke.Service.Assets.Services
         {
             var assetConditions = await _cacheManager.TryGetAssetConditionsForClientAsync(clientId);
 
-            if (assetConditions != null)
+            bool canLog = _clientIdsToLog.Contains(clientId);
+
+            if (assetConditions != null && canLog)
+            {
+                _log.Info(message: $"Found asset conditions in the cache for the client: {assetConditions.ToJson()}", clientId);
+
                 return assetConditions;
+            }
 
             var assetDefaultLayer = await _cachedAssetConditionsService.GetDefaultLayerAsync();
 
@@ -215,8 +229,13 @@ namespace Lykke.Service.Assets.Services
                 map[condition.Asset] = Mapper.Map<AssetCondition>(condition);
             }
 
+            if (canLog)
+            {
+                _log.Info(message: $"Default layer conditions mapping: {map.ToJson()}", clientId);
+            }
+
             // Merge client conditions layers
-            var layers = await GetLayersAsync(clientId);
+            var layers = await GetLayersAsync(clientId, canLog);
 
             foreach (var layer in layers.OrderBy(e => e.Priority))
             {
@@ -224,15 +243,38 @@ namespace Lykke.Service.Assets.Services
 
                 var conditions = await _cachedAssetConditionsService.GetConditionsAsync(layer.Id);
 
+                if (canLog)
+                {
+                    _log.Info(message: $"Layer conditions: {conditions.ToJson()}", new {clientId, layerId = layer.Id});
+                }
+
                 // Apply explicit assets conditions
                 foreach (var condition in conditions)
                 {
                     if (!map.TryGetValue(condition.Asset, out var value))
+                    {
                         map[condition.Asset] = Mapper.Map<AssetCondition>(condition);
+
+                        if (canLog)
+                        {
+                            _log.Info(message: $"Add condition to the mapping: {condition.ToJson()}", clientId);
+                        }
+                    }
                     else
+                    {
                         value.Apply(condition);
+                        if (canLog)
+                        {
+                            _log.Info(message: $"Apply asset condition: {condition.ToJson()}", new {clientId, condition.Asset});
+                        }
+                    }
 
                     explicitAssets.Add(condition.Asset);
+                }
+
+                if (canLog)
+                {
+                    _log.Info(message: $"Explicit assets: {explicitAssets.ToJson()}", clientId);
                 }
 
                 var defaultAssetCondition = await _cachedAssetConditionsService.GetDefaultConditionsAsync(layer.Id);
@@ -240,16 +282,29 @@ namespace Lykke.Service.Assets.Services
                 if (defaultAssetCondition == null)
                     continue;
 
+                if (canLog)
+                {
+                    _log.Info(message: $"Default asset conditions for layer: {defaultAssetCondition.ToJson()}", new {clientId, layer.Id});
+                }
                 // Apply implicit assets conditions
                 var implicitAssets = map.Keys.Where(o => !explicitAssets.Contains(o));
 
                 foreach (var asset in implicitAssets)
                 {
                     map[asset].Apply(defaultAssetCondition);
+                    if (canLog)
+                    {
+                        _log.Info(message: $"Apply default asset condition for asset", new {clientId, asset});
+                    }
                 }
             }
 
             assetConditions = map.Values.Cast<IAssetCondition>().ToList();
+
+            if (canLog)
+            {
+                _log.Info(message: $"Result asset conditions: {assetConditions.ToJson()}", clientId);
+            }
 
             // Update asset conditions cache
             await _cacheManager.SaveAssetConditionsForClientAsync(clientId, assetConditions);
@@ -274,10 +329,18 @@ namespace Lykke.Service.Assets.Services
             return settings;
         }
 
-        private async Task<IEnumerable<IAssetConditionLayer>> GetLayersAsync(string clientId)
+        private async Task<IEnumerable<IAssetConditionLayer>> GetLayersAsync(string clientId, bool canLog = false)
         {
             var layerIds = await _assetConditionLayerLinkClientRepository.GetLayersAsync(clientId);
-            return await _assetConditionLayerRepository.GetAsync(layerIds);
+
+            var layers = await _assetConditionLayerRepository.GetAsync(layerIds);
+
+            if (canLog)
+            {
+                _log.Info(message: $"Condition layers for the client: {layerIds.ToJson()}", clientId);
+            }
+
+            return layers;
         }
 
         public void Start()
