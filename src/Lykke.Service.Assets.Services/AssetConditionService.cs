@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
@@ -25,7 +24,7 @@ namespace Lykke.Service.Assets.Services
         private readonly ICachedAssetConditionsService _cachedAssetConditionsService;
         private readonly IMyNoSqlWriterWrapper<AssetConditionNoSql> _myNoSqlWriter;
         private readonly int _maxClientsInNoSqlCache;
-        private readonly List<string> _clientIdsToLog;
+        private readonly ISet<string> _clientIdsToLog;
         private readonly ILog _log;
 
         public AssetConditionService(
@@ -37,7 +36,7 @@ namespace Lykke.Service.Assets.Services
             ICachedAssetConditionsService cachedAssetConditionsService,
             IMyNoSqlWriterWrapper<AssetConditionNoSql> myNoSqlWriter,
             int maxClientsInNoSqlCache,
-            List<string> clientIdsToLog,
+            ISet<string> clientIdsToLog,
             ILogFactory logFactory)
         {
             _assetConditionLayerRepository = assetConditionLayerRepository;
@@ -236,7 +235,7 @@ namespace Lykke.Service.Assets.Services
             }
 
             // Merge client conditions layers
-            var layers = await GetLayersAsync(clientId, true);
+            var layers = await GetLayersAsync(clientId, canLog);
 
             foreach (var layer in layers.OrderBy(e => e.Priority))
             {
