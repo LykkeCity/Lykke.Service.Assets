@@ -103,7 +103,11 @@ namespace Lykke.Service.Assets.Repositories.Entities
         public string LykkeEntityId { get; set; }
 
         public long SiriusAssetId { get; set; }
+        
         public string SiriusBlockchainId { get; set; }
+        
         public string BlockchainIntegrationType { get; set; }
+
+        public string BlockchainNetworkName { get; set; }
     }
 }
