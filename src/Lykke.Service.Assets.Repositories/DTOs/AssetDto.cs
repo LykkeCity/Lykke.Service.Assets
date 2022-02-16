@@ -159,5 +159,7 @@ namespace Lykke.Service.Assets.Repositories.DTOs
         public string SiriusBlockchainId { get; set; }
         [ProtoMember(52)]
         public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
+        [ProtoMember(53)]
+        public string BlockchainNetworkName { get; set; }
     }
 }
