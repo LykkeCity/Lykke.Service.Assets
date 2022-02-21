@@ -42,6 +42,7 @@ namespace Lykke.Service.Assets.NoSql.Models
                     BlockchainIntegrationLayerAssetId = source.BlockchainIntegrationLayerAssetId,
                     BlockchainIntegrationLayerId = source.BlockchainIntegrationLayerId,
                     BlockchainIntegrationType = source.BlockchainIntegrationType,
+                    BlockchainNetworkName = source.BlockchainNetworkName,
                     BlockchainWithdrawal = source.BlockchainWithdrawal,
                     BuyScreen = source.BuyScreen,
                     CashinMinimalAmount = source.CashinMinimalAmount,
@@ -144,6 +145,7 @@ namespace Lykke.Service.Assets.NoSql.Models
             public long SiriusAssetId { get; set; }
             public string SiriusBlockchainId { get; set; }
             public BlockchainIntegrationType BlockchainIntegrationType { get; set; }
+            public string BlockchainNetworkName { get; set; }
         }
     }
 }
