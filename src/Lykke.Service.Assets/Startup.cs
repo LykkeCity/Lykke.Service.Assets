@@ -73,6 +73,8 @@ namespace Lykke.Service.Assets
 
             app.UseMiddleware<PrometheusMetricsMiddleware>();
 
+            app.UseMetricServer();
+
             app.UseLykkeConfiguration(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
