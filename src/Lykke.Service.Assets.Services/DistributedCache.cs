@@ -190,9 +190,15 @@ namespace Lykke.Service.Assets.Services
             {
                 lock (_data)
                 {
-                    _data.Remove(GetCacheKey(id));
+                    _data.Clear();
                     CacheItemCount.WithLabels(_name, "single-item").Set(_data.Count);
                 }
+                lock (_dataList)
+                {
+                    _dataList.Clear();
+                    CacheItemCount.WithLabels(_name, "list-item").Set(_dataList.Count);
+                }
+
                 //await _redisDatabase.KeyDeleteAsync(GetCacheKey(id));
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Lykke.Common.Chaos;
 using Lykke.Common.Log;
 using Lykke.Cqrs;
@@ -47,7 +48,7 @@ namespace Lykke.Service.Assets.Modules
 
             builder.Register(context => new AutofacDependencyResolver(context)).As<IDependencyResolver>().SingleInstance();
 
-            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = _settings.RabbitConnectionString };
+            var rabbitMqSettings = new RabbitMQ.Client.ConnectionFactory { Uri = new Uri(_settings.RabbitConnectionString) };
 
             builder.RegisterType<AssetsHandler>();
             builder.RegisterType<AssetPairHandler>();

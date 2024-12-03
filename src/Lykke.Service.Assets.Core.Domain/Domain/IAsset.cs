@@ -117,7 +117,11 @@ namespace Lykke.Service.Assets.Core.Domain
         string LykkeEntityId { get; }
 
         long SiriusAssetId { get; }
+        
         string SiriusBlockchainId { get; }
+        
         BlockchainIntegrationType BlockchainIntegrationType { get; }
+
+        string BlockchainNetworkName { get; }
     }
 }

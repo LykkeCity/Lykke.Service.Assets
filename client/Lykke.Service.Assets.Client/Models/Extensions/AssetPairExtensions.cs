@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Lykke.Service.Assets.Client.Models.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class AssetPairExtensions
     {
         //public static async Task<AssetPair> GetAsync(this IAssetPairsRepository assetPairsRepository, string assetId1, string assetId2)

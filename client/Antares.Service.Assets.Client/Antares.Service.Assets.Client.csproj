@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Swisschain</Authors>
+    <Company>Swisschain</Company>
+    <Product>Antares.Service.Assets</Product>
+    <Description>Client for Antares.Service.Assets API</Description>
+    <Copyright></Copyright>
+    <PackageLicenseUrl>https://github.com/swisschain/Antares.Service.Assets/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/swisschain/Antares.Service.Assets</PackageProjectUrl>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/60782394</PackageIconUrl>
+    <RepositoryUrl>https://github.com/swisschain/Antares.Service.Assets.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Antares;Swisschain</PackageTags>
+    <PackageId>Swisschain.Antares.Service.Assets.Client</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MyNoSqlServer20.DataReader" Version="1.2.18" />
+    <PackageReference Include="Lykke.Cqrs" Version="9.0.1" />
+    <PackageReference Include="Lykke.Logs" Version="7.4.0" />
+    <PackageReference Include="Lykke.SettingsReader" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.13" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference PrivateAssets="All" Include="..\..\src\Lykke.Service.Assets.Core.Domain\Lykke.Service.Assets.Core.Domain.csproj" />
+    <ProjectReference PrivateAssets="All" Include="..\..\src\Lykke.Service.Assets.NoSql\Lykke.Service.Assets.NoSql.csproj" />
+    <ProjectReference PrivateAssets="All" Include="..\Lykke.Service.Assets.Client\Lykke.Service.Assets.Client.csproj" />
+  </ItemGroup>
+
+  <!--
+    The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.
+    See https://github.com/NuGet/Home/issues/3891 for a description of the problem
+    and for newer versions / workarounds / built-in methods.
+  -->
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>
+      $(TargetsForTfmSpecificBuildOutput);PackReferencedProjectOutputs
+    </TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Name="PackReferencedProjectOutputs" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
+
+</Project>

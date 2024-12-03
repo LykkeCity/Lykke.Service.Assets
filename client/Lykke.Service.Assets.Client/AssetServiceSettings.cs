@@ -6,5 +6,7 @@ namespace Lykke.Service.Assets.Client
     {
         [HttpCheck("/api/isalive")]
         public string ServiceUrl { get; set; }
+
+        public string AssetServiceMyNoSqlReaderHostPort { get; }
     }
 }

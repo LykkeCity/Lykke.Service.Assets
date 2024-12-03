@@ -1,27 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using AutoMapper;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.NoSql.Models;
 using Lykke.Service.Assets.Services.Domain;
+using MyNoSqlServer.Abstractions;
 
 namespace Lykke.Service.Assets.Services
 {
-    public class AssetAttributeService : IAssetAttributeService
+    public class AssetAttributeService : IAssetAttributeService, IStartable
     {
         private readonly IAssetAttributeRepository _assetAttributeRepository;
+        private readonly IMyNoSqlWriterWrapper<AssetAttributeNoSql> _myNoSqlWriter;
 
         public AssetAttributeService(
-            IAssetAttributeRepository assetAttributeRepository)
+            IAssetAttributeRepository assetAttributeRepository,
+            IMyNoSqlWriterWrapper<AssetAttributeNoSql> myNoSqlWriter)
         {
             _assetAttributeRepository = assetAttributeRepository;
+            _myNoSqlWriter = myNoSqlWriter;
         }
 
         public async Task<IAssetAttribute> AddAsync(string assetId, IAssetAttribute attribute)
         {
             await _assetAttributeRepository.AddAsync(assetId, attribute);
+
+            await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetAttributeNoSql.Create(assetId, attribute.Key, attribute.Value));
 
             return attribute;
         }
@@ -79,16 +89,30 @@ namespace Lykke.Service.Assets.Services
         public async Task RemoveAsync(string assetId, string key)
         {
             await _assetAttributeRepository.RemoveAsync(assetId, key);
+            await _myNoSqlWriter.TryDeleteAsync(AssetAttributeNoSql.GeneratePartitionKey(assetId), AssetAttributeNoSql.GenerateRowKey(key));
         }
 
         public async Task UpdateAsync(string assetId, IAssetAttribute attribute)
         {
             await _assetAttributeRepository.UpdateAsync(assetId, attribute);
+            await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetAttributeNoSql.Create(assetId, attribute.Key, attribute.Value));
         }
         
         public async Task UpdateAsync(string assetId, string key, string value)
         {
             await UpdateAsync(assetId, new AssetAttribute { Key = key, Value = value });
+        }
+
+        private IList<AssetAttributeNoSql> ReadAllData()
+        {
+            var records = _assetAttributeRepository.GetAllAsync().GetAwaiter().GetResult();
+            var data = records.Select(e => AssetAttributeNoSql.Create(e.AssetId, e.Attribute.Key, e.Attribute.Value)).ToList();
+            return data;
+        }
+
+        public void Start()
+        {
+            _myNoSqlWriter.Start(ReadAllData);
         }
     }
 }

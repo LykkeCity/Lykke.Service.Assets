@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using JetBrains.Annotations;
-using Lykke.Sdk;
+using Antares.Sdk;
 using Lykke.Service.Assets.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Autofac;
+using Lykke.SettingsReader;
+using Microsoft.Extensions.Configuration;
 using Prometheus;
+using Swisschain.Sdk.Metrics.Rest;
 
 namespace Lykke.Service.Assets
 {
@@ -18,11 +22,34 @@ namespace Lykke.Service.Assets
             ApiVersion = "v1"
         };
 
+        private IReloadingManagerWithConfiguration<ApplicationSettings> _settings;
+        private LykkeServiceOptions<ApplicationSettings> _lykkeOptions;
+
+
+        //[UsedImplicitly]
+        //public IServiceProvider ConfigureServices(IServiceCollection services)
+        //{
+        //    return services.BuildServiceProvider<ApplicationSettings>(options =>
+        //    {
+        //        options.SwaggerOptions = _swaggerOptions;
+
+        //        options.Logs = logs =>
+        //        {
+        //            logs.AzureTableName = "AssetsServiceLog";
+        //            logs.AzureTableConnectionStringResolver = settings => settings.AssetsService.Db.LogsConnString;
+        //        };
+
+        //        options.Extend = (sc, settingsManager) =>
+        //        {
+        //            sc.AddMemoryCache();
+        //        };
+        //    });
+        //}
 
         [UsedImplicitly]
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            return services.BuildServiceProvider<ApplicationSettings>(options =>
+            (_lykkeOptions, _settings) = services.ConfigureServices<ApplicationSettings>(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
 
@@ -42,7 +69,9 @@ namespace Lykke.Service.Assets
         [UsedImplicitly]
         public void Configure(IApplicationBuilder app)
         {
-            ConfigureAutoMapper();
+            app.UseMetricServer();
+
+            app.UseMiddleware<PrometheusMetricsMiddleware>();
 
             app.UseMetricServer();
 
@@ -50,6 +79,18 @@ namespace Lykke.Service.Assets
             {
                 options.SwaggerOptions = _swaggerOptions;
             });
+        }
+
+        [UsedImplicitly]
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            ConfigureAutoMapper();
+
+            var configurationRoot = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .Build();
+
+            builder.ConfigureContainerBuilder(_lykkeOptions, configurationRoot, _settings);
         }
 
         private void ConfigureAutoMapper()

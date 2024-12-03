@@ -3,28 +3,33 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using AutoMapper;
 using JetBrains.Annotations;
 using Lykke.Cqrs;
 using Lykke.Service.Assets.Core.Domain;
 using Lykke.Service.Assets.Core.Repositories;
 using Lykke.Service.Assets.Core.Services;
+using Lykke.Service.Assets.NoSql.Models;
 using Lykke.Service.Assets.Services.Commands;
 using Lykke.Service.Assets.Services.Domain;
 
 namespace Lykke.Service.Assets.Services
 {
-    public class AssetService : IAssetService
+    public class AssetService : IAssetService, IStartable
     {
         private readonly IAssetRepository _assetRepository;
+        private readonly IMyNoSqlWriterWrapper<AssetNoSql> _myNoSqlWriter;
         private readonly ICqrsEngine _cqrsEngine;
 
 
         public AssetService(
             [NotNull] IAssetRepository assetRepository,
+            [NotNull] IMyNoSqlWriterWrapper<AssetNoSql> myNoSqlWriter,
             [NotNull] ICqrsEngine cqrsEngine)
         {
             _assetRepository = assetRepository ?? throw new ArgumentNullException(nameof(assetRepository));
+            _myNoSqlWriter = myNoSqlWriter;
             _cqrsEngine = cqrsEngine ?? throw new ArgumentNullException(nameof(cqrsEngine));
         }
 
@@ -33,6 +38,12 @@ namespace Lykke.Service.Assets.Services
         {
             await ValidateAsset(asset);
 
+            await _assetRepository.InsertOrReplaceAsync(asset);
+
+            await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetNoSql.Create(asset));
+
+            
+            //todo: remove cqrs
             _cqrsEngine.SendCommand(
                 new CreateAssetCommand { Asset = Mapper.Map<Asset>(asset) },
                 BoundedContext.Name, BoundedContext.Name);
@@ -81,12 +92,19 @@ namespace Lykke.Service.Assets.Services
         public async Task RemoveAsync(string id)
         {
             await _assetRepository.RemoveAsync(id);
+            await _myNoSqlWriter.TryDeleteAsync(AssetNoSql.GeneratePartitionKey(), AssetNoSql.GenerateRowKey(id));
         }
 
         public async Task UpdateAsync(IAsset asset)
         {
             await ValidateAsset(asset);
 
+            await _assetRepository.UpdateAsync(asset);
+
+            await _myNoSqlWriter.TryInsertOrReplaceAsync(AssetNoSql.Create(asset));
+
+
+            //todo: remove cqrs
             _cqrsEngine.SendCommand(
                 new UpdateAssetCommand { Asset = Mapper.Map<Asset>(asset) },
                 BoundedContext.Name, BoundedContext.Name);
@@ -118,6 +136,17 @@ namespace Lykke.Service.Assets.Services
                     throw new ValidationException($"Another asset [{asset.Id}] with specified BlockChainAssetId [{asset.BlockChainAssetId}] already exists");
                 }
             }
+        }
+
+        public void Start()
+        {
+            _myNoSqlWriter.Start(GetAllData);
+        }
+
+        private IList<AssetNoSql> GetAllData()
+        {
+            var data = GetAllAsync(true).GetAwaiter().GetResult().Select(AssetNoSql.Create).ToList();
+            return data;
         }
     }
 }

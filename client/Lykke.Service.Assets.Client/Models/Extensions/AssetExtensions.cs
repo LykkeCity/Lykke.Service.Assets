@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Lykke.Service.Assets.Client.Models.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class AssetExtensions
     {
         public static double Multiplier(this Asset asset)
